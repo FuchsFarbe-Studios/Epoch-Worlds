@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EpochApp.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class UserData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,8 +38,9 @@ namespace EpochApp.Server.Migrations
                     UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true),
                     Email = table.Column<string>(type: "longchar", nullable: true),
-                    Password = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime", nullable: false)
+                    DateOfBirth = table.Column<DateTime>(type: "datetime", nullable: false),
+                    PasswordHash = table.Column<string>(type: "longchar", nullable: true),
+                    PasswordSalt = table.Column<byte[]>(type: "longbinary", nullable: true)
                 },
                 constraints: table =>
                 {

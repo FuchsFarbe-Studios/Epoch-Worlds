@@ -13,7 +13,7 @@ namespace EpochApp.Client.Services
     public class EpochAuthProvider : AuthenticationStateProvider, IDisposable
     {
         private readonly EpochUserService _userService;
-        public User CurrentUser { get; private set; } = new User();
+        public UserData CurrentUser { get; private set; } = new UserData();
 
         public EpochAuthProvider(EpochUserService userService)
         {
@@ -29,7 +29,7 @@ namespace EpochApp.Client.Services
 
             if (user is not null)
             {
-                var authenticatedUser = await _userService.SendAuthenticateRequestAsync(user.UserName, user.Password);
+                var authenticatedUser = await _userService.SendAuthenticateRequestAsync(user.UserName, user.Hash);
 
                 if (authenticatedUser is not null)
                 {
@@ -46,7 +46,7 @@ namespace EpochApp.Client.Services
             var authState = await task;
             if (authState is not null)
             {
-                CurrentUser = User.FromClaimsPrincipal(authState.User);
+                CurrentUser = UserData.FromClaimsPrincipal(authState.User);
             }
         }
 

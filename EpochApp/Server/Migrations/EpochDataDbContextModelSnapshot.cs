@@ -71,12 +71,11 @@ namespace EpochApp.Server.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("longchar");
 
-                    b.Property<string>("Gender")
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("longchar");
 
-                    b.Property<string>("Password")
-                        .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("longbinary");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(64)

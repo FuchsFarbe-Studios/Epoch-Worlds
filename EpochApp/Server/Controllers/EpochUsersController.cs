@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EpochApp.Data;
 using EpochApp.Shared;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EpochApp.Server
 {
@@ -15,10 +20,15 @@ namespace EpochApp.Server
     public class EpochUsersController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
+        private IConfiguration _configuration;
+        const int keySize = 64;
+        const int iterations = 350000;
+        HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
 
-        public EpochUsersController(EpochDataDbContext context)
+        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: api/EpochUsers
@@ -30,7 +40,7 @@ namespace EpochApp.Server
 
         // GET: api/EpochUsers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(Guid id)
+        public async Task<ActionResult<UserData>> GetUser(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -39,7 +49,17 @@ namespace EpochApp.Server
                 return NotFound();
             }
 
-            return user;
+            var data = new UserData
+                       {
+                           UserID = user.UserID,
+                           UserName = user.UserName,
+                           Hash = user.PasswordHash,
+                           Email = user.Email,
+                           DateOfBirth = user.DateOfBirth,
+                           Roles = user.UserRoles.Select(ur => ur.Role.Description).ToList()
+                       };
+
+            return data;
         }
 
         // PUT: api/EpochUsers/5
@@ -84,6 +104,57 @@ namespace EpochApp.Server
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
+        [HttpPost("Authenticate")]
+        public async Task<IActionResult> Authenticate(LoginDTO authentication)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == authentication.UserName);
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            if (!VerifyPassword(authentication.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                return Unauthorized();
+            }
+
+            var data = new UserData
+                       {
+                           UserID = user.UserID,
+                           UserName = user.UserName,
+                           Hash = user.PasswordHash,
+                           Email = user.Email,
+                           DateOfBirth = user.DateOfBirth,
+                           Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
+                       };
+            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
+            return Ok(jwt);
+        }
+
+        [HttpPost("Registration")]
+        public async Task<IActionResult> Register(RegistrationDTO registration)
+        {
+            var user = new User { UserID = Guid.NewGuid(), UserName = registration.UserName, Email = registration.Email, DateOfBirth = registration.DateOfBirth };
+            var hash = HashPasword(registration.Password, out var salt);
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+            user.UserRoles.Add(new UserRole { DateAssigned = DateTime.Today, User = user, Role = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 1) });
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            var data = new UserData
+                       {
+                           UserID = user.UserID,
+                           UserName = user.UserName,
+                           Hash = user.PasswordHash,
+                           Email = user.Email,
+                           DateOfBirth = user.DateOfBirth,
+                           Roles = user.UserRoles.Select(ur => ur.Role.Description).ToList()
+                       };
+
+            return CreatedAtAction("GetUser", new { id = user.UserID }, data);
+        }
+
         // DELETE: api/EpochUsers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
@@ -103,6 +174,39 @@ namespace EpochApp.Server
         private bool UserExists(Guid id)
         {
             return _context.Users.Any(e => e.UserID == id);
+        }
+
+        string HashPasword(string password, out byte[] salt)
+        {
+            salt = RandomNumberGenerator.GetBytes(keySize);
+            var hash = Rfc2898DeriveBytes.Pbkdf2(
+                Encoding.UTF8.GetBytes(password),
+                salt,
+                iterations,
+                hashAlgorithm,
+                keySize);
+            return Convert.ToHexString(hash);
+        }
+
+        bool VerifyPassword(string password, string hash, byte[] salt)
+        {
+            var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashAlgorithm, keySize);
+            return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromHexString(hash));
+        }
+
+        private string CreateJWT(IEnumerable<Claim> claims)
+        {
+            var secretkey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value.ToString()));
+            var credentials = new SigningCredentials(secretkey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "https://localhost:5001",
+                audience: "https://localhost:5001",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(60),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

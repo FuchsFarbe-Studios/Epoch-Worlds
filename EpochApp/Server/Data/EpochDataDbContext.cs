@@ -36,14 +36,8 @@ namespace EpochApp.Data
             modelBuilder.Entity<User>(
                 user =>
                 {
-                    user.Ignore(p => p.Roles);
-                    user.Ignore(p => p.Age);
                     user.Property(p => p.UserName)
                         .HasMaxLength(64);
-                    user.Property(p => p.Password)
-                        .HasMaxLength(128);
-                    user.Property(p => p.DateOfBirth)
-                        .IsRequired();
                 });
             modelBuilder.Entity<UserRole>(
                 entity =>

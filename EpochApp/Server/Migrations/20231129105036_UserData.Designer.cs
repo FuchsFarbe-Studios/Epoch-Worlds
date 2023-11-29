@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EpochApp.Server.Migrations
 {
     [DbContext(typeof(EpochDataDbContext))]
-    [Migration("20231129100117_Gender")]
-    partial class Gender
+    [Migration("20231129105036_UserData")]
+    partial class UserData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,12 +74,11 @@ namespace EpochApp.Server.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("longchar");
 
-                    b.Property<string>("Gender")
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("longchar");
 
-                    b.Property<string>("Password")
-                        .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("longbinary");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(64)

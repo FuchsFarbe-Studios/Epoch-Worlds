@@ -5,8 +5,11 @@
 // Modified: 29-11-2023
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using EpochApp.Shared;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 
 namespace EpochApp.Client.Services
 {
@@ -21,15 +24,15 @@ namespace EpochApp.Client.Services
             _authData = authData;
         }
 
-        public async Task<User> SendAuthenticateRequestAsync(string username, string password)
+        public async Task<UserData> SendAuthenticateRequestAsync(string username, string password)
         {
-            var response = await _client.GetAsync($"/example-data/{username}.json");
+            var response = await _client.PostAsJsonAsync($"/api/v1/EpochUsers/Authenticate",new LoginDTO(){UserName = username, Password = password});
 
             if (response.IsSuccessStatusCode)
             {
                 string token = await response.Content.ReadAsStringAsync();
                 var claimPrincipal = CreateClaimsPrincipalFromToken(token);
-                var user = User.FromClaimsPrincipal(claimPrincipal);
+                var user = UserData.FromClaimsPrincipal(claimPrincipal);
                 PersistUserToBrowser(token);
 
                 return user;
@@ -38,10 +41,10 @@ namespace EpochApp.Client.Services
             return null;
         }
 
-        public User FetchUserFromBrowser()
+        public UserData FetchUserFromBrowser()
         {
             var claimsPrincipal = CreateClaimsPrincipalFromToken(_authData.Token);
-            var user = User.FromClaimsPrincipal(claimsPrincipal);
+            var user = UserData.FromClaimsPrincipal(claimsPrincipal);
 
             return user;
         }
@@ -63,5 +66,7 @@ namespace EpochApp.Client.Services
         private void PersistUserToBrowser(string token) => _authData.Token = token;
 
         public void ClearBrowserUserData() => _authData.Token = "";
+
+
     }
 }
