@@ -1,5 +1,7 @@
 using EpochApp.Client;
-
+using EpochApp.Client.Services;
+using EpochApp.Shared;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -15,8 +17,13 @@ namespace EpochApp.Client
 			builder.RootComponents.Add<HeadOutlet>("head::after");
 
 			builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+			builder.Services.AddScoped<ILocalStorage, LocalStorageAccessor>();
+			builder.Services.AddScoped<ClientAuthData>(); // Storage
+			builder.Services.AddScoped<EpochUserService>(); // Service
+			builder.Services.AddScoped<EpochAuthProvider>(); // Auth provider
+			builder.Services.AddScoped<AuthenticationStateProvider>(sp=>sp.GetRequiredService<EpochAuthProvider>());
 			builder.Services.AddMudServices();
-
+			builder.Services.AddAuthorizationCore();
 			await builder.Build().RunAsync();
 		}
 	}

@@ -1,7 +1,50 @@
 ﻿@page "/"
+@using EpochApp.Client.Services
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h3>Browser Storage Test</h3>
+<form>
+    <label>
+        Key
+        <input type="text" @bind-value="Key" />
+    </label>
+    <label>
+        Value
+        <input type="text" @bind-value="Value" />
+    </label>
+    <MudButton OnClick="@(async () => await SetValueAsync())">Set Value</MudButton>
+</form>
+<div>Stored Value: @StoredValue</div>
 
-Welcome to your new app.
+<MudButton OnClick="@(async () => await GetValueAsync())">Get Value</MudButton>
+<MudButton OnClick="@(async () => await RemoveAsync())">Remove Value</MudButton>
+<MudButton OnClick="@(async () => await ClearAllAsync())">Clear All</MudButton>
+
+@code {
+    [Inject] public ILocalStorage Storage { get; set; }
+    public string Key { get; set; } = "";
+    public string Value { get; set; } = "";
+    public string StoredValue { get; set; } = "";
+
+    public async Task SetValueAsync()
+    {
+        await Storage.SetValueAsync(Key, Value);
+    }
+
+    public async Task GetValueAsync()
+    {
+        StoredValue = await Storage.GetValueAsync<string>(Key);
+    }
+
+    public async Task RemoveAsync()
+    {
+        await Storage.RemoveAsync(Key);
+    }
+
+    public async Task ClearAllAsync()
+    {
+        await Storage.Clear();
+        StoredValue = "";
+    }
+}

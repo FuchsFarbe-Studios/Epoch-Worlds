@@ -1,6 +1,19 @@
-﻿<MudNavMenu>
-    <MudNavLink Match="NavLinkMatch.All">Home</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All">Features</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All">Community</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All">Support</MudNavLink>
+﻿@using Microsoft.AspNetCore.Authorization
+<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
+    <MudNavLink Href="/Features" Match="NavLinkMatch.All">Features</MudNavLink>
+    <MudNavLink Href="/Community" Match="NavLinkMatch.All">Community</MudNavLink>
+    <MudNavLink Href="/Support" Match="NavLinkMatch.All">Support</MudNavLink>
+
+    <AuthorizeView>
+        <Authorized>
+            <MudNavLink Href="/User/Profile">Profile</MudNavLink>
+            <MudNavLink Href="/Auth/Logout">Logout</MudNavLink>
+        </Authorized>
+        <NotAuthorized>
+            <MudNavLink Href="/Auth/Register">Create Account</MudNavLink>
+            <MudNavLink Href="/Auth/Login">Login</MudNavLink>
+        </NotAuthorized>
+    </AuthorizeView>
+
 </MudNavMenu>
