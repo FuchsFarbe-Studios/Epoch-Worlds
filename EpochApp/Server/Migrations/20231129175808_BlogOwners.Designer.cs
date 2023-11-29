@@ -4,6 +4,7 @@ using EntityFrameworkCore.Jet.Metadata;
 using EpochApp.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EpochApp.Server.Migrations
 {
     [DbContext(typeof(EpochDataDbContext))]
-    partial class EpochDataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231129175808_BlogOwners")]
+    partial class BlogOwners
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

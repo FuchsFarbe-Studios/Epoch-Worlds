@@ -4,6 +4,9 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using EpochApp.Shared.Blog;
+using EpochApp.Shared.Worlds;
+
 namespace EpochApp.Shared.Users
 {
     public class User
@@ -28,5 +31,7 @@ namespace EpochApp.Shared.Users
         public virtual Profile Profile { get; set; }
 
         public ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<BlogOwner> OwnedBlogs { get; set; }
+        public ICollection<World> OwnedWorlds { get; set; }
     }
 }
