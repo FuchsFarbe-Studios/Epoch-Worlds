@@ -125,7 +125,7 @@ namespace EpochApp.Server.Migrations
 
                     b.HasKey("BlogTypeID");
 
-                    b.ToTable("BlogTypes", "Blogs");
+                    b.ToTable("lkBlogTypes", "Blogs");
 
                     b.HasData(
                         new
@@ -209,7 +209,7 @@ namespace EpochApp.Server.Migrations
 
                     b.HasKey("PostTypeID");
 
-                    b.ToTable("PostTypes", "Blogs");
+                    b.ToTable("lkPostTypes", "Blogs");
                 });
 
             modelBuilder.Entity("EpochApp.Shared.Config.MetaTemplate", b =>
@@ -243,7 +243,7 @@ namespace EpochApp.Server.Migrations
 
                     b.HasIndex("CategoryID");
 
-                    b.ToTable("MetaTemplates", "Config");
+                    b.ToTable("lkMetaTemplates", "Lookups");
                 });
 
             modelBuilder.Entity("EpochApp.Shared.Lookups.ArticleCategory", b =>
@@ -448,6 +448,58 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("UserSocials", "Users");
                 });
 
+            modelBuilder.Entity("EpochApp.Shared.Worlds.World", b =>
+                {
+                    b.Property<Guid>("WorldID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DateRemoved")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longchar");
+
+                    b.Property<Guid>("OwnerID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Pronunciation")
+                        .HasColumnType("longchar");
+
+                    b.Property<string>("WorldName")
+                        .HasColumnType("longchar");
+
+                    b.HasKey("WorldID");
+
+                    b.HasIndex("OwnerID");
+
+                    b.ToTable("Worlds", "Users");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Worlds.WorldMeta", b =>
+                {
+                    b.Property<Guid>("WorldID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("MetaID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("longchar");
+
+                    b.HasKey("WorldID", "MetaID");
+
+                    b.HasIndex("MetaID");
+
+                    b.ToTable("WorldMetas", "Users");
+                });
+
             modelBuilder.Entity("EpochApp.Server.Controllers.Consonant", b =>
                 {
                     b.HasBaseType("EpochApp.Server.Controllers.Phoneme");
@@ -585,13 +637,15 @@ namespace EpochApp.Server.Migrations
                         .WithMany("Users")
                         .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_UserRoles_Roles");
 
                     b.HasOne("EpochApp.Shared.Users.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_UserRoles_Users");
 
                     b.Navigation("Role");
 
@@ -604,17 +658,49 @@ namespace EpochApp.Server.Migrations
                         .WithMany()
                         .HasForeignKey("SocialID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_UserSocials_SocialMediae");
 
                     b.HasOne("EpochApp.Shared.Users.Profile", "Profile")
                         .WithMany("Socials")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_UserSocials_Users");
 
                     b.Navigation("Profile");
 
                     b.Navigation("Social");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Worlds.World", b =>
+                {
+                    b.HasOne("EpochApp.Shared.Users.User", "Owner")
+                        .WithMany("OwnedWorlds")
+                        .HasForeignKey("OwnerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Worlds.WorldMeta", b =>
+                {
+                    b.HasOne("EpochApp.Shared.Config.MetaTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("MetaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EpochApp.Shared.Worlds.World", "World")
+                        .WithMany("MetaData")
+                        .HasForeignKey("WorldID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Template");
+
+                    b.Navigation("World");
                 });
 
             modelBuilder.Entity("EpochApp.Server.Controllers.Consonant", b =>
@@ -661,9 +747,16 @@ namespace EpochApp.Server.Migrations
                 {
                     b.Navigation("OwnedBlogs");
 
+                    b.Navigation("OwnedWorlds");
+
                     b.Navigation("Profile");
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Worlds.World", b =>
+                {
+                    b.Navigation("MetaData");
                 });
 #pragma warning restore 612, 618
         }

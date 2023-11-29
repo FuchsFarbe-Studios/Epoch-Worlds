@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EpochApp.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class BlogOwners : Migration
+    public partial class Lookups : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,24 +20,7 @@ namespace EpochApp.Server.Migrations
                 name: "Lookups");
 
             migrationBuilder.EnsureSchema(
-                name: "Config");
-
-            migrationBuilder.EnsureSchema(
                 name: "Users");
-
-            migrationBuilder.CreateTable(
-                name: "BlogTypes",
-                schema: "Blogs",
-                columns: table => new
-                {
-                    BlogTypeID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "longchar", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BlogTypes", x => x.BlogTypeID);
-                });
 
             migrationBuilder.CreateTable(
                 name: "lkArticleCategories",
@@ -51,6 +34,20 @@ namespace EpochApp.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_lkArticleCategories", x => x.CategoryID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "lkBlogTypes",
+                schema: "Blogs",
+                columns: table => new
+                {
+                    BlogTypeID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Jet:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "longchar", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_lkBlogTypes", x => x.BlogTypeID);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,6 +78,20 @@ namespace EpochApp.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "lkPostTypes",
+                schema: "Blogs",
+                columns: table => new
+                {
+                    PostTypeID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Jet:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "longchar", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_lkPostTypes", x => x.PostTypeID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "lkSocialMediae",
                 schema: "Lookups",
                 columns: table => new
@@ -94,20 +105,6 @@ namespace EpochApp.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_lkSocialMediae", x => x.SocialID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PostTypes",
-                schema: "Blogs",
-                columns: table => new
-                {
-                    PostTypeID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "longchar", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PostTypes", x => x.PostTypeID);
                 });
 
             migrationBuilder.CreateTable(
@@ -165,14 +162,14 @@ namespace EpochApp.Server.Migrations
                         name: "FK_Blogs_BlogTypes",
                         column: x => x.BlogTypeID,
                         principalSchema: "Blogs",
-                        principalTable: "BlogTypes",
+                        principalTable: "lkBlogTypes",
                         principalColumn: "BlogTypeID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MetaTemplates",
-                schema: "Config",
+                name: "lkMetaTemplates",
+                schema: "Lookups",
                 columns: table => new
                 {
                     TemplateID = table.Column<int>(type: "integer", nullable: false)
@@ -185,7 +182,7 @@ namespace EpochApp.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MetaTemplates", x => x.TemplateID);
+                    table.PrimaryKey("PK_lkMetaTemplates", x => x.TemplateID);
                     table.ForeignKey(
                         name: "FK_MetaTemplates_MetaCategories",
                         column: x => x.CategoryID,
@@ -259,18 +256,18 @@ namespace EpochApp.Server.Migrations
                 {
                     table.PrimaryKey("PK_Posts", x => x.PostID);
                     table.ForeignKey(
-                        name: "FK_Posts_PostTypes_PostTypeID",
-                        column: x => x.PostTypeID,
-                        principalSchema: "Blogs",
-                        principalTable: "PostTypes",
-                        principalColumn: "PostTypeID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Posts_Users_AuthorID",
                         column: x => x.AuthorID,
                         principalSchema: "Users",
                         principalTable: "Users",
                         principalColumn: "UserID");
+                    table.ForeignKey(
+                        name: "FK_Posts_lkPostTypes_PostTypeID",
+                        column: x => x.PostTypeID,
+                        principalSchema: "Blogs",
+                        principalTable: "lkPostTypes",
+                        principalColumn: "PostTypeID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -313,15 +310,41 @@ namespace EpochApp.Server.Migrations
                 {
                     table.PrimaryKey("PK_UserRoles", x => new { x.RoleID, x.UserID });
                     table.ForeignKey(
-                        name: "FK_UserRoles_Roles_RoleID",
+                        name: "FK_UserRoles_Roles",
                         column: x => x.RoleID,
                         principalSchema: "Users",
                         principalTable: "Roles",
                         principalColumn: "RoleID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoles_Users_UserID",
+                        name: "FK_UserRoles_Users",
                         column: x => x.UserID,
+                        principalSchema: "Users",
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Worlds",
+                schema: "Users",
+                columns: table => new
+                {
+                    WorldID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WorldName = table.Column<string>(type: "longchar", nullable: true),
+                    Pronunciation = table.Column<string>(type: "longchar", nullable: true),
+                    Description = table.Column<string>(type: "longchar", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime", nullable: false),
+                    DateModified = table.Column<DateTime>(type: "datetime", nullable: true),
+                    DateRemoved = table.Column<DateTime>(type: "datetime", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Worlds", x => x.WorldID);
+                    table.ForeignKey(
+                        name: "FK_Worlds_Users_OwnerID",
+                        column: x => x.OwnerID,
                         principalSchema: "Users",
                         principalTable: "Users",
                         principalColumn: "UserID",
@@ -399,32 +422,47 @@ namespace EpochApp.Server.Migrations
                 {
                     table.PrimaryKey("PK_UserSocials", x => new { x.SocialID, x.UserID });
                     table.ForeignKey(
-                        name: "FK_UserSocials_Profiles_UserID",
-                        column: x => x.UserID,
-                        principalSchema: "Users",
-                        principalTable: "Profiles",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserSocials_lkSocialMediae_SocialID",
+                        name: "FK_UserSocials_SocialMediae",
                         column: x => x.SocialID,
                         principalSchema: "Lookups",
                         principalTable: "lkSocialMediae",
                         principalColumn: "SocialID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserSocials_Users",
+                        column: x => x.UserID,
+                        principalSchema: "Users",
+                        principalTable: "Profiles",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                schema: "Blogs",
-                table: "BlogTypes",
-                columns: new[] { "BlogTypeID", "Description" },
-                values: new object[,]
+            migrationBuilder.CreateTable(
+                name: "WorldMetas",
+                schema: "Users",
+                columns: table => new
                 {
-                    { 1, "NEWS" },
-                    { 2, "UPDATES" },
-                    { 3, "EVENTS" },
-                    { 4, "FAQ" },
-                    { 5, "DOCUMENTATION" }
+                    WorldID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MetaID = table.Column<int>(type: "integer", nullable: false),
+                    Content = table.Column<string>(type: "longchar", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorldMetas", x => new { x.WorldID, x.MetaID });
+                    table.ForeignKey(
+                        name: "FK_WorldMetas_Worlds_WorldID",
+                        column: x => x.WorldID,
+                        principalSchema: "Users",
+                        principalTable: "Worlds",
+                        principalColumn: "WorldID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WorldMetas_lkMetaTemplates_MetaID",
+                        column: x => x.MetaID,
+                        principalSchema: "Lookups",
+                        principalTable: "lkMetaTemplates",
+                        principalColumn: "TemplateID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -437,6 +475,19 @@ namespace EpochApp.Server.Migrations
                     { 2, "ACTIVATED" },
                     { 3, "MODERATOR" },
                     { 4, "ADMIN" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "Blogs",
+                table: "lkBlogTypes",
+                columns: new[] { "BlogTypeID", "Description" },
+                values: new object[,]
+                {
+                    { 1, "NEWS" },
+                    { 2, "UPDATES" },
+                    { 3, "EVENTS" },
+                    { 4, "FAQ" },
+                    { 5, "DOCUMENTATION" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -458,9 +509,9 @@ namespace EpochApp.Server.Migrations
                 column: "BlogTypeID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MetaTemplates_CategoryID",
-                schema: "Config",
-                table: "MetaTemplates",
+                name: "IX_lkMetaTemplates_CategoryID",
+                schema: "Lookups",
+                table: "lkMetaTemplates",
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
@@ -486,6 +537,18 @@ namespace EpochApp.Server.Migrations
                 schema: "Users",
                 table: "UserSocials",
                 column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorldMetas_MetaID",
+                schema: "Users",
+                table: "WorldMetas",
+                column: "MetaID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Worlds_OwnerID",
+                schema: "Users",
+                table: "Worlds",
+                column: "OwnerID");
         }
 
         /// <inheritdoc />
@@ -512,15 +575,15 @@ namespace EpochApp.Server.Migrations
                 schema: "Lookups");
 
             migrationBuilder.DropTable(
-                name: "MetaTemplates",
-                schema: "Config");
-
-            migrationBuilder.DropTable(
                 name: "UserRoles",
                 schema: "Users");
 
             migrationBuilder.DropTable(
                 name: "UserSocials",
+                schema: "Users");
+
+            migrationBuilder.DropTable(
+                name: "WorldMetas",
                 schema: "Users");
 
             migrationBuilder.DropTable(
@@ -536,15 +599,7 @@ namespace EpochApp.Server.Migrations
                 schema: "Lookups");
 
             migrationBuilder.DropTable(
-                name: "lkMetaCategories",
-                schema: "Lookups");
-
-            migrationBuilder.DropTable(
                 name: "Roles",
-                schema: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Profiles",
                 schema: "Users");
 
             migrationBuilder.DropTable(
@@ -552,16 +607,32 @@ namespace EpochApp.Server.Migrations
                 schema: "Lookups");
 
             migrationBuilder.DropTable(
-                name: "BlogTypes",
+                name: "Profiles",
+                schema: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Worlds",
+                schema: "Users");
+
+            migrationBuilder.DropTable(
+                name: "lkMetaTemplates",
+                schema: "Lookups");
+
+            migrationBuilder.DropTable(
+                name: "lkBlogTypes",
                 schema: "Blogs");
 
             migrationBuilder.DropTable(
-                name: "PostTypes",
+                name: "lkPostTypes",
                 schema: "Blogs");
 
             migrationBuilder.DropTable(
                 name: "Users",
                 schema: "Users");
+
+            migrationBuilder.DropTable(
+                name: "lkMetaCategories",
+                schema: "Lookups");
         }
     }
 }
