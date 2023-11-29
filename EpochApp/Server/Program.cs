@@ -1,5 +1,6 @@
 using EntityFrameworkCore.Jet.Data;
 using EpochApp.Data;
+using EpochApp.Shared;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,24 +11,34 @@ namespace EpochApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var config = builder.Configuration;
 
             // Add services to the container.
 
             builder.Services.AddDbContext<EpochDataDbContext>(
                 options =>
                 {
-                    options.UseJet(@"Z:\Projects\EpochWorlds\EpochApp\Server\Data\EpochDataDb.accdb", DataAccessProviderType.OleDb);
+                    options.UseJetOleDb(config.GetConnectionString("UserConnection"));
                 });
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
             builder.Services.AddRazorPages();
+            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
+            app.UseStatusCodePages();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                app.UseSwagger();
+                app.UseSwaggerUI(
+                    c =>
+                    {
+                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Epoch World API V1");
+                    });
                 app.UseWebAssemblyDebugging();
+                app.UseDeveloperExceptionPage();
             }
             else
             {

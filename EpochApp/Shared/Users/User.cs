@@ -15,6 +15,7 @@ namespace EpochApp.Shared
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public int Age { get => (int)((DateTime.Now - DateOfBirth).TotalDays / 365); set => _age = value; }
 
