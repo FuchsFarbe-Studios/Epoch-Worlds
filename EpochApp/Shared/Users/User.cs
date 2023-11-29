@@ -17,6 +17,8 @@ namespace EpochApp.Shared
         public DateTime DateOfBirth { get; set; }
         public string PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public string NormalizedUserName { get => UserName.ToUpper(); }
+        public string NormalizedEmailName { get => Email.ToUpper(); }
 
         public ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
     }

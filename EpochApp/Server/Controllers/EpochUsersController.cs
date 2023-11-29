@@ -134,7 +134,7 @@ namespace EpochApp.Server
         [HttpPost("Registration")]
         public async Task<IActionResult> Register(RegistrationDTO registration)
         {
-            var user = new User { UserID = Guid.NewGuid(), UserName = registration.UserName, Email = registration.Email, DateOfBirth = registration.DateOfBirth };
+            var user = new User { UserID = Guid.NewGuid(), UserName = registration.UserName, Email = registration.Email, DateOfBirth = registration.DateOfBirth.Value };
             var hash = HashPasword(registration.Password, out var salt);
             user.PasswordHash = hash;
             user.PasswordSalt = salt;

@@ -1,6 +1,19 @@
 @page "/Auth/Logout"
+@using EpochApp.Client.Services
 <PageTitle>Log-Out</PageTitle>
 
 @code {
+    [Inject] public NavigationManager NavigationManager { get; set; }
+    [Inject] public EpochAuthProvider _auth { get; set; }
+    [Inject] public ILogger<Logout> _logger { get; set; }
+
+    /// <inheritdoc />
+    protected override async Task OnInitializedAsync()
+    {
+        _auth.Logout();
+        _logger.LogInformation($"User: {_auth.CurrentUser.UserName} logged out.");
+        NavigationManager.NavigateTo("/");
+        await base.OnInitializedAsync();
+    }
 
 }

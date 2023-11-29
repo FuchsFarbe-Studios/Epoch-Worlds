@@ -22,6 +22,7 @@ namespace EpochApp.Shared
         {
             var claims = new List<Claim>
                          {
+                             new Claim(ClaimTypes.NameIdentifier, UserID.ToString()),
                              new Claim(ClaimTypes.Name, UserName),
                              new Claim(ClaimTypes.Email, Email),
                              new Claim(ClaimTypes.Hash, Hash),

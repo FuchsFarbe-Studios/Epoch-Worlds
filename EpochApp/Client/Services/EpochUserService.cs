@@ -57,7 +57,7 @@ namespace EpochApp.Client.Services
             if (tokenHandler.CanReadToken(token))
             {
                 var jwtSecurityToken = tokenHandler.ReadJwtToken(token);
-                identity = new(jwtSecurityToken.Claims, "Blazor School");
+                identity = new(jwtSecurityToken.Claims, "jwt");
             }
 
             return new(identity);

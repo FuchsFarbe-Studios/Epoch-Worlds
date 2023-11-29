@@ -13,11 +13,13 @@ namespace EpochApp.Client.Services
     public class EpochAuthProvider : AuthenticationStateProvider, IDisposable
     {
         private readonly EpochUserService _userService;
+        private readonly ILogger<EpochAuthProvider> _logger;
         public UserData CurrentUser { get; private set; } = new UserData();
 
-        public EpochAuthProvider(EpochUserService userService)
+        public EpochAuthProvider(EpochUserService userService, ILogger<EpochAuthProvider> logger)
         {
             _userService = userService;
+            _logger = logger;
             AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
         }
 
@@ -61,11 +63,13 @@ namespace EpochApp.Client.Services
             }
 
             CurrentUser = user;
+            _logger.LogInformation($"User: {CurrentUser.UserName} logged in.");
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
         }
 
         public void Logout()
         {
+            _logger.LogInformation($"User: {CurrentUser.UserName} logged out.");
             _userService.ClearBrowserUserData();
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new())));
         }

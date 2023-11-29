@@ -12,7 +12,7 @@ namespace EpochApp.Shared
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Password2 { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public bool TermAgreement { get; set; } = false;
     }
 }
