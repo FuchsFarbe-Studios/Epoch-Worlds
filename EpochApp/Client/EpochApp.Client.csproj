@@ -22,4 +22,9 @@
     <ProjectReference Include="..\Shared\EpochApp.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Authoring\Epoch\" />
+    <Folder Include="Pages\Authoring\Worlds\" />
+  </ItemGroup>
+
 </Project>

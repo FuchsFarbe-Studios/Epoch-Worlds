@@ -4,7 +4,7 @@
     <option name="keyValueStorage">
       <map>
         <entry key="Common:buildConfiguration" value="Debug" />
-        <entry key="Common:f2340ac5-3df2-471d-ab17-241e4acf54ab:dbContext" value="EpochApp.Data.EpochConfigDbContext" />
+        <entry key="Common:f2340ac5-3df2-471d-ab17-241e4acf54ab:dbContext" value="EpochApp.Server.Data.EpochDataDbContext" />
         <entry key="Common:noBuild" value="false" />
         <entry key="Common:outputFolder" value="Migrations\Config" />
         <entry key="Common:targetFramework" value="net6.0" />

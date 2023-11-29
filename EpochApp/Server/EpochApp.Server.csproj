@@ -32,9 +32,5 @@
     <ProjectReference Include="..\Shared\EpochApp.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\Lookups\" />
-  </ItemGroup>
-
 
 </Project>
