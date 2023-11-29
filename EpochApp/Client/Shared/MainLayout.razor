@@ -1,68 +1,46 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
-<MudDialogProvider/>
-<MudSnackbarProvider/>
+@* <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" /> *@
+@* <MudDialogProvider /> *@
+@* <MudSnackbarProvider /> *@
+<Layout>
+    <HeaderContent>
+        <EpochNavBar>
+            <EpochNavLink Link="/">Home</EpochNavLink>
+            <EpochNavLink Link="/" Match="NavLinkMatch.All">Home</EpochNavLink>
+            <EpochNavLink Link="/Features" Match="NavLinkMatch.All">Features</EpochNavLink>
+            <EpochNavLink Link="/Community" Match="NavLinkMatch.All">Community</EpochNavLink>
+            <EpochNavLink Link="/Support" Match="NavLinkMatch.All">Support</EpochNavLink>
+            <EpochNavLink Link="/About" Match="NavLinkMatch.All">About</EpochNavLink>
+            <AuthorizeView>
+                <Authorized>
+                    <EpochNavLink Link="/User/Profile">Profile</EpochNavLink>
+                    <EpochNavLink Link="/Auth/Logout">Logout</EpochNavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <EpochNavLink Link="/Auth/Register">Create Account</EpochNavLink>
+                    <EpochNavLink Link="/Auth/Login">Login</EpochNavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </EpochNavBar>
+    </HeaderContent>
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
-        <MudSpacer/>
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/>
-    </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h5" Class="mt-1">Application</MudText>
-        </MudDrawerHeader>
-        <NavMenu/>
-    </MudDrawer>
-    <MudMainContent>
-        @Body
-    </MudMainContent>
-</MudLayout>
+    <LayoutContent>
+        <MainContent Width="ContainerWidthType.Xxl">
+            @Body
+        </MainContent>
+    </LayoutContent>
+    <FooterContent>
+        <div class="flex-center">
+            <h3>Footer Content</h3>
+        </div>
+    </FooterContent>
+</Layout>
 
 @code {
 
-    // MudTheme MyCustomTheme =
-    //     new MudTheme()
-    //     {
-    //         Palette = new PaletteLight()
-    //                   {
-    //                       Primary = Colors.Blue.Default,
-    //                       Secondary = Colors.Green.Accent4,
-    //                       AppbarBackground = Colors.Red.Default,
-    //                   },
-    //         PaletteDark = new PaletteDark()
-    //                       {
-    //                           Primary = Colors.Blue.Lighten1
-    //                       },
-    //         LayoutProperties = new LayoutProperties()
-    //                            {
-    //                                DrawerWidthLeft = "260px",
-    //                                DrawerWidthRight = "300px"
-    //                            }
-    //     };
-
     bool _drawerOpen = true;
     private bool _isDarkMode;
-    private MudThemeProvider _mudThemeProvider;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
-            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
-            StateHasChanged();
-            StateHasChanged();
-        }
-    }
-
-    private async Task OnSystemPreferenceChanged(bool newValue)
-    {
-        _isDarkMode = newValue;
-        StateHasChanged();
-    }
 
     private void DrawerToggle()
     {

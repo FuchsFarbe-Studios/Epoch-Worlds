@@ -1,0 +1,9 @@
+@using EpochComponents.Enums
+<article class=@($"container-{Width.ToString().ToLower()}")>
+    @ChildContent
+</article>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public ContainerWidthType Width { get; set; } = ContainerWidthType.Lg;
+}

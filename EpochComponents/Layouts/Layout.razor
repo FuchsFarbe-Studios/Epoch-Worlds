@@ -1,0 +1,15 @@
+<header>
+    @HeaderContent
+</header>
+<section>
+    @LayoutContent
+</section>
+<footer>
+    @FooterContent
+</footer>
+
+@code {
+    [Parameter] public RenderFragment HeaderContent { get; set; }
+    [Parameter] public RenderFragment LayoutContent { get; set; }
+    [Parameter] public RenderFragment FooterContent { get; set; }
+}
