@@ -40,6 +40,9 @@ namespace EpochApp.Shared
             var roles = principal.FindAll(ClaimTypes.Role).Select(c => c.Value.ToString()).ToList();
             return new UserData()
                    {
+                       UserID = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value != null
+                                        ? Guid.Parse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value)
+                                        : Guid.Empty,
                        UserName = principal.FindFirst(ClaimTypes.Name)?.Value ?? "",
                        Email = principal.FindFirst(ClaimTypes.Email)?.Value ?? "",
                        Hash = principal.FindFirst(ClaimTypes.Hash)?.Value ?? "",

@@ -1,19 +1,15 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using EpochApp.Server.Data;
+using EpochApp.Shared;
+using EpochApp.Shared.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EpochApp.Data;
-using EpochApp.Shared;
 using Microsoft.IdentityModel.Tokens;
 
-namespace EpochApp.Server
+namespace EpochApp.Server.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
@@ -131,14 +127,30 @@ namespace EpochApp.Server
             return Ok(jwt);
         }
 
+
         [HttpPost("Registration")]
         public async Task<IActionResult> Register(RegistrationDTO registration)
         {
-            var user = new User { UserID = Guid.NewGuid(), UserName = registration.UserName, Email = registration.Email, DateOfBirth = registration.DateOfBirth.Value };
+            // check if user already exists based on username or email
+            var isUserAlreadyExists = await _context.Users.AnyAsync(u => u.UserName == registration.UserName || u.Email == registration.Email);
+            if (isUserAlreadyExists)
+            {
+                ModelState.AddModelError("UserName", "Username or Email already exists");
+                ModelState.AddModelError("Email", "Username or Email already exists");
+                return BadRequest(ModelState);
+            }
+
+            var user = new User
+                       {
+                           UserID = Guid.NewGuid(), UserName = registration.UserName, Email = registration.Email, DateOfBirth = registration.DateOfBirth.Value
+                       };
+
             var hash = HashPasword(registration.Password, out var salt);
             user.PasswordHash = hash;
             user.PasswordSalt = salt;
             user.UserRoles.Add(new UserRole { DateAssigned = DateTime.Today, User = user, Role = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 1) });
+            user.Profile = new Profile();
+            user.DateCreated = DateTime.Now;
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -149,7 +161,7 @@ namespace EpochApp.Server
                            Hash = user.PasswordHash,
                            Email = user.Email,
                            DateOfBirth = user.DateOfBirth,
-                           Roles = user.UserRoles.Select(ur => ur.Role.Description).ToList()
+                           Roles = user.UserRoles.Select(ur => ur.Role.Description).ToList(),
                        };
 
             return CreatedAtAction("GetUser", new { id = user.UserID }, data);

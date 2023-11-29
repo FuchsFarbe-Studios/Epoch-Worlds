@@ -1,10 +1,7 @@
-using EntityFrameworkCore.Jet.Data;
-using EpochApp.Data;
-using EpochApp.Shared;
-using Microsoft.AspNetCore.ResponseCompression;
+using EpochApp.Server.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace EpochApp
+namespace EpochApp.Server
 {
     public class Program
     {
@@ -14,13 +11,11 @@ namespace EpochApp
             var config = builder.Configuration;
 
             // Add services to the container.
-
             builder.Services.AddDbContext<EpochDataDbContext>(
                 options =>
                 {
                     options.UseJetOleDb(config.GetConnectionString("UserConnection"));
                 });
-
             builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
             builder.Services.AddRazorPages();
             builder.Services.AddSwaggerGen();
