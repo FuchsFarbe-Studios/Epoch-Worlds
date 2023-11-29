@@ -6,8 +6,12 @@
 
 namespace EpochApp.Shared
 {
-    public class Utils
+    public static class Utils
     {
-        
+        public static class Auth
+        {
+            public const string LoginNav = "/Auth/Login";
+            public const string LogoutNav = "/Auth/Logout";
+        }
     }
 }

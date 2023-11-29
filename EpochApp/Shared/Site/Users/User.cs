@@ -26,7 +26,7 @@ namespace EpochApp.Shared.Users
         public DateTime? DateModified { get; set; }
         public DateTime? DateRemoved { get; set; }
         public string NormalizedUserName { get => UserName.ToUpper(); }
-        public string NormalizedEmailName { get => Email.ToUpper(); }
+        public string NormalizedEmail { get => Email.ToUpper(); }
 
         public virtual Profile Profile { get; set; }
 
