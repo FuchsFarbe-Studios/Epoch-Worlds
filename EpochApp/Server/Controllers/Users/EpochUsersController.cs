@@ -106,12 +106,15 @@ namespace EpochApp.Server.Controllers
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == authentication.UserName);
             if (user is null)
             {
-                return NotFound();
+                ModelState.AddModelError(nameof(LoginDTO.UserName), "Username or Password is incorrect");
+                ModelState.AddModelError(nameof(LoginDTO.Password), "Username or Password is incorrect");
+                return BadRequest(ModelState);
             }
 
             if (!VerifyPassword(authentication.Password, user.PasswordHash, user.PasswordSalt))
             {
-                return Unauthorized();
+                ModelState.AddModelError(nameof(LoginDTO.UserName), "Unauthorized!");
+                return BadRequest(ModelState);
             }
 
             var data = new UserData

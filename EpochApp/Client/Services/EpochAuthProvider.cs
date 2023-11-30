@@ -47,9 +47,7 @@ namespace EpochApp.Client.Services
         {
             var authState = await task;
             if (authState is not null)
-            {
                 CurrentUser = UserData.FromClaimsPrincipal(authState.User);
-            }
         }
 
         public async Task LoginAsync(string username, string password)
@@ -57,11 +55,13 @@ namespace EpochApp.Client.Services
             var principal = new ClaimsPrincipal();
             var user = await _userService.SendAuthenticateRequestAsync(username, password);
 
-            if (user is not null)
+            if (user is null)
             {
-                principal = user.ToClaimsPrincipal();
+                NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
+                CurrentUser = null;
+                return;
             }
-
+            principal = user.ToClaimsPrincipal();
             CurrentUser = user;
             _logger.LogInformation($"User: {CurrentUser.UserName} logged in.");
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));

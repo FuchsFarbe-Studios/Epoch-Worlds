@@ -23,11 +23,18 @@
 
 	public void DisplayErrors(Dictionary<string, List<string>> errors)
 	{
-		foreach (KeyValuePair<string,List<string>> err in errors)
+		if (Context is not null)
 		{
-			_store.Add(Context.Field(err.Key), err.Value);
+			foreach (KeyValuePair<string,List<string>> err in errors)
+				_store.Add(Context.Field(err.Key), err.Value);
+			Context.NotifyValidationStateChanged();
 		}
-		Context.NotifyValidationStateChanged();
+	}
+
+	public void ClearErrors()
+	{
+		_store?.Clear();
+		Context?.NotifyValidationStateChanged();
 	}
 
 }

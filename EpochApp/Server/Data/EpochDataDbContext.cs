@@ -57,15 +57,12 @@ namespace EpochApp.Server.Data
             modelBuilder.HasDefaultSchema("Users");
             modelBuilder.Entity<User>(user =>
             {
-                user.Property(x=>x.UserID).HasDefaultValueSql("NEWID()");
                 user.Property(p => p.UserName)
                     .HasMaxLength(64);
                 user.Property(p => p.Email)
                     .HasMaxLength(128);
-                user.Property(p=>p.NormalizedUserName)
-                    .HasComputedColumnSql("UPPER(UserName)");
-                user.Property(p=>p.NormalizedEmail)
-                    .HasComputedColumnSql("UPPER(Email)");
+                user.Ignore(x => x.NormalizedUserName);
+                user.Ignore(x => x.NormalizedEmail);
                 user.HasMany(u => u.OwnedWorlds)
                     .WithOne(w => w.Owner)
                     .HasForeignKey(w => w.OwnerID)
@@ -274,7 +271,6 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("Posts", "Blogs");
                 entity.HasKey(e => e.PostID);
-                entity.Property(x=>x.PostID).HasDefaultValueSql("NEWID()");
                 entity.HasOne(p => p.Author)
                       .WithMany()// replace with .WithMany(u => u.Posts) if User class have collection of posts
                       .HasForeignKey(p => p.AuthorID)
@@ -312,7 +308,6 @@ namespace EpochApp.Server.Data
             modelBuilder.Entity<World>(entity =>
             {
                 entity.HasKey(e => e.WorldID);
-                entity.Property(x=>x.WorldID).HasDefaultValueSql("NEWID()");
                 entity.HasMany(w => w.MetaData)
                       .WithOne(m => m.World)
                       .HasForeignKey(m => m.WorldID);

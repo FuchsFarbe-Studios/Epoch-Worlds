@@ -227,14 +227,15 @@ namespace EpochApp.Server.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("HelpText")
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Placeholder")
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("TemplateName")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("Name");
@@ -251,6 +252,8 @@ namespace EpochApp.Server.Migrations
                     b.Property<int>("CategoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
+                        .HasAnnotation("Jet:IdentityIncrement", 4)
+                        .HasAnnotation("Jet:IdentitySeed", 3)
                         .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
@@ -278,6 +281,43 @@ namespace EpochApp.Server.Migrations
                     b.HasKey("CategoryID");
 
                     b.ToTable("lkMetaCategories", "Lookups");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryID = 1,
+                            Description = "Goals"
+                        },
+                        new
+                        {
+                            CategoryID = 2,
+                            Description = "Theme"
+                        },
+                        new
+                        {
+                            CategoryID = 3,
+                            Description = "Focus"
+                        },
+                        new
+                        {
+                            CategoryID = 4,
+                            Description = "Setting"
+                        },
+                        new
+                        {
+                            CategoryID = 5,
+                            Description = "Residents"
+                        },
+                        new
+                        {
+                            CategoryID = 6,
+                            Description = "Conflict"
+                        },
+                        new
+                        {
+                            CategoryID = 7,
+                            Description = "Inspiration"
+                        });
                 });
 
             modelBuilder.Entity("EpochApp.Shared.Lookups.SocialMedia", b =>
@@ -285,6 +325,8 @@ namespace EpochApp.Server.Migrations
                     b.Property<int>("SocialID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
+                        .HasAnnotation("Jet:IdentityIncrement", 12)
+                        .HasAnnotation("Jet:IdentitySeed", 12)
                         .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Icon")
@@ -392,7 +434,8 @@ namespace EpochApp.Server.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longchar");
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("longchar");
@@ -480,6 +523,28 @@ namespace EpochApp.Server.Migrations
                     b.HasIndex("OwnerID");
 
                     b.ToTable("Worlds", "Users");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Worlds.WorldDate", b =>
+                {
+                    b.Property<Guid>("WorldID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CurrentAge")
+                        .HasColumnType("longchar");
+
+                    b.Property<int>("CurrentDay")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CurrentMonth")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CurrentYear")
+                        .HasColumnType("integer");
+
+                    b.HasKey("WorldID");
+
+                    b.ToTable("WorldDate", "Users");
                 });
 
             modelBuilder.Entity("EpochApp.Shared.Worlds.WorldMeta", b =>
@@ -594,7 +659,8 @@ namespace EpochApp.Server.Migrations
                 {
                     b.HasOne("EpochApp.Shared.Users.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorID")
+                        .HasConstraintName("FK_Posts_Users");
 
                     b.HasOne("EpochApp.Shared.Blog.PostType", "PostType")
                         .WithMany()
@@ -679,9 +745,22 @@ namespace EpochApp.Server.Migrations
                         .WithMany("OwnedWorlds")
                         .HasForeignKey("OwnerID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Worlds_Users");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Worlds.WorldDate", b =>
+                {
+                    b.HasOne("EpochApp.Shared.Worlds.World", "World")
+                        .WithOne("CurrentWorldDate")
+                        .HasForeignKey("EpochApp.Shared.Worlds.WorldDate", "WorldID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_WorldDates_Worlds");
+
+                    b.Navigation("World");
                 });
 
             modelBuilder.Entity("EpochApp.Shared.Worlds.WorldMeta", b =>
@@ -690,7 +769,8 @@ namespace EpochApp.Server.Migrations
                         .WithMany()
                         .HasForeignKey("MetaID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_WorldMetas_MetaTemplates");
 
                     b.HasOne("EpochApp.Shared.Worlds.World", "World")
                         .WithMany("MetaData")
@@ -756,6 +836,8 @@ namespace EpochApp.Server.Migrations
 
             modelBuilder.Entity("EpochApp.Shared.Worlds.World", b =>
                 {
+                    b.Navigation("CurrentWorldDate");
+
                     b.Navigation("MetaData");
                 });
 #pragma warning restore 612, 618

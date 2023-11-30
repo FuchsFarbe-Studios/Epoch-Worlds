@@ -1,5 +1,7 @@
 using EpochApp.Server.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace EpochApp.Server
 {
@@ -11,12 +13,17 @@ namespace EpochApp.Server
             var config = builder.Configuration;
 
             // Add services to the container.
+            builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true)
+                   .AddJsonOptions(x=>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+                   .ConfigureApiBehaviorOptions(options =>
+                   {
+                       options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState);
+                   });
             builder.Services.AddDbContext<EpochDataDbContext>(
                 options =>
                 {
                     options.UseJetOleDb(config.GetConnectionString("UserConnection"));
                 });
-            builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
             builder.Services.AddRazorPages();
             builder.Services.AddSwaggerGen();
 
