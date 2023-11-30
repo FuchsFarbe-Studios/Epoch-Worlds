@@ -4,33 +4,32 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Shared.Users;
+using EpochApp.Shared.Config;
 
-namespace EpochApp.Shared.Blog
+namespace EpochApp.Shared;
+
+public class Blog
 {
-    public class Blog
-    {
-        public Blog()
-        {
-            BlogPosts = new HashSet<BlogPost>();
-        }
-        public int BlogTypeID { get; set; }
-        public int BlogID { get; set; }
+	public Blog()
+	{
+		BlogPosts = new HashSet<BlogPost>();
+	}
+	public int BlogTypeID { get; set; }
+	public int BlogID { get; set; }
 
-        public string Name { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime ModifiedOn { get; set; }
-        public string ModifiedBy { get; set; }
-        public BlogTypeInfo Type => GetBlogType(BlogTypeID);
+	public string Name { get; set; }
+	public DateTime CreatedOn { get; set; }
+	public string CreatedBy { get; set; }
+	public DateTime ModifiedOn { get; set; }
+	public string ModifiedBy { get; set; }
+	public BlogTypeInfo Type => GetBlogType(BlogTypeID);
 
-        public virtual BlogType BlogType { get; set; }
-        public ICollection<BlogPost> BlogPosts { get; set; }
-        public ICollection<BlogOwner> BlogOwners { get; set; }
+	public virtual BlogType BlogType { get; set; }
+	public ICollection<BlogPost> BlogPosts { get; set; }
+	public ICollection<BlogOwner> BlogOwners { get; set; }
 
-        public static BlogTypeInfo GetBlogType(int blogTypeID)
-        {
-            return (BlogTypeInfo)blogTypeID;
-        }
-    }
+	public static BlogTypeInfo GetBlogType(int blogTypeID)
+	{
+		return (BlogTypeInfo)blogTypeID;
+	}
 }

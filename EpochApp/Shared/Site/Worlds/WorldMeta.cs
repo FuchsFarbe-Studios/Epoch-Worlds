@@ -3,6 +3,12 @@
 // FuchsFarbe Studios 2023
 // Oliver MacDougall
 // Modified: 29-11-2023
+
+// EpochWorlds
+// WorldMeta.cs
+// FuchsFarbe Studios 2023
+// Oliver MacDougall
+// Modified: 29-11-2023
 using EpochApp.Shared.Config;
 
 namespace EpochApp.Shared.Worlds

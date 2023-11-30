@@ -1,16 +1,8 @@
 @page "/Auth/Register"
-@using EpochApp.Client.Services
 @using EpochApp.Shared
-<PageTitle>Registration</PageTitle>
-<MudText Typo="Typo.h1">Create an Account</MudText>
+<PageTitle>@StaticUtils.Constants.AppName - Registration</PageTitle>
 
 <EditForm Model="@_registration" OnValidSubmit="@(async () => await AttemptRegistrationAsync())">
-    <DataAnnotationsValidator />
-    <MudTextField Label="User Name" @bind-Value="@_registration.UserName"/>
-    <MudTextField Label="Email" @bind-Value="@_registration.Email"/>
-    <MudTextField InputType="InputType.Password" Label="Password" @bind-Value="@_registration.Password"/>
-    <MudTextField InputType="InputType.Password" Label="Confirm Password" @bind-Value="@_registration.Password2"/>
-    <MudDatePicker T="DateTime?" Label="Date of Birth" @bind-Date="@_registration.DateOfBirth"/>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Register</MudButton>
+    <DataAnnotationsValidator />    
 </EditForm>
 

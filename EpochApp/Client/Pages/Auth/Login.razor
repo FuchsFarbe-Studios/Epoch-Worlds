@@ -1,32 +1,9 @@
-@page "/Auth/Login"
 @using EpochApp.Shared
-@using EpochApp.Client.Services
+@using EpochApp.Client.Kit.Auth
+@page "/Auth/Login"
+<PageTitle>@StaticUtils.Constants.AppName - Log In</PageTitle>
 
-<PageTitle>Log-In</PageTitle>
 <EpochTypo Typo="EpochTypoType.H1">Login</EpochTypo>
-<hr />
-<EditForm OnSubmit="@(async (e) => await AttemptLoginAsync(e))" Model="@_login">
-    <DataAnnotationsValidator />
-    <ServerSideValidator @ref="@_validator" />
+<EpochTypo Typo="EpochTypoType.H4">Sign in to your @StaticUtils.Constants.CompanyName account!</EpochTypo>
 
-    <EpochField For="@(() => _login.UserName)" Floating="false" Required="true" Label="Username" @bind-Value="@_login.UserName" InputType="InputType.Text" />
-    <EpochField For="@(() => _login.Password)" Floating="true" Required="true" Label="Password" @bind-Value="@_login.Password" InputType="@InputType.Password">
-        <button class="show-password-button" aria-label="Show password" type="button"></button>
-    </EpochField>
-    <EpochButton Disabled="@_loggingIn" Type="ButtonType.Submit">Login</EpochButton>
-    <hr />
-    <EpochContainer Flex="FlexType.None">
-        @foreach (var error in _errors)
-        {
-            <div class="flex-column-center">
-                <EpochTypo Typo="EpochTypoType.Mono">
-                    <span><b>@error.Key</b>: </span>
-                    @foreach (var message in error.Value)
-                    {
-                        <em>@message</em>
-                    }
-                </EpochTypo>
-            </div>
-        }
-    </EpochContainer>
-</EditForm>
+<LoginKit />

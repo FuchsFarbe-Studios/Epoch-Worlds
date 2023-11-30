@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EpochApp.Server.Data;
-using EpochApp.Shared.Blog;
+using EpochApp.Shared;
 
 namespace EpochApp.Server.Controllers
 {

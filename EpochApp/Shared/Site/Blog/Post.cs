@@ -4,9 +4,10 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using EpochApp.Shared.Config;
 using EpochApp.Shared.Users;
 
-namespace EpochApp.Shared.Blog
+namespace EpochApp.Shared
 {
     public class Post
     {
@@ -16,14 +17,14 @@ namespace EpochApp.Shared.Blog
 
         public string Title { get; set; }
         public string Content { get; set; }
-        public string? Href { get; set; }
-        public string? OutsideLink { get; set; }
+        public string Href { get; set; }
+        public string OutsideLink { get; set; }
         public DateTime PostedOn { get; set; }
         public DateTime? ModifiedOn { get; set; }
-        public string? ModifiedBy { get; set; }
+        public string ModifiedBy { get; set; }
 
         public PostType PostType { get; set; }
-        public User? Author { get; set; }
+        public User Author { get; set; }
         public ICollection<BlogPost> BlogPosts { get; set; }
     }
 }

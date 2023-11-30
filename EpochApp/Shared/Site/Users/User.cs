@@ -4,7 +4,6 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Shared.Blog;
 using EpochApp.Shared.Worlds;
 
 namespace EpochApp.Shared.Users

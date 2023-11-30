@@ -24,34 +24,3 @@
     }
 </div>
 
-@code {
-    [Parameter] public Expression<Func<string>> For { get; set; }
-    [Parameter] public string Label { get; set; }
-    [Parameter] public bool Inline { get; set; } = true;
-    [Parameter] public bool Floating { get; set; } = false;
-    [Parameter] public bool Required { get; set; } = false;
-    [Parameter] public InputType InputType { get; set; } = InputType.Text;
-    [Parameter] public string Placeholder { get; set; }
-    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
-
-
-    protected override void OnParametersSet()
-    {
-        var attributes = new Dictionary<string, object>();
-        if (!string.IsNullOrEmpty(Placeholder))
-            attributes.TryAdd("placeholder", Placeholder);
-        if (Required)
-            attributes.TryAdd("required", Required);
-        attributes.TryAdd("type", InputType.ToDescriptionString());
-        AdditionalAttributes = attributes;
-        base.OnParametersSet();
-    }
-    /// <inheritdoc />
-    protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
-    {
-        result = value;
-        validationErrorMessage = null;
-        return true;
-    }
-
-}

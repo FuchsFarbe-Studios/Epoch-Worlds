@@ -6,7 +6,6 @@
 
 using EpochApp.Client.Services;
 using EpochApp.Shared;
-
 using Microsoft.AspNetCore.Components;
 
 using System.Net.Http.Json;

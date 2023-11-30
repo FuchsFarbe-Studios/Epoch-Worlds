@@ -1,5 +1,6 @@
-﻿@using Microsoft.AspNetCore.Authorization
-<EpochNavBar>
+﻿@using EpochApp.Shared
+@using Microsoft.AspNetCore.Authorization
+<EpochNavBar BrandHref="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="true" Color="ColorStyle.Orange">
 	<NavLeft>
 		<EpochNavLink Link="/" Match="NavLinkMatch.All">Home</EpochNavLink>
 		<EpochNavLink Link="/Features" Match="NavLinkMatch.All">Features</EpochNavLink>
@@ -25,3 +26,5 @@
 	</NavRight>
 
 </EpochNavBar>
+
+				

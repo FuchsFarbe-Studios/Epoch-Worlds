@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,11 +17,19 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
-  </ItemGroup>
+  </ItemGroup>	
 
   <ItemGroup>
     <ProjectReference Include="..\..\EpochComponents\EpochComponents.csproj" />
     <ProjectReference Include="..\Shared\EpochApp.Shared.csproj" />
+  </ItemGroup>	
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Community\Community.razor" />
+  </ItemGroup>	
+
+  <ItemGroup>
+    <AdditionalFiles Include="Pages\Site\Community\Community.razor" />
   </ItemGroup>
 
 </Project>

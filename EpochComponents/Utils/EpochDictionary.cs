@@ -9,26 +9,26 @@ namespace EpochComponents.Utils
 {
     public static class EpochDictionary
     {
-        public static readonly Dictionary<EpochColor, string> ColorDictionary = new Dictionary<EpochColor, string>()
+        public static readonly Dictionary<ColorStyle, string> ColorDictionary = new Dictionary<ColorStyle, string>()
         {
-            { EpochColor.Blue, "style-blue" },
-            { EpochColor.Green, "style-green" },
-            { EpochColor.Yellow, "style-yellow" },
-            { EpochColor.Orange, "style-orange" },
-            { EpochColor.Red, "style-red" },
-            { EpochColor.Pink, "style-pink" },
-            { EpochColor.Purple, "style-purple" },
-            { EpochColor.Light, "style-light" },
-            { EpochColor.Dark, "style-dark" },
-            { EpochColor.LightLight, "style-light-light" },
-            { EpochColor.LightDark, "style-dark-light" },
-            { EpochColor.LightBlue, "style-blue-light" },
-            { EpochColor.LightGreen, "style-green-light" },
-            { EpochColor.LightYellow, "style-yellow-light" },
-            { EpochColor.LightOrange, "style-orange-light" },
-            { EpochColor.LightRed, "style-red-light" },
-            { EpochColor.LightPink, "style-pink-light" },
-            { EpochColor.LightPurple, "style-purple-light" },
+            { ColorStyle.Blue, "style-blue" },
+            { ColorStyle.Green, "style-green" },
+            { ColorStyle.Yellow, "style-yellow" },
+            { ColorStyle.Orange, "style-orange" },
+            { ColorStyle.Red, "style-red" },
+            { ColorStyle.Pink, "style-pink" },
+            { ColorStyle.Purple, "style-purple" },
+            { ColorStyle.Light, "style-light" },
+            { ColorStyle.Dark, "style-dark" },
+            { ColorStyle.LightLight, "style-light-light" },
+            { ColorStyle.LightDark, "style-dark-light" },
+            { ColorStyle.LightBlue, "style-blue-light" },
+            { ColorStyle.LightGreen, "style-green-light" },
+            { ColorStyle.LightYellow, "style-yellow-light" },
+            { ColorStyle.LightOrange, "style-orange-light" },
+            { ColorStyle.LightRed, "style-red-light" },
+            { ColorStyle.LightPink, "style-pink-light" },
+            { ColorStyle.LightPurple, "style-purple-light" },
         };
 
         public static readonly Dictionary<EpochTypoType, string> TypoDictionary = new Dictionary<EpochTypoType, string>()
@@ -44,26 +44,26 @@ namespace EpochComponents.Utils
           {EpochTypoType.Mono, "text-xs"},
         };
 
-        public static readonly Dictionary<EpochColor, string> TextColorDictionary = new Dictionary<EpochColor, string>()
+        public static readonly Dictionary<ColorStyle, string> TextColorDictionary = new Dictionary<ColorStyle, string>()
         {
-            { EpochColor.Blue, "color-blue" },
-            { EpochColor.Green, "color-green" },
-            { EpochColor.Yellow, "color-yellow" },
-            { EpochColor.Orange, "color-orange" },
-            { EpochColor.Red, "color-red" },
-            { EpochColor.Pink, "color-pink" },
-            { EpochColor.Purple, "color-purple" },
-            { EpochColor.Light, "color-light" },
-            { EpochColor.Dark, "color-dark" },
-            { EpochColor.LightLight, "color-light-light" },
-            { EpochColor.LightDark, "color-dark-light" },
-            { EpochColor.LightBlue, "color-blue-light" },
-            { EpochColor.LightGreen, "color-green-light" },
-            { EpochColor.LightYellow, "color-yellow-light" },
-            { EpochColor.LightOrange, "color-orange-light" },
-            { EpochColor.LightRed, "color-red-light" },
-            { EpochColor.LightPink, "color-pink-light" },
-            { EpochColor.LightPurple, "color-purple-light" },
+            { ColorStyle.Blue, "color-blue" },
+            { ColorStyle.Green, "color-green" },
+            { ColorStyle.Yellow, "color-yellow" },
+            { ColorStyle.Orange, "color-orange" },
+            { ColorStyle.Red, "color-red" },
+            { ColorStyle.Pink, "color-pink" },
+            { ColorStyle.Purple, "color-purple" },
+            { ColorStyle.Light, "color-light" },
+            { ColorStyle.Dark, "color-dark" },
+            { ColorStyle.LightLight, "color-light-light" },
+            { ColorStyle.LightDark, "color-dark-light" },
+            { ColorStyle.LightBlue, "color-blue-light" },
+            { ColorStyle.LightGreen, "color-green-light" },
+            { ColorStyle.LightYellow, "color-yellow-light" },
+            { ColorStyle.LightOrange, "color-orange-light" },
+            { ColorStyle.LightRed, "color-red-light" },
+            { ColorStyle.LightPink, "color-pink-light" },
+            { ColorStyle.LightPurple, "color-purple-light" },
         };
 
         public static readonly Dictionary<EpochState, string> StateDictionary = new Dictionary<EpochState, string>()

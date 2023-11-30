@@ -4,7 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Shared.Lookups;
+using EpochApp.Shared.Config;
 
 namespace EpochApp.Shared
 {

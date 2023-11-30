@@ -4,6 +4,13 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+
+// EpochWorlds
+// Profile.cs
+// FuchsFarbe Studios 2023
+// Oliver MacDougall
+// Modified: 29-11-2023
+
 namespace EpochApp.Shared.Users
 {
     public class Profile
@@ -21,7 +28,7 @@ namespace EpochApp.Shared.Users
         public string AvatarImg { get; set; }
         public string CoverImg { get; set; }
         public string WebAddress { get; set; }
-        public virtual User User{ get; set; }
+        public virtual User User { get; set; }
 
         public ICollection<UserSocial> Socials { get; set; }
     }

@@ -1,4 +1,5 @@
 @using EpochComponents.Enums
+@using EpochComponents.Utils
 
 @switch (Typo)
 {
@@ -27,7 +28,7 @@
         <p>@ChildContent</p>
         break;
     case EpochTypoType.Span:
-        <span>@ChildContent</span>
+        <span class=@($"badge edge-round-sm {Color.ToDescriptionString()}")>@ChildContent</span>
         break;
     case EpochTypoType.Mono:
         <code>@ChildContent</code>
@@ -37,7 +38,3 @@
         break;
 }
 
-@code {
-    [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public EpochTypoType Typo { get; set; } = EpochTypoType.Body1;
-}

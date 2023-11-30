@@ -8,7 +8,7 @@ using MudBlazor.Services;
 
 namespace EpochApp.Client
 {
-	public class Program
+    public class Program
 	{
 		public static async Task Main(string[] args)
 		{
@@ -22,7 +22,6 @@ namespace EpochApp.Client
 			builder.Services.AddScoped<EpochUserService>(); // Service
 			builder.Services.AddScoped<EpochAuthProvider>(); // Auth provider
 			builder.Services.AddScoped<AuthenticationStateProvider>(sp=>sp.GetRequiredService<EpochAuthProvider>());
-			builder.Services.AddMudServices();
 			builder.Services.AddAuthorizationCore();
 			await builder.Build().RunAsync();
 		}

@@ -1,6 +1,5 @@
 @page "/User/Account"
-@using EpochApp.Client.Services
-<PageTitle>Account @Auth.CurrentUser.UserName</PageTitle>
+@using EpochApp.Shared
+<PageTitle>@StaticUtils.Constants.AppName Account - @Auth.CurrentUser.UserName</PageTitle>
 <h3>Account</h3>
 <p>@Auth.CurrentUser.UserID</p>
-

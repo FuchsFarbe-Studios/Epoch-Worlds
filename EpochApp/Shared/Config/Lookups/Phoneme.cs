@@ -4,7 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Server.Controllers
+namespace EpochApp.Shared.Config
 {
     public class Phoneme
     {

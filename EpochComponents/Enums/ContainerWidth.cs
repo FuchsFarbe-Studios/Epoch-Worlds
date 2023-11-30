@@ -8,7 +8,7 @@ using EpochComponents.Utils;
 
 namespace EpochComponents.Enums
 {
-    public enum ContainerWidthType
+    public enum ContainerWidth
     {
         [Description("")]
         None = 0,

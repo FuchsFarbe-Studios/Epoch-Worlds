@@ -6,7 +6,7 @@
 
 using EpochApp.Shared.Users;
 
-namespace EpochApp.Shared.Blog
+namespace EpochApp.Shared
 {
     public class BlogOwner
     {

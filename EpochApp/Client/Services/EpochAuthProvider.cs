@@ -4,8 +4,8 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using System.Security.Claims;
 using EpochApp.Shared;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace EpochApp.Client.Services
