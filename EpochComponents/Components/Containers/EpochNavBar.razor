@@ -1,0 +1,35 @@
+<nav class="menu-items-wrapper navbar style-dark size-md">
+	<ul class="links">
+		@if (UseBranding)
+		{
+			<li class="menu-item">
+				<a class="navbar-logo center" href="@BrandHref">
+					<EpochTypo Typo="Enums.EpochTypoType.H6"><b>@BrandName</b></EpochTypo>
+					@if (!string.IsNullOrEmpty(BrandImageSrc))
+					{					
+						<img src="@BrandImageSrc" alt="@BrandImageAlt" />
+					}
+				</a>
+			</li>
+		}
+
+		@NavLeft
+	</ul>
+
+	@if (@NavRight != null)
+	{
+		<ul class="links push-right">
+			@NavRight
+		</ul>
+	}
+</nav>
+
+@code {
+	[Parameter] public RenderFragment NavLeft { get; set; }
+	[Parameter] public RenderFragment NavRight { get; set; }
+	[Parameter] public bool UseBranding { get; set; } = true;
+	[Parameter] public string BrandName { get; set; } = "Flat UI";
+	[Parameter] public string BrandHref { get; set; } = "/";
+	[Parameter] public string BrandImageSrc { get; set; } = "";
+	[Parameter] public string BrandImageAlt { get; set; } = "";
+}

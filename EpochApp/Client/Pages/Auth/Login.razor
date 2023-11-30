@@ -5,13 +5,20 @@
 <PageTitle>Log-In</PageTitle>
 <EpochTypo Typo="EpochTypoType.H1">Login</EpochTypo>
 <hr />
-<EditForm class="container-md" OnSubmit="@(async (e) => await AttemptLoginAsync(e))" Model="@_login">
+<EditForm OnSubmit="@(async (e) => await AttemptLoginAsync(e))" Model="@_login">
     <DataAnnotationsValidator />
     <ServerSideValidator @ref="@_validator" />
-    <EpochContainer>
+
+    <EpochField For="@(() => _login.UserName)" Floating="false" Required="true" Label="Username" @bind-Value="@_login.UserName" InputType="InputType.Text" />
+    <EpochField For="@(() => _login.Password)" Floating="true" Required="true" Label="Password" @bind-Value="@_login.Password" InputType="@InputType.Password">
+        <button class="show-password-button" aria-label="Show password" type="button"></button>
+    </EpochField>
+    <EpochButton Disabled="@_loggingIn" Type="ButtonType.Submit">Login</EpochButton>
+    <hr />
+    <EpochContainer Flex="FlexType.None">
         @foreach (var error in _errors)
         {
-            <div class="w-100">
+            <div class="flex-column-center">
                 <EpochTypo Typo="EpochTypoType.Mono">
                     <span><b>@error.Key</b>: </span>
                     @foreach (var message in error.Value)
@@ -22,76 +29,4 @@
             </div>
         }
     </EpochContainer>
-
-    <EpochField For="@(() => _login.UserName)" Floating="false" Required="true" Label="Username" @bind-Value="@_login.UserName" InputType="InputType.Text" />
-    <EpochField For="@(() => _login.Password)" Floating="true" Required="true" Label="Password" @bind-Value="@_login.Password" InputType="@InputType.Password">
-        <button class="show-password-button" aria-label="Show password" type="button"></button>
-    </EpochField>
-    <hr />
-    <EpochButton Disabled="@_loggingIn" Type="ButtonType.Submit">Login</EpochButton>
 </EditForm>
-
-@code {
-
-    [Inject] public HttpClient Client { get; set; }
-    [Inject] public NavigationManager NavigationManager { get; set; }
-    [Inject] public EpochAuthProvider _auth { get; set; }
-    private LoginDTO _login = new LoginDTO();
-    private ServerSideValidator _validator;
-    private bool _loggingIn = false;
-    private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
-
-    public async Task AttemptLoginAsync(EditContext ctx)
-    {
-        _loggingIn = true;
-        _validator.ClearErrors();
-        _errors.Clear();
-        if (!ctx.Validate())
-        {
-            _loggingIn = false;
-            var errors = new Dictionary<String, List<String>>()
-                         {
-                             {
-                                 "Errors!", ctx.GetValidationMessages().ToList()
-                             }
-
-                         };
-            _errors = errors;
-            _validator.DisplayErrors(errors);
-            foreach (var error in errors)
-            {
-                Console.WriteLine(error.Key);
-                foreach (var message in error.Value)
-                    Console.WriteLine(message);
-            }
-            return;
-        }
-        if (ctx.Validate())
-        {
-            var result = await Client.PostAsJsonAsync<LoginDTO>("api/v1/EpochUsers/Authenticate", _login);
-            await Task.Delay(500);
-            if (result.IsSuccessStatusCode)
-            {
-                var token = await result.Content.ReadAsStringAsync();
-    //await _auth.LoginAsync(_login.UserName, _login.Password);
-                _loggingIn = false;
-                if (_auth.CurrentUser != null)
-                    NavigationManager.NavigateTo("/");
-            }
-            else
-            {
-                _loggingIn = false;
-                var errors = await result.Content.ReadFromJsonAsync<Dictionary<string, List<string>>>();
-                _errors = errors;
-                _validator.DisplayErrors(errors);
-                foreach (var error in errors)
-                {
-                    Console.WriteLine(error.Key);
-                    foreach (var message in error.Value)
-                        Console.WriteLine(message);
-                }
-            }
-        }
-        _loggingIn = false;
-    }
-}

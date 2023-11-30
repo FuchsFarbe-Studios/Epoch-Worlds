@@ -1,0 +1,14 @@
+@using EpochComponents.Enums
+@using MudBlazor.Extensions
+<div class="">
+    @if(ChildContent != null)
+    {
+        <div class="flex-column-center @(Width == ContainerWidthType.None ? "" : $"{Width.ToDescriptionString()}")">
+            @ChildContent
+        </div>
+    }
+</div>
+@code {
+    [Parameter] public ContainerWidthType Width { get; set; } = ContainerWidthType.None;
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

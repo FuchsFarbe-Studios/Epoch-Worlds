@@ -5,7 +5,7 @@
 // Modified: 29-11-2023
 using EpochComponents.Enums;
 
-namespace EpochComponents
+namespace EpochComponents.Utils
 {
     public static class EpochDictionary
     {

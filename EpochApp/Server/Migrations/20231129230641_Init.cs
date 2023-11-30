@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EpochApp.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Lookups : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,7 +28,7 @@ namespace EpochApp.Server.Migrations
                 columns: table => new
                 {
                     CategoryID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
+                        .Annotation("Jet:Identity", "3, 4"),
                     Description = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
@@ -97,7 +97,7 @@ namespace EpochApp.Server.Migrations
                 columns: table => new
                 {
                     SocialID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Jet:Identity", "1, 1"),
+                        .Annotation("Jet:Identity", "12, 12"),
                     Description = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     URLAffix = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
                     Icon = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
@@ -128,7 +128,7 @@ namespace EpochApp.Server.Migrations
                 {
                     UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: true),
-                    Email = table.Column<string>(type: "longchar", nullable: true),
+                    Email = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime", nullable: false),
                     PasswordHash = table.Column<string>(type: "longchar", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "longbinary", nullable: true),
@@ -175,10 +175,10 @@ namespace EpochApp.Server.Migrations
                     TemplateID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Jet:Identity", "1, 1"),
                     CategoryID = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
-                    Placeholder = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: true),
-                    HelpText = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: true)
+                    Placeholder = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
+                    HelpText = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -256,7 +256,7 @@ namespace EpochApp.Server.Migrations
                 {
                     table.PrimaryKey("PK_Posts", x => x.PostID);
                     table.ForeignKey(
-                        name: "FK_Posts_Users_AuthorID",
+                        name: "FK_Posts_Users",
                         column: x => x.AuthorID,
                         principalSchema: "Users",
                         principalTable: "Users",
@@ -343,7 +343,7 @@ namespace EpochApp.Server.Migrations
                 {
                     table.PrimaryKey("PK_Worlds", x => x.WorldID);
                     table.ForeignKey(
-                        name: "FK_Worlds_Users_OwnerID",
+                        name: "FK_Worlds_Users",
                         column: x => x.OwnerID,
                         principalSchema: "Users",
                         principalTable: "Users",
@@ -438,6 +438,29 @@ namespace EpochApp.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WorldDate",
+                schema: "Users",
+                columns: table => new
+                {
+                    WorldID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CurrentDay = table.Column<int>(type: "integer", nullable: false),
+                    CurrentMonth = table.Column<int>(type: "integer", nullable: false),
+                    CurrentYear = table.Column<int>(type: "integer", nullable: false),
+                    CurrentAge = table.Column<string>(type: "longchar", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorldDate", x => x.WorldID);
+                    table.ForeignKey(
+                        name: "FK_WorldDates_Worlds",
+                        column: x => x.WorldID,
+                        principalSchema: "Users",
+                        principalTable: "Worlds",
+                        principalColumn: "WorldID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WorldMetas",
                 schema: "Users",
                 columns: table => new
@@ -450,18 +473,18 @@ namespace EpochApp.Server.Migrations
                 {
                     table.PrimaryKey("PK_WorldMetas", x => new { x.WorldID, x.MetaID });
                     table.ForeignKey(
+                        name: "FK_WorldMetas_MetaTemplates",
+                        column: x => x.MetaID,
+                        principalSchema: "Lookups",
+                        principalTable: "lkMetaTemplates",
+                        principalColumn: "TemplateID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_WorldMetas_Worlds_WorldID",
                         column: x => x.WorldID,
                         principalSchema: "Users",
                         principalTable: "Worlds",
                         principalColumn: "WorldID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WorldMetas_lkMetaTemplates_MetaID",
-                        column: x => x.MetaID,
-                        principalSchema: "Lookups",
-                        principalTable: "lkMetaTemplates",
-                        principalColumn: "TemplateID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -488,6 +511,21 @@ namespace EpochApp.Server.Migrations
                     { 3, "EVENTS" },
                     { 4, "FAQ" },
                     { 5, "DOCUMENTATION" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "Lookups",
+                table: "lkMetaCategories",
+                columns: new[] { "CategoryID", "Description" },
+                values: new object[,]
+                {
+                    { 1, "Goals" },
+                    { 2, "Theme" },
+                    { 3, "Focus" },
+                    { 4, "Setting" },
+                    { 5, "Residents" },
+                    { 6, "Conflict" },
+                    { 7, "Inspiration" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -583,6 +621,10 @@ namespace EpochApp.Server.Migrations
                 schema: "Users");
 
             migrationBuilder.DropTable(
+                name: "WorldDate",
+                schema: "Users");
+
+            migrationBuilder.DropTable(
                 name: "WorldMetas",
                 schema: "Users");
 
@@ -611,12 +653,12 @@ namespace EpochApp.Server.Migrations
                 schema: "Users");
 
             migrationBuilder.DropTable(
-                name: "Worlds",
-                schema: "Users");
-
-            migrationBuilder.DropTable(
                 name: "lkMetaTemplates",
                 schema: "Lookups");
+
+            migrationBuilder.DropTable(
+                name: "Worlds",
+                schema: "Users");
 
             migrationBuilder.DropTable(
                 name: "lkBlogTypes",
@@ -627,12 +669,12 @@ namespace EpochApp.Server.Migrations
                 schema: "Blogs");
 
             migrationBuilder.DropTable(
-                name: "Users",
-                schema: "Users");
-
-            migrationBuilder.DropTable(
                 name: "lkMetaCategories",
                 schema: "Lookups");
+
+            migrationBuilder.DropTable(
+                name: "Users",
+                schema: "Users");
         }
     }
 }

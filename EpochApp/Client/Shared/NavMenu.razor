@@ -1,20 +1,27 @@
 ﻿@using Microsoft.AspNetCore.Authorization
-<MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-    <MudNavLink Href="/Features" Match="NavLinkMatch.All">Features</MudNavLink>
-    <MudNavLink Href="/Community" Match="NavLinkMatch.All">Community</MudNavLink>
-    <MudNavLink Href="/Support" Match="NavLinkMatch.All">Support</MudNavLink>
-    <MudNavLink Href="/About" Match="NavLinkMatch.All">About</MudNavLink>
+<EpochNavBar>
+	<NavLeft>
+		<EpochNavLink Link="/" Match="NavLinkMatch.All">Home</EpochNavLink>
+		<EpochNavLink Link="/Features" Match="NavLinkMatch.All">Features</EpochNavLink>
+		<EpochNavLink Link="/Community" Match="NavLinkMatch.All">Community</EpochNavLink>
+		<EpochNavLink Link="/Support" Match="NavLinkMatch.All">Support</EpochNavLink>
+		<EpochNavLink Link="/About" Match="NavLinkMatch.All">About</EpochNavLink>
+	</NavLeft>
+	<NavRight>
+		<AuthorizeView>
+			<Authorized>
+				<EpochNavLink Link="/User/Profile">Profile</EpochNavLink>
+				<EpochNavLink Link="/Auth/Logout">Logout</EpochNavLink>
+			</Authorized>
+			<Authorizing>
+				<EpochNavLink Link="/Auth/Register">Create Account</EpochNavLink>
+				<EpochNavLink Link="/Auth/Login">Login</EpochNavLink>
+			</Authorizing>
+			<NotAuthorized>
+				<EpochNavLink Link="/Auth/Register">Create Account</EpochNavLink>
+				<EpochNavLink Link="/Auth/Login">Login</EpochNavLink>
+			</NotAuthorized>
+		</AuthorizeView>
+	</NavRight>
 
-    <AuthorizeView>
-        <Authorized>
-            <MudNavLink Href="/User/Profile">Profile</MudNavLink>
-            <MudNavLink Href="/Auth/Logout">Logout</MudNavLink>
-        </Authorized>
-        <NotAuthorized>
-            <MudNavLink Href="/Auth/Register">Create Account</MudNavLink>
-            <MudNavLink Href="/Auth/Login">Login</MudNavLink>
-        </NotAuthorized>
-    </AuthorizeView>
-
-</MudNavMenu>
+</EpochNavBar>

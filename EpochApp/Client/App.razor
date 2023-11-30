@@ -1,13 +1,24 @@
 ﻿<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"> 				
+                <NotAuthorized>
+					<RedirectToLogin/>
+				</NotAuthorized>
+				<Authorizing>
+                    <EpochContainer Flex="FlexType.Center" Width="ContainerWidthType.None">
+					    <p class="text-center">Authentication in progress...</p>
+                    </EpochContainer>
+				</Authorizing>
+            </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <div class="alert style-warning-light" role="alert">
+                    <EpochTypo>Sorry, there's nothing at this address.</EpochTypo>
+                </div>
             </LayoutView>
         </NotFound>
     </Router>

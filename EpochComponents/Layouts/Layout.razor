@@ -4,12 +4,6 @@
 <section>
     @LayoutContent
 </section>
-<footer>
+<footer class="position-absolute place-bottom place-expand-x style-dark">
     @FooterContent
 </footer>
-
-@code {
-    [Parameter] public RenderFragment HeaderContent { get; set; }
-    [Parameter] public RenderFragment LayoutContent { get; set; }
-    [Parameter] public RenderFragment FooterContent { get; set; }
-}
