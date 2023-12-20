@@ -1,6 +1,6 @@
 using EpochApp.Server.Data;
-using EpochApp.Shared;
-using EpochApp.Shared.Config;
+using EpochApp.Shared.Config.Lookups;
+using EpochApp.Shared.DataTransfer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

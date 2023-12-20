@@ -5,12 +5,10 @@
 // Modified: 29-11-2023
 
 using EpochApp.Client.Services;
-using EpochApp.Shared;
-using EpochComponents.Forms;
-
+using EpochApp.Kit.Forms;
+using EpochApp.Shared.DataTransfer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-
 using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Auth

@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using EpochApp.Client.Services
 
 <PageTitle>Index</PageTitle>
 
@@ -13,15 +12,15 @@
         Value
         <input type="text" @bind-value="@Value" />
     </label>
-    <MudButton OnClick="@(async () => await SetValueAsync())">Set Value</MudButton>
+    <button class="button" @onclick="@(async () => await SetValueAsync())" type="button">Set Value</button>
 </form>
 <div>Stored Value: @StoredValue</div>
 
-<EpochContainer Flex="FlexType.Center" Width="ContainerWidthType.Md">
-    <button class="button" @onclick="@(async () => await GetValueAsync())">Get Value</button>
-    <button class="button" @onclick="@(async () => await RemoveAsync())">Remove Value</button>
-    <button class="button" @onclick="@(async () => await ClearAllAsync())">Clear Value</button>
-</EpochContainer>
+<div>
+    <button type="button" class="button" @onclick="@(async () => await GetValueAsync())">Get Value</button>
+    <button type="button" class="button" @onclick="@(async () => await RemoveAsync())">Remove Value</button>
+    <button type="button" class="button" @onclick="@(async () => await ClearAllAsync())">Clear Value</button>
+</div>
 <br />
 <article class="card" style="max-width: 320px">
     <header class="card-header">

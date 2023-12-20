@@ -20,8 +20,8 @@
   </ItemGroup>	
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FuchsFarbe\Flatify\Flatify\Flatify.csproj"/>
-    <ProjectReference Include="..\..\EpochComponents\EpochComponents.csproj" />
+      <ProjectReference Include="..\..\..\FuchsFarbe\Flatify\Flatify\Flatify.csproj"/>
+      <ProjectReference Include="..\Kit\EpochApp.Kit.csproj"/>
     <ProjectReference Include="..\Shared\EpochApp.Shared.csproj" />
   </ItemGroup>	
 
@@ -31,6 +31,17 @@
 
   <ItemGroup>
     <AdditionalFiles Include="Pages\Site\Community\Community.razor" />
+  </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="wwwroot\css\flatify\flatify.css">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Update="wwwroot\css\flatify\flatify.min.css">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
   </ItemGroup>
 
 </Project>

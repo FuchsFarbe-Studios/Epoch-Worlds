@@ -4,14 +4,14 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Shared
+namespace EpochApp.Shared.DataTransfer
 {
-    public class CategoryDTO
-    {
-        public string CategoryID { get; set; }
-        public string CategoryName { get; set; }
-        public string Description { get; set; }
-        public string Image { get; set; }
-        public string Affix { get; set; }
-    }
+	public class CategoryDTO
+	{
+		public String CategoryID { get; set; }
+		public String CategoryName { get; set; }
+		public String Description { get; set; }
+		public String Image { get; set; }
+		public String Affix { get; set; }
+	}
 }

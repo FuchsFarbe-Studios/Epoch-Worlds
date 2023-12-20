@@ -4,12 +4,12 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Shared.Config
+namespace EpochApp.Shared.Config.Lookups
 {
-    public class Consonant : Phoneme
-    {
-        public string Manner { get; set; }
-        public string Place { get; set; }
-        public bool IsVoiced { get; set; }
-    }
+	public class Consonant : Phoneme
+	{
+		public String Manner { get; set; }
+		public String Place { get; set; }
+		public Boolean IsVoiced { get; set; }
+	}
 }

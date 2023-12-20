@@ -1,5 +1,5 @@
 using EpochApp.Server.Data;
-using EpochApp.Shared;
+using EpochApp.Shared.DataTransfer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

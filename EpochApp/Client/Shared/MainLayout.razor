@@ -2,20 +2,18 @@
 @inherits LayoutComponentBase
 <FlatThemeProvider />
 
-<Layout>
-    <HeaderContent>
+<main>
+    <header>
         <NavMenu />
-    </HeaderContent>
+    </header>
 
-    <LayoutContent>
-        <MainContent Width="ContainerWidth.Xxl">
-            @Body
-        </MainContent>
-    </LayoutContent>
+    <div class="container-xxl">
+        @Body
+    </div>
 
-    <FooterContent>
+    <footer>
         <div class="flex-center">
             <h3>Footer Content</h3>
         </div>
-    </FooterContent>
-</Layout>
+    </footer>
+</main>

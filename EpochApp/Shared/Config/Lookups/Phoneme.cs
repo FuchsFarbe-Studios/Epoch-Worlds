@@ -4,11 +4,11 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Shared.Config
+namespace EpochApp.Shared.Config.Lookups
 {
-    public class Phoneme
-    {
-        public string PhonemeID { get; set; }
-        public string AudioFile { get; set; }
-    }
+	public class Phoneme
+	{
+		public String PhonemeID { get; set; }
+		public String AudioFile { get; set; }
+	}
 }

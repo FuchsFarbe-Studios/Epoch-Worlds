@@ -1,9 +1,9 @@
-@using EpochApp.Shared
-@using EpochApp.Client.Kit.Auth
 @page "/Auth/Login"
+@using EpochApp.Client.Kit.Auth
+@using EpochApp.Shared
 <PageTitle>@StaticUtils.Constants.AppName - Log In</PageTitle>
 
-<EpochTypo Typo="EpochTypoType.H1">Login</EpochTypo>
-<EpochTypo Typo="EpochTypoType.H4">Sign in to your @StaticUtils.Constants.CompanyName account!</EpochTypo>
+<h1>Login</h1>
+<h4>Sign in to your @StaticUtils.Constants.CompanyName account!</h4>
 
 <LoginKit />

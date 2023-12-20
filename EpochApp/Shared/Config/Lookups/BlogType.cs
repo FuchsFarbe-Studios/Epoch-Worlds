@@ -4,11 +4,11 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Shared.Config
+namespace EpochApp.Shared.Config.Lookups
 {
-    public class BlogType
-    {
-        public int BlogTypeID { get; set; }
-        public string Description { get; set; }
-    }
+	public class BlogType
+	{
+		public Int32 BlogTypeID { get; set; }
+		public String Description { get; set; }
+	}
 }

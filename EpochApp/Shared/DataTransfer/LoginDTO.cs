@@ -4,11 +4,11 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Shared
+namespace EpochApp.Shared.DataTransfer
 {
-    public class LoginDTO
-    {
-        public string UserName { get; set; }
-        public string Password { get; set; }
-    }
+	public class LoginDTO
+	{
+		public String UserName { get; set; }
+		public String Password { get; set; }
+	}
 }

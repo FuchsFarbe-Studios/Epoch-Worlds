@@ -6,7 +6,7 @@
 
 using System.Security.Claims;
 
-namespace EpochApp.Shared
+namespace EpochApp.Shared.DataTransfer
 {
 	public class UserData
 	{

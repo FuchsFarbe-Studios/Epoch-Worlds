@@ -4,15 +4,15 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Shared;
-using EpochApp.Shared.Config;
-using EpochApp.Shared.Users;
-using EpochApp.Shared.Worlds;
+using EpochApp.Shared.Config.Lookups;
+using EpochApp.Shared.Site.Blog;
+using EpochApp.Shared.Site.Users;
+using EpochApp.Shared.Site.Worlds;
 using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Data;
 
-    public class EpochDataDbContext : DbContext
+public class EpochDataDbContext : DbContext
     {
         public string ConnectionString { get; private set; } = @"Data Source=C:\myFolder\myAccessFile.accdb;";
         // Users

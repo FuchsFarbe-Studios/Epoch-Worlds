@@ -11,17 +11,31 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Shared.Config;
 
-namespace EpochApp.Shared.Users
+// EpochWorlds
+// UserSocial.cs
+// FuchsFarbe Studios 2023
+// Oliver MacDougall
+// Modified: 29-11-2023
+
+
+// EpochWorlds
+// UserSocial.cs
+// FuchsFarbe Studios 2023
+// Oliver MacDougall
+// Modified: 29-11-2023
+
+using EpochApp.Shared.Config.Lookups;
+
+namespace EpochApp.Shared.Site.Users
 {
-    public class UserSocial
-    {
-        public int SocialID { get; set; }
-        public Guid UserID { get; set; }
-        public string SocialHandle { get; set; }
+	public class UserSocial
+	{
+		public Int32 SocialID { get; set; }
+		public Guid UserID { get; set; }
+		public String SocialHandle { get; set; }
 
-        public virtual SocialMedia Social { get; set; }
-        public virtual Profile Profile { get; set; }
-    }
+		public virtual SocialMedia Social { get; set; }
+		public virtual Profile Profile { get; set; }
+	}
 }

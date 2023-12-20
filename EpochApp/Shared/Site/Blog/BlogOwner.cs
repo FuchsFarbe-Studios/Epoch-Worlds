@@ -4,18 +4,18 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Shared.Users;
+using EpochApp.Shared.Site.Users;
 
-namespace EpochApp.Shared
+namespace EpochApp.Shared.Site.Blog
 {
-    public class BlogOwner
-    {
-        public int BlogID { get; set; }
-        public Guid OwnerID { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public DateTime? RemovedOn { get; set; }
+	public class BlogOwner
+	{
+		public Int32 BlogID { get; set; }
+		public Guid OwnerID { get; set; }
+		public DateTime CreatedOn { get; set; }
+		public DateTime? RemovedOn { get; set; }
 
-        public virtual Blog Blog { get; set; }
-        public virtual User Owner { get; set; }
-    }
+		public virtual Blog Blog { get; set; }
+		public virtual User Owner { get; set; }
+	}
 }

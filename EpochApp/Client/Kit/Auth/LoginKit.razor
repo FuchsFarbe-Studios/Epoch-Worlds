@@ -1,14 +1,2 @@
-@using EpochApp.Shared
 <h3>Login Kit</h3>
 
-@code {
-    [Inject] private NavigationManager Nav { get; set; }
-    private LoginDTO _login = new LoginDTO();
-    private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
-    private bool _attemptingLogin = false;
-
-    public async Task AttemptLoginAsync(EditContext ctx)
-    {
-        await Task.CompletedTask;
-    }
-}

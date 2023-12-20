@@ -1,14 +1,12 @@
-using EpochApp.Client;
 using EpochApp.Client.Services;
-using EpochApp.Shared;
+using EpochApp.Shared.DataTransfer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using MudBlazor.Services;
 
 namespace EpochApp.Client
 {
-    public class Program
+	public class Program
 	{
 		public static async Task Main(string[] args)
 		{

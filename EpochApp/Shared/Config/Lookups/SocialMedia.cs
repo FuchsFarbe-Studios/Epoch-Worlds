@@ -4,13 +4,13 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Shared.Config
+namespace EpochApp.Shared.Config.Lookups
 {
-    public class SocialMedia
-    {
-        public int SocialID { get; set; }
-        public string SocialMediaName { get; set; }
-        public string URLAffix { get; set; }
-        public string Icon { get; set; }
-    }
+	public class SocialMedia
+	{
+		public Int32 SocialID { get; set; }
+		public String SocialMediaName { get; set; }
+		public String URLAffix { get; set; }
+		public String Icon { get; set; }
+	}
 }

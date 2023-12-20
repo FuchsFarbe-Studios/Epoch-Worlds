@@ -4,13 +4,10 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using EpochApp.Shared.DataTransfer;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
-
-using EpochApp.Shared;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualBasic;
 
 namespace EpochApp.Client.Services
 {

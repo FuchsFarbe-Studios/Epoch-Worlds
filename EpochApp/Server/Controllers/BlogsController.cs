@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using EpochApp.Server.Data;
+using EpochApp.Shared.Site.Blog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EpochApp.Server.Data;
-using EpochApp.Shared;
 
 namespace EpochApp.Server.Controllers
 {
