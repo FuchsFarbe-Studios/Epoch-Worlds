@@ -28,4 +28,14 @@
         <ProjectReference Include="..\Shared\EpochApp.Shared.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <AdditionalFiles Include="Authoring\Articles\Article.razor"/>
+        <AdditionalFiles Include="Authoring\Epoch\Epoch.razor"/>
+        <AdditionalFiles Include="Authoring\Worlds\World.razor"/>
+        <AdditionalFiles Include="Auth\LoginKit.razor"/>
+        <AdditionalFiles Include="Auth\RedirectToLogin.razor"/>
+        <AdditionalFiles Include="Auth\RedirectToLogout.razor"/>
+        <AdditionalFiles Include="Auth\RegistrationKit.razor"/>
+    </ItemGroup>
+
 </Project>

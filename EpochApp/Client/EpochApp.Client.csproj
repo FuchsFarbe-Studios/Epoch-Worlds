@@ -35,6 +35,10 @@
 
     <ItemGroup>
         <_ContentIncludedByDefault Remove="Pages\Community\Community.razor"/>
+        <_ContentIncludedByDefault Remove="Kit\Auth\RegistrationKit.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Authoring\Articles\Article.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Authoring\Epoch\Epoch.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Authoring\Worlds\World.razor"/>
     </ItemGroup>
 
     <ItemGroup>

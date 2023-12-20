@@ -1,25 +1,30 @@
-﻿<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
-        <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"> 				
-                <NotAuthorized>
-					<RedirectToLogin/>
+﻿@using EpochApp.Kit.Auth
+<CascadingAuthenticationState>
+	<Router AppAssembly="@typeof(App).Assembly">
+
+		<!-- ROUTE FOUND -->
+		<Found Context="routeData">
+			<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+				<NotAuthorized>
+					<RedirectToLogin />
 				</NotAuthorized>
 				<Authorizing>
-                    <EpochContainer Flex="FlexType.Center" Width="ContainerWidthType.None">
-					    <p class="text-center">Authentication in progress...</p>
-                    </EpochContainer>
+					<FlatContainer>
+						<p class="text-center">Authentication in progress...</p>
+					</FlatContainer>
 				</Authorizing>
-            </AuthorizeRouteView>
-            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
-        </Found>
-        <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <div class="alert style-warning-light" role="alert">
-                    <EpochTypo>Sorry, there's nothing at this address.</EpochTypo>
-                </div>
-            </LayoutView>
-        </NotFound>
-    </Router>
+			</AuthorizeRouteView>
+			<FocusOnNavigate RouteData="@routeData" Selector="h1" />
+		</Found>
+
+		<!-- NOT FOUND -->
+		<NotFound>
+			<PageTitle>Not found</PageTitle>
+			<LayoutView Layout="@typeof(MainLayout)">
+				<div class="alert style-warning-light" role="alert">
+					<p>Sorry, there's nothing at this address.</p>
+				</div>
+			</LayoutView>
+		</NotFound>
+	</Router>
 </CascadingAuthenticationState>

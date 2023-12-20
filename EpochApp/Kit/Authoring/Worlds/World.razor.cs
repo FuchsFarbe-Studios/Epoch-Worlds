@@ -4,10 +4,9 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Client.Pages.Authoring.Epoch
+namespace EpochApp.Kit.Authoring.Worlds
 {
-    public partial class Epoch
+    public partial class World
     {
-
     }
 }

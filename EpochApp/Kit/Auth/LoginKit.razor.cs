@@ -8,7 +8,7 @@ using EpochApp.Shared.DataTransfer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace EpochApp.Client.Kit.Auth
+namespace EpochApp.Kit.Auth
 {
     public partial class LoginKit
     {

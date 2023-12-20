@@ -5,18 +5,18 @@
 // Modified: 29-11-2023
 using Microsoft.AspNetCore.Components;
 
-namespace EpochApp.Kit.Components.Auth
+namespace EpochApp.Kit.Auth
 {
-    public partial class RedirectToLogin : ComponentBase
+    public partial class RedirectToLogout : ComponentBase
     {
-        [Parameter] public String LoginUrl { get; set; }
+        [Parameter] public String LogoutUrl { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            NavigationManager.NavigateTo(LoginUrl);
+            NavigationManager.NavigateTo(LogoutUrl);
         }
     }
 }

@@ -4,9 +4,9 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Client.Pages.Authoring.Articles
+namespace EpochApp.Kit.Authoring.Epoch
 {
-    public partial class Article
+    public partial class Epoch
     {
     }
 }

@@ -4,9 +4,9 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Client.Kit.Auth
+namespace EpochApp.Kit.Authoring.Articles
 {
-    public partial class RegistrationKit
+    public partial class Article
     {
     }
 }
