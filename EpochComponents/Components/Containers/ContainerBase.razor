@@ -1,0 +1,9 @@
+@inherits EpochBase
+
+<div class="@Class" style="@Styles" id="@ID">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public String ID { get; set; }
+}

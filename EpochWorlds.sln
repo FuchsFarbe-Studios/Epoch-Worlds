@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EpochApp.Shared", "EpochApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EpochComponents", "EpochComponents\EpochComponents.csproj", "{7498FB73-ABEC-49FD-8A6E-9F0988EF79D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flatify", "..\FuchsFarbe\Flatify\Flatify\Flatify.csproj", "{698050AF-6BE0-4002-BBC6-764B0A3A77E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7498FB73-ABEC-49FD-8A6E-9F0988EF79D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7498FB73-ABEC-49FD-8A6E-9F0988EF79D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7498FB73-ABEC-49FD-8A6E-9F0988EF79D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{698050AF-6BE0-4002-BBC6-764B0A3A77E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{698050AF-6BE0-4002-BBC6-764B0A3A77E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{698050AF-6BE0-4002-BBC6-764B0A3A77E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{698050AF-6BE0-4002-BBC6-764B0A3A77E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

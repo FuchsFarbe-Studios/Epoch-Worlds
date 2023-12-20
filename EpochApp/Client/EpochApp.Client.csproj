@@ -20,6 +20,7 @@
   </ItemGroup>	
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\FuchsFarbe\Flatify\Flatify\Flatify.csproj"/>
     <ProjectReference Include="..\..\EpochComponents\EpochComponents.csproj" />
     <ProjectReference Include="..\Shared\EpochApp.Shared.csproj" />
   </ItemGroup>	
