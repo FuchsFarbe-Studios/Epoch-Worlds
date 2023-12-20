@@ -6,6 +6,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
         <LangVersion>default</LangVersion>
+        <Version>0.0.1</Version>
+        <Title>Epoch Worlds Application Kit</Title>
+        <Authors>FuchsFarbe Studios</Authors>
+        <Description>This is a component kit designed for the Epoch Worlds web application and social media platform.</Description>
+        <Copyright>FuchsFarbe Studios 2023</Copyright>
+        <Company>FuchsFarbe Studios</Company>
+        <Product>Razor Component Library</Product>
     </PropertyGroup>
     <ItemGroup>
         <SupportedPlatform Include="browser"/>
