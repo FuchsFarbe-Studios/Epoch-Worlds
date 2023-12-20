@@ -13,15 +13,12 @@ namespace EpochApp.Client.Pages.Auth
 {
     public partial class Registration
     {
-        [Inject]
-        public HttpClient Http { get; set; }
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
-        [Inject]
-        public ILogger<Registration> Logger { get; set; }
-        [Inject]
-        public EpochAuthProvider Auth { get; set; }
+
         private RegistrationDTO _registration = new RegistrationDTO();
+        [Inject] public HttpClient Http { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public ILogger<Registration> Logger { get; set; }
+        [Inject] public EpochAuthProvider Auth { get; set; }
 
         private async Task AttemptRegistrationAsync()
         {
@@ -29,7 +26,7 @@ namespace EpochApp.Client.Pages.Auth
                                   _registration.UserName, "\n\t\t",
                                   _registration.Password, "\n\t\t",
                                   _registration.DateOfBirth, "\n\t\t"
-                                      , _registration.Email, "\n\t\t");
+                                  , _registration.Email, "\n\t\t");
             var result = await Http.PostAsJsonAsync("api/v1/EpochUsers/Registration", _registration);
             if (result.IsSuccessStatusCode)
             {
@@ -45,6 +42,5 @@ namespace EpochApp.Client.Pages.Auth
                 }
             }
         }
-
     }
 }
