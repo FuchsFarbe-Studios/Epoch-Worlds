@@ -5,6 +5,7 @@
         <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <SupportedPlatform Include="browser"/>
