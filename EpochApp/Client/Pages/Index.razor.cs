@@ -5,37 +5,44 @@
 // Modified: 29-11-2023
 
 using EpochApp.Client.Services;
-
 using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages
 {
-	public partial class Index
-	{
-		[Inject] public ILocalStorage Storage { get; set; }
-		public string Key { get; set; } = "";
-		public string Value { get; set; } = "";
-		public string StoredValue { get; set; } = "";
 
-		public async Task SetValueAsync()
-		{
-			await Storage.SetValueAsync(Key, Value);
-		}
+    public partial class Index
+    {
 
-		public async Task GetValueAsync()
-		{
-			StoredValue = await Storage.GetValueAsync<string>(Key);
-		}
+        private DataStore _dataStore = new DataStore();
+        [Inject] public ILocalStorage Storage { get; set; }
+        public string StoredValue { get; set; } = "";
 
-		public async Task RemoveAsync()
-		{
-			await Storage.RemoveAsync(Key);
-		}
+        public async Task SetValueAsync()
+        {
+            await Storage.SetValueAsync(_dataStore.Key, _dataStore.Value);
+        }
 
-		public async Task ClearAllAsync()
-		{
-			await Storage.Clear();
-			StoredValue = "";
-		}
-	}
+        public async Task GetValueAsync()
+        {
+            StoredValue = await Storage.GetValueAsync<String>(_dataStore.Key);
+        }
+
+        public async Task RemoveAsync()
+        {
+            await Storage.RemoveAsync(_dataStore.Key);
+        }
+
+        public async Task ClearAllAsync()
+        {
+            await Storage.Clear();
+            StoredValue = "";
+        }
+
+        private class DataStore
+        {
+            public String Key { get; } = "";
+            public String Value { get; set; } = "";
+            public Boolean BoolVal { get; set; }
+        }
+    }
 }
