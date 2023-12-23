@@ -103,7 +103,11 @@ public class EpochDataDbContext : DbContext
                 },
                 new Role
                 {
-                    RoleID = 4, Description = "ADMIN",
+                    RoleID = 4, Description = "INTERNAL"
+                },
+                new Role
+                {
+                    RoleID = 5, Description = "ADMIN"
                 }
             });
         });
