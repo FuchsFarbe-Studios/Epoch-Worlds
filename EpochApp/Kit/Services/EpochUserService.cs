@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
 using System.Security.Claims;
 
-namespace EpochApp.Client.Services
+namespace EpochApp.Kit.Services
 {
     public class EpochUserService
     {
@@ -24,7 +24,7 @@ namespace EpochApp.Client.Services
 
         public async Task<UserData> SendAuthenticateRequestAsync(string username, string password)
         {
-            var response = await _client.PostAsJsonAsync("/api/v1/EpochUsers/Authentication"
+            var response = await _client.PostAsJsonAsync("/api/v1/EpochUsers/Auth/Authentication"
                                                          , new LoginDTO { UserName = username, Password = password });
 
             if (response.IsSuccessStatusCode)

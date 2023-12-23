@@ -4,8 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Client.Services;
-
+using EpochApp.Kit.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages.Auth
@@ -24,6 +23,5 @@ namespace EpochApp.Client.Pages.Auth
             NavigationManager.NavigateTo("/");
             await base.OnInitializedAsync();
         }
-
     }
 }

@@ -4,8 +4,8 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Client.Services;
 using EpochApp.Kit.Forms;
+using EpochApp.Kit.Services;
 using EpochApp.Shared.DataTransfer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -18,7 +18,7 @@ namespace EpochApp.Client.Pages.Auth
         private Dictionary<String, List<String>> _errors = new Dictionary<String, List<String>>();
         private Boolean _loggingIn;
         private LoginDTO _loginDto = new LoginDTO();
-        private ServerSideValidator _validator;
+        private EpochValidator _validator;
         [Inject] public HttpClient Client { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
         [Inject] public EpochAuthProvider _auth { get; set; }

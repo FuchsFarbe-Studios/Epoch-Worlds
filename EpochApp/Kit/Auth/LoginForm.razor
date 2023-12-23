@@ -1,12 +1,15 @@
+@using System.Net.Http.Json
 @using EpochApp.Kit.Forms
-<h3>LoginForm</h3>
+@using EpochApp.Kit.Services
+@using EpochApp.Shared.DataTransfer
+<h3>Login Form</h3>
 
 @code {
 	private Dictionary<String, List<String>> _errors = new Dictionary<String, List<String>>();
 	private Boolean _loggingIn;
 	private LoginDTO _loginDto = new LoginDTO();
-	private ServerSideValidator _validator;
-	[Inject] public HttpClient Client { get; set; }
+	private EpochValidator _validator;
+	[Inject] public UserClient Client { get; set; }
 	[Inject] public NavigationManager NavigationManager { get; set; }
 	[Inject] public EpochAuthProvider _auth { get; set; }
 
@@ -36,7 +39,7 @@
 		}
 		if (ctx.Validate())
 		{
-			var result = await Client.PostAsJsonAsync("api/v1/EpochUsers/Authentication", (LoginDTO)ctx.Model);
+			var result = await Client.PostAsJsonAsync("Auth/Authentication", (LoginDTO)ctx.Model);
 			await Task.Delay(500);
 			if (result.IsSuccessStatusCode)
 			{

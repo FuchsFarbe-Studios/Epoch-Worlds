@@ -4,7 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Client.Services
+namespace EpochApp.Kit.Services
 {
     public interface ILocalStorage
     {

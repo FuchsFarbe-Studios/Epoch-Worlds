@@ -21,6 +21,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.25"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.25"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -29,13 +30,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Authoring\Articles\Article.razor"/>
-        <AdditionalFiles Include="Authoring\Epoch\Epoch.razor"/>
-        <AdditionalFiles Include="Authoring\Worlds\World.razor"/>
-        <AdditionalFiles Include="Auth\LoginKit.razor"/>
         <AdditionalFiles Include="Auth\RedirectToLogin.razor"/>
         <AdditionalFiles Include="Auth\RedirectToLogout.razor"/>
-        <AdditionalFiles Include="Auth\RegistrationKit.razor"/>
     </ItemGroup>
 
     <ItemGroup>

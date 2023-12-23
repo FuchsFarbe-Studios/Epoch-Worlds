@@ -4,7 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Client.Services;
+using EpochApp.Kit.Services;
 using EpochApp.Shared.DataTransfer;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;

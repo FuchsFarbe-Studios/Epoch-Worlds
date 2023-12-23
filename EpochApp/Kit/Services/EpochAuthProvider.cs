@@ -6,15 +6,15 @@
 
 using EpochApp.Shared.DataTransfer;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
-namespace EpochApp.Client.Services
+namespace EpochApp.Kit.Services
 {
     public class EpochAuthProvider : AuthenticationStateProvider, IDisposable
     {
-        private readonly EpochUserService _userService;
         private readonly ILogger<EpochAuthProvider> _logger;
-        public UserData CurrentUser { get; private set; } = new UserData();
+        private readonly EpochUserService _userService;
 
         public EpochAuthProvider(EpochUserService userService, ILogger<EpochAuthProvider> logger)
         {
@@ -22,6 +22,10 @@ namespace EpochApp.Client.Services
             _logger = logger;
             AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
         }
+        public UserData CurrentUser { get; private set; } = new UserData();
+
+        /// <inheritdoc />
+        public void Dispose() => AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
 
         /// <inheritdoc />
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -73,8 +77,5 @@ namespace EpochApp.Client.Services
             _userService.ClearBrowserUserData();
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new())));
         }
-
-        /// <inheritdoc />
-        public void Dispose() => AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
     }
 }

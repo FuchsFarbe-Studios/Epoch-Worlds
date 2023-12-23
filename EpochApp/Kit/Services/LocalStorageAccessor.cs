@@ -6,32 +6,16 @@
 
 using Microsoft.JSInterop;
 
-namespace EpochApp.Client.Services
+namespace EpochApp.Kit.Services
 {
     public class LocalStorageAccessor : ILocalStorage
     {
-        private Lazy<IJSObjectReference> _accessorJsRef = new();
         private readonly IJSRuntime _jsRuntime;
+        private Lazy<IJSObjectReference> _accessorJsRef = new();
 
         public LocalStorageAccessor(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
-        }
-
-        private async Task WaitForReference()
-        {
-            if (_accessorJsRef.IsValueCreated is false)
-            {
-                _accessorJsRef = new(await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/epoch-script.js"));
-            }
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            if (_accessorJsRef.IsValueCreated)
-            {
-                await _accessorJsRef.Value.DisposeAsync();
-            }
         }
 
         /// <inheritdoc />
@@ -62,6 +46,22 @@ namespace EpochApp.Client.Services
         {
             await WaitForReference();
             await _accessorJsRef.Value.InvokeVoidAsync("remove", key);
+        }
+
+        private async Task WaitForReference()
+        {
+            if (_accessorJsRef.IsValueCreated is false)
+            {
+                _accessorJsRef = new(await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/epoch-script.js"));
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_accessorJsRef.IsValueCreated)
+            {
+                await _accessorJsRef.Value.DisposeAsync();
+            }
         }
     }
 }
