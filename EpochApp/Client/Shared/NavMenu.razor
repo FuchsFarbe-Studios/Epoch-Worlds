@@ -1,12 +1,12 @@
 ﻿@using EpochApp.Shared
-@using Microsoft.AspNetCore.Authorization
 <EpochNavBar BrandHref="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="true" Color="ColorStyle.Orange">
 	<NavLeft>
-		<EpochNavLink Link="/" Match="NavLinkMatch.All">Home</EpochNavLink>
-		<EpochNavLink Link="/Features" Match="NavLinkMatch.All">Features</EpochNavLink>
-		<EpochNavLink Link="/Community" Match="NavLinkMatch.All">Community</EpochNavLink>
-		<EpochNavLink Link="/Support" Match="NavLinkMatch.All">Support</EpochNavLink>
-		<EpochNavLink Link="/About" Match="NavLinkMatch.All">About</EpochNavLink>
+		<NavLink href="/" Match="NavLinkMatch.All">Home</NavLink>
+		<NavLink href="/Features" Match="NavLinkMatch.All">Features</NavLink>
+		<NavLink href="/Community" Match="NavLinkMatch.All">Community</NavLink>
+		<NavLink href="/Support" Match="NavLinkMatch.All">Support</NavLink>
+		<NavLink href="/About" Match="NavLinkMatch.All">About</NavLink>
+		<NavLink href="/Flatify" Match="NavLinkMatch.All">Flatify</NavLink>
 	</NavLeft>
 	<NavRight>
 		<AuthorizeView>
@@ -26,5 +26,3 @@
 	</NavRight>
 
 </EpochNavBar>
-
-				
