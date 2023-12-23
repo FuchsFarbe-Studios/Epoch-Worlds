@@ -38,4 +38,9 @@
         <AdditionalFiles Include="Auth\RegistrationKit.razor"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <UpToDateCheckInput Remove="Forms\EpochField.razor"/>
+        <UpToDateCheckInput Remove="Forms\ServerSideValidator.razor"/>
+    </ItemGroup>
+
 </Project>

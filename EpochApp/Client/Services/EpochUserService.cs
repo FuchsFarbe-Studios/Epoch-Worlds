@@ -13,8 +13,8 @@ namespace EpochApp.Client.Services
 {
     public class EpochUserService
     {
-        private readonly HttpClient _client;
         private readonly ClientAuthData _authData;
+        private readonly HttpClient _client;
 
         public EpochUserService(HttpClient client, ClientAuthData authData)
         {
@@ -24,7 +24,8 @@ namespace EpochApp.Client.Services
 
         public async Task<UserData> SendAuthenticateRequestAsync(string username, string password)
         {
-            var response = await _client.PostAsJsonAsync($"/api/v1/EpochUsers/Authenticate",new LoginDTO(){UserName = username, Password = password});
+            var response = await _client.PostAsJsonAsync("api/v1/EpochUsers/Authentication", new LoginDTO
+                                                                                             { UserName = username, Password = password });
 
             if (response.IsSuccessStatusCode)
             {
@@ -64,7 +65,5 @@ namespace EpochApp.Client.Services
         private void PersistUserToBrowser(string token) => _authData.Token = token;
 
         public void ClearBrowserUserData() => _authData.Token = "";
-
-
     }
 }

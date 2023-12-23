@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EpochApp.Server.Migrations
 {
     [DbContext(typeof(EpochDataDbContext))]
-    [Migration("20231129230641_Init")]
-    partial class Init
+    [Migration("20231223115505_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,98 +25,26 @@ namespace EpochApp.Server.Migrations
                 .HasAnnotation("ProductVersion", "7.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("EpochApp.Server.Controllers.Phoneme", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.ArticleCategory", b =>
                 {
-                    b.Property<string>("PhonemeID")
-                        .HasMaxLength(4)
-                        .HasColumnType("varchar(4)");
-
-                    b.Property<string>("AudioFile")
-                        .HasMaxLength(155)
-                        .HasColumnType("varchar(155)");
-
-                    b.HasKey("PhonemeID");
-
-                    b.ToTable("lkPhonemes", "Lookups");
-
-                    b.UseTptMappingStrategy();
-                });
-
-            modelBuilder.Entity("EpochApp.Shared.Blog.Blog", b =>
-                {
-                    b.Property<int>("BlogID")
+                    b.Property<int>("CategoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
+                        .HasAnnotation("Jet:IdentityIncrement", 4)
+                        .HasAnnotation("Jet:IdentitySeed", 3)
                         .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BlogTypeID")
-                        .HasColumnType("integer");
+                    b.Property<string>("Description")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Description");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longchar");
+                    b.HasKey("CategoryID");
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longchar");
-
-                    b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longchar");
-
-                    b.HasKey("BlogID");
-
-                    b.HasIndex("BlogTypeID");
-
-                    b.ToTable("Blogs", "Blogs");
+                    b.ToTable("lkArticleCategories", "Lookups");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Blog.BlogOwner", b =>
-                {
-                    b.Property<int>("BlogID")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("OwnerID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime?>("RemovedOn")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("BlogID", "OwnerID");
-
-                    b.HasIndex("OwnerID");
-
-                    b.ToTable("BlogOwners", "Blogs");
-                });
-
-            modelBuilder.Entity("EpochApp.Shared.Blog.BlogPost", b =>
-                {
-                    b.Property<int>("BlogID")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("PostID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime>("PostedOn")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("BlogID", "PostID");
-
-                    b.HasIndex("PostID");
-
-                    b.ToTable("BlogPosts", "Blogs");
-                });
-
-            modelBuilder.Entity("EpochApp.Shared.Blog.BlogType", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.BlogType", b =>
                 {
                     b.Property<int>("BlogTypeID")
                         .ValueGeneratedOnAdd()
@@ -158,118 +86,7 @@ namespace EpochApp.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Blog.Post", b =>
-                {
-                    b.Property<Guid>("PostID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AuthorID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("longchar");
-
-                    b.Property<string>("Href")
-                        .HasColumnType("longchar");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longchar");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("OutsideLink")
-                        .HasColumnType("longchar");
-
-                    b.Property<int>("PostTypeID")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("PostedOn")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("longchar");
-
-                    b.HasKey("PostID");
-
-                    b.HasIndex("AuthorID");
-
-                    b.HasIndex("PostTypeID");
-
-                    b.ToTable("Posts", "Blogs");
-                });
-
-            modelBuilder.Entity("EpochApp.Shared.Blog.PostType", b =>
-                {
-                    b.Property<int>("PostTypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longchar");
-
-                    b.HasKey("PostTypeID");
-
-                    b.ToTable("lkPostTypes", "Blogs");
-                });
-
-            modelBuilder.Entity("EpochApp.Shared.Config.MetaTemplate", b =>
-                {
-                    b.Property<int>("TemplateID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CategoryID")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("HelpText")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Placeholder")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("TemplateName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Name");
-
-                    b.HasKey("TemplateID");
-
-                    b.HasIndex("CategoryID");
-
-                    b.ToTable("lkMetaTemplates", "Lookups");
-                });
-
-            modelBuilder.Entity("EpochApp.Shared.Lookups.ArticleCategory", b =>
-                {
-                    b.Property<int>("CategoryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Jet:IdentityIncrement", 4)
-                        .HasAnnotation("Jet:IdentitySeed", 3)
-                        .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Description");
-
-                    b.HasKey("CategoryID");
-
-                    b.ToTable("lkArticleCategories", "Lookups");
-                });
-
-            modelBuilder.Entity("EpochApp.Shared.Lookups.MetaCategory", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.MetaCategory", b =>
                 {
                     b.Property<int>("CategoryID")
                         .ValueGeneratedOnAdd()
@@ -323,7 +140,74 @@ namespace EpochApp.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Lookups.SocialMedia", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.MetaTemplate", b =>
+                {
+                    b.Property<int>("TemplateID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("HelpText")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Placeholder")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Name");
+
+                    b.HasKey("TemplateID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.ToTable("lkMetaTemplates", "Lookups");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.Phoneme", b =>
+                {
+                    b.Property<string>("PhonemeID")
+                        .HasMaxLength(4)
+                        .HasColumnType("varchar(4)");
+
+                    b.Property<string>("AudioFile")
+                        .HasMaxLength(155)
+                        .HasColumnType("varchar(155)");
+
+                    b.HasKey("PhonemeID");
+
+                    b.ToTable("lkPhonemes", "Lookups");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.PostType", b =>
+                {
+                    b.Property<int>("PostTypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longchar");
+
+                    b.HasKey("PostTypeID");
+
+                    b.ToTable("lkPostTypes", "Blogs");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.SocialMedia", b =>
                 {
                     b.Property<int>("SocialID")
                         .ValueGeneratedOnAdd()
@@ -350,7 +234,123 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("lkSocialMediae", "Lookups");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.Profile", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.Blog", b =>
+                {
+                    b.Property<int>("BlogID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Jet:ValueGenerationStrategy", JetValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BlogTypeID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longchar");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("longchar");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longchar");
+
+                    b.HasKey("BlogID");
+
+                    b.HasIndex("BlogTypeID");
+
+                    b.ToTable("Blogs", "Blogs");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.BlogOwner", b =>
+                {
+                    b.Property<int>("BlogID")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("OwnerID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("RemovedOn")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("BlogID", "OwnerID");
+
+                    b.HasIndex("OwnerID");
+
+                    b.ToTable("BlogOwners", "Blogs");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.BlogPost", b =>
+                {
+                    b.Property<int>("BlogID")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("PostID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime>("PostedOn")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("BlogID", "PostID");
+
+                    b.HasIndex("PostID");
+
+                    b.ToTable("BlogPosts", "Blogs");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.Post", b =>
+                {
+                    b.Property<Guid>("PostID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AuthorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("longchar");
+
+                    b.Property<string>("Href")
+                        .HasColumnType("longchar");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("longchar");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("OutsideLink")
+                        .HasColumnType("longchar");
+
+                    b.Property<int>("PostTypeID")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("PostedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longchar");
+
+                    b.HasKey("PostID");
+
+                    b.HasIndex("AuthorID");
+
+                    b.HasIndex("PostTypeID");
+
+                    b.ToTable("Posts", "Blogs");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.Profile", b =>
                 {
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
@@ -381,7 +381,7 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("Profiles", "Users");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.Role", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.Role", b =>
                 {
                     b.Property<int>("RoleID")
                         .ValueGeneratedOnAdd()
@@ -418,7 +418,7 @@ namespace EpochApp.Server.Migrations
                         });
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.User", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.User", b =>
                 {
                     b.Property<Guid>("UserID")
                         .ValueGeneratedOnAdd()
@@ -455,7 +455,7 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("Users", "Users");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.UserRole", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.UserRole", b =>
                 {
                     b.Property<int>("RoleID")
                         .HasColumnType("integer");
@@ -476,7 +476,7 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("UserRoles", "Users");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.UserSocial", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.UserSocial", b =>
                 {
                     b.Property<int>("SocialID")
                         .HasColumnType("integer");
@@ -494,7 +494,7 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("UserSocials", "Users");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Worlds.World", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Worlds.World", b =>
                 {
                     b.Property<Guid>("WorldID")
                         .ValueGeneratedOnAdd()
@@ -528,7 +528,7 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("Worlds", "Users");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Worlds.WorldDate", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Worlds.WorldDate", b =>
                 {
                     b.Property<Guid>("WorldID")
                         .HasColumnType("uniqueidentifier");
@@ -550,7 +550,7 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("WorldDate", "Users");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Worlds.WorldMeta", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Worlds.WorldMeta", b =>
                 {
                     b.Property<Guid>("WorldID")
                         .HasColumnType("uniqueidentifier");
@@ -568,9 +568,9 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("WorldMetas", "Users");
                 });
 
-            modelBuilder.Entity("EpochApp.Server.Controllers.Consonant", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.Consonant", b =>
                 {
-                    b.HasBaseType("EpochApp.Server.Controllers.Phoneme");
+                    b.HasBaseType("EpochApp.Shared.Config.Lookups.Phoneme");
 
                     b.Property<bool>("IsVoiced")
                         .HasColumnType("smallint");
@@ -586,9 +586,9 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("lkConsonants", "Lookups");
                 });
 
-            modelBuilder.Entity("EpochApp.Server.Controllers.Vowel", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.Vowel", b =>
                 {
-                    b.HasBaseType("EpochApp.Server.Controllers.Phoneme");
+                    b.HasBaseType("EpochApp.Shared.Config.Lookups.Phoneme");
 
                     b.Property<string>("Depth")
                         .HasMaxLength(35)
@@ -604,9 +604,21 @@ namespace EpochApp.Server.Migrations
                     b.ToTable("lkVowels", "Lookups");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Blog.Blog", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.MetaTemplate", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Blog.BlogType", "BlogType")
+                    b.HasOne("EpochApp.Shared.Config.Lookups.MetaCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_MetaTemplates_MetaCategories");
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.Blog", b =>
+                {
+                    b.HasOne("EpochApp.Shared.Config.Lookups.BlogType", "BlogType")
                         .WithMany()
                         .HasForeignKey("BlogTypeID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -616,16 +628,16 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("BlogType");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Blog.BlogOwner", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.BlogOwner", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Blog.Blog", "Blog")
+                    b.HasOne("EpochApp.Shared.Site.Blog.Blog", "Blog")
                         .WithMany("BlogOwners")
                         .HasForeignKey("BlogID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_BlogOwners_Blogs");
 
-                    b.HasOne("EpochApp.Shared.Users.User", "Owner")
+                    b.HasOne("EpochApp.Shared.Site.Users.User", "Owner")
                         .WithMany("OwnedBlogs")
                         .HasForeignKey("OwnerID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -637,16 +649,16 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Blog.BlogPost", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.BlogPost", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Blog.Blog", "Blog")
+                    b.HasOne("EpochApp.Shared.Site.Blog.Blog", "Blog")
                         .WithMany("BlogPosts")
                         .HasForeignKey("BlogID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_BlogPosts_Blogs");
 
-                    b.HasOne("EpochApp.Shared.Blog.Post", "Post")
+                    b.HasOne("EpochApp.Shared.Site.Blog.Post", "Post")
                         .WithMany("BlogPosts")
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -658,14 +670,14 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Blog.Post", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.Post", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Users.User", "Author")
+                    b.HasOne("EpochApp.Shared.Site.Users.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorID")
                         .HasConstraintName("FK_Posts_Users");
 
-                    b.HasOne("EpochApp.Shared.Blog.PostType", "PostType")
+                    b.HasOne("EpochApp.Shared.Config.Lookups.PostType", "PostType")
                         .WithMany()
                         .HasForeignKey("PostTypeID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -676,23 +688,11 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("PostType");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Config.MetaTemplate", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.Profile", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Lookups.MetaCategory", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_MetaTemplates_MetaCategories");
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("EpochApp.Shared.Users.Profile", b =>
-                {
-                    b.HasOne("EpochApp.Shared.Users.User", "User")
+                    b.HasOne("EpochApp.Shared.Site.Users.User", "User")
                         .WithOne("Profile")
-                        .HasForeignKey("EpochApp.Shared.Users.Profile", "UserID")
+                        .HasForeignKey("EpochApp.Shared.Site.Users.Profile", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Profile_User");
@@ -700,16 +700,16 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.UserRole", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.UserRole", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Users.Role", "Role")
+                    b.HasOne("EpochApp.Shared.Site.Users.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_UserRoles_Roles");
 
-                    b.HasOne("EpochApp.Shared.Users.User", "User")
+                    b.HasOne("EpochApp.Shared.Site.Users.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -721,16 +721,16 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.UserSocial", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.UserSocial", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Lookups.SocialMedia", "Social")
+                    b.HasOne("EpochApp.Shared.Config.Lookups.SocialMedia", "Social")
                         .WithMany()
                         .HasForeignKey("SocialID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_UserSocials_SocialMediae");
 
-                    b.HasOne("EpochApp.Shared.Users.Profile", "Profile")
+                    b.HasOne("EpochApp.Shared.Site.Users.Profile", "Profile")
                         .WithMany("Socials")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -742,9 +742,9 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("Social");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Worlds.World", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Worlds.World", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Users.User", "Owner")
+                    b.HasOne("EpochApp.Shared.Site.Users.User", "Owner")
                         .WithMany("OwnedWorlds")
                         .HasForeignKey("OwnerID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -754,11 +754,11 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Worlds.WorldDate", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Worlds.WorldDate", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Worlds.World", "World")
+                    b.HasOne("EpochApp.Shared.Site.Worlds.World", "World")
                         .WithOne("CurrentWorldDate")
-                        .HasForeignKey("EpochApp.Shared.Worlds.WorldDate", "WorldID")
+                        .HasForeignKey("EpochApp.Shared.Site.Worlds.WorldDate", "WorldID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_WorldDates_Worlds");
@@ -766,16 +766,16 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("World");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Worlds.WorldMeta", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Worlds.WorldMeta", b =>
                 {
-                    b.HasOne("EpochApp.Shared.Config.MetaTemplate", "Template")
+                    b.HasOne("EpochApp.Shared.Config.Lookups.MetaTemplate", "Template")
                         .WithMany()
                         .HasForeignKey("MetaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_WorldMetas_MetaTemplates");
 
-                    b.HasOne("EpochApp.Shared.Worlds.World", "World")
+                    b.HasOne("EpochApp.Shared.Site.Worlds.World", "World")
                         .WithMany("MetaData")
                         .HasForeignKey("WorldID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -786,47 +786,47 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("World");
                 });
 
-            modelBuilder.Entity("EpochApp.Server.Controllers.Consonant", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.Consonant", b =>
                 {
-                    b.HasOne("EpochApp.Server.Controllers.Phoneme", null)
+                    b.HasOne("EpochApp.Shared.Config.Lookups.Phoneme", null)
                         .WithOne()
-                        .HasForeignKey("EpochApp.Server.Controllers.Consonant", "PhonemeID")
+                        .HasForeignKey("EpochApp.Shared.Config.Lookups.Consonant", "PhonemeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EpochApp.Server.Controllers.Vowel", b =>
+            modelBuilder.Entity("EpochApp.Shared.Config.Lookups.Vowel", b =>
                 {
-                    b.HasOne("EpochApp.Server.Controllers.Phoneme", null)
+                    b.HasOne("EpochApp.Shared.Config.Lookups.Phoneme", null)
                         .WithOne()
-                        .HasForeignKey("EpochApp.Server.Controllers.Vowel", "PhonemeID")
+                        .HasForeignKey("EpochApp.Shared.Config.Lookups.Vowel", "PhonemeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Blog.Blog", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.Blog", b =>
                 {
                     b.Navigation("BlogOwners");
 
                     b.Navigation("BlogPosts");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Blog.Post", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Blog.Post", b =>
                 {
                     b.Navigation("BlogPosts");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.Profile", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.Profile", b =>
                 {
                     b.Navigation("Socials");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.Role", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.Role", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Users.User", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Users.User", b =>
                 {
                     b.Navigation("OwnedBlogs");
 
@@ -837,7 +837,7 @@ namespace EpochApp.Server.Migrations
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("EpochApp.Shared.Worlds.World", b =>
+            modelBuilder.Entity("EpochApp.Shared.Site.Worlds.World", b =>
                 {
                     b.Navigation("CurrentWorldDate");
 

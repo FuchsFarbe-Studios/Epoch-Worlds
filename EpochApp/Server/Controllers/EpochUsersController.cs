@@ -97,10 +97,14 @@ namespace EpochApp.Server.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
-        [HttpPost("Authenticate")]
-        public async Task<IActionResult> Authenticate(LoginDTO authentication)
+        [HttpPost("Authentication")]
+        public async Task<IActionResult> Authentication(LoginDTO login)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == authentication.UserName);
+            var user = await _context.Users
+                                     .Include(x => x.UserRoles)
+                                     .ThenInclude(x => x.Role)
+                                     .Include(x => x.Profile)
+                                     .FirstOrDefaultAsync(x => x.UserName == login.UserName);
             if (user is null)
             {
                 ModelState.AddModelError(nameof(LoginDTO.UserName), "Username or Password is incorrect");
@@ -108,7 +112,7 @@ namespace EpochApp.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!VerifyPassword(authentication.Password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPassword(login.Password, user.PasswordHash, user.PasswordSalt))
             {
                 ModelState.AddModelError(nameof(LoginDTO.UserName), "Unauthorized!");
                 return BadRequest(ModelState);
