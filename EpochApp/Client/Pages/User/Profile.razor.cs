@@ -4,10 +4,12 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace EpochApp.Client.Pages.User
 {
-	public partial class Profile
-	{
-
-	}
+    [Authorize]
+    public partial class Profile
+    {
+    }
 }

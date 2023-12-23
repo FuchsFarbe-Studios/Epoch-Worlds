@@ -5,13 +5,14 @@
 // Modified: 29-11-2023
 
 using EpochApp.Client.Services;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages.User
 {
-	public partial class Account
-	{
-		[Inject] public EpochAuthProvider Auth { get; set; }
-	}
+    [Authorize]
+    public partial class Account
+    {
+        [Inject] public EpochAuthProvider Auth { get; set; }
+    }
 }

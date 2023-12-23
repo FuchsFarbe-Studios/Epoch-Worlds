@@ -24,8 +24,8 @@ namespace EpochApp.Client.Services
 
         public async Task<UserData> SendAuthenticateRequestAsync(string username, string password)
         {
-            var response = await _client.PostAsJsonAsync("api/v1/EpochUsers/Authentication", new LoginDTO
-                                                                                             { UserName = username, Password = password });
+            var response = await _client.PostAsJsonAsync("/api/v1/EpochUsers/Authentication"
+                                                         , new LoginDTO { UserName = username, Password = password });
 
             if (response.IsSuccessStatusCode)
             {

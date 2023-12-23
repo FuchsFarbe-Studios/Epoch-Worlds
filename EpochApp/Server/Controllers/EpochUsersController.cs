@@ -29,14 +29,14 @@ namespace EpochApp.Server.Controllers
 
         // GET: api/EpochUsers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync()
         {
             return await _context.Users.ToListAsync();
         }
 
         // GET: api/EpochUsers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserData>> GetUser(Guid id)
+        public async Task<ActionResult<UserData>> GetUserAsync(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -61,7 +61,7 @@ namespace EpochApp.Server.Controllers
         // PUT: api/EpochUsers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(Guid id, User user)
+        public async Task<IActionResult> PutUserAsync(Guid id, User user)
         {
             if (id != user.UserID)
             {
@@ -89,7 +89,7 @@ namespace EpochApp.Server.Controllers
         // POST: api/EpochUsers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUserAsync(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -97,8 +97,8 @@ namespace EpochApp.Server.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
-        [HttpPost("Authentication")]
-        public async Task<IActionResult> Authentication(LoginDTO login)
+        [HttpPost("Auth/Authentication")]
+        public async Task<IActionResult> AuthenticateAsync(LoginDTO login)
         {
             var user = await _context.Users
                                      .Include(x => x.UserRoles)
@@ -132,7 +132,7 @@ namespace EpochApp.Server.Controllers
         }
 
 
-        [HttpPost("Registration")]
+        [HttpPost("Auth/Registration")]
         public async Task<IActionResult> Register(RegistrationDTO registration)
         {
             // check if user already exists based on username or email

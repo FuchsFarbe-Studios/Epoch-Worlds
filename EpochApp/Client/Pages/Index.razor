@@ -1,7 +1,6 @@
 ﻿@page "/"
-@using Flatify.Forms
 
-<PageTitle>Index</PageTitle>
+<PageTitle>@StaticUtils.Constants.AppName Home</PageTitle>
 
 <h3>Browser Storage Test</h3>
 <EditForm Model="@_dataStore">
@@ -23,32 +22,11 @@
 	<button type="button" class="button" @onclick="@(async () => await ClearAllAsync())">Clear Value</button>
 </div>
 <br />
-<article class="card" style="max-width: 320px">
-	<header class="card-header">
-		<div class="card-badges">
-			<a href="#" class="badge style-green">Sundays</a>
-			<a href="#" class="badge style-accent">Cards</a>
-		</div>
-
-		<img class="card-image" src="https://picsum.photos/200/300" alt="Card image" />
-		<h2 class="card-title">Hello, I am a new card</h2>
-	</header>
-
-	<div class="card-body">
-		Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada
-		erat ut turpis.
-	</div>
-
-	<footer class="card-footer">
-		<div class="button-group">
-			<button class="button bordered style-light-light" aria-label="Like">
-				<!-- Like svg ... -->
-			</button>
-			<button class="button bordered style-light-light" aria-label="Share">
-				<!-- Share svg ... -->
-			</button>
-		</div>
-
-		<a href="#" class="button style-accent push-right">Read more</a>
-	</footer>
-</article>
+<FlatCard HeadingText="This is heading text" MaxWidth="400" CardSize="Size.Large" Edge="EdgeType.Triangle">
+	<CardContent>
+		Here is some card content...
+	</CardContent>
+	<CardButtons>
+		<FlatButton>Card Button</FlatButton>
+	</CardButtons>
+</FlatCard>
