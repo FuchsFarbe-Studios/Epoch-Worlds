@@ -1,27 +1,27 @@
-﻿<EpochNavBar BrandHref="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="true" Color="ColorStyle.Orange">
-	<NavLeft>
-		<NavLink href="/" Match="NavLinkMatch.All">Home</NavLink>
-		<NavLink href="/Features" Match="NavLinkMatch.All">Features</NavLink>
-		<NavLink href="/Community" Match="NavLinkMatch.All">Community</NavLink>
-		<NavLink href="/Support" Match="NavLinkMatch.All">Support</NavLink>
-		<NavLink href="/About" Match="NavLinkMatch.All">About</NavLink>
-		<NavLink href="/Flatify" Match="NavLinkMatch.All">Flatify</NavLink>
-	</NavLeft>
-	<NavRight>
+﻿<FlatNavBar BrandLink="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="true" Color="FlatColor.Dark">
+	<LeftBar>
+		<FlatLink Link="/" MatchMode="NavLinkMatch.All">Home</FlatLink>
+		<FlatLink Link="/Features" MatchMode="NavLinkMatch.All">Features</FlatLink>
+		<FlatLink Link="/Community" MatchMode="NavLinkMatch.All">Community</FlatLink>
+		<FlatLink Link="/Support" MatchMode="NavLinkMatch.All">Support</FlatLink>
+		<FlatLink Link="/About" MatchMode="NavLinkMatch.All">About</FlatLink>
+		<FlatLink Link="/Flatify" MatchMode="NavLinkMatch.All">Flatify</FlatLink>
+	</LeftBar>
+	<RightBar>
 		<AuthorizeView>
 			<Authorized>
-				<EpochNavLink Link="/User/Profile">Profile</EpochNavLink>
-				<EpochNavLink Link="/Auth/Logout">Logout</EpochNavLink>
+				<FlatLink Link="/User/Profile" MatchMode="NavLinkMatch.All">Profile</FlatLink>
+				<FlatLink Link="/Auth/Logout" MatchMode="NavLinkMatch.All">Logout</FlatLink>
 			</Authorized>
 			<Authorizing>
-				<EpochNavLink Link="/Auth/Register">Create Account</EpochNavLink>
-				<EpochNavLink Link="/Auth/Login">Login</EpochNavLink>
+				<FlatLink Link="/Auth/Register" MatchMode="NavLinkMatch.All">Create Account</FlatLink>
+				<FlatLink Link="/Auth/Login" MatchMode="NavLinkMatch.All">Login</FlatLink>
 			</Authorizing>
 			<NotAuthorized>
-				<EpochNavLink Link="/Auth/Register">Create Account</EpochNavLink>
-				<EpochNavLink Link="/Auth/Login">Login</EpochNavLink>
+				<FlatLink Link="/Auth/Register" MatchMode="NavLinkMatch.All">Create Account</FlatLink>
+				<FlatLink Link="/Auth/Login" MatchMode="NavLinkMatch.All">Login</FlatLink>
 			</NotAuthorized>
 		</AuthorizeView>
-	</NavRight>
+	</RightBar>
 
-</EpochNavBar>
+</FlatNavBar>
