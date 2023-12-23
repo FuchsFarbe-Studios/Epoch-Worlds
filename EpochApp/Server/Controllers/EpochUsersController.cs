@@ -97,9 +97,12 @@ namespace EpochApp.Server.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
-        [HttpPost("Auth/Authentication")]
+        [HttpPost("Authentication")]
         public async Task<IActionResult> AuthenticateAsync(LoginDTO login)
         {
+            if (string.IsNullOrWhiteSpace(login.UserName) && string.IsNullOrWhiteSpace(login.Password))
+                return Ok("");
+
             var user = await _context.Users
                                      .Include(x => x.UserRoles)
                                      .ThenInclude(x => x.Role)
@@ -132,8 +135,8 @@ namespace EpochApp.Server.Controllers
         }
 
 
-        [HttpPost("Auth/Registration")]
-        public async Task<IActionResult> Register(RegistrationDTO registration)
+        [HttpPost("Registration")]
+        public async Task<IActionResult> RegisterAsync(RegistrationDTO registration)
         {
             // check if user already exists based on username or email
             var isUserAlreadyExists = await _context.Users.AnyAsync(u => u.UserName == registration.UserName || u.Email == registration.Email);

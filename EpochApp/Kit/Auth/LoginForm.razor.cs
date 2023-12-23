@@ -49,7 +49,7 @@ namespace EpochApp.Kit.Auth
             }
             if (ctx.Validate())
             {
-                var result = await Client.PostAsJsonAsync("Auth/Authentication", (LoginDTO)ctx.Model);
+                var result = await Client.PostAsJsonAsync("/Authentication", (LoginDTO)ctx.Model);
                 await Task.Delay(500);
                 if (result.IsSuccessStatusCode)
                 {
