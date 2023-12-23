@@ -8,7 +8,7 @@ namespace EpochApp.Shared.Config
 {
     public class Phoneme
     {
-        public String PhonemeID { get; set; }
-        public String AudioFile { get; set; }
+        public string PhonemeID { get; set; }
+        public string AudioFile { get; set; }
     }
 }

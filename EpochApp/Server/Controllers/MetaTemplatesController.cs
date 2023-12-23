@@ -37,7 +37,7 @@ namespace EpochApp.Server.Controllers
 
         // GET: api/MetaTemplates/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MetaTemplate>> GetMetaTemplate(Int32 id)
+        public async Task<ActionResult<MetaTemplate>> GetMetaTemplate(int id)
         {
             var metaTemplate = await _context.MetaTemplates.Include(t => t.Category).FirstOrDefaultAsync(t => t.TemplateID == id);
 
@@ -56,7 +56,7 @@ namespace EpochApp.Server.Controllers
                       });
         }
 
-        private Boolean MetaTemplateExists(Int32 id)
+        private bool MetaTemplateExists(int id)
         {
             return _context.MetaTemplates.Any(e => e.TemplateID == id);
         }

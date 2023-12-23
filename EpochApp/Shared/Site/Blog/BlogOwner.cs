@@ -10,7 +10,7 @@ namespace EpochApp.Shared
 {
     public class BlogOwner
     {
-        public Int32 BlogID { get; set; }
+        public int BlogID { get; set; }
         public Guid OwnerID { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? RemovedOn { get; set; }

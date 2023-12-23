@@ -11,7 +11,7 @@ namespace EpochApp.Kit.Services
     public class LocalStorageAccessor : ILocalStorage
     {
         private readonly IJSRuntime _jsRuntime;
-        private Lazy<IJSObjectReference> _accessorJsRef = new();
+        private Lazy<IJSObjectReference> _accessorJsRef = new Lazy<IJSObjectReference>();
 
         public LocalStorageAccessor(IJSRuntime jsRuntime)
         {
@@ -52,7 +52,7 @@ namespace EpochApp.Kit.Services
         {
             if (_accessorJsRef.IsValueCreated is false)
             {
-                _accessorJsRef = new(await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/epoch-script.js"));
+                _accessorJsRef = new Lazy<IJSObjectReference>(await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/epoch-script.js"));
             }
         }
 

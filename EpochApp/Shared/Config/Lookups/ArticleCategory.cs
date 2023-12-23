@@ -8,7 +8,7 @@ namespace EpochApp.Shared.Config
 {
     public class ArticleCategory
     {
-        public Int32 CategoryID { get; set; }
-        public String Description { get; set; }
+        public int CategoryID { get; set; }
+        public string Description { get; set; }
     }
 }

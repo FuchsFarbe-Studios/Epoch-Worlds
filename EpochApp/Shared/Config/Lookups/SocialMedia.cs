@@ -8,9 +8,9 @@ namespace EpochApp.Shared.Config
 {
     public class SocialMedia
     {
-        public Int32 SocialID { get; set; }
-        public String SocialMediaName { get; set; }
-        public String URLAffix { get; set; }
-        public String Icon { get; set; }
+        public int SocialID { get; set; }
+        public string SocialMediaName { get; set; }
+        public string URLAffix { get; set; }
+        public string Icon { get; set; }
     }
 }

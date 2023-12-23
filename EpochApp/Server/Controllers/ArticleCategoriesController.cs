@@ -25,7 +25,7 @@ namespace EpochApp.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CategoryDTO>> GetArticleCategory(Int32 id)
+        public async Task<ActionResult<CategoryDTO>> GetArticleCategory(int id)
         {
             var articleCategory = await _context.ArticleCategories.FindAsync(id);
 
@@ -38,7 +38,7 @@ namespace EpochApp.Server.Controllers
                    { CategoryID = articleCategory.CategoryID.ToString(), Description = articleCategory.Description };
         }
 
-        private Boolean ArticleCategoryExists(Int32 id)
+        private bool ArticleCategoryExists(int id)
         {
             return _context.ArticleCategories.Any(e => e.CategoryID == id);
         }

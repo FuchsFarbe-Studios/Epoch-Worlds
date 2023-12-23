@@ -18,6 +18,6 @@ namespace EpochApp.Shared
     public class SocialDTO
     {
         public SocialMedia Social { get; set; }
-        public String Handle { get; set; }
+        public string Handle { get; set; }
     }
 }

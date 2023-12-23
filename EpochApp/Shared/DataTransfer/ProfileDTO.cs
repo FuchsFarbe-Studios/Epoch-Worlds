@@ -9,13 +9,13 @@ namespace EpochApp.Shared
     public class ProfileDTO
     {
         public Guid UserID { get; set; }
-        public String FirstName { get; set; }
-        public String LastName { get; set; }
-        public String Bio { get; set; }
-        public String Signature { get; set; }
-        public String AvatarImg { get; set; }
-        public String CoverImg { get; set; }
-        public String WebAddress { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Bio { get; set; }
+        public string Signature { get; set; }
+        public string AvatarImg { get; set; }
+        public string CoverImg { get; set; }
+        public string WebAddress { get; set; }
 
         public List<SocialDTO> Socials { get; set; }
     }

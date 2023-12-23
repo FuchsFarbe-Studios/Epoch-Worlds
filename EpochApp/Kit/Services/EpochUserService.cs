@@ -29,7 +29,7 @@ namespace EpochApp.Kit.Services
 
             if (response.IsSuccessStatusCode)
             {
-                string token = await response.Content.ReadAsStringAsync();
+                var token = await response.Content.ReadAsStringAsync();
                 var claimPrincipal = CreateClaimsPrincipalFromToken(token);
                 var user = UserData.FromClaimsPrincipal(claimPrincipal);
                 PersistUserToBrowser(token);
@@ -56,14 +56,20 @@ namespace EpochApp.Kit.Services
             if (tokenHandler.CanReadToken(token))
             {
                 var jwtSecurityToken = tokenHandler.ReadJwtToken(token);
-                identity = new(jwtSecurityToken.Claims, "jwt");
+                identity = new ClaimsIdentity(jwtSecurityToken.Claims, "jwt");
             }
 
-            return new(identity);
+            return new ClaimsPrincipal(identity);
         }
 
-        private void PersistUserToBrowser(string token) => _authData.Token = token;
+        private void PersistUserToBrowser(string token)
+        {
+            _authData.Token = token;
+        }
 
-        public void ClearBrowserUserData() => _authData.Token = "";
+        public void ClearBrowserUserData()
+        {
+            _authData.Token = "";
+        }
     }
 }

@@ -12,9 +12,9 @@ namespace EpochApp.Shared.Worlds
     {
         public Guid OwnerID { get; set; }
         public Guid WorldID { get; set; }
-        public String WorldName { get; set; }
-        public String Pronunciation { get; set; }
-        public String Description { get; set; }
+        public string WorldName { get; set; }
+        public string Pronunciation { get; set; }
+        public string Description { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public DateTime? DateRemoved { get; set; }

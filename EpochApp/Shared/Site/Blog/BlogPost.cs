@@ -8,7 +8,7 @@ namespace EpochApp.Shared
 {
     public class BlogPost
     {
-        public Int32 BlogID { get; set; }
+        public int BlogID { get; set; }
         public Guid PostID { get; set; }
         public DateTime PostedOn { get; set; }
         public DateTime? ModifiedOn { get; set; }

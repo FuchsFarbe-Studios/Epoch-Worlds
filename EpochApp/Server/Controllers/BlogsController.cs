@@ -81,10 +81,7 @@ namespace EpochApp.Server.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return NoContent();

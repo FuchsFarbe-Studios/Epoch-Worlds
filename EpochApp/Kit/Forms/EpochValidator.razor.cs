@@ -24,7 +24,7 @@ namespace EpochApp.Kit.Forms
 
         #endregion
 
-        public void DisplayErrors(Dictionary<String, List<String>> errors)
+        public void DisplayErrors(Dictionary<string, List<string>> errors)
         {
             if (Context is not null)
             {

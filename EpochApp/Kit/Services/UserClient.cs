@@ -28,7 +28,7 @@ namespace EpochApp.Kit.Services
         {
         }
 
-        public async Task<HttpResponseMessage> PostAsJsonAsync<TValue>(String requestUri, TValue value)
+        public async Task<HttpResponseMessage> PostAsJsonAsync<TValue>(string requestUri, TValue value)
         {
             return await _client.PostAsJsonAsync<TValue>(requestUri, value);
         }

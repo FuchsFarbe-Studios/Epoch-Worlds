@@ -26,7 +26,7 @@ namespace EpochApp.Kit.Utils
         /// <summary>
         ///     Initializes a new instance of the <see cref='System.ComponentModel.DescriptionAttribute' /> class.
         /// </summary>
-        public DescriptionAttribute(String description)
+        public DescriptionAttribute(string description)
         {
             DescriptionValue = description;
         }
@@ -34,25 +34,25 @@ namespace EpochApp.Kit.Utils
         /// <summary>
         ///     Gets the description stored in this attribute.
         /// </summary>
-        public virtual String Description => DescriptionValue;
+        public virtual string Description => DescriptionValue;
 
         /// <summary>
         ///     Read/Write property that directly modifies the string stored in the description attribute. The default
         ///     implementation of the <see cref="Description" /> property simply returns this value.
         /// </summary>
-        protected String DescriptionValue { get; set; }
+        protected string DescriptionValue { get; set; }
 
-        public override Boolean Equals([NotNullWhen(true)] Object obj)
+        public override bool Equals([NotNullWhen(true)] object obj)
         {
             return obj is DescriptionAttribute other && other.Description == Description;
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
             return Description?.GetHashCode() ?? 0;
         }
 
-        public override Boolean IsDefaultAttribute()
+        public override bool IsDefaultAttribute()
         {
             return Equals(Default);
         }

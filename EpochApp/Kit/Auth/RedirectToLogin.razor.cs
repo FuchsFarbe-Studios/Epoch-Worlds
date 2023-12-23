@@ -9,7 +9,7 @@ namespace EpochApp.Kit.Auth
 {
     public partial class RedirectToLogin : ComponentBase
     {
-        [Parameter] public String LoginUrl { get; set; }
+        [Parameter] public string LoginUrl { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
 
         /// <inheritdoc />

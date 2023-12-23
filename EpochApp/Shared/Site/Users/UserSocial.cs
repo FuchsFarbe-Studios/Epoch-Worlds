@@ -31,9 +31,9 @@ namespace EpochApp.Shared.Users
 {
     public class UserSocial
     {
-        public Int32 SocialID { get; set; }
+        public int SocialID { get; set; }
         public Guid UserID { get; set; }
-        public String SocialHandle { get; set; }
+        public string SocialHandle { get; set; }
 
         public virtual SocialMedia Social { get; set; }
         public virtual Profile Profile { get; set; }

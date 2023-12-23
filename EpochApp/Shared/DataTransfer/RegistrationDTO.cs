@@ -8,11 +8,11 @@ namespace EpochApp.Shared
 {
     public class RegistrationDTO
     {
-        public String Email { get; set; }
-        public String UserName { get; set; }
-        public String Password { get; set; }
-        public String Password2 { get; set; }
+        public string Email { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string Password2 { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public Boolean TermAgreement { get; set; } = false;
+        public bool TermAgreement { get; set; } = false;
     }
 }

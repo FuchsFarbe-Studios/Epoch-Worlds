@@ -128,7 +128,7 @@ namespace EpochApp.Server.Controllers
             return NoContent();
         }
 
-        private Boolean ProfileExists(Guid id)
+        private bool ProfileExists(Guid id)
         {
             return _context.Profiles.Any(e => e.UserID == id);
         }

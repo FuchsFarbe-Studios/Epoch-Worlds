@@ -6,8 +6,7 @@
 
 namespace EpochApp.Client.Pages.Site
 {
-	public partial class About
-	{
-
-	}
+    public partial class About
+    {
+    }
 }

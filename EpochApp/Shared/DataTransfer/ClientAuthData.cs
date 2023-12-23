@@ -8,6 +8,6 @@ namespace EpochApp.Shared
 {
     public class ClientAuthData
     {
-        public String Token { get; set; }
+        public string Token { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace EpochApp.Shared.Config
 {
     public class BlogType
     {
-        public Int32 BlogTypeID { get; set; }
-        public String Description { get; set; }
+        public int BlogTypeID { get; set; }
+        public string Description { get; set; }
     }
 }

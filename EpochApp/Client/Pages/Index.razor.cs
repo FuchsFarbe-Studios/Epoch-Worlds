@@ -24,7 +24,7 @@ namespace EpochApp.Client.Pages
 
         public async Task GetValueAsync()
         {
-            StoredValue = await Storage.GetValueAsync<String>(_dataStore.Key);
+            StoredValue = await Storage.GetValueAsync<string>(_dataStore.Key);
         }
 
         public async Task RemoveAsync()
@@ -40,9 +40,9 @@ namespace EpochApp.Client.Pages
 
         private class DataStore
         {
-            public String Key { get; } = "";
-            public String Value { get; set; } = "";
-            public Boolean BoolVal { get; set; }
+            public string Key { get; } = "";
+            public string Value { get; set; } = "";
+            public bool BoolVal { get; set; }
         }
     }
 }

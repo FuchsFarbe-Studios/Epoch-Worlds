@@ -16,16 +16,16 @@ namespace EpochApp.Shared.Users
         }
 
         public Guid UserID { get; set; }
-        public String UserName { get; set; }
-        public String Email { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public String PasswordHash { get; set; }
-        public Byte[] PasswordSalt { get; set; }
+        public string PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public DateTime? DateRemoved { get; set; }
-        public String NormalizedUserName => UserName.ToUpper();
-        public String NormalizedEmail => Email.ToUpper();
+        public string NormalizedUserName => UserName.ToUpper();
+        public string NormalizedEmail => Email.ToUpper();
 
         public virtual Profile Profile { get; set; }
 

@@ -15,8 +15,8 @@ namespace EpochApp.Server.Controllers
     [ApiController]
     public class EpochUsersController : ControllerBase
     {
-        private const Int32 keySize = 64;
-        private const Int32 iterations = 350000;
+        private const int keySize = 64;
+        private const int iterations = 350000;
         private readonly EpochDataDbContext _context;
         private IConfiguration _configuration;
         private HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
@@ -190,12 +190,12 @@ namespace EpochApp.Server.Controllers
             return NoContent();
         }
 
-        private Boolean UserExists(Guid id)
+        private bool UserExists(Guid id)
         {
             return _context.Users.Any(e => e.UserID == id);
         }
 
-        private String HashPasword(String password, out Byte[] salt)
+        private string HashPasword(string password, out byte[] salt)
         {
             salt = RandomNumberGenerator.GetBytes(keySize);
             var hash = Rfc2898DeriveBytes.Pbkdf2(
@@ -207,13 +207,13 @@ namespace EpochApp.Server.Controllers
             return Convert.ToHexString(hash);
         }
 
-        private Boolean VerifyPassword(String password, String hash, Byte[] salt)
+        private bool VerifyPassword(string password, string hash, byte[] salt)
         {
             var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashAlgorithm, keySize);
             return CryptographicOperations.FixedTimeEquals(hashToCompare, Convert.FromHexString(hash));
         }
 
-        private String CreateJWT(IEnumerable<Claim> claims)
+        private string CreateJWT(IEnumerable<Claim> claims)
         {
             var secretkey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
             var credentials = new SigningCredentials(secretkey, SecurityAlgorithms.HmacSha256);

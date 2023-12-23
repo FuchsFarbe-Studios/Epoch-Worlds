@@ -8,7 +8,7 @@ namespace EpochApp.Shared.Config
 {
     public class PostType
     {
-        public Int32 PostTypeID { get; set; }
-        public String Description { get; set; }
+        public int PostTypeID { get; set; }
+        public string Description { get; set; }
     }
 }

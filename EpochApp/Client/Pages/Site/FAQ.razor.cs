@@ -6,8 +6,7 @@
 
 namespace EpochApp.Client.Pages.Site
 {
-	public partial class FAQ
-	{
-
-	}
+    public partial class FAQ
+    {
+    }
 }

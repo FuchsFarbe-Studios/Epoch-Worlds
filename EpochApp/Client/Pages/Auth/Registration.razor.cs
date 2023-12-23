@@ -35,7 +35,7 @@ namespace EpochApp.Client.Pages.Auth
             }
             else
             {
-                Dictionary<string, List<string>> errors = await result.Content.ReadFromJsonAsync<Dictionary<string, List<string>>>();
+                var errors = await result.Content.ReadFromJsonAsync<Dictionary<string, List<string>>>();
                 foreach (var error in errors)
                 {
                     Logger.LogError($"Error registering user: {error.Key}\n\t", error.Value, "\n");

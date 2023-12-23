@@ -8,10 +8,10 @@ namespace EpochApp.Shared
 {
     public class CategoryDTO
     {
-        public String CategoryID { get; set; }
-        public String CategoryName { get; set; }
-        public String Description { get; set; }
-        public String Image { get; set; }
-        public String Affix { get; set; }
+        public string CategoryID { get; set; }
+        public string CategoryName { get; set; }
+        public string Description { get; set; }
+        public string Image { get; set; }
+        public string Affix { get; set; }
     }
 }

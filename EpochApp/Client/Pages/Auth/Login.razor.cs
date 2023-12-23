@@ -15,8 +15,8 @@ namespace EpochApp.Client.Pages.Auth
 {
     public partial class Login
     {
-        private Dictionary<String, List<String>> _errors = new Dictionary<String, List<String>>();
-        private Boolean _loggingIn;
+        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+        private bool _loggingIn;
         private LoginDTO _loginDto = new LoginDTO();
         private EpochValidator _validator;
         [Inject] public HttpClient Client { get; set; }
@@ -30,7 +30,7 @@ namespace EpochApp.Client.Pages.Auth
             if (!ctx.Validate())
             {
                 _loggingIn = false;
-                var errors = new Dictionary<String, List<String>>()
+                var errors = new Dictionary<string, List<string>>
                              {
                                  {
                                      "Errors!", ctx.GetValidationMessages().ToList()

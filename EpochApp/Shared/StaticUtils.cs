@@ -10,16 +10,16 @@ namespace EpochApp.Shared
     {
         public static class Auth
         {
-            public const String LoginNav = "/Auth/Login";
-            public const String RegistrationNav = "/Auth/Register";
-            public const String LogoutNav = "/Auth/Logout";
+            public const string LoginNav = "/Auth/Login";
+            public const string RegistrationNav = "/Auth/Register";
+            public const string LogoutNav = "/Auth/Logout";
         }
 
         public static class Constants
         {
-            public const String CompanyName = "FuchsFarbe Studios";
-            public const String Author = "Oliver Conover";
-            public const String AppName = "Epoch Worlds";
+            public const string CompanyName = "FuchsFarbe Studios";
+            public const string Author = "Oliver Conover";
+            public const string AppName = "Epoch Worlds";
         }
     }
 }

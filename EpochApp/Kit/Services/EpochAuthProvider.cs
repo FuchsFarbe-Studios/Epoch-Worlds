@@ -25,7 +25,10 @@ namespace EpochApp.Kit.Services
         public UserData CurrentUser { get; private set; } = new UserData();
 
         /// <inheritdoc />
-        public void Dispose() => AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
+        public void Dispose()
+        {
+            AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
+        }
 
         /// <inheritdoc />
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -44,7 +47,7 @@ namespace EpochApp.Kit.Services
                 }
             }
 
-            return new(principal);
+            return new AuthenticationState(principal);
         }
 
         private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task)
@@ -75,7 +78,7 @@ namespace EpochApp.Kit.Services
         {
             _logger.LogInformation($"User: {CurrentUser.UserName} logged out.");
             _userService.ClearBrowserUserData();
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new())));
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
         }
     }
 }

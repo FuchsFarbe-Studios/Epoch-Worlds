@@ -30,7 +30,7 @@ namespace EpochApp.Shared.Users
     public class UserRole
     {
         public Guid UserID { get; set; }
-        public Int32 RoleID { get; set; }
+        public int RoleID { get; set; }
         public DateTime DateAssigned { get; set; }
         public DateTime DateRemoved { get; set; }
 

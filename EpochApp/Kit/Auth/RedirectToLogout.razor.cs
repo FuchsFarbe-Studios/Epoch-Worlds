@@ -9,7 +9,7 @@ namespace EpochApp.Kit.Auth
 {
     public partial class RedirectToLogout : ComponentBase
     {
-        [Parameter] public String LogoutUrl { get; set; }
+        [Parameter] public string LogoutUrl { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
 
         /// <inheritdoc />

@@ -8,8 +8,8 @@ namespace EpochApp.Shared.Config
 {
     public class Consonant : Phoneme
     {
-        public String Manner { get; set; }
-        public String Place { get; set; }
-        public Boolean IsVoiced { get; set; }
+        public string Manner { get; set; }
+        public string Place { get; set; }
+        public bool IsVoiced { get; set; }
     }
 }

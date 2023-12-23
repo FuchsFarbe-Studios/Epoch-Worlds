@@ -31,10 +31,10 @@ namespace EpochApp.Shared
 {
     public class MetaTemplateDTO
     {
-        public String TemplateName { get; set; }
-        public String Description { get; set; }
-        public String Placeholder { get; set; }
-        public String HelpText { get; set; }
+        public string TemplateName { get; set; }
+        public string Description { get; set; }
+        public string Placeholder { get; set; }
+        public string HelpText { get; set; }
         public virtual MetaCategory Category { get; set; }
     }
 }

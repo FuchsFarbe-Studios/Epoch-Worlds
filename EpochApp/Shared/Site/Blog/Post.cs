@@ -11,17 +11,17 @@ namespace EpochApp.Shared
 {
     public class Post
     {
-        public Int32 PostTypeID { get; set; }
+        public int PostTypeID { get; set; }
         public Guid? AuthorID { get; set; }
         public Guid PostID { get; set; }
 
-        public String Title { get; set; }
-        public String Content { get; set; }
-        public String Href { get; set; }
-        public String OutsideLink { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string Href { get; set; }
+        public string OutsideLink { get; set; }
         public DateTime PostedOn { get; set; }
         public DateTime? ModifiedOn { get; set; }
-        public String ModifiedBy { get; set; }
+        public string ModifiedBy { get; set; }
 
         public PostType PostType { get; set; }
         public User Author { get; set; }

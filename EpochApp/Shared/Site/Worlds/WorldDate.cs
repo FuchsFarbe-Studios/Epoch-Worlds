@@ -26,10 +26,10 @@ namespace EpochApp.Shared.Worlds
     public class WorldDate
     {
         public Guid WorldID { get; set; }
-        public Int32 CurrentDay { get; set; }
-        public Int32 CurrentMonth { get; set; }
-        public Int32 CurrentYear { get; set; }
-        public String CurrentAge { get; set; }
+        public int CurrentDay { get; set; }
+        public int CurrentMonth { get; set; }
+        public int CurrentYear { get; set; }
+        public string CurrentAge { get; set; }
 
         public virtual World World { get; set; }
     }

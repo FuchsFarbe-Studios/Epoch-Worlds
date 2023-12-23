@@ -28,8 +28,8 @@ namespace EpochApp.Shared.Worlds
     public class WorldMeta
     {
         public Guid WorldID { get; set; }
-        public Int32 MetaID { get; set; }
-        public String Content { get; set; }
+        public int MetaID { get; set; }
+        public string Content { get; set; }
 
         public World World { get; set; }
         public MetaTemplate Template { get; set; }

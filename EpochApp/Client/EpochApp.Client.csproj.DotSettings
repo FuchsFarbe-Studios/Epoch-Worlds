@@ -3,4 +3,5 @@
 						xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve">
 	<s:Boolean
 			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=clients/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=kit_005Cauth/@EntryIndexedValue">False</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean
+			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=kit_005Cauth/@EntryIndexedValue">False</s:Boolean></wpf:ResourceDictionary>

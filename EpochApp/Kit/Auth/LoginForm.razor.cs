@@ -9,8 +9,8 @@ namespace EpochApp.Kit.Auth
 {
     public partial class LoginForm
     {
-        private Dictionary<String, List<String>> _errors = new Dictionary<String, List<String>>();
-        private Boolean _loggingIn;
+        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+        private bool _loggingIn;
         private LoginDTO _loginDto = new LoginDTO();
         private EpochValidator _validator;
         [Inject] public UserClient Client { get; set; }
@@ -30,7 +30,7 @@ namespace EpochApp.Kit.Auth
             if (!ctx.Validate())
             {
                 _loggingIn = false;
-                var errors = new Dictionary<String, List<String>>
+                var errors = new Dictionary<string, List<string>>
                              {
                                  {
                                      "Errors!", ctx.GetValidationMessages().ToList()
@@ -62,7 +62,7 @@ namespace EpochApp.Kit.Auth
                 else
                 {
                     _loggingIn = false;
-                    var errors = await result.Content.ReadFromJsonAsync<Dictionary<String, List<String>>>();
+                    var errors = await result.Content.ReadFromJsonAsync<Dictionary<string, List<string>>>();
                     _errors = errors;
                     _validator.DisplayErrors(errors);
                     foreach (var error in errors)

@@ -8,8 +8,8 @@ namespace EpochApp.Shared.Config
 {
     public class Vowel : Phoneme
     {
-        public String Depth { get; set; }
-        public String Verticality { get; set; }
-        public Boolean IsRounded { get; set; }
+        public string Depth { get; set; }
+        public string Verticality { get; set; }
+        public bool IsRounded { get; set; }
     }
 }

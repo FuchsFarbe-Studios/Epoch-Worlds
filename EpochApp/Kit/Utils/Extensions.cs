@@ -7,10 +7,10 @@ namespace EpochApp.Kit.Utils
 {
     public static class Extensions
     {
-        public static String ToDescriptionString(this Enum value)
+        public static string ToDescriptionString(this Enum value)
         {
             var field = value.GetType().GetField(value.ToString());
-            if ((Object)field == null)
+            if ((object)field == null)
                 return value.ToString().ToLower();
 
             return !(Attribute.GetCustomAttributes(field, typeof(DescriptionAttribute), false) is DescriptionAttribute[] customAttributes) || customAttributes.Length <= 0
