@@ -12,16 +12,16 @@
 		Value
 		<FlatTextField InputMode="InputType.Text" @bind-Value="@_dataStore.Value" />
 	</label>
-	<button class="button" @onclick="@(async () => await SetValueAsync())" type="button">Set Value</button>
+	<FlatButton OnClick="@(async () => await SetValueAsync())" Type="ButtonType.Button">Set Value</FlatButton>
 </EditForm>
-<div>Stored Value: @StoredValue</div>
+<h4>Stored Value: <b>@StoredValue</b></h4>
 
-<div>
-	<button type="button" class="button" @onclick="@(async () => await GetValueAsync())">Get Value</button>
-	<button type="button" class="button" @onclick="@(async () => await RemoveAsync())">Remove Value</button>
-	<button type="button" class="button" @onclick="@(async () => await ClearAllAsync())">Clear Value</button>
-</div>
-<br />
+<ButtonGroup Vertical="@(true)">
+	<FlatButton Type="ButtonType.Button" OnClick="@(async () => await GetValueAsync())">Get Value</FlatButton>
+	<FlatButton Type="ButtonType.Button" OnClick="@(async () => await RemoveAsync())">Remove Value</FlatButton>
+	<FlatButton Type="ButtonType.Button" OnClick="@(async () => await ClearAllAsync())">Clear Value</FlatButton>
+</ButtonGroup>
+<hr />
 <FlatCard HeadingText="This is heading text" MaxWidth="400" CardSize="Size.Large" Edge="EdgeType.Triangle">
 	<CardContent>
 		Here is some card content...

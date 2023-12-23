@@ -21,17 +21,17 @@
 // FuchsFarbe Studios 2023
 // Oliver MacDougall
 // Modified: 29-11-2023
-using EpochApp.Shared.Config.Lookups;
+using EpochApp.Shared.Config;
 
-namespace EpochApp.Shared.Site.Worlds
+namespace EpochApp.Shared.Worlds
 {
-	public class WorldMeta
-	{
-		public Guid WorldID { get; set; }
-		public Int32 MetaID { get; set; }
-		public String Content { get; set; }
+    public class WorldMeta
+    {
+        public Guid WorldID { get; set; }
+        public Int32 MetaID { get; set; }
+        public String Content { get; set; }
 
-		public World World { get; set; }
-		public MetaTemplate Template { get; set; }
-	}
+        public World World { get; set; }
+        public MetaTemplate Template { get; set; }
+    }
 }

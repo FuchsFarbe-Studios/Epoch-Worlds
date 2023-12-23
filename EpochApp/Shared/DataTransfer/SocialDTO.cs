@@ -11,13 +11,13 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Shared.Config.Lookups;
+using EpochApp.Shared.Config;
 
-namespace EpochApp.Shared.DataTransfer
+namespace EpochApp.Shared
 {
-	public class SocialDTO
-	{
-		public SocialMedia Social { get; set; }
-		public String Handle { get; set; }
-	}
+    public class SocialDTO
+    {
+        public SocialMedia Social { get; set; }
+        public String Handle { get; set; }
+    }
 }

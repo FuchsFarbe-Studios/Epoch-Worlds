@@ -1,5 +1,5 @@
 using EpochApp.Kit.Services;
-using EpochApp.Shared.DataTransfer;
+using EpochApp.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

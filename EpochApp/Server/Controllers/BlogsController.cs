@@ -1,5 +1,5 @@
 using EpochApp.Server.Data;
-using EpochApp.Shared.Site.Blog;
+using EpochApp.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,22 +26,22 @@ namespace EpochApp.Server.Controllers
         [HttpGet("Type/{id}")]
         public async Task<ActionResult<IEnumerable<Blog>>> GetBlogsByType(int id)
         {
-            return await _context.Blogs.Where(x=>x.BlogTypeID == id).ToListAsync();
+            return await _context.Blogs.Where(x => x.BlogTypeID == id).ToListAsync();
         }
 
         [HttpGet("User/{id}")]
         public async Task<ActionResult<IEnumerable<Blog>>> GetBlogsByUser(Guid id)
         {
-            return await _context.Blogs.Where(x=>x.BlogOwners.Any(x=>x.OwnerID == id)).ToListAsync();
+            return await _context.Blogs.Where(x => x.BlogOwners.Any(x => x.OwnerID == id)).ToListAsync();
         }
 
         // Get blog posts
         [HttpGet("BlogPosts/{blogId}")]
         public async Task<ActionResult<IEnumerable<BlogPost>>> GetBlogPosts(int blogId)
         {
-            return await _context.Blogs.Where(x=>x.BlogID == blogId)
-                                 .SelectMany(x=>x.BlogPosts)
-                                 .OrderByDescending(x=>x.PostedOn)
+            return await _context.Blogs.Where(x => x.BlogID == blogId)
+                                 .SelectMany(x => x.BlogPosts)
+                                 .OrderByDescending(x => x.PostedOn)
                                  .ToListAsync();
         }
 

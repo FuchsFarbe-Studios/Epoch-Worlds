@@ -4,11 +4,11 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Shared.Config.Lookups
+namespace EpochApp.Shared.Config
 {
-	public class ArticleCategory
-	{
-		public Int32 CategoryID { get; set; }
-		public String Description { get; set; }
-	}
+    public class ArticleCategory
+    {
+        public Int32 CategoryID { get; set; }
+        public String Description { get; set; }
+    }
 }

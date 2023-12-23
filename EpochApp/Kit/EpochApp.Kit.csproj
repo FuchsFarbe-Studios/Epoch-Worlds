@@ -37,6 +37,7 @@
     <ItemGroup>
         <UpToDateCheckInput Remove="Forms\EpochField.razor"/>
         <UpToDateCheckInput Remove="Forms\ServerSideValidator.razor"/>
+        <UpToDateCheckInput Remove="Layouts\Layout.razor"/>
     </ItemGroup>
 
 </Project>

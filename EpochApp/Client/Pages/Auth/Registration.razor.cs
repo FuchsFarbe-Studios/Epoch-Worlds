@@ -5,7 +5,7 @@
 // Modified: 29-11-2023
 
 using EpochApp.Kit.Services;
-using EpochApp.Shared.DataTransfer;
+using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 

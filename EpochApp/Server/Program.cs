@@ -14,16 +14,16 @@ namespace EpochApp.Server
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true)
-                   .AddJsonOptions(x=>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+                   .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
                    .ConfigureApiBehaviorOptions(options =>
                    {
                        options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState);
                    });
             builder.Services.AddDbContext<EpochDataDbContext>(
-                options =>
-                {
-                    options.UseJetOleDb(config.GetConnectionString("UserConnection"));
-                });
+            options =>
+            {
+                options.UseSqlServer(config.GetConnectionString("UserConnection"));
+            });
             builder.Services.AddRazorPages();
             builder.Services.AddSwaggerGen();
 
@@ -35,10 +35,10 @@ namespace EpochApp.Server
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(
-                    c =>
-                    {
-                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Epoch World API V1");
-                    });
+                c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Epoch World API V1");
+                });
                 app.UseWebAssemblyDebugging();
                 app.UseDeveloperExceptionPage();
             }

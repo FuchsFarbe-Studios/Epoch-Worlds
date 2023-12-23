@@ -4,10 +4,10 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Shared.DataTransfer
+namespace EpochApp.Shared
 {
-	public class ClientAuthData
-	{
-		public String Token { get; set; }
-	}
+    public class ClientAuthData
+    {
+        public String Token { get; set; }
+    }
 }

@@ -1,9 +1,3 @@
-// EpochWorlds
-// EpochUserService.cs
-// FuchsFarbe Studios 2023
-// Oliver MacDougall
-// Modified: 29-11-2023
-
 using EpochApp.Kit.Forms;
 using EpochApp.Kit.Services;
 using EpochApp.Shared;
@@ -11,17 +5,23 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http.Json;
 
-namespace EpochApp.Client.Pages.Auth
+namespace EpochApp.Kit.Auth
 {
-    public partial class Login
+    public partial class LoginForm
     {
         private Dictionary<String, List<String>> _errors = new Dictionary<String, List<String>>();
         private Boolean _loggingIn;
         private LoginDTO _loginDto = new LoginDTO();
         private EpochValidator _validator;
-        [Inject] public HttpClient Client { get; set; }
+        [Inject] public UserClient Client { get; set; }
         [Inject] public NavigationManager NavigationManager { get; set; }
-        [Inject] public EpochAuthProvider _auth { get; set; }
+        [Inject] public EpochAuthProvider Auth { get; set; }
+
+        /// <inheritdoc />
+        protected override Task OnInitializedAsync()
+        {
+            return base.OnInitializedAsync();
+        }
 
         private async Task AttemptLoginAsync(EditContext ctx)
         {
@@ -30,7 +30,7 @@ namespace EpochApp.Client.Pages.Auth
             if (!ctx.Validate())
             {
                 _loggingIn = false;
-                var errors = new Dictionary<String, List<String>>()
+                var errors = new Dictionary<String, List<String>>
                              {
                                  {
                                      "Errors!", ctx.GetValidationMessages().ToList()
@@ -49,20 +49,20 @@ namespace EpochApp.Client.Pages.Auth
             }
             if (ctx.Validate())
             {
-                var result = await Client.PostAsJsonAsync("api/v1/EpochUsers/Authentication", (LoginDTO)ctx.Model);
+                var result = await Client.PostAsJsonAsync("Auth/Authentication", (LoginDTO)ctx.Model);
                 await Task.Delay(500);
                 if (result.IsSuccessStatusCode)
                 {
                     var token = await result.Content.ReadAsStringAsync();
-                    await _auth.LoginAsync(_loginDto.UserName, _loginDto.Password);
+                    await Auth.LoginAsync(_loginDto.UserName, _loginDto.Password);
                     _loggingIn = false;
-                    if (_auth.CurrentUser != null)
+                    if (Auth.CurrentUser != null)
                         NavigationManager.NavigateTo("/");
                 }
                 else
                 {
                     _loggingIn = false;
-                    var errors = await result.Content.ReadFromJsonAsync<Dictionary<string, List<string>>>();
+                    var errors = await result.Content.ReadFromJsonAsync<Dictionary<String, List<String>>>();
                     _errors = errors;
                     _validator.DisplayErrors(errors);
                     foreach (var error in errors)
