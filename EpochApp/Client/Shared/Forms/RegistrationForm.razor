@@ -7,17 +7,19 @@
 		<FlatTextField @bind-Value="_registration.UserName" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.UserName))" MaxLength="64" Label="Username" Placeholder="Login name" />
 		<FlatTextField @bind-Value="_registration.Password" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password))" MaxLength="64" Label="Password" Placeholder="Password" />
 		<FlatTextField @bind-Value="_registration.Password2" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password2))" MaxLength="64" Label="Confirm Password" Placeholder="Confirm Password" />
-		<div class="inline-flex">
-			<FlatTextField @bind-Value="_registration.Month" InputMode="InputType.Month" Floating="true" Id="@(nameof(_registration.Month))" MaxLength="2" Label="Birth Month" Placeholder="Birth Month" max="12" min="1" />
-			<FlatTextField @bind-Value="_registration.Day" InputMode="InputType.Number" Floating="true" Id="@(nameof(_registration.Day))" MaxLength="2" Label="Birth Day" Placeholder="Birth Day" max="31" min="1" />
-			<FlatTextField @bind-Value="_registration.Year" InputMode="InputType.Number" Floating="true" Id="@(nameof(_registration.Day))" MaxLength="4" Label="Birth Year" Placeholder="Birth Year" max="9999" min="1900" />
+		<div class="flex-center-x">
+			<FlatTextField Width="Width.Medium" @bind-Value="_registration.Month" InputMode="InputType.Month" Floating="true" Id="@(nameof(_registration.Month))" MaxLength="2" Label="Birth Month" Placeholder="Birth Month" max="12" min="1" />
+			<FlatTextField Width="Width.Medium" @bind-Value="_registration.Day" InputMode="InputType.Number" Floating="true" Id="@(nameof(_registration.Day))" MaxLength="2" Label="Birth Day" Placeholder="Birth Day" max="31" min="1" />
+			<FlatTextField Width="Width.Small" @bind-Value="_registration.Year" InputMode="InputType.Number" Floating="true" Id="@(nameof(_registration.Day))" MaxLength="4" Label="Birth Year" Placeholder="Birth Year" max="9999" min="1900" />
 		</div>
-		<FlatBreak Color="FlatColor.Accent" BreakType="BreakType.Short" />
-		<FlatButtonGroup Vertical="true" Width="Width.Medium" Class="flex-center-x">
+		<FlatBreak BreakType="BreakType.Default" />
+		<FlatButtonGroup Vertical="true" Width="Width.ExtraLarge" Class="flex-center-x">
 			<FlatButton Class="width-100p" Border="BorderType.Bordered" Color="FlatColor.Accent" Type="ButtonType.Submit">Register!</FlatButton>
 			<FlatButton Class="width-100p" Border="BorderType.Outlined" Color="FlatColor.Orange" Type="ButtonType.Button">Invite Friends</FlatButton>
 		</FlatButtonGroup>
-		<FlatTypo Typo="Typo.Body1">Already have an account? <FlatButton Link="/Auth/Login" Target="_self" Border="BorderType.Outlined" Variant="Variant.Text" Edge="EdgeType.RoundMd">Log in!</FlatButton></FlatTypo>
+		<FlatTypo Typo="Typo.Body1" Text="Already have an account? ">
+			<FlatElement HtmlTag="a" href="/Auth/Login" target="_self">Log in!</FlatElement>
+		</FlatTypo>
 
 	</EditForm>
 </FlatContainer>
