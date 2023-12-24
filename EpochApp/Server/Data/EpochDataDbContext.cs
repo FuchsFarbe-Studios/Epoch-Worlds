@@ -172,7 +172,7 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("lkArticleCategories", "Lookups");
                 entity.HasKey(m => m.CategoryID);
-                entity.Property(m => m.CategoryID).UseJetIdentityColumn(3, 4);
+                entity.Property(m => m.CategoryID).UseIdentityColumn(3, 4);
                 entity.Property(m => m.Description).HasColumnName("Description");
                 entity.Property(m => m.Description).HasMaxLength(50);
             });
@@ -181,7 +181,7 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("lkSocialMediae", "Lookups");
                 entity.HasKey(m => m.SocialID);
-                entity.Property(m => m.SocialID).UseJetIdentityColumn(12, 12);
+                entity.Property(m => m.SocialID).UseIdentityColumn(12, 12);
                 entity.Property(m => m.SocialMediaName).HasColumnName("Description");
                 entity.Property(m => m.SocialMediaName).HasMaxLength(100);
                 entity.Property(m => m.URLAffix).HasMaxLength(255);

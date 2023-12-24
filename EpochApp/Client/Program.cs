@@ -1,4 +1,4 @@
-using EpochApp.Kit.Services;
+using EpochApp.Client.Services;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;

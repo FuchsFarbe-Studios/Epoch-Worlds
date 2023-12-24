@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
@@ -15,12 +15,15 @@
         <Product>Epoch World Exchange</Product>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DocumentationFile>bin\Debug\EpochApp.Client.xml</DocumentationFile>
+    </PropertyGroup>
+
     <ItemGroup>
-        <PackageReference Include="MudBlazor" Version="6.11.1"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.25"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.20"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.20" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.14">
+        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -29,7 +32,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\FuchsFarbe\Flatify\Flatify\Flatify.csproj"/>
-        <ProjectReference Include="..\Kit\EpochApp.Kit.csproj"/>
         <ProjectReference Include="..\Shared\EpochApp.Shared.csproj"/>
     </ItemGroup>
 
@@ -43,6 +45,7 @@
 
     <ItemGroup>
         <AdditionalFiles Include="Pages\Site\Community\Community.razor"/>
+        <AdditionalFiles Include="Shared\Forms\EpochValidator.razor"/>
     </ItemGroup>
 
     <ItemGroup>

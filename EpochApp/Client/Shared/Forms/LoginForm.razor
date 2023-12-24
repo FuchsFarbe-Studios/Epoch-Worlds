@@ -1,0 +1,11 @@
+@namespace EpochApp.Client.Shared
+<EditForm Model="@_loginDto" OnSubmit="AttemptLoginAsync">
+	<DataAnnotationsValidator />
+
+	<FlatTextField @bind-Value="_loginDto.UserName" InputMode="InputType.Text" Floating="true" Id="@(nameof(_loginDto.UserName))" MaxLength="64" Label="Username" Placeholder="Login name" />
+	<FlatTextField @bind-Value="_loginDto.Password" InputMode="InputType.Password" Floating="true" Id="@(nameof(_loginDto.Password))" MaxLength="64" Label="Password" Placeholder="Password" />
+	<FlatBreak Color="FlatColor.Accent" BreakType="BreakType.Short" />
+	<FlatButton Color="FlatColor.Accent" Type="ButtonType.Submit">Login</FlatButton>
+	<FlatButton Color="FlatColor.Accent" Target="_blank" Border="BorderType.Outlined" Link="/Auth/Register">Register</FlatButton>
+
+</EditForm>

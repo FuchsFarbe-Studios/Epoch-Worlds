@@ -4,7 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Kit.Services;
+using EpochApp.Client.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages.Auth
