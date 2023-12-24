@@ -11,6 +11,9 @@ using System.Text;
 
 namespace EpochApp.Server.Controllers
 {
+    /// <summary>
+    ///     This controller is responsible for handling all user related requests for authorization/authentication.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
     public class EpochUsersController : ControllerBase
@@ -27,14 +30,27 @@ namespace EpochApp.Server.Controllers
             _configuration = configuration;
         }
 
-        // GET: api/EpochUsers
+        /// <summary>
+        ///     GetUsersAsync() is a GET method which retrieves all the Users from Users DBSet
+        /// </summary>
+        /// <returns>
+        ///     It returns a list of all User objects present in the users table.
+        /// </returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync()
         {
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/EpochUsers/5
+        /// <summary>
+        ///     GetUserAsync() is a GET method that retrieves a specific User based on the provided ID.
+        /// </summary>
+        /// <param name="id">
+        ///     The GUID of the user to find.
+        /// </param>
+        /// <returns>
+        ///     Returns a UserData object with user information if found, else Not Found error.
+        /// </returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<UserData>> GetUserAsync(Guid id)
         {
@@ -58,8 +74,15 @@ namespace EpochApp.Server.Controllers
             return data;
         }
 
-        // PUT: api/EpochUsers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        ///     PutUserAsync() is a PUT method that updates a specific User based on the provided ID and User object.
+        /// </summary>
+        /// <param name="id">
+        ///     The GUID of the User to update.
+        /// </param>
+        /// <param name="user">
+        ///     User Object with new user details.
+        /// </param>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserAsync(Guid id, User user)
         {
@@ -86,8 +109,15 @@ namespace EpochApp.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/EpochUsers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        ///     PostUserAsync() is a POST method that creates a new User using a given User object.
+        /// </summary>
+        /// <param name="user">
+        ///     User Entity that needs to be created in DB
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task{T}" /> where TResult is <see cref="ActionResult{T}" /> where TValue is <see cref="User" />.
+        /// </returns>
         [HttpPost]
         public async Task<ActionResult<User>> PostUserAsync(User user)
         {
@@ -97,12 +127,18 @@ namespace EpochApp.Server.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
         }
 
+        /// <summary>
+        ///     AuthenticateAsync() is a POST method used for user login.
+        /// </summary>
+        /// <param name="login">
+        ///     LoginDTO Entity that carries user login information
+        /// </param>
+        /// <returns>
+        ///     Returns JWT if authentication success else error message.
+        /// </returns>
         [HttpPost("Authentication")]
         public async Task<IActionResult> AuthenticateAsync(LoginDTO login)
         {
-            if (string.IsNullOrWhiteSpace(login.UserName) && string.IsNullOrWhiteSpace(login.Password))
-                return Ok("");
-
             var user = await _context.Users
                                      .Include(x => x.UserRoles)
                                      .ThenInclude(x => x.Role)
@@ -134,7 +170,15 @@ namespace EpochApp.Server.Controllers
             return Ok(jwt);
         }
 
-
+        /// <summary>
+        ///     RegisterAsync() is a POST method used for user registration.
+        /// </summary>
+        /// <param name="registration">
+        ///     RegistrationDTO entity used carry new user registration information
+        /// </param>
+        /// <returns>
+        ///     Returns user data if registration success else error message.
+        /// </returns>
         [HttpPost("Registration")]
         public async Task<IActionResult> RegisterAsync(RegistrationDTO registration)
         {
@@ -177,7 +221,15 @@ namespace EpochApp.Server.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserID }, data);
         }
 
-        // DELETE: api/EpochUsers/5
+        /// <summary>
+        ///     Deletes a user from the database.
+        /// </summary>
+        /// <param name="id">
+        ///     The id of the user to delete.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task{T}" /> where TResult is <see cref="IActionResult" />.
+        /// </returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -12,6 +12,7 @@
         <Copyright>FuchsFarbe Studios 2023</Copyright>
         <Company>FuchsFarbe Studios</Company>
         <Product>Epoch Exchange API</Product>
+        <UserSecretsId>f5ed99fe-8474-443d-8930-5ad3ef89b749</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

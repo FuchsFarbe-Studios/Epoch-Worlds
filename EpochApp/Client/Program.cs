@@ -15,7 +15,6 @@ namespace EpochApp.Client
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddScoped<UserClient>(sp => new UserClient(builder.Services.BuildServiceProvider().GetRequiredService<HttpClient>(), builder.Configuration, builder.Services.BuildServiceProvider().GetRequiredService<ILogger<UserClient>>()));
             builder.Services.AddScoped<ILocalStorage, LocalStorageAccessor>();
             builder.Services.AddScoped<ClientAuthData>();// Storage
             builder.Services.AddScoped<EpochUserService>();// Service

@@ -9,12 +9,14 @@ namespace EpochApp.Client.Shared
     public partial class LoginForm
     {
         private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
-        private bool _loggingIn;
+        private bool _loggingIn = false;
         private LoginDTO _loginDto = new LoginDTO();
         private EpochValidator _validator;
-        [Inject] public UserClient Client { get; set; }
-        [Inject] public NavigationManager NavigationManager { get; set; }
+
+        [Inject] public ILogger<LoginForm> Logger { get; set; }
+        [Inject] public NavigationManager Nav { get; set; }
         [Inject] public EpochAuthProvider Auth { get; set; }
+        [Inject] public HttpClient Client { get; set; }
 
         /// <inheritdoc />
         protected override Task OnInitializedAsync()
@@ -48,7 +50,7 @@ namespace EpochApp.Client.Shared
             }
             if (ctx.Validate())
             {
-                var result = await Client.PostAsJsonAsync("/Authentication", (LoginDTO)ctx.Model);
+                var result = await Client.PostAsJsonAsync<LoginDTO>("api/v1/EpochUsers/Authentication", (LoginDTO)ctx.Model);
                 await Task.Delay(500);
                 if (result.IsSuccessStatusCode)
                 {
@@ -56,7 +58,7 @@ namespace EpochApp.Client.Shared
                     await Auth.LoginAsync(_loginDto.UserName, _loginDto.Password);
                     _loggingIn = false;
                     if (Auth.CurrentUser != null)
-                        NavigationManager.NavigateTo("/");
+                        Nav.NavigateTo("/");
                 }
                 else
                 {

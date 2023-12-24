@@ -24,6 +24,12 @@ namespace EpochApp.Client.Services
 
         public async Task<UserData> SendAuthenticateRequestAsync(string username, string password)
         {
+            // Don't send a request if the username or password is empty.
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                return null;
+            }
+
             var response = await _client.PostAsJsonAsync("api/v1/EpochUsers/Authentication"
                                                          , new LoginDTO { UserName = username, Password = password });
 

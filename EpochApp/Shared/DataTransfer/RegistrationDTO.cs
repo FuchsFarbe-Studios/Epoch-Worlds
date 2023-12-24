@@ -12,6 +12,9 @@ namespace EpochApp.Shared
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Password2 { get; set; }
+        public string Month { get; set; } = "01";
+        public string Day { get; set; } = "01";
+        public string Year { get; set; } = "1990";
         public DateTime? DateOfBirth { get; set; }
         public bool TermAgreement { get; set; } = false;
     }
