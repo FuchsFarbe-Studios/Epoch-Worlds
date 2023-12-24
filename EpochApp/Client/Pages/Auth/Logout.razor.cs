@@ -11,16 +11,16 @@ namespace EpochApp.Client.Pages.Auth
 {
     public partial class Logout
     {
-        [Inject] public NavigationManager NavigationManager { get; set; }
-        [Inject] public EpochAuthProvider _auth { get; set; }
-        [Inject] public ILogger<Logout> _logger { get; set; }
+        [Inject] public NavigationManager Nav { get; set; }
+        [Inject] public EpochAuthProvider Auth { get; set; }
+        [Inject] public ILogger<Logout> Logger { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            _auth.Logout();
-            _logger.LogInformation($"User: {_auth.CurrentUser.UserName} logged out.");
-            NavigationManager.NavigateTo("/");
+            Auth.Logout();
+            Logger.LogInformation($"User: {Auth.CurrentUser.UserName} logged out.");
+            Nav.NavigateTo("/");
             await base.OnInitializedAsync();
         }
     }
