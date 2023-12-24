@@ -1,7 +1,7 @@
 @page "/Auth/Register"
-@using EpochApp.Shared.Utils
+@namespace EpochApp.Client.Pages.Auth
 <PageTitle>@StaticUtils.Constants.AppName - Registration</PageTitle>
 
-<EditForm Model="@_registration" OnValidSubmit="@(async () => await AttemptRegistrationAsync())">
-	<DataAnnotationsValidator />
-</EditForm>
+<FlatContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+	<RegistrationForm />
+</FlatContainer>

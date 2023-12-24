@@ -1,6 +1,6 @@
+@using EpochApp.Client.Services
 @namespace EpochApp.Client.Shared
-
-<EditForm Model="@_registration" OnSubmit="async (ctx) => HandleRegistrationAsync(ctx)">
+<EditForm Model="@_registration" OnSubmit="async ctx => AttemptRegistrationAsync(ctx)">
 	<DataAnnotationsValidator />
 
 	<FlatTextField @bind-Value="_registration.UserName" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.UserName))" MaxLength="64" Label="Username" Placeholder="Login name" />
@@ -13,15 +13,28 @@
 </EditForm>
 
 @code {
-
 	private RegistrationDTO _registration = new RegistrationDTO();
 
-	[Inject] private ILogger<RegistrationForm> Logger { get; set; }
+	[Inject] public ILogger<RegistrationForm> Logger { get; set; }
+	[Inject] public NavigationManager Nav { get; set; }
+	[Inject] public EpochAuthProvider Auth { get; set; }
+	[Inject] public HttpClient Client { get; set; }
 
-	public async Task HandleRegistrationAsync(EditContext ctx)
+	private async Task AttemptRegistrationAsync(EditContext ctx)
 	{
-		Logger.LogInformation("User registered");
-		await Task.CompletedTask;
+		var result = await Client.PostAsJsonAsync("api/v1/EpochUsers/Registration", _registration);
+		if (result.IsSuccessStatusCode)
+		{
+			await Auth.LoginAsync(_registration.UserName, _registration.Password);
+			Nav.NavigateTo("/");
+		}
+		else
+		{
+			var errors = await result.Content.ReadFromJsonAsync<Dictionary<string, List<string>>>();
+			foreach (var error in errors)
+			{
+				Logger.LogError($"Error registering user: {error.Key}\n\t", error.Value, "\n");
+			}
+		}
 	}
-
 }

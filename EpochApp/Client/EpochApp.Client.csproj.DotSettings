@@ -6,6 +6,6 @@
 	<s:Boolean
 			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=kit_005Cauth/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean
-			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=shared_005Cforms/@EntryIndexedValue">True</s:Boolean>
+			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=shared_005Cforms/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean
 			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=shared_005Credirects/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
