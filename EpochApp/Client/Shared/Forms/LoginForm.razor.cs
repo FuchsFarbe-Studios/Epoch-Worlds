@@ -26,6 +26,7 @@ namespace EpochApp.Client.Shared
 
         private async Task AttemptLoginAsync(EditContext ctx)
         {
+            Logger.LogInformation("Logging in: {0}", _loginDto.UserName);
             _loggingIn = true;
             _errors.Clear();
             if (!ctx.Validate())
