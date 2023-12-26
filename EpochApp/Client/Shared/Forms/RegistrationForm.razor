@@ -4,18 +4,16 @@
 	<EditForm Model="@_registration" OnSubmit="async ctx => AttemptRegistrationAsync(ctx)">
 		<EpochValidator @ref="@_validator" />
 
+		<FlatTextField @bind-Value="_registration.Email" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.Email))" MaxLength="128" Label="E-Mail" Placeholder="Email" />
 		<FlatTextField @bind-Value="_registration.UserName" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.UserName))" MaxLength="64" Label="Username" Placeholder="Login name" />
 		<FlatTextField @bind-Value="_registration.Password" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password))" MaxLength="64" Label="Password" Placeholder="Password" />
 		<FlatTextField @bind-Value="_registration.Password2" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password2))" MaxLength="64" Label="Confirm Password" Placeholder="Confirm Password" />
-		<div class="flex-center-x">
-			<FlatTextField Width="Width.Medium" @bind-Value="_registration.Month" InputMode="InputType.Month" Floating="true" Id="@(nameof(_registration.Month))" MaxLength="2" Label="Birth Month" Placeholder="Birth Month" max="12" min="1" />
-			<FlatTextField Width="Width.Medium" @bind-Value="_registration.Day" InputMode="InputType.Number" Floating="true" Id="@(nameof(_registration.Day))" MaxLength="2" Label="Birth Day" Placeholder="Birth Day" max="31" min="1" />
-			<FlatTextField Width="Width.Small" @bind-Value="_registration.Year" InputMode="InputType.Number" Floating="true" Id="@(nameof(_registration.Day))" MaxLength="4" Label="Birth Year" Placeholder="Birth Year" max="9999" min="1900" />
-		</div>
+		<FlatDate @bind-Value="_registration.DateOfBirth" Label="Date of Birth" Floating="true" Id="@(nameof(_registration.DateOfBirth))" Placeholder="Date of Birth" />
+		<FlatSwitch Placeholder="Agree to the terms?" @bind-Value="_registration.TermAgreement" Label="Agree to the terms?" Id="@(nameof(_registration.TermAgreement))" />
 		<FlatBreak BreakType="BreakType.Default" />
-		<FlatButtonGroup Vertical="true" Width="Width.ExtraLarge" Class="flex-center-x">
-			<FlatButton Class="width-100p" Border="BorderType.Bordered" Color="FlatColor.Accent" Type="ButtonType.Submit">Register!</FlatButton>
-			<FlatButton Class="width-100p" Border="BorderType.Outlined" Color="FlatColor.Orange" Type="ButtonType.Button">Invite Friends</FlatButton>
+		<FlatButtonGroup Vertical="true" Width="Width.ExtraLarge" Class="width-100p flex-center-x">
+			<FlatButton Class="width-50p" Edge="EdgeType.RoundLg" Border="BorderType.Bordered" Color="FlatColor.Accent" Type="ButtonType.Submit">Register!</FlatButton>
+			<FlatButton Class="width-50p" Edge="EdgeType.RoundLg" Border="BorderType.Outlined" Color="FlatColor.Orange" Type="ButtonType.Button">Invite Friends</FlatButton>
 		</FlatButtonGroup>
 		<FlatTypo Typo="Typo.Body1" Text="Already have an account? ">
 			<FlatElement HtmlTag="a" href="/Auth/Login" target="_self">Log in!</FlatElement>

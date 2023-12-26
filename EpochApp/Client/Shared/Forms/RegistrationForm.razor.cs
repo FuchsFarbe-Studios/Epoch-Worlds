@@ -16,13 +16,9 @@ namespace EpochApp.Client.Shared
         [Inject] public NavigationManager Nav { get; set; }
         [Inject] public EpochAuthProvider Auth { get; set; }
         [Inject] public HttpClient Client { get; set; }
+
         private async Task AttemptRegistrationAsync(EditContext ctx)
         {
-            int m, d, y;
-            int.TryParse(_registration.Month, out m);
-            int.TryParse(_registration.Day, out d);
-            int.TryParse(_registration.Year, out y);
-            _registration.DateOfBirth = new DateTime(month: m, day: d, year: y);
             var result = await Client.PostAsJsonAsync("api/v1/EpochUsers/Registration", _registration);
             if (result.IsSuccessStatusCode)
             {
