@@ -8,7 +8,7 @@
 		<FlatTextField @bind-Value="_registration.UserName" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.UserName))" MaxLength="64" Label="Username" Placeholder="Login name" />
 		<FlatTextField @bind-Value="_registration.Password" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password))" MaxLength="64" Label="Password" Placeholder="Password" />
 		<FlatTextField @bind-Value="_registration.Password2" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password2))" MaxLength="64" Label="Confirm Password" Placeholder="Confirm Password" />
-		<FlatDate @bind-Value="_registration.DateOfBirth" Label="Date of Birth" Floating="true" Id="@(nameof(_registration.DateOfBirth))" Placeholder="Date of Birth" />
+		<FlatDateField @bind-Value="_registration.DateOfBirth" Label="Date of Birth" Floating="true" Id="@(nameof(_registration.DateOfBirth))" Placeholder="Date of Birth" />
 		<FlatSwitch Placeholder="Agree to the terms?" @bind-Value="_registration.TermAgreement" Label="Agree to the terms?" Id="@(nameof(_registration.TermAgreement))" />
 		<FlatBreak BreakType="BreakType.Default" />
 		<FlatButtonGroup Vertical="true" Width="Width.ExtraLarge" Class="width-100p flex-center-x">

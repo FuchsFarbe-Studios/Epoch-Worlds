@@ -12,7 +12,6 @@ namespace EpochApp.Client.Pages
 
     public partial class Index
     {
-
         private DataStore _dataStore = new DataStore();
         [Inject] public ILocalStorage Storage { get; set; }
         public string StoredValue { get; set; } = "";
