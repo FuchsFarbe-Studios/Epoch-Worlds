@@ -1,7 +1,20 @@
-@using EpochApp.Shared.Users
-<FlatTypo Text="@UserData.UserName" Typo="Typo.Body1" />
+@using EpochApp.Client.Shared.Forms
+<FlatContainer MaxWidth="MaxWidth.ExtraLarge">
+	<FlatButton OnClick="@(() => _isEdit = !_isEdit)">Edit</FlatButton>
+	@if (Profile != null && !_isEdit)
+	{
+		<FlatTypo Text="@UserData.UserName.ToUpper()" Typo="Typo.Heading5" />
+		<FlatBreak />
+		<FlatTypo Typo="Typo.Heading6">@Profile.FirstName @Profile.LastName</FlatTypo>
+		<FlatTypo>@Profile.Bio</FlatTypo>
+		<FlatTypo>@Profile.Signature</FlatTypo>
+		<FlatTypo>
+			<FlatElement HtmlTag="a">@Profile.WebAddress</FlatElement>
+		</FlatTypo>
+	}
 
-@code {
-	[Parameter] public UserData UserData { get; set; }
-	[Parameter] public Profile Profile { get; set; }
-}
+	@if (_isEdit)
+	{
+		<ProfileForm Profile="@Profile" />
+	}
+</FlatContainer>

@@ -1,3 +1,8 @@
 <EditForm Model="@Blog" OnSubmit="CreateBlogAsync">
-
+	<FlatNumericInput TNumeric="int" @bind-Value="@Blog.BlogID" Id="@nameof(Blog.BlogID)" ReadOnly="true" Floating="true" />
+	<FlatTextField @bind-Value="@Blog.Name" Floating="true" Id="@nameof(Blog.Name)" InputMode="InputType.Text" />
+	<FlatTextField @bind-Value="@Blog.CreatedBy" Floating="true" Id="@nameof(Blog.CreatedBy)" InputMode="InputType.Text" />
+	<FlatDate TDateTime="DateTime" @bind-Value="@Blog.CreatedOn" Floating="true" Id="@nameof(Blog.CreatedOn)" InputMode="InputType.Date" ReadOnly="true" />
+	<FlatDate TDateTime="DateTime" @bind-Value="@Blog.ModifiedOn" Floating="true" Id="@nameof(Blog.ModifiedOn)" InputMode="InputType.Date" ReadOnly="true" />
+	<FlatButton Type="ButtonType.Submit" ButtonType="ButtonType.Submit" Color="FlatColor.Accent" Edge="EdgeType.RoundLg" Border="BorderType.Bordered">Save</FlatButton>
 </EditForm>

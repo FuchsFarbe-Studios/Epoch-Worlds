@@ -1,0 +1,9 @@
+<EditForm Model="@World" OnSubmit="SaveWorldAsync">
+	<FlatTypo Typo="Typo.Heading3">World Form</FlatTypo>
+	<FlatBreak />
+	<FlatContainer>
+		<FlatTextField @bind-Value="@World.WorldName" Id="@nameof(World.WorldName)" Placeholder="World Name" Width="Width.Medium" />
+		<FlatTextField @bind-Value="@World.Description" Id="@nameof(World.Description)" Placeholder="Description" Width="Width.Medium" LineCount="5" />
+	</FlatContainer>
+	<FlatButton Type="ButtonType.Submit" Color="FlatColor.Accent" Edge="EdgeType.RoundMd" Variant="Variant.Text" ButtonType="ButtonType.Submit"></FlatButton>
+</EditForm>

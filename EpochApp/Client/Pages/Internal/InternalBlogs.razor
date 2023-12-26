@@ -1,0 +1,56 @@
+@page "/InternalBlogs"
+<FlatTypo Text="Internal Blogs" />
+
+<FlatButton Disabled="@_loading" OnClick="LoadBlogsAsync">Get Blogs</FlatButton>
+
+@if (!_loading && Blogs.Any())
+{
+	@foreach (var blog in Blogs)
+	{
+		<FlatCard @key="@blog" HeadingText="@blog.Name" MaxWidth="400">
+			<CardContent>
+				@if (_currentEditingBlog == blog)
+				{
+					<BlogForm Blog="blog" />
+				}
+				else
+				{
+					<p>@blog.Type</p>
+					<p>@blog.CreatedBy</p>
+					<p>@blog.CreatedOn</p>
+				}
+			</CardContent>
+			<CardButtons>
+				<FlatButton OnClick="@(e => ToggleEditBlog(blog))">Edit</FlatButton>
+			</CardButtons>
+		</FlatCard>
+	}
+}
+
+@code {
+	private bool _loading;
+	public IEnumerable<Blog> Blogs { get; private set; } = new List<Blog>();
+	private Blog _currentEditingBlog;
+	[Inject] public HttpClient Client { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+	}
+
+	private async Task LoadBlogsAsync()
+	{
+		_loading = true;
+		await Task.Delay(500);
+		var blogs = await Client.GetFromJsonAsync<IEnumerable<Blog>>("api/v1/Blogs");
+		Blogs = blogs.ToList();
+		_loading = false;
+	}
+
+	private void ToggleEditBlog(Blog blog)
+	{
+		if (_currentEditingBlog == blog)
+			_currentEditingBlog = null;
+		_currentEditingBlog = blog;
+	}
+}
