@@ -1,22 +1,3 @@
 ﻿@page "/"
 
 <PageTitle>@StaticUtils.Constants.AppName Home</PageTitle>
-
-<FlatTabs @bind-SelectedIndex="@TabIndex">
-	<ChildContent>
-		<FlatTab TabID="@("556555A2-6507-4143-A8E5-0D3B53030F01")" TabButtonText="Tab 1">
-			<TabContent>
-				This is some tab content.
-			</TabContent>
-		</FlatTab>
-
-		<FlatTab TabID="@("156555A2-6507-4143-A8E5-0D3B53030F01")" TabButtonText="Tab 2">
-			<TabContent>
-				This is some more tab content.
-			</TabContent>
-		</FlatTab>
-	</ChildContent>
-
-</FlatTabs>
-
-<p>Active Index: <span>@TabIndex</span></p>
