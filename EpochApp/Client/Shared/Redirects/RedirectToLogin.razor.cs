@@ -10,13 +10,13 @@ namespace EpochApp.Client.Shared
     public partial class RedirectToLogin : ComponentBase
     {
         [Parameter] public string LoginUrl { get; set; }
-        [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public NavigationManager Nav { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            NavigationManager.NavigateTo(LoginUrl);
+            Nav.NavigateTo(LoginUrl);
         }
     }
 }

@@ -1,0 +1,7 @@
+@using EpochApp.Shared.Users
+<FlatTypo Text="@UserData.UserName" Typo="Typo.Body1" />
+
+@code {
+	[Parameter] public UserData UserData { get; set; }
+	[Parameter] public Profile Profile { get; set; }
+}

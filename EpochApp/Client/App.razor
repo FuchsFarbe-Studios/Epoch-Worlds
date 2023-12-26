@@ -5,7 +5,7 @@
 		<Found Context="routeData">
 			<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
 				<NotAuthorized>
-					<RedirectToLogin />
+					<RedirectToLogin LoginUrl="@StaticUtils.Auth.LoginNav" />
 				</NotAuthorized>
 				<Authorizing>
 					<FlatContainer>

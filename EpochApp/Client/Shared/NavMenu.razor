@@ -1,25 +1,28 @@
-﻿@using EpochApp.Shared.Utils
-<FlatNavBar BrandLink="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="true" Color="FlatColor.Dark">
+﻿<FlatNavBar BrandLink="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="true" Color="FlatColor.Dark">
 	<LeftBar>
 		<FlatLink Link="/" MatchMode="NavLinkMatch.All">Home</FlatLink>
 		<FlatLink Link="/Features" MatchMode="NavLinkMatch.All">Features</FlatLink>
 		<FlatLink Link="/Community" MatchMode="NavLinkMatch.All">Community</FlatLink>
 		<FlatLink Link="/Support" MatchMode="NavLinkMatch.All">Support</FlatLink>
 		<FlatLink Link="/About" MatchMode="NavLinkMatch.All">About</FlatLink>
+		<AuthorizeView Roles="ADMIN,INTERNAL">
+			<FlatLink Link="/Internal" MatchMode="NavLinkMatch.All">Internal</FlatLink>
+
+		</AuthorizeView>
 		<FlatLink Link="/Flatify" MatchMode="NavLinkMatch.All">Flatify</FlatLink>
 	</LeftBar>
 	<RightBar>
 		<AuthorizeView>
 			<Authorized>
 				<FlatLink Link="/User/Profile" MatchMode="NavLinkMatch.All">Profile</FlatLink>
-				<FlatLink Link="/Auth/Logout" MatchMode="NavLinkMatch.All">Logout</FlatLink>
+				<FlatLink Link="@StaticUtils.Auth.LogoutNav" MatchMode="NavLinkMatch.All">Logout</FlatLink>
 			</Authorized>
 			<Authorizing>
 				<FlatLink Link="/Auth/Register" MatchMode="NavLinkMatch.All">Create Account</FlatLink>
-				<FlatLink Link="/Auth/Login" MatchMode="NavLinkMatch.All">Login</FlatLink>
+				<FlatLink Link="@StaticUtils.Auth.LoginNav" MatchMode="NavLinkMatch.All">Login</FlatLink>
 			</Authorizing>
 			<NotAuthorized>
-				<FlatLink Link="/Auth/Register" MatchMode="NavLinkMatch.All">Create Account</FlatLink>
+				<FlatLink Link="@StaticUtils.Auth.RegistrationNav" MatchMode="NavLinkMatch.All">Create Account</FlatLink>
 				<FlatLink Link="/Auth/Login" MatchMode="NavLinkMatch.All">Login</FlatLink>
 			</NotAuthorized>
 		</AuthorizeView>

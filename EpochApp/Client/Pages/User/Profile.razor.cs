@@ -4,12 +4,15 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using EpochApp.Client.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages.User
 {
     [Authorize]
     public partial class Profile
     {
+        [Inject] public EpochAuthProvider Auth { get; set; }
     }
 }
