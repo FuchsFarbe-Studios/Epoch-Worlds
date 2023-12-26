@@ -1,16 +1,17 @@
+@using Flatify.Components.Forms
 @namespace EpochApp.Client.Shared
 
 <EditForm Model="@_registration" OnSubmit="async ctx => AttemptRegistrationAsync(ctx)">
 	<EpochValidator @ref="@_validator" />
 
-	<FlatTextField Required="true" @bind-Value="_registration.Email" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.Email))" MaxLength="128" Label="E-Mail" Placeholder="Email" Inline="true" Width="Width.Small" />
-	<FlatTextField Required="true" @bind-Value="_registration.UserName" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.UserName))" MaxLength="64" Label="Username" Placeholder="Login name" Inline="true" Width="Width.Small" />
-	<FlatTextField Required="true" @bind-Value="_registration.Password" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password))" MaxLength="64" Label="Password" Placeholder="Password" Inline="true" Width="Width.Medium" />
-	<FlatTextField Required="true" @bind-Value="_registration.Password2" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password2))" MaxLength="64" Label="Confirm Password" Placeholder="Confirm Password" Inline="true" Width="Width.Medium" />
-	<FlatDateField Required="true" TDateTime="DateTime?" @bind-Value="_registration.DateOfBirth" Label="Date of Birth" Floating="true" Id="@(nameof(_registration.DateOfBirth))" Placeholder="Date of Birth" Width="Width.Medium" />
-	<FlatSwitch Required="true" Placeholder="Agree to the terms?" @bind-Value="_registration.TermAgreement" Label="Agree to the terms?" Id="@(nameof(_registration.TermAgreement))" />
+	<FlatTextInput Required="true" @bind-Value="_registration.Email" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.Email))" MaxLength="128" Label="E-Mail" Placeholder="Email" Inline="true" Width="Width.ExtraLarge" />
+	<FlatTextInput Required="true" @bind-Value="_registration.UserName" InputMode="InputType.Text" Floating="true" Id="@(nameof(_registration.UserName))" MaxLength="64" Label="Username" Placeholder="Login name" Inline="true" Width="Width.ExtraLarge" />
+	<FlatTextInput Required="true" @bind-Value="_registration.Password" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password))" MaxLength="64" Label="Password" Placeholder="Password" Inline="true" Width="Width.ExtraLarge" />
+	<FlatTextInput Required="true" @bind-Value="_registration.Password2" InputMode="InputType.Password" Floating="true" Id="@(nameof(_registration.Password2))" MaxLength="64" Label="Confirm Password" Placeholder="Confirm Password" Inline="true" Width="Width.ExtraLarge" />
+	<FlatDateInput Required="true" TDateTime="DateTime?" @bind-Value="_registration.DateOfBirth" Label="Date of Birth" Floating="true" Id="@(nameof(_registration.DateOfBirth))" Placeholder="Date of Birth" Width="Width.ExtraLarge" />
+	<FlatSwitchInput Required="true" Placeholder="Agree to the terms?" @bind-Value="_registration.TermAgreement" Label="Agree to the terms?" Id="@(nameof(_registration.TermAgreement))" />
 	<FlatBreak BreakType="BreakType.Default" />
-	<FlatButtonGroup Vertical="true" Width="Width.ExtraLarge" Class="width-100p flex-center-x">
+	<FlatButtonGroup Vertical="true" MaxWidth="312" Width="Width.ExtraLarge" Class="flex-center-x">
 		<FlatButton Class="width-50p" Edge="EdgeType.RoundLg" Border="BorderType.Bordered" Color="FlatColor.Accent" Type="ButtonType.Submit">Register!</FlatButton>
 		<FlatButton Class="width-50p" Edge="EdgeType.RoundLg" Border="BorderType.Outlined" Color="FlatColor.Orange" Type="ButtonType.Button">Invite Friends</FlatButton>
 	</FlatButtonGroup>

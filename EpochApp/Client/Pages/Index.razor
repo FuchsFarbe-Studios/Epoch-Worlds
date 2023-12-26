@@ -1,3 +1,21 @@
 ﻿@page "/"
+@using Flatify.Components.Forms
 
 <PageTitle>@StaticUtils.Constants.AppName Home</PageTitle>
+
+<EditForm Model="@_testModel" OnSubmit="@(e => RefreshData(e))">
+	<DataAnnotationsValidator />
+	<FlatTextInput Inline="true" Required="true" @bind-Value="@_testModel.TextData" Label="A test Label" />
+	<FlatNumericInput TData="decimal" Inline="true" InputType="InputType.Number" Required="true" @bind-Value="@_testModel.DecimalData" Label="A decimal Label" />
+	<FlatNumericInput TData="int" Inline="true" InputType="InputType.Number" Required="true" @bind-Value="@_testModel.IntData" Label="An int Label" />
+	<FlatDateInput TDateTime="DateTime" Inline="true" Type="InputDateType.Date" @bind-Value="@_testModel.DateData" Label="A date Label" />
+	<FlatSwitchInput Inline="true" Required="true" @bind-Value="@_testModel.BoolData" Label="A bool Label" />
+	<FlatSelectInput TValue="string" Inline="true" Required="true" @bind-Value="@_testModel.SelectData" Label="A select Label">
+		<Flatify.Components.Forms.FlatOption Value="1">Option 1</Flatify.Components.Forms.FlatOption>
+		<Flatify.Components.Forms.FlatOption Value="2">Option 2</Flatify.Components.Forms.FlatOption>
+		<Flatify.Components.Forms.FlatOption Value="3">Option 3</Flatify.Components.Forms.FlatOption>
+	</FlatSelectInput>
+	<FlatButton Edge="EdgeType.RoundLg" ButtonType="ButtonType.Submit">Submit</FlatButton>
+</EditForm>
+
+<p>@_testModel.TextData</p>
