@@ -1,11 +1,15 @@
 ﻿<wpf:ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-						xmlns:s="clr-namespace:System;assembly=mscorlib"
-						xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve">
+                        xmlns:s="clr-namespace:System;assembly=mscorlib"
+                        xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve">
 	<s:Boolean
-			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=clients/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean
-			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=kit_005Cauth/@EntryIndexedValue">False</s:Boolean>
-	<s:Boolean
-			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=shared_005Cforms/@EntryIndexedValue">False</s:Boolean>
-	<s:Boolean
-			x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=shared_005Credirects/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=clients/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=kit_005Cauth/@EntryIndexedValue">False</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=pages_005Cuser_005Caccount/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=pages_005Cuser_005Cprofile/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=shared_005Cforms/@EntryIndexedValue">False</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=shared_005Credirects/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

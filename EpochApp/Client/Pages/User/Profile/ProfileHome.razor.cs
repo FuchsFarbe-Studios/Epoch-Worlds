@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Components;
 namespace EpochApp.Client.Pages.User
 {
     [Authorize]
-    public partial class Profile
+    public partial class ProfileHome
     {
         [Inject] public EpochAuthProvider Auth { get; set; }
     }

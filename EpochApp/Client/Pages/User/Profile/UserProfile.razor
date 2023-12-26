@@ -1,4 +1,6 @@
 @using EpochApp.Client.Shared.Forms
+@namespace EpochApp.Client.Pages.User
+
 <FlatContainer MaxWidth="MaxWidth.ExtraLarge">
 	<FlatButton OnClick="@(() => _isEdit = !_isEdit)">Edit</FlatButton>
 	@if (Profile != null && !_isEdit)

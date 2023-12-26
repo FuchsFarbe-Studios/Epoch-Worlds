@@ -3,7 +3,7 @@ using EpochApp.Shared.Users;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
-namespace EpochApp.Client.Shared
+namespace EpochApp.Client.Pages.User
 {
     public partial class UserProfile
     {
