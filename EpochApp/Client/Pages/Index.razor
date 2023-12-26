@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using Flatify.Components.Forms
 
 <PageTitle>@StaticUtils.Constants.AppName Home</PageTitle>
 
@@ -11,9 +10,9 @@
 	<FlatDateInput TDateTime="DateTime" Inline="true" Type="InputDateType.Date" @bind-Value="@_testModel.DateData" Label="A date Label" />
 	<FlatSwitchInput Inline="true" Required="true" @bind-Value="@_testModel.BoolData" Label="A bool Label" />
 	<FlatSelectInput TValue="string" Inline="true" Required="true" @bind-Value="@_testModel.SelectData" Label="A select Label">
-		<Flatify.Components.Forms.FlatOption Value="1">Option 1</Flatify.Components.Forms.FlatOption>
-		<Flatify.Components.Forms.FlatOption Value="2">Option 2</Flatify.Components.Forms.FlatOption>
-		<Flatify.Components.Forms.FlatOption Value="3">Option 3</Flatify.Components.Forms.FlatOption>
+		<FlatOption Value="1">Option 1</FlatOption>
+		<FlatOption Value="2">Option 2</FlatOption>
+		<FlatOption Value="3">Option 3</FlatOption>
 	</FlatSelectInput>
 	<FlatButton Edge="EdgeType.RoundLg" ButtonType="ButtonType.Submit">Submit</FlatButton>
 </EditForm>
