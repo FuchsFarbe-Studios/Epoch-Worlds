@@ -1,16 +1,24 @@
 ﻿<FlatNavBar BrandLink="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="true" Color="FlatColor.Dark">
 	<LeftBar>
 		<FlatLink MenuItem="true" Link="/#" MatchMode="NavLinkMatch.All">Home</FlatLink>
-		<FlatLink MenuItem="true" Link="/Features" MatchMode="NavLinkMatch.All">Features</FlatLink>
+		<AuthorizeView>
+			<Authorized>
+				<FlatLink MenuItem="true" Link="/Manuals" MatchMode="NavLinkMatch.All">Manuals</FlatLink>
+			</Authorized>
+			<NotAuthorized>
+			</NotAuthorized>
+		</AuthorizeView>
 		<FlatLink MenuItem="true" Link="/Community" MatchMode="NavLinkMatch.All">Community</FlatLink>
+		<FlatLink MenuItem="true" Link="/Features" MatchMode="NavLinkMatch.All">Features</FlatLink>
 		<FlatLink MenuItem="true" Link="/Support" MatchMode="NavLinkMatch.All">Support</FlatLink>
 		<FlatLink MenuItem="true" Link="/About" MatchMode="NavLinkMatch.All">About</FlatLink>
+	</LeftBar>
+
+	<RightBar>
 		<AuthorizeView Roles="ADMIN,INTERNAL">
 			<FlatLink MenuItem="true" Link="/Internal" MatchMode="NavLinkMatch.All">Internal</FlatLink>
 			<FlatLink MenuItem="true" Link="/Flatify" MatchMode="NavLinkMatch.All">Flatify</FlatLink>
 		</AuthorizeView>
-	</LeftBar>
-	<RightBar>
 		<AuthorizeView>
 			<Authorized>
 				<FlatLink MenuItem="true" Link="/User/Profile" MatchMode="NavLinkMatch.All">Profile</FlatLink>
