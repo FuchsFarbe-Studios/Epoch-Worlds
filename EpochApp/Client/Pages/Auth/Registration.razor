@@ -1,7 +1,9 @@
 @page "/Auth/Register"
 @namespace EpochApp.Client.Pages.Auth
 <PageTitle>@StaticUtils.Constants.AppName - Registration</PageTitle>
-
-<FlatContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+<FlatTypo Text="Register New User" Typo="Typo.Heading1" />
+<FlatTypo Typo="Typo.Heading4">Register for a new @StaticUtils.Constants.CompanyName account!</FlatTypo>
+<FlatBreak />
+<FlatContainer MaxWidth="MaxWidth.Medium">
 	<RegistrationForm />
 </FlatContainer>

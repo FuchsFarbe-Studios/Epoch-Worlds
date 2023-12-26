@@ -23,6 +23,16 @@ namespace EpochApp.Server.Controllers
             return await _context.Worlds.ToListAsync();
         }
 
+        [HttpGet("User/ownerId")]
+        public async Task<ActionResult<IEnumerable<World>>> GetUserWorlds(Guid ownerId)
+        {
+            return await _context.Worlds
+                                 .Where(x => x.OwnerID == ownerId)
+                                 .Include(x => x.CurrentWorldDate)
+                                 .Include(x => x.MetaData)
+                                 .ToListAsync();
+        }
+
         // GET: api/Worlds/5
         [HttpGet("{id}")]
         public async Task<ActionResult<World>> GetWorld(Guid id)
