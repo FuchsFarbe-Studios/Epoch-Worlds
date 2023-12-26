@@ -1,5 +1,5 @@
 @page "/User/Profile"
 
-<PageTitle>Profile</PageTitle>
+<PageTitle>@StaticUtils.Constants.AppName - @Auth.CurrentUser's Profile</PageTitle>
 
 <UserProfile UserData="@Auth.CurrentUser" />

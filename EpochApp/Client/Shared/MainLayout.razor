@@ -2,18 +2,14 @@
 
 <FlatThemeProvider />
 
-<main>
-	<header>
+<FlatLayout MaxWidth="MaxWidth.ExtraExtraLarge">
+	<LayoutHeader>
 		<NavMenu />
-	</header>
-
-	<div class="container-xxl">
+	</LayoutHeader>
+	<MainContent>
 		@Body
-	</div>
-
-	<footer>
-		<div class="flex-center">
-			<h3>Footer Content</h3>
-		</div>
-	</footer>
-</main>
+	</MainContent>
+	<LayoutFooter>
+		<h3>Footer Content</h3>
+	</LayoutFooter>
+</FlatLayout>
