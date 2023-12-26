@@ -15,6 +15,7 @@ namespace EpochApp.Client.Pages
         private DataStore _dataStore = new DataStore();
         [Inject] public ILocalStorage Storage { get; set; }
         public string StoredValue { get; set; } = "";
+        public int TabIndex { get; set; }
 
         public async Task SetValueAsync()
         {
