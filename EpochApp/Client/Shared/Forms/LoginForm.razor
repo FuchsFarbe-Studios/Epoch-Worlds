@@ -4,9 +4,17 @@
 <EditForm Model="@_loginDto" OnSubmit="@(async e => await AttemptLoginAsync(e))">
 	<EpochValidator @ref="@_validator" />
 
-	<FlatTextInput Floating="true" Color="FlatColor.Default" Label="Username" Placeholder="FuchsFarbe" @bind-Value="@_loginDto.UserName" Required="true" InputType="@InputType.Text" MinLength="8" MaxLength="128" DisplayName="Username" Disabled="@_loggingIn" />
+	<FlatGrid Cols="RowCols.Cols2">
+		<FlatGridItem Span="GridCols.Col3">
+			<FlatTextInput Label="Username" Placeholder="FuchsFarbe" @bind-Value="@_loginDto.UserName" Required="true" InputType="@InputType.Text" MinLength="8" MaxLength="128" DisplayName="Username" Disabled="@_loggingIn" />
+		</FlatGridItem>
+		<FlatGridItem Span="GridCols.Col3">
+			<FlatTextInput Label="Password" Placeholder="*******" @bind-Value="@_loginDto.Password" Required="true" InputType="@InputType.Password" MinLength="8" MaxLength="128" DisplayName="Password" Disabled="@_loggingIn" />
+		</FlatGridItem>
+	</FlatGrid>
 
-	<FlatTextInput Floating="true" Color="FlatColor.Default" Label="Password" Placeholder="*******" @bind-Value="@_loginDto.Password" Required="true" InputType="@InputType.Password" MinLength="8" MaxLength="128" DisplayName="Password" Disabled="@_loggingIn" />
+	@* <FlatTextInput Label="Username" Placeholder="FuchsFarbe" @bind-Value="@_loginDto.UserName" Required="true" InputType="@InputType.Text" MinLength="8" MaxLength="128" DisplayName="Username" Disabled="@_loggingIn" /> *@
+	@* <FlatTextInput Label="Password" Placeholder="*******" @bind-Value="@_loginDto.Password" Required="true" InputType="@InputType.Password" MinLength="8" MaxLength="128" DisplayName="Password" Disabled="@_loggingIn" /> *@
 
 	<FlatBreak Color="FlatColor.Accent" BreakType="BreakType.Short" />
 
