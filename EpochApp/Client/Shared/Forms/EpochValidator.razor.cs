@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace EpochApp.Client.Shared
 {
+    /// <summary>
+    ///     A validator that can display errors.
+    /// </summary>
     public partial class EpochValidator
     {
         private ValidationMessageStore _store;
@@ -24,6 +27,10 @@ namespace EpochApp.Client.Shared
 
         #endregion
 
+        /// <summary>
+        ///     Displays the given errors.
+        /// </summary>
+        /// <param name="errors"> Errors to display. </param>
         public void DisplayErrors(Dictionary<string, List<string>> errors)
         {
             if (Context is not null)
@@ -33,6 +40,8 @@ namespace EpochApp.Client.Shared
                 Context.NotifyValidationStateChanged();
             }
         }
+
+        /// <summary> Clears all errors. </summary>
         public void ClearErrors()
         {
             _store?.Clear();

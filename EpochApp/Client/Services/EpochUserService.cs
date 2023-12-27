@@ -11,17 +11,30 @@ using System.Security.Claims;
 
 namespace EpochApp.Client.Services
 {
+    /// <summary>
+    ///     Service for handling user authentication.
+    /// </summary>
     public class EpochUserService
     {
         private readonly ClientAuthData _authData;
         private readonly HttpClient _client;
 
+ #pragma warning disable CS1591// Missing XML comment for publicly visible type or member
         public EpochUserService(HttpClient client, ClientAuthData authData)
+ #pragma warning restore CS1591// Missing XML comment for publicly visible type or member
         {
             _client = client;
             _authData = authData;
         }
 
+        /// <summary>
+        ///     Sends a request to the server to authenticate the user.
+        /// </summary>
+        /// <param name="username"> Users username. </param>
+        /// <param name="password"> Users password. </param>
+        /// <returns>
+        ///     <see cref="Task{TResult}" /> where TResult is <see cref="UserData" />.
+        /// </returns>
         public async Task<UserData> SendAuthenticateRequestAsync(string username, string password)
         {
             // Don't send a request if the username or password is empty.
@@ -46,6 +59,12 @@ namespace EpochApp.Client.Services
             return null;
         }
 
+        /// <summary>
+        ///     Gets the client side user data.
+        /// </summary>
+        /// <returns>
+        ///     <see cref="UserData" />
+        /// </returns>
         public UserData FetchUserFromBrowser()
         {
             var claimsPrincipal = CreateClaimsPrincipalFromToken(_authData.Token);
@@ -68,11 +87,25 @@ namespace EpochApp.Client.Services
             return new ClaimsPrincipal(identity);
         }
 
+        /// <summary>
+        ///     Retrieves the active token from the browser.
+        /// </summary>
+        /// <returns>
+        ///     <see cref="string" />
+        /// </returns>
+        public string GetTokenFromBrowser()
+        {
+            return _authData.Token;
+        }
+
         private void PersistUserToBrowser(string token)
         {
             _authData.Token = token;
         }
 
+        /// <summary>
+        ///     Clears the client side user data, effectively logging out the user.
+        /// </summary>
         public void ClearBrowserUserData()
         {
             _authData.Token = "";

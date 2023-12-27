@@ -1,10 +1,13 @@
-<EditForm Model="@Profile" OnValidSubmit="UpdateProfileAsync">
+<EditForm Model="@Profile" OnValidSubmit="@(async e => await UpdateProfileAsync(e))">
 	<EpochValidator @ref="@_validator" />
-	<FlatTextField Label="First Name" @bind-Value="@Profile.FirstName" MaxLength="255" Id="@nameof(Profile.FirstName)" InputMode="InputType.Text" Width="Width.Small" />
-	<FlatTextField Label="Last Name" @bind-Value="@Profile.LastName" MaxLength="255" Id="@nameof(Profile.LastName)" InputMode="InputType.Text" Width="Width.Small" />
-	<FlatTextField Label="Bio" @bind-Value="@Profile.Bio" Id="@nameof(Profile.Bio)" LineCount="5" Placeholder="A small bio about yourself..." InputMode="InputType.Text" Width="Width.ExtraLarge" />
-	<FlatTextField Label="Website" @bind-Value="@Profile.WebAddress" Id="@nameof(Profile.WebAddress)" Placeholder="https://awebsite.com" InputMode="InputType.Url" Width="Width.Medium" />
-	<FlatTextField Label="Signature" @bind-Value="@Profile.Signature" Id="@nameof(Profile.Signature)" Placeholder="XxSpicyGirlxX" InputMode="InputType.Telephone" Width="Width.Medium" />
 
-	<FlatButton Disabled="@_isLoading" Type="ButtonType.Submit" ButtonType="ButtonType.Submit" Color="FlatColor.Accent">Submit Changes</FlatButton>
+	<FlatTextInput Label="First Name" @bind-Value="@Profile.FirstName" MaxLength="255" Id="@nameof(Profile.FirstName)" InputType="InputType.Text" />
+	<FlatTextInput Label="Last Name" @bind-Value="@Profile.LastName" MaxLength="255" InputType="InputType.Text" />
+	<FlatTextArea Label="Bio" @bind-Value="@Profile.Bio" Lines="5" Placeholder="A small bio about yourself..." InputType="InputType.Text" />
+	<FlatTextInput Label="Website" @bind-Value="@Profile.WebAddress" Placeholder="https://awebsite.com" InputType="InputType.Text" />
+	<FlatTextInput Label="Signature" @bind-Value="@Profile.Signature" Placeholder="FuchsFarbe" InputType="InputType.Text" />
+
+	<FlatButton Disabled="@_isLoading" ButtonType="ButtonType.Submit" Color="FlatColor.Accent">
+		Submit Changes
+	</FlatButton>
 </EditForm>

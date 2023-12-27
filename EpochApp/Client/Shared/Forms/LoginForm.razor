@@ -1,12 +1,16 @@
 @namespace EpochApp.Client.Shared
+@inherits RequestComponent<LoginDTO>
 
-<EditForm Model="@_loginDto" OnSubmit="AttemptLoginAsync">
-
+<EditForm Model="@_loginDto" OnSubmit="@(async e => await AttemptLoginAsync(e))">
 	<EpochValidator @ref="@_validator" />
-	<FlatTextField Disabled="@_loggingIn" @bind-Value="_loginDto.UserName" InputMode="InputType.Text" Floating="true" Id="@(nameof(_loginDto.UserName))" MaxLength="64" Label="Username" Placeholder="Login name" />
-	<FlatTextField Disabled="@_loggingIn" @bind-Value="_loginDto.Password" InputMode="InputType.Password" Floating="true" Id="@(nameof(_loginDto.Password))" MaxLength="64" Label="Password" Placeholder="Password" />
+
+	<FlatTextInput Floating="true" Color="FlatColor.Default" Label="Username" Placeholder="FuchsFarbe" @bind-Value="@_loginDto.UserName" Required="true" InputType="@InputType.Text" MinLength="8" MaxLength="128" DisplayName="Username" Disabled="@_loggingIn" />
+
+	<FlatTextInput Floating="true" Color="FlatColor.Default" Label="Password" Placeholder="*******" @bind-Value="@_loginDto.Password" Required="true" InputType="@InputType.Password" MinLength="8" MaxLength="128" DisplayName="Password" Disabled="@_loggingIn" />
+
 	<FlatBreak Color="FlatColor.Accent" BreakType="BreakType.Short" />
-	<FlatButtonGroup Vertical="true" Width="Width.ExtraLarge" Class="width-100p flex-center-x">
+
+	<FlatButtonGroup Vertical="true" ElementWidth="ElementWidth.ExtraLarge" Class="width-100p flex-center-x">
 		<FlatButton Class="width-50p" Disabled="@_loggingIn" Color="FlatColor.Accent" Edge="EdgeType.RoundLg" Type="ButtonType.Submit" Border="BorderType.Bordered">Login</FlatButton>
 		<FlatButton Class="width-50p" Disabled="@_loggingIn" Color="FlatColor.Dark" Edge="EdgeType.RoundLg" Target="_self" Border="BorderType.None" Type="ButtonType.Button" Variant="Variant.Text" Link="/Auth/Register">Register</FlatButton>
 	</FlatButtonGroup>

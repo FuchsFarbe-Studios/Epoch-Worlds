@@ -1,22 +1,18 @@
-using EpochApp.Client.Services;
 using EpochApp.Shared;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http.Json;
 
 namespace EpochApp.Client.Shared
 {
+    /// <summary>
+    ///     The login form component.
+    /// </summary>
     public partial class LoginForm
     {
         private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
         private bool _loggingIn = false;
         private LoginDTO _loginDto = new LoginDTO();
         private EpochValidator _validator;
-
-        [Inject] public ILogger<LoginForm> Logger { get; set; }
-        [Inject] public NavigationManager Nav { get; set; }
-        [Inject] public EpochAuthProvider Auth { get; set; }
-        [Inject] public HttpClient Client { get; set; }
 
         /// <inheritdoc />
         protected override Task OnInitializedAsync()
