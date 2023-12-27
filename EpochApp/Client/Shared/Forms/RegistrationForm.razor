@@ -1,6 +1,8 @@
 @namespace EpochApp.Client.Shared
+@inherits RequestComponent<RegistrationDTO>
 
 <EditForm Model="@_registration" OnSubmit="@(async ctx => await AttemptRegistrationAsync(ctx))">
+	<DataAnnotationsValidator />
 	<EpochValidator @ref="@_validator" />
 
 	<FlatTextInput Required="true" @bind-Value="_registration.Email" DisplayName="E-Mail" InputType="InputType.Email" MaxLength="128" Label="E-Mail" Placeholder="Email" Inline="true" />
@@ -12,7 +14,7 @@
 
 	<FlatBreak BreakType="BreakType.Default" />
 
-	<FlatButton Class="width-50p" Edge="EdgeType.RoundLg" Border="BorderType.Bordered" Color="FlatColor.Accent">Register!</FlatButton>
+	<FlatButton Edge="EdgeType.RoundLg" Variant="Variant.Outline" Color="FlatColor.Accent" ButtonType="ButtonType.Submit">Register!</FlatButton>
 
 	<FlatTypo Typo="Typo.Body1" Text="Already have an account? ">
 		<FlatElement HtmlTag="a" href="/Auth/Login" target="_self">Log in!</FlatElement>

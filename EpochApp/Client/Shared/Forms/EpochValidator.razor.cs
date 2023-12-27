@@ -41,6 +41,20 @@ namespace EpochApp.Client.Shared
             }
         }
 
+        /// <summary>
+        ///     Displays the given errors.
+        /// </summary>
+        /// <param name="errors"> Errors to display. </param>
+        public void DisplayErrors(IEnumerable<string> errors)
+        {
+            if (Context is not null)
+            {
+                foreach (var err in errors)
+                    _store.Add(Context.Field("Error!"), err);
+                Context.NotifyValidationStateChanged();
+            }
+        }
+
         /// <summary> Clears all errors. </summary>
         public void ClearErrors()
         {

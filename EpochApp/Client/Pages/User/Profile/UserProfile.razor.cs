@@ -1,30 +1,43 @@
-using EpochApp.Shared;
+// EpochWorlds
+// EpochUserService.cs
+// FuchsFarbe Studios 2023
+// Oliver MacDougall
+// Modified: 29-11-2023
+
 using EpochApp.Shared.Users;
-using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.User
 {
+    /// <summary> The profile home page. </summary>
+    [Authorize]
     public partial class UserProfile
     {
-        private bool _isEdit = false;
-        [Parameter] public UserData UserData { get; set; }
-        [Parameter] public Profile Profile { get; set; }
-        [Inject] public HttpClient Client { get; set; }
+        private bool _loading = true;
+        private Profile _profile;
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            await GetProfileAsync();
-        }
-        private async Task GetProfileAsync()
-        {
-            var profile = await Client.GetFromJsonAsync<Profile>($"api/v1/Profiles/{UserData.UserID}");
-            if (profile != null)
-                Profile = profile;
-            else
-                Profile = new Profile();
+            _loading = true;
+            await Task.Delay(1000);
+            try
+            {
+                var prof = await Client.GetFromJsonAsync<Profile>($"api/v1/Profiles/{Auth.CurrentUser.UserID}");
+                if (prof != null)
+                    _profile = prof;
+                _loading = false;
+                await Task.CompletedTask;
+            }
+            catch (Exception exception)
+            {
+                _loading = false;
+                Console.WriteLine(exception);
+                throw;
+            }
 
+            _loading = false;
         }
     }
 }

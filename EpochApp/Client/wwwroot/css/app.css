@@ -6,10 +6,14 @@ html, body {
     height: 100%;
 }
 
+:root {
+    --footer-Offset: 96px;
+    --footer-Offset-inverted: -96px;
+}
 .page-wrap {
     min-height: 100%;
     /* equal to footer height */
-    margin-bottom: -142px;
+    margin-bottom: var(--footer-Offset-inverted);
 }
 
 .page-wrap:after {
@@ -18,9 +22,5 @@ html, body {
 }
 
 .site-footer, .page-wrap:after {
-    height: 142px;
-}
-
-.site-footer {
-    background: orange;
+    height: var(--footer-Offset);
 }

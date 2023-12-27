@@ -42,7 +42,6 @@ namespace EpochApp.Client.Shared
         public void Dispose()
         {
             Auth.AuthenticationStateChanged -= RefreshHeaders;
-            Client.Dispose();
         }
 
         /// <inheritdoc />

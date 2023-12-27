@@ -7,11 +7,11 @@ namespace EpochApp.Server.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class Profiles : ControllerBase
+    public class ProfilesController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
 
-        public Profiles(EpochDataDbContext context)
+        public ProfilesController(EpochDataDbContext context)
         {
             _context = context;
         }

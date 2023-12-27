@@ -186,8 +186,8 @@ namespace EpochApp.Server.Controllers
             var isUserAlreadyExists = await _context.Users.AnyAsync(u => u.UserName == registration.UserName || u.Email == registration.Email);
             if (isUserAlreadyExists)
             {
-                ModelState.AddModelError("UserName", "Username or Email already exists");
-                ModelState.AddModelError("Email", "Username or Email already exists");
+                ModelState.AddModelError(nameof(registration.UserName), "Username or Email already exists");
+                ModelState.AddModelError(nameof(registration.Email), "Username or Email already exists");
                 return BadRequest(ModelState);
             }
 
