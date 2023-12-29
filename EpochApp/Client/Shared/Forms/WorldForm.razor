@@ -3,9 +3,9 @@
 	<FlatBreak />
 	<FlatContainer>
 		<FlatTextInput @bind-Value="@World.WorldName" Placeholder="World Name" />
-		<FlatTextArea @bind-Value="@World.Description" Placeholder="Description" Lines="5" />
+		<FlatTextArea HelpText="A brief description of your world." @bind-Value="@World.Description" Placeholder="Description" Lines="5" />
 	</FlatContainer>
-	<FlatButton Color="FlatColor.Accent" Edge="EdgeType.RoundMd" Variant="Variant.Text" ButtonType="ButtonType.Submit">
+	<FlatButton Color="FlatColor.Accent" Edge="EdgeType.RoundMd" Variant="Variant.Default" ButtonType="ButtonType.Submit">
 		Submit
 	</FlatButton>
 </EditForm>

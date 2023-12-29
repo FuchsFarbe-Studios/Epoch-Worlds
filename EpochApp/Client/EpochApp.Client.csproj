@@ -60,6 +60,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Pages\Manuals\"/>
         <Folder Include="wwwroot\Styles\"/>
     </ItemGroup>
 

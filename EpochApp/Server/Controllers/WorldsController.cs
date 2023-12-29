@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class WorldsController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace EpochApp.Server.Controllers
             return await _context.Worlds.ToListAsync();
         }
 
-        [HttpGet("User/ownerId")]
+        [HttpGet("User/{ownerId}")]
         public async Task<ActionResult<IEnumerable<World>>> GetUserWorlds(Guid ownerId)
         {
             return await _context.Worlds
@@ -79,6 +79,7 @@ namespace EpochApp.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<World>> PostWorld(World world)
         {
+            world.DateCreated = DateTime.Now;
             _context.Worlds.Add(world);
             await _context.SaveChangesAsync();
 

@@ -1,5 +1,6 @@
 @page "/User/Worlds"
 @namespace EpochApp.Client.Pages.User
+@inherits RequestComponent<EpochApp.Shared.Worlds.World>
 <FlatTypo Typo="Typo.Heading2" Text="@($"{Auth.CurrentUser.UserName}'s Worlds")" />
 
 <!-- Filled out World Cards -->
@@ -8,13 +9,15 @@
 {
 	@foreach (var world in _userWorlds)
 	{
+		<FlatCard>
 
+		</FlatCard>
 	}
 }
 else if (!_loading)
 {
 	<FlatTypo Typo="Typo.Heading3" Text="No Worlds Found" />
-	<FlatButton>Create World!</FlatButton>
+	<FlatButton Link="/User/W/Create">Create World!</FlatButton>
 }
 else
 {

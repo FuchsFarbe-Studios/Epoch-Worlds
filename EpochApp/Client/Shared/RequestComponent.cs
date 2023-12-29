@@ -11,7 +11,7 @@ namespace EpochApp.Client.Shared
     /// <typeparam name="TModel">
     ///     The type of model to request from the server.
     /// </typeparam>
-    public class RequestComponent<TModel> : ComponentBase, IDisposable
+    public class RequestComponent<TModel> : ComponentBase, IDisposable where TModel : new()
     {
         /// <summary>
         ///     The logger for this component.
@@ -37,6 +37,8 @@ namespace EpochApp.Client.Shared
         ///     User service for receiving tokens and setting headers.
         /// </summary>
         [Inject] protected EpochUserService UserService { get; set; }
+
+        protected TModel Model { get; set; } = new TModel();
 
         /// <inheritdoc />
         public void Dispose()
