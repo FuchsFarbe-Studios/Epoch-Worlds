@@ -9,8 +9,13 @@
 {
 	@foreach (var world in _userWorlds)
 	{
-		<FlatCard>
-
+		<FlatCard HeadingText="@world.WorldName">
+			<CardContent>
+				@world.Description
+			</CardContent>
+			<CardButtons>
+				<FlatButton Link="@($"/User/W/Edit/{world.WorldID}")">Edit World</FlatButton>
+			</CardButtons>
 		</FlatCard>
 	}
 }

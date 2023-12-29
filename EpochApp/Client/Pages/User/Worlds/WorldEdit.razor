@@ -1,10 +1,12 @@
-@page "/User/Worlds/Create"
-@page "/User/W/Create"
+@page "/User/Worlds/Edit/{WorldID}"
+@page "/User/W/Edit/{WorldID}"
 @namespace EpochApp.Client.Pages.User
+@using EpochApp.Shared.Worlds
 @inherits RequestComponent<EpochApp.Shared.Worlds.World>
 
-<FlatTypo Typo="Typo.Heading3" Color="FlatColor.Info">Create World</FlatTypo>
-<EditForm Model="@Model" OnValidSubmit="@(async ctx => await CreateWorldAsync(ctx))">
+<FlatTypo Typo="Typo.Heading3" Color="FlatColor.Info">Edit World</FlatTypo>
+
+<EditForm Model="@Model" OnValidSubmit="@(async ctx => await UpdateWorldAsync(ctx))">
 	<DataAnnotationsValidator />
 	<ValidationSummary Model="@Model" />
 	<FlatGrid Cols="RowCols.Cols2">
@@ -28,16 +30,32 @@
 @code {
 	private bool _isSubmitting;
 
-	private async Task CreateWorldAsync(EditContext ctx)
+	/// <summary>
+	///     The ID of the world to edit.
+	/// </summary>
+	[Parameter] public string WorldID { get; set; }
+
+	/// <inheritdoc />
+	protected override async Task OnParametersSetAsync()
+	{
+		await base.OnParametersSetAsync();
+		await GetWorldAsync();
+	}
+
+	private async Task GetWorldAsync()
+	{
+		var world = await Client.GetFromJsonAsync<World>($"api/v1/Worlds/{WorldID}");
+		if (world != null)
+			Model = world;
+	}
+
+	private async Task UpdateWorldAsync(EditContext ctx)
 	{
 		_isSubmitting = true;
-		Model.OwnerID = Auth.CurrentUser.UserID;
-
-		var result = await Client.PostAsJsonAsync("api/v1/Worlds", Model);
+		var result = await Client.PutAsJsonAsync<World>($"/api/v1/Worlds/{Model.WorldID}", Model);
 		if (result.IsSuccessStatusCode)
-		{
 			Nav.NavigateTo("/User/Worlds");
-		}
+		await Task.CompletedTask;
 		_isSubmitting = false;
 	}
 }

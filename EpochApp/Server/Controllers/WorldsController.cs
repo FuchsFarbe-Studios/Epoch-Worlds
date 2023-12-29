@@ -57,6 +57,7 @@ namespace EpochApp.Server.Controllers
                 return BadRequest();
             }
 
+            world.DateModified = DateTime.Now;
             _context.Entry(world).State = EntityState.Modified;
             try
             {
