@@ -1,6 +1,8 @@
 using EpochApp.Shared.Services;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace EpochApp.Client.Pages.Manuals
 {
@@ -18,6 +20,28 @@ namespace EpochApp.Client.Pages.Manuals
                                                                                  VowelOpts = new VowelOptions()
                                                                              }
                                                              };
+
+        protected async Task OutputOptionsAsync(MouseEventArgs e)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"Name: {Model.LangName}");
+            sb.AppendLine($"Owner: {Model.OwnerID}");
+            sb.AppendLine("Phonology: ");
+            sb.AppendLine($"Consonants: {Model.Phonology.Consonants}");
+            sb.AppendLine($"Vowels: {Model.Phonology.Vowels}");
+            sb.AppendLine($"Illegal Combinations: {Model.Phonology.IllegalOpts.IllegalCombos}");
+            sb.AppendLine($"Vowel Options: {Model.Phonology.VowelOpts.UseVowelProbabilities}");
+            sb.AppendLine($"Vowel Options: {Model.Phonology.VowelOpts.VowelAtStart}");
+            sb.AppendLine($"Vowel Options: {Model.Phonology.VowelOpts.VowelAtEnd}");
+            Logger.LogInformation(sb.ToString());
+        }
+
+        private async Task CancelOptionsAsync(MouseEventArgs e)
+        {
+            Nav.NavigateTo("/Manual/Language");
+            await Task.CompletedTask;
+        }
+
         private async Task SaveOptionsAsync(EditContext context = null)
         {
             Model.OwnerID = Auth.CurrentUser.UserID;
