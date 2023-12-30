@@ -19,6 +19,7 @@ namespace EpochApp.Shared.Services
         public string WordInitialConsonants { get; set; }
         public string WordMedialConsonants { get; set; }
         public string WordFinalConsonants { get; set; }
+        public bool UseHarmonicVowels { get; set; } = false;
         public string HarmonicVowels { get; set; }
 
         public virtual LangOptions LangOpts { get; set; }

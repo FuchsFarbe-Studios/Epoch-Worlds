@@ -5,6 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
+    /// <summary>
+    ///     The options controller.
+    /// </summary>
+    /// <remarks>
+    ///     Used for validating generation options, saving them to the database, and generating content.
+    /// </remarks>
     [Route("api/v1/[controller]")]
     [ApiController]
     public class OptionsController : ControllerBase
@@ -16,13 +22,22 @@ namespace EpochApp.Server.Controllers
             _context = context;
         }
 
-        // GET: api/Lang
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContentOptions>>> GetContentOptions()
         {
             return await _context.ContentOptions.ToListAsync();
         }
 
+        /// <summary>
+        ///     Gets the language options for a specified user.
+        /// </summary>
+        /// <param name="userId">
+        ///     This user's language options.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task{TResult}" /> where TResult is <see cref="ActionResult{TValue}" /> where TValue is
+        ///     <see cref="IEnumerable{T}" /> where T is <see cref="LangOptions" />.
+        /// </returns>
         [HttpGet("Options/Language/{userId}")]
         public async Task<ActionResult<IEnumerable<LangOptions>>> GetLangOptions(Guid userId)
         {
@@ -31,6 +46,17 @@ namespace EpochApp.Server.Controllers
                                  .ToListAsync();
         }
 
+        /// <summary>
+        ///     Gets a particular language option for a specified user.
+        /// </summary>
+        /// <param name="userId">
+        ///     User retrieving the option.
+        /// </param>
+        /// <param name="contentId"> Language option ID. </param>
+        /// <returns>
+        ///     <see cref="Task{TResult}" /> where TResult is <see cref="ActionResult{TValue}" /> where TValue is
+        ///     <see cref="LangOptions" />.
+        /// </returns>
         [HttpGet("Options/Language/{userId}/{contentId}")]
         public async Task<ActionResult<LangOptions>> GetLangOptions(Guid userId, Guid contentId)
         {
@@ -39,7 +65,6 @@ namespace EpochApp.Server.Controllers
                                  .FirstOrDefaultAsync();
         }
 
-        // GET: api/Lang/5
         [HttpGet("{userId}/{contentId}")]
         public async Task<ActionResult<ContentOptions>> GetContentOptions(Guid userId, Guid contentId)
         {
@@ -51,15 +76,11 @@ namespace EpochApp.Server.Controllers
             return contentOptions;
         }
 
-        // PUT: api/Lang/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContentOptions(Guid id, ContentOptions contentOptions)
         {
             if (id != contentOptions.OptionsID)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(contentOptions).State = EntityState.Modified;
 
@@ -70,17 +91,23 @@ namespace EpochApp.Server.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!ContentOptionsExists(id))
-                {
                     return NotFound();
-                }
+
                 throw;
             }
 
             return NoContent();
         }
 
+        /// <summary>
+        ///     Creates a new language option record in the database.
+        /// </summary>
+        /// <param name="contentOptions"> Language options. </param>
+        /// <returns>
+        ///     <see cref="Task{TResult}" /> where TResult is <see cref="IActionResult" />.
+        /// </returns>
         [HttpPost("Language")]
-        public async Task<ActionResult<LangOptions>> PostLangOptions(LangOptions contentOptions)
+        public async Task<IActionResult> PostLangOptions(LangOptions contentOptions)
         {
             _context.LangOptions.Add(contentOptions);
             await _context.SaveChangesAsync();
@@ -88,8 +115,6 @@ namespace EpochApp.Server.Controllers
             return CreatedAtAction("GetLangOptions", new { userId = contentOptions.OwnerID, contentId = contentOptions.OptionsID }, contentOptions);
         }
 
-        // POST: api/Lang
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ContentOptions>> PostContentOptions(ContentOptions contentOptions)
         {
@@ -99,7 +124,6 @@ namespace EpochApp.Server.Controllers
             return CreatedAtAction("GetContentOptions", new { id = contentOptions.OptionsID }, contentOptions);
         }
 
-        // DELETE: api/Lang/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContentOptions(Guid id)
         {

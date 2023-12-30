@@ -24,9 +24,7 @@ namespace EpochApp.Client.Pages.Manuals
             var response = await Client.PostAsJsonAsync<LangOptions>("api/v1/Options/Language", Model);
             var lang = await response.Content.ReadFromJsonAsync<LangOptions>();
             if (response.IsSuccessStatusCode)
-            {
                 Nav.NavigateTo($"/Manual/Language/E/{lang.OptionsID}");
-            }
         }
 
         private async Task SubmitOptionsAsync(EditContext context = null)
