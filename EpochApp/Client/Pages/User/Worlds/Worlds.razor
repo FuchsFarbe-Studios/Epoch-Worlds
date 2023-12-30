@@ -1,4 +1,5 @@
 @page "/User/Worlds"
+<PageTitle>@StaticUtils.Constants.AppName - @Auth.CurrentUser.UserName's Worlds</PageTitle>
 @namespace EpochApp.Client.Pages.User
 @inherits RequestComponent<EpochApp.Shared.Worlds.World>
 <FlatTypo Typo="Typo.Heading2" Text="@($"{Auth.CurrentUser.UserName}'s Worlds")" />

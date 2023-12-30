@@ -41,6 +41,7 @@
         <_ContentIncludedByDefault Remove="Pages\Authoring\Articles\Article.razor"/>
         <_ContentIncludedByDefault Remove="Pages\Authoring\Epoch\Epoch.razor"/>
         <_ContentIncludedByDefault Remove="Pages\Authoring\Worlds\World.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Site\Manuals\ManualsHome.razor"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -60,7 +61,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Pages\Manuals\"/>
         <Folder Include="wwwroot\Styles\"/>
     </ItemGroup>
 

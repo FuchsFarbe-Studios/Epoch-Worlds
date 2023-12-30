@@ -1,0 +1,27 @@
+@page "/Manual/Language/Create"
+@page "/Manual/Language/C"
+@using EpochApp.Shared.Services
+@inherits RequestComponent<LangOptions>
+
+<FlatTypo Typo="Typo.Heading3" Color="FlatColor.Info">Create Language</FlatTypo>
+<EditForm Model="@Model">
+	<FlatTextInput @bind-Value="@Model.LangName" />
+	<FlatTextInput @bind-Value="@Model.Pronunciation" />
+	<div>
+		<FlatTypo Typo="Typo.Heading5" Color="FlatColor.Info">Phonology Options</FlatTypo>
+		<FlatTextInput @bind-Value="@Model.Phonology.Consonants" />
+		<FlatTextInput @bind-Value="@Model.Phonology.Vowels" />
+	</div>
+</EditForm>
+
+@code {
+	/// <inheritdoc />
+	protected override LangOptions Model { get; set; } = new LangOptions
+	                                                     {
+		                                                     Phonology = new PhonologyOptions
+		                                                                 {
+			                                                                 IllegalOpts = new IllegalComboOptions(),
+			                                                                 VowelOpts = new VowelOptions()
+		                                                                 }
+	                                                     };
+}

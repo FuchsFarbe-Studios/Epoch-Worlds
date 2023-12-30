@@ -4,6 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using EpochApp.Shared.Services;
 using EpochApp.Shared.Worlds;
 
 namespace EpochApp.Shared.Users
@@ -13,6 +14,9 @@ namespace EpochApp.Shared.Users
         public User()
         {
             UserRoles = new HashSet<UserRole>();
+            OwnedBlogs = new HashSet<BlogOwner>();
+            OwnedWorlds = new HashSet<World>();
+            ContentOptions = new HashSet<ContentOptions>();
         }
 
         public Guid UserID { get; set; }
@@ -32,5 +36,7 @@ namespace EpochApp.Shared.Users
         public ICollection<UserRole> UserRoles { get; set; }
         public ICollection<BlogOwner> OwnedBlogs { get; set; }
         public ICollection<World> OwnedWorlds { get; set; }
+
+        public ICollection<ContentOptions> ContentOptions { get; set; }
     }
 }

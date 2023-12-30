@@ -38,7 +38,7 @@ namespace EpochApp.Client.Shared
         /// </summary>
         [Inject] protected EpochUserService UserService { get; set; }
 
-        protected TModel Model { get; set; } = new TModel();
+        protected virtual TModel Model { get; set; } = new TModel();
 
         /// <inheritdoc />
         public void Dispose()
