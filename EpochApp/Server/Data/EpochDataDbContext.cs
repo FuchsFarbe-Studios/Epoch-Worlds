@@ -420,6 +420,7 @@ namespace EpochApp.Server.Data
                 entity.ToTable("LangOptions", "Manuals");
                 //.HasKey(e => new { e.OptionsID, e.OwnerID })
                 entity.Property(e => e.OptionsID).ValueGeneratedOnAdd();
+                entity.Navigation(x => x.Phonology).AutoInclude();
 
                 // One-to-one relationship between LangOptions and PhonologyOptions
                 entity.HasOne(x => x.Phonology)
@@ -434,6 +435,9 @@ namespace EpochApp.Server.Data
                       .HasKey(e => new { e.OptionsID, e.OwnerID, e.PhonologyID });
                 entity.Property(e => e.PhonologyID)
                       .ValueGeneratedOnAdd();
+
+                entity.Navigation(x => x.VowelOpts).AutoInclude();
+                entity.Navigation(x => x.IllegalOpts).AutoInclude();
 
                 // One-to-one relationship between PhonologyOptions and IllegalComboOptions
                 entity.HasOne(p => p.IllegalOpts)

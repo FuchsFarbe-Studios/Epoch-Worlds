@@ -1,7 +1,15 @@
 @page "/Manual/Language/Edit/{LanguageId}"
 @page "/Manual/Language/E/{LanguageId}"
-
-
 @inherits RequestComponent<EpochApp.Shared.Services.LangOptions>
 
 <FlatTypo Typo="Typo.Heading3" Color="FlatColor.Warning">Edit Language</FlatTypo>
+
+<EditForm Model="@Model" OnSubmit="@(async ctx => await UpdateOptionsAsync(ctx))">
+	<FlatTextInput @bind-Value="@Model.LangName" />
+	<FlatTextInput @bind-Value="@Model.Pronunciation" />
+	<div>
+		<FlatTypo Typo="Typo.Heading5" Color="FlatColor.Info">Phonology Options</FlatTypo>
+		<FlatTextInput @bind-Value="@Model.Phonology.Consonants" />
+		<FlatTextInput @bind-Value="@Model.Phonology.Vowels" />
+	</div>
+</EditForm>

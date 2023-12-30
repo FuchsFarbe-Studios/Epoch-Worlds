@@ -7,11 +7,11 @@ namespace EpochApp.Server.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class LangController : ControllerBase
+    public class OptionsController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
 
-        public LangController(EpochDataDbContext context)
+        public OptionsController(EpochDataDbContext context)
         {
             _context = context;
         }
@@ -77,6 +77,15 @@ namespace EpochApp.Server.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("Language")]
+        public async Task<ActionResult<LangOptions>> PostLangOptions(LangOptions contentOptions)
+        {
+            _context.LangOptions.Add(contentOptions);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetLangOptions", new { userId = contentOptions.OwnerID, contentId = contentOptions.OptionsID }, contentOptions);
         }
 
         // POST: api/Lang
