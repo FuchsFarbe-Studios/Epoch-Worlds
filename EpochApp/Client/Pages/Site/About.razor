@@ -4,10 +4,8 @@
 
 @foreach (var item in AboutContents)
 {
-	<FlatCard CardElementSize="ElementSize.Large" Edge="EdgeType.None">
-		<CardContent>
-			@((MarkupString)item.Content)
-		</CardContent>
-	</FlatCard>
-
+	<FlatTypo Typo="Typo.Body1">
+		@((MarkupString)item.Content)
+	</FlatTypo>
+	<FlatBreak BreakType="BreakType.Short" Color="FlatColor.Accent" />
 }
