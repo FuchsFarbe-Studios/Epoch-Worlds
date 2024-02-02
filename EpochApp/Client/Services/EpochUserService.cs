@@ -19,9 +19,14 @@ namespace EpochApp.Client.Services
         private readonly ClientAuthData _authData;
         private readonly HttpClient _client;
 
- #pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+        /// <summary>
+        ///     Constructor for the <see cref="EpochUserService" />.
+        /// </summary>
+        /// <param name="client"> Http client. </param>
+        /// <param name="authData">
+        ///     Client side authentication data.
+        /// </param>
         public EpochUserService(HttpClient client, ClientAuthData authData)
- #pragma warning restore CS1591// Missing XML comment for publicly visible type or member
         {
             _client = client;
             _authData = authData;

@@ -4,9 +4,23 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using EpochApp.Shared;
+using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json;
+
 namespace EpochApp.Client.Pages.Site
 {
     public partial class About
     {
+        [Inject] private HttpClient Http { get; set; }
+
+        private List<ClientSettingDTO> AboutContents { get; set; } = new List<ClientSettingDTO>();
+
+        protected override async Task OnInitializedAsync()
+        {
+            var aboutContents = await Http.GetFromJsonAsync<List<ClientSettingDTO>>("api/v1/Settings/About");
+            if (aboutContents != null)
+                AboutContents = aboutContents;
+        }
     }
 }

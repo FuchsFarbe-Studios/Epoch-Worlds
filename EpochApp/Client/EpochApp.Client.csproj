@@ -65,6 +65,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Pages\Generators\ConLang\"/>
         <Folder Include="wwwroot\Styles\"/>
     </ItemGroup>
 

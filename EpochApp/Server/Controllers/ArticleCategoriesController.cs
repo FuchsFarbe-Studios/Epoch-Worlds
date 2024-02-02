@@ -43,4 +43,5 @@ namespace EpochApp.Server.Controllers
             return _context.ArticleCategories.Any(e => e.CategoryID == id);
         }
     }
+
 }

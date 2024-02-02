@@ -5,6 +5,7 @@
 // Modified: 29-11-2023
 
 using EpochApp.Shared;
+using EpochApp.Shared.Client;
 using EpochApp.Shared.Config;
 using EpochApp.Shared.Services;
 using EpochApp.Shared.Users;
@@ -25,6 +26,10 @@ namespace EpochApp.Server.Data
             ConnectionString = connectionString;
         }
         public string ConnectionString { get; private set; } = @"Data Source=C:\myFolder\myAccessFile.accdb;";
+
+        // Settings
+        public DbSet<ClientSetting> ClientSettings { get; set; }
+
         // Users
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -61,6 +66,14 @@ namespace EpochApp.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ClientSetting>(entity =>
+            {
+                entity.ToTable("ClientSettings", "Client");
+                entity.HasKey(e => e.SettingId);
+                entity.Property(e => e.SettingId).ValueGeneratedOnAdd();
+                entity.Property(e => e.FieldName).HasMaxLength(50);
+            });
+
             modelBuilder.HasDefaultSchema("Users");
             modelBuilder.Entity<User>(user =>
             {
