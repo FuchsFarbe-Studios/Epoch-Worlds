@@ -42,6 +42,10 @@
         <_ContentIncludedByDefault Remove="Pages\Authoring\Epoch\Epoch.razor"/>
         <_ContentIncludedByDefault Remove="Pages\Authoring\Worlds\World.razor"/>
         <_ContentIncludedByDefault Remove="Pages\Site\Manuals\ManualsHome.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Manuals\CreateLanguage.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Manuals\EditLanguage.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Manuals\LanguageManual.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Manuals\Manuals.razor"/>
     </ItemGroup>
 
     <ItemGroup>

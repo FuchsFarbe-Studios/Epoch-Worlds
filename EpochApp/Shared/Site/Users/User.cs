@@ -28,6 +28,9 @@ namespace EpochApp.Shared.Users
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public DateTime? DateRemoved { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTime? TokenCreated { get; set; }
+        public DateTime? TokenExpires { get; set; }
         public string NormalizedUserName => UserName.ToUpper();
         public string NormalizedEmail => Email.ToUpper();
 

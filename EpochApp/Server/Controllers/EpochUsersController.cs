@@ -166,8 +166,65 @@ namespace EpochApp.Server.Controllers
                            DateOfBirth = user.DateOfBirth,
                            Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
                        };
+
             var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
+            var refreshToken = GenerateRefreshToken();
+            await SetRefreshTokenAsync(user, refreshToken);
             return Ok(jwt);
+        }
+
+        [HttpPost("Refresh-Token")]
+        public async Task<ActionResult<string>> GetRefreshToken()
+        {
+            var token = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(token))
+                return BadRequest("No refresh token found");
+
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.RefreshToken == token);
+            if (user is null)
+                return BadRequest("No user found with this refresh token");
+            if (user.TokenExpires < DateTime.Now)
+                return BadRequest("Refresh token has expired");
+
+            var data = new UserData
+                       {
+                           UserID = user.UserID,
+                           UserName = user.UserName,
+                           Hash = user.PasswordHash,
+                           Email = user.Email,
+                           DateOfBirth = user.DateOfBirth,
+                           Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
+                       };
+            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
+            var refreshToken = GenerateRefreshToken();
+            await SetRefreshTokenAsync(user, refreshToken);
+            return Ok(jwt);
+        }
+
+        private async Task SetRefreshTokenAsync(User user, RefreshToken refreshToken)
+        {
+            var cookieOpts = new CookieOptions
+                             {
+                                 Expires = refreshToken.TokenExpires,
+                                 Secure = false,
+                                 HttpOnly = true
+                             };
+            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOpts);
+            user.RefreshToken = refreshToken.Token;
+            user.TokenCreated = refreshToken.TokenCreated;
+            user.TokenExpires = refreshToken.TokenExpires;
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        private RefreshToken GenerateRefreshToken()
+        {
+            return new RefreshToken
+                   {
+                       Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                       TokenCreated = DateTime.Now,
+                       TokenExpires = DateTime.Now.AddDays(7)
+                   };
         }
 
         /// <summary>
