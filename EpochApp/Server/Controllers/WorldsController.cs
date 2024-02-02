@@ -5,12 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
+    /// <summary>
+    ///     Worlds Controller for managing user worlds.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
     public class WorldsController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
 
+        /// <summary>
+        ///     Constructor for WorldsController
+        /// </summary>
+        /// <param name="context"> EpochDataDbContext </param>
         public WorldsController(EpochDataDbContext context)
         {
             _context = context;
