@@ -70,6 +70,11 @@ namespace EpochApp.Client.Pages
             return Task.CompletedTask;
         }
 
+        private Task OnItemSelected(string arg)
+        {
+            return null;
+        }
+
         private class DataStore
         {
             public string Key { get; } = "";
