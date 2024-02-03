@@ -1,20 +1,17 @@
 <AuthorizeView>
 	<FlatNavBar BrandLink="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="false" Color="FlatColor.Default">
 		<LeftBar>
-			<FlatLink MenuItem="true" Link="/Dashboard" MatchMode="NavLinkMatch.All">Dashboard</FlatLink>
-
+			<FlatLink MenuItem="true" Link="@NavRef.Site.Dash" MatchMode="NavLinkMatch.All">Dashboard</FlatLink>
 			<!-- Eventual sub-menu with specific builders -->
-			<FlatLink MenuItem="true" Link="/Builders" MatchMode="NavLinkMatch.All">Builders</FlatLink>
-
-			<FlatLink MenuItem="true" Link="/User/Worlds" MatchMode="NavLinkMatch.All">Worlds</FlatLink>
-			<FlatLink MenuItem="true" Link="/User/Content" MatchMode="NavLinkMatch.All">Generated Content</FlatLink>
-			<FlatLink MenuItem="true" Link="/User/Articles" MatchMode="NavLinkMatch.All">Articles</FlatLink>
+			<FlatLink MenuItem="true" Link="@NavRef.BuilderNav.Index" MatchMode="NavLinkMatch.All">Builders</FlatLink>
+			<FlatLink MenuItem="true" Link="@NavRef.WorldNav.Index" MatchMode="NavLinkMatch.All">Worlds</FlatLink>
+			<FlatLink MenuItem="true" Link="@NavRef.WorldNav.Current.Articles" MatchMode="NavLinkMatch.All">Articles</FlatLink>
 		</LeftBar>
 
 		<RightBar>
-			<FlatLink MenuItem="true" Link="/About" MatchMode="NavLinkMatch.All">About</FlatLink>
-			<FlatLink MenuItem="true" Link="/FAQ" MatchMode="NavLinkMatch.All">FAQ</FlatLink>
-			<FlatLink MenuItem="true" Link="/Support" MatchMode="NavLinkMatch.All">Support</FlatLink>
+			<FlatLink MenuItem="true" Link="@NavRef.ResourceNav.Guides" MatchMode="NavLinkMatch.All">Writing Guides</FlatLink>
+			<FlatLink MenuItem="true" Link="@NavRef.ResourceNav.Manuals" MatchMode="NavLinkMatch.All">Builder Manuals</FlatLink>
+			<FlatLink MenuItem="true" Link="@NavRef.ResourceNav.Tips" MatchMode="NavLinkMatch.All">Tips and Tricks</FlatLink>
 		</RightBar>
 
 	</FlatNavBar>

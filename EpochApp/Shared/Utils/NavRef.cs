@@ -51,6 +51,8 @@ namespace EpochApp.Shared.Utils
 
         public static class BuilderNav
         {
+            public const string Index = "/Builders";
+
             public static class CongLang
             {
                 public const string Create = "/Builders/ConLang/C";
@@ -71,6 +73,7 @@ namespace EpochApp.Shared.Utils
             public const string Contact = "/Contact";
             public const string Support = "/Support";
             public const string Faq = "/FAQ";
+            public const string Features = "/Features";
             public const string Dash = "/Dashboard";
         }
     }
