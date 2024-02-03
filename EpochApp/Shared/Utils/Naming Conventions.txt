@@ -1,0 +1,42 @@
+Naming Conventions
+Auth
+    "/Auth/Login"
+    "/Auth/Logout"
+    "/Auth/Register"
+    "/Auth/Reset"
+Dashboard
+	"/Dashboard" or "/Dash"
+Builders
+	"/Builders/ConLang/C"
+	"/Builders/ConLang/E"
+User
+	"/User/Account"
+	"/User/Profile"
+	"/User/Settings"
+World (Current)
+	"/World/Articles"
+	"/World/Active"
+Worlds
+	"/World/Create"
+	"/Worlds/Explore"
+	"/Worlds"
+Resources
+    "/Resources/Manuals"
+    "/Resources/Tips"
+    "/Resources/Guides"
+Internal
+    "/Internal"
+    "/Internal/Blogs"
+    "/Internal/Logs"
+
+Main
+	Home 
+		"/"
+	About
+		 "/About"
+	FAQ 
+		"/FAQ"
+	Features 
+		"/Features"
+	Support 
+		"/Support"

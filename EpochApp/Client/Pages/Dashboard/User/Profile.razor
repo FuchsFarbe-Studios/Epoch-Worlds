@@ -1,0 +1,10 @@
+@page "/User/Profile"
+@using EpochApp.Client.Services
+@namespace EpochApp.Client.Pages.User
+
+<PageTitle>@StaticUtils.Constants.AppName - @Auth.CurrentUser.UserName - Profile</PageTitle>
+<h3>Profile</h3>
+
+@code {
+	[Inject] public EpochAuthProvider Auth { get; set; }
+}

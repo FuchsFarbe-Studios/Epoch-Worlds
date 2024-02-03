@@ -46,10 +46,14 @@
         <_ContentIncludedByDefault Remove="Pages\Manuals\EditLanguage.razor"/>
         <_ContentIncludedByDefault Remove="Pages\Manuals\LanguageManual.razor"/>
         <_ContentIncludedByDefault Remove="Pages\Manuals\Manuals.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Dashboard\Articles\Articles.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\Dashboard\_Imports.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\User\Dashboard\Articles\Articles.razor"/>
+        <_ContentIncludedByDefault Remove="Pages\User\Dashboard\_Imports.razor"/>
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Pages\Site\Community\Community.razor"/>
+        <AdditionalFiles Include="Pages\Dashboard\User\Account.razor"/>
         <AdditionalFiles Include="Shared\Forms\EpochValidator.razor"/>
     </ItemGroup>
 
@@ -65,9 +69,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Pages\Generators\ConLang\"/>
-        <Folder Include="Pages\User\Profile\"/>
-        <Folder Include="Pages\User\Worlds\"/>
         <Folder Include="wwwroot\Styles\"/>
     </ItemGroup>
 

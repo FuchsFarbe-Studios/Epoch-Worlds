@@ -1,4 +1,6 @@
 @page "/InternalBlogs"
+@page "/Internal/Blogs"
+@attribute [Authorize(Roles = "ADMIN,INTERNAL")]
 <FlatTypo Text="Internal Blogs" />
 
 <FlatButton Disabled="@_loading" OnClick="LoadBlogsAsync">Get Blogs</FlatButton>

@@ -1,6 +1,9 @@
 using EpochApp.Server.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace EpochApp.Server
@@ -24,6 +27,20 @@ namespace EpochApp.Server
             {
                 options.UseSqlServer(config.GetConnectionString("UserConnection"));
             });
+            var services = builder.Services;
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                                                            {
+                                                                ValidateIssuerSigningKey = true,
+                                                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value)),
+                                                                ValidateIssuer = false,
+                                                                ValidateAudience = false,
+                                                                ClockSkew = TimeSpan.Zero
+                                                            };
+                    });
+
             builder.Services.AddRazorPages();
             builder.Services.AddSwaggerGen();
 

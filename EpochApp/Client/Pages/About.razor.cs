@@ -8,7 +8,7 @@ using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
-namespace EpochApp.Client.Pages.Site
+namespace EpochApp.Client.Pages
 {
     public partial class About
     {

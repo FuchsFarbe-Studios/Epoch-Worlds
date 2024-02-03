@@ -5,7 +5,9 @@
 		<Found Context="routeData">
 			<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
 				<NotAuthorized>
-					<RedirectToLogin LoginUrl="@StaticUtils.Auth.LoginNav" />
+					<div class="alert style-warning-light" role="alert">
+						<p>Not authorized to view this content!</p>
+					</div>
 				</NotAuthorized>
 				<Authorizing>
 					<FlatContainer>

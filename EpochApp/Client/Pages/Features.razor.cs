@@ -4,7 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-namespace EpochApp.Client.Pages.Site
+namespace EpochApp.Client.Pages
 {
     public partial class Features
     {

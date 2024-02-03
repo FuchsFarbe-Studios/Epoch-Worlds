@@ -1,0 +1,24 @@
+<AuthorizeView>
+	<FlatNavBar BrandLink="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="false" Color="FlatColor.Default">
+		<LeftBar>
+			<FlatLink MenuItem="true" Link="/Dashboard" MatchMode="NavLinkMatch.All">Dashboard</FlatLink>
+
+			<!-- Eventual sub-menu with specific builders -->
+			<FlatLink MenuItem="true" Link="/Builders" MatchMode="NavLinkMatch.All">Builders</FlatLink>
+
+			<FlatLink MenuItem="true" Link="/User/Worlds" MatchMode="NavLinkMatch.All">Worlds</FlatLink>
+			<FlatLink MenuItem="true" Link="/User/Content" MatchMode="NavLinkMatch.All">Generated Content</FlatLink>
+			<FlatLink MenuItem="true" Link="/User/Articles" MatchMode="NavLinkMatch.All">Articles</FlatLink>
+		</LeftBar>
+
+		<RightBar>
+			<FlatLink MenuItem="true" Link="/About" MatchMode="NavLinkMatch.All">About</FlatLink>
+			<FlatLink MenuItem="true" Link="/FAQ" MatchMode="NavLinkMatch.All">FAQ</FlatLink>
+			<FlatLink MenuItem="true" Link="/Support" MatchMode="NavLinkMatch.All">Support</FlatLink>
+		</RightBar>
+
+	</FlatNavBar>
+</AuthorizeView>
+
+@code {
+}
