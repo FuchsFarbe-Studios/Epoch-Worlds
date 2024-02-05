@@ -22,4 +22,6 @@
     <s:Boolean
             x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cblog/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cblog/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cbuilders_005Cconlang/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
