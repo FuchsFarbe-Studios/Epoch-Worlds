@@ -24,6 +24,15 @@ namespace EpochApp.Server.Controllers
         private IConfiguration _configuration;
         private HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
 
+        /// <summary>
+        ///     Constructor for the <see cref="EpochUsersController" />.
+        /// </summary>
+        /// <param name="context">
+        ///     The injected <see cref="EpochDataDbContext" /> to use for the controller.
+        /// </param>
+        /// <param name="configuration">
+        ///     The injected <see cref="IConfiguration" /> configuration settings.
+        /// </param>
         public EpochUsersController(EpochDataDbContext context, IConfiguration configuration)
         {
             _context = context;

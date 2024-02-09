@@ -5,12 +5,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
+    /// <summary>
+    ///     Controller for the Article Categories lookups.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
     public class ArticleCategoriesController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
 
+        /// <summary>
+        ///     Constructor for the <see cref="ArticleCategoriesController" />
+        /// </summary>
+        /// <param name="context">
+        ///     The injected <see cref="EpochDataDbContext" /> to use for the controller
+        /// </param>
         public ArticleCategoriesController(EpochDataDbContext context)
         {
             _context = context;
