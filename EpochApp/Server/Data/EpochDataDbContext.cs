@@ -7,7 +7,6 @@
 using EpochApp.Shared;
 using EpochApp.Shared.Client;
 using EpochApp.Shared.Config;
-using EpochApp.Shared.Services;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
 using Microsoft.EntityFrameworkCore;
@@ -58,11 +57,7 @@ namespace EpochApp.Server.Data
 
         // Content generation
 
-        public DbSet<ContentOptions> ContentOptions { get; set; }
-        public DbSet<LangOptions> LangOptions { get; set; }
-        public DbSet<PhonologyOptions> PhonologyOptions { get; set; }
-        public DbSet<VowelOptions> VowelOptions { get; set; }
-        public DbSet<IllegalComboOptions> IllegalComboOptions { get; set; }
+        public DbSet<BuilderContent> BuilderContents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,11 +82,6 @@ namespace EpochApp.Server.Data
                     .WithOne(w => w.Owner)
                     .HasForeignKey(w => w.OwnerID)
                     .HasConstraintName("FK_Worlds_Users");
-
-                user.HasMany(u => u.ContentOptions)
-                    .WithOne(c => c.Owner)
-                    .HasForeignKey(c => c.OwnerID)
-                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<UserRole>(entity =>
@@ -419,67 +409,28 @@ namespace EpochApp.Server.Data
                                        Description = "Inspiration"
                                    }
                                });
+
+                // Content Generation
+
+                modelBuilder.Entity<BuilderContent>(entity =>
+                {
+                    entity.HasKey(bc => bc.ContentID);
+
+                    // Defines conversion from ContentType enum to string and back
+                    entity.Property(bc => bc.ContentType)
+                          .HasConversion<string>();
+
+                    entity.HasOne(bc => bc.Author)
+                          .WithMany()
+                          .HasForeignKey(bc => bc.AuthorID)
+                          .OnDelete(DeleteBehavior.Restrict);// Or DeleteBehavior.SetNull, Cascade etc. based on your needs.
+
+                    entity.HasOne(bc => bc.World)
+                          .WithMany()
+                          .HasForeignKey(bc => bc.WorldID)
+                          .OnDelete(DeleteBehavior.Restrict);// Or DeleteBehavior.SetNull, Cascade etc. based on your needs.
+                });
             });
-
-            // Content generation
-
-            // Define the schema for the tables
-            modelBuilder.Entity<ContentOptions>()
-                        .ToTable("ContentOptions", "Manuals")
-                        .HasKey(e => new { e.OptionsID, e.OwnerID });
-
-            modelBuilder.Entity<LangOptions>(entity =>
-            {
-                entity.ToTable("LangOptions", "Manuals");
-                //.HasKey(e => new { e.OptionsID, e.OwnerID })
-                entity.Property(e => e.OptionsID).ValueGeneratedOnAdd();
-                entity.Navigation(x => x.Phonology).AutoInclude();
-
-                // One-to-one relationship between LangOptions and PhonologyOptions
-                entity.HasOne(x => x.Phonology)
-                      .WithOne(l => l.LangOpts)
-                      .HasForeignKey<PhonologyOptions>(l => new { l.OptionsID, l.OwnerID })
-                      .HasConstraintName("FK_PhonologyOptions_LangOptions");
-            });
-
-            modelBuilder.Entity<PhonologyOptions>(entity =>
-            {
-                entity.ToTable("PhonologyOptions", "Manuals")
-                      .HasKey(e => new { e.OptionsID, e.OwnerID, e.PhonologyID });
-                entity.Property(e => e.PhonologyID)
-                      .ValueGeneratedOnAdd();
-
-                entity.Navigation(x => x.VowelOpts).AutoInclude();
-                entity.Navigation(x => x.IllegalOpts).AutoInclude();
-
-                // One-to-one relationship between PhonologyOptions and IllegalComboOptions
-                entity.HasOne(p => p.IllegalOpts)
-                      .WithOne(x => x.PhonologyOpts)
-                      .HasForeignKey<IllegalComboOptions>(i => new { i.OptionsID, i.OwnerID, i.PhonologyID })
-                      .HasConstraintName("FK_IllegalComboOptions_PhonologyOptions");
-
-                // One-to-one relationship between PhonologyOptions and VowelOptions
-                entity.HasOne(p => p.VowelOpts)
-                      .WithOne(x => x.PhonologyOpts)
-                      .HasForeignKey<VowelOptions>(i => new { i.OptionsID, i.OwnerID, i.PhonologyID })
-                      .HasConstraintName("FK_VowelOptions_PhonologyOptions");
-            });
-
-            modelBuilder.Entity<VowelOptions>(entity =>
-            {
-                entity.ToTable("VowelOptions", "Manuals")
-                      .HasKey(i => new { i.OptionsID, i.OwnerID, i.PhonologyID, i.VowelOptionsID });
-                entity.Property(e => e.VowelOptionsID).ValueGeneratedOnAdd();
-            });
-
-            modelBuilder.Entity<IllegalComboOptions>(entity =>
-            {
-                entity.ToTable("IllegalComboOptions", "Manuals")
-                      .HasKey(i => new { i.OptionsID, i.OwnerID, i.PhonologyID, i.IllegalComboOptionsID });
-                entity.Property(e => e.IllegalComboOptionsID).ValueGeneratedOnAdd();
-            });
-
-
         }
     }
 }

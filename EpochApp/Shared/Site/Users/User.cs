@@ -16,7 +16,6 @@ namespace EpochApp.Shared.Users
             UserRoles = new HashSet<UserRole>();
             OwnedBlogs = new HashSet<BlogOwner>();
             OwnedWorlds = new HashSet<World>();
-            ContentOptions = new HashSet<ContentOptions>();
         }
 
         public Guid UserID { get; set; }
@@ -40,6 +39,5 @@ namespace EpochApp.Shared.Users
         public ICollection<BlogOwner> OwnedBlogs { get; set; }
         public ICollection<World> OwnedWorlds { get; set; }
 
-        public ICollection<ContentOptions> ContentOptions { get; set; }
     }
 }

@@ -3,8 +3,9 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 2-2-2024
-namespace EpochApp.Shared.Builders
+namespace EpochApp.Shared
 {
+    [Serializable]
     public class Phonology
     {
         public int PhonologyId { get; set; }
@@ -38,8 +39,5 @@ namespace EpochApp.Shared.Builders
         public StressPattern StressPattern { get; set; } = StressPattern.None;
         public bool AllowContrastiveStress { get; set; } = false;
         public bool OverrideVocabStress { get; set; } = false;
-
-        public Guid ConLangId { get; set; }
-        public virtual CongLang ConLang { get; set; }
     }
 }

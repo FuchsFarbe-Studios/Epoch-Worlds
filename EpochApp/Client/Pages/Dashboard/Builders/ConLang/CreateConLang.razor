@@ -2,6 +2,30 @@
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 <PageTitle>@StaticUtils.Constants.AppName - Create Constructed Language</PageTitle>
 <FlatTypo Typo="Typo.Heading3">Create Constructed Language</FlatTypo>
+<FlatTypo Typo="Typo.Body1">Create a new constructed language by filling out the form below.</FlatTypo>
+<FlatBreak BreakType="BreakType.Short" />
+
+<EditForm Model="@_model" OnSubmit="@(async () => await OnConlangSubmit())">
+
+	<FlatTypo Typo="Typo.Heading4">General Information</FlatTypo>
+	<FlatTextInput @bind-Value="@_model.LangName" Placeholder="Language Name" HelpText="This is the name of your language." Label="Language Name" />
+	<FlatTextInput @bind-Value="@_model.NativePronunciation" Placeholder="Pronunciation" HelpText="How this language is pronounced natively." Label="Language Pronunciation" />
+	<FlatTextInput @bind-Value="@_model.Description" Placeholder="Description" HelpText="Breif description of this language." Label="Description" />
+	<FlatBreak BreakType="BreakType.Short" />
+	<FlatTypo Typo="Typo.Heading4">Phonology</FlatTypo>
+
+	<FlatBreak BreakType="BreakType.Short" />
+	<FlatButton ButtonType="ButtonType.Submit" Color="FlatColor.Accent">Create ConLang</FlatButton>
+</EditForm>
 
 @code {
+	private CongLang _model = new CongLang
+	                          {
+		                          Phonology = new Phonology()
+	                          };
+
+	private async Task OnConlangSubmit()
+	{
+		await Task.CompletedTask;
+	}
 }
