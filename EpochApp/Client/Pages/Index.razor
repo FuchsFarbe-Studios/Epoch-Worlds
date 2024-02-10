@@ -1,36 +1,12 @@
 ﻿@page "/"
-@using Flatify.Components
 @namespace EpochApp.Client.Pages
 
-<PageTitle>@StaticUtils.Constants.AppName Home</PageTitle>
+<PageTitle>@StaticUtils.Constants.AppName</PageTitle>
 
-<div class="container text-center">
-	<div class="row row-cols-6">
-		<div class="col style-accent">col</div>
-		<div class="col style-accent">col</div>
-		<div class="col style-accent">col</div>
-		<div class="col style-accent">col</div>
-	</div>
-	<div class="row">
-		<div class="col-8 style-pink">col-8</div>
-		<div class="col-4 style-pink">col-4</div>
-	</div>
-</div>
-
-@* <FlatDropdown Variant="Variant.Outline" Id="DropdownId" MenuLabel="Dropdown Button" MenuHeadingLabel="Dropdown Items"> *@
-@* 	<DropdownItem Link="/Auth/Register" Title="Register" /> *@
-@* 	<DropdownItem Link="/Auth/Login" Title="Login" /> *@
-@* </FlatDropdown> *@
-
-<FlatDropMenu>
-	<MenuItems>
-		<DropMenuItem OnClick="@(() => Logger.LogInformation("Clicked Menu Item..."))">
-			<p>Drop Menu Item</p>
-		</DropMenuItem>
-	</MenuItems>
-</FlatDropMenu>
-
-@code
-{
-	[Inject] private ILogger<Index> Logger { get; set; }
-}
+<section>
+	<FlatTypo Typo="Typo.Heading1">Welcome to the <b>Epoch World Exchange!</b></FlatTypo>
+	<FlatTypo Typo="Typo.Heading2">A World first in Collaborative and Generative Content Generation</FlatTypo>
+</section>
+<section>
+	<FlatTypo Typo="Typo.Heading3">Features</FlatTypo>
+</section>

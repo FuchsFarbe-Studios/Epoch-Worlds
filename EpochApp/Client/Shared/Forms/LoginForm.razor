@@ -13,25 +13,18 @@
 		</FlatGridItem>
 	</FlatGrid>
 
-	@* <FlatTextInput Label="Username" Placeholder="FuchsFarbe" @bind-Value="@_loginDto.UserName" Required="true" InputType="@InputType.Text" MinLength="8" MaxLength="128" DisplayName="Username" Disabled="@_loggingIn" /> *@
-	@* <FlatTextInput Label="Password" Placeholder="*******" @bind-Value="@_loginDto.Password" Required="true" InputType="@InputType.Password" MinLength="8" MaxLength="128" DisplayName="Password" Disabled="@_loggingIn" /> *@
-
 	<FlatBreak Color="FlatColor.Accent" BreakType="BreakType.Default" />
 
 	<FlatGrid Cols="RowCols.Cols1">
 		<FlatGridItem Span="GridCols.Default">
-			<FlatButton Disabled="@_loggingIn" Color="FlatColor.Accent" Variant="Variant.Border" ButtonType="ButtonType.Submit">
+			<FlatButton Width="ElementWidth.ExtraLarge" Disabled="@_loggingIn" Color="FlatColor.Accent" Variant="Variant.Border" ButtonType="ButtonType.Submit">
 				Login
 			</FlatButton>
 		</FlatGridItem>
 		<FlatGridItem Span="GridCols.Default">
-			<FlatButton Disabled="@_loggingIn" Color="FlatColor.Orange" Target="_self" ButtonType="ButtonType.Button" Variant="Variant.Text" Link="@($"{StaticUtils.Auth.RegistrationNav}")">
+			<FlatButton Width="ElementWidth.ExtraLarge" Disabled="@_loggingIn" Color="FlatColor.Orange" Target="_self" ButtonType="ButtonType.Button" Variant="Variant.Text" Link="@($"{StaticUtils.Auth.RegistrationNav}")">
 				Register
 			</FlatButton>
 		</FlatGridItem>
 	</FlatGrid>
-	<div class="flex-center">
-
-	</div>
-
 </EditForm>

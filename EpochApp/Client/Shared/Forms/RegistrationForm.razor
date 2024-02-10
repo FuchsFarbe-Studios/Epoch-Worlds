@@ -5,19 +5,34 @@
 	<DataAnnotationsValidator />
 	<EpochValidator @ref="@_validator" />
 
-	<FlatTextInput Required="true" @bind-Value="_registration.Email" DisplayName="E-Mail" InputType="InputType.Email" MaxLength="128" Label="E-Mail" Placeholder="Email" Inline="true" />
-	<FlatTextInput Required="true" @bind-Value="_registration.UserName" MaxLength="64" Label="Username" Placeholder="Login name" Inline="true" />
-	<FlatTextInput Required="true" @bind-Value="_registration.Password" InputType="InputType.Password" DisplayName="Password" MaxLength="64" Label="Password" Placeholder="Password" Inline="true" />
-	<FlatTextInput Required="true" @bind-Value="_registration.Password2" InputType="InputType.Password" DisplayName="Confirm Password" MaxLength="64" Label="Confirm Password" Placeholder="Confirm Password" Inline="true" />
-	<FlatDateInput Required="true" Type="InputDateType.Date" InputType="InputType.Date" TDateTime="DateTime?" @bind-Value="_registration.DateOfBirth" Label="Date of Birth" Placeholder="Date of Birth" />
-	<FlatSwitchInput @bind-Value="_registration.TermAgreement" Label="Agree to the terms?" Placeholder="Agree to the terms?" Required="true" />
+	<FlatGrid Cols="RowCols.Cols2">
+		<FlatGridItem Span="GridCols.Default">
+			<FlatTextInput Required="true" @bind-Value="_registration.Email" DisplayName="E-Mail" InputType="InputType.Email" MaxLength="128" Label="E-Mail" Placeholder="Email" Inline="true" />
+			<FlatTextInput Required="true" @bind-Value="_registration.UserName" MaxLength="64" Label="Username" Placeholder="Login name" Inline="true" />
+		</FlatGridItem>
 
-	<FlatBreak BreakType="BreakType.Default" />
+		<FlatGridItem Span="GridCols.Default">
+			<FlatTextInput Required="true" @bind-Value="_registration.Password" InputType="InputType.Password" DisplayName="Password" MaxLength="64" Label="Password" Placeholder="Password" Inline="true" />
+			<FlatTextInput Required="true" @bind-Value="_registration.Password2" InputType="InputType.Password" DisplayName="Confirm Password" MaxLength="64" Label="Confirm Password" Placeholder="Confirm Password" Inline="true" />
+		</FlatGridItem>
 
-	<FlatButton Edge="EdgeType.RoundLg" Variant="Variant.Outline" Color="FlatColor.Accent" ButtonType="ButtonType.Submit">Register!</FlatButton>
+		<FlatGridItem Span="GridCols.Default">
+			<FlatDateInput Required="true" Type="InputDateType.Date" InputType="InputType.Date" TDateTime="DateTime?" @bind-Value="_registration.DateOfBirth" Label="Date of Birth" Placeholder="Date of Birth" />
+			<FlatSwitchInput @bind-Value="_registration.TermAgreement" Label="Agree to the terms?" Placeholder="Agree to the terms?" Required="true" />
+		</FlatGridItem>
+	</FlatGrid>
 
-	<FlatTypo Typo="Typo.Body1" Text="Already have an account? ">
-		<FlatElement HtmlTag="a" href="/Auth/Login" target="_self">Log in!</FlatElement>
-	</FlatTypo>
+	<FlatBreak BreakType="BreakType.Default" Color="FlatColor.Accent" />
+
+	<FlatGrid Cols="RowCols.Cols1">
+		<FlatGridItem Span="GridCols.Default">
+			<FlatButton Width="ElementWidth.ExtraLarge" Edge="EdgeType.RoundLg" Variant="Variant.Outline" Color="FlatColor.Accent" ButtonType="ButtonType.Submit">Register!</FlatButton>
+		</FlatGridItem>
+		<FlatGridItem Span="GridCols.Default">
+			<FlatTypo Typo="Typo.Body1" Text="Already have an account? ">
+				<FlatElement HtmlTag="a" href="/Auth/Login" target="_self">Log in!</FlatElement>
+			</FlatTypo>
+		</FlatGridItem>
+	</FlatGrid>
 
 </EditForm>
