@@ -22,11 +22,14 @@ namespace EpochApp.Server
                    {
                        options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState);
                    });
+
+            // Database
             builder.Services.AddDbContext<EpochDataDbContext>(
             options =>
             {
-                options.UseSqlServer(config.GetConnectionString("UserConnection"));
+                options.UseSqlServer(config.GetConnectionString("LocalUserConnection"));
             });
+
             var services = builder.Services;
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

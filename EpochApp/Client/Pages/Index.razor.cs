@@ -12,6 +12,6 @@ namespace EpochApp.Client.Pages
     public partial class Index
     {
         [Inject] private ILogger<Index> Logger { get; set; }
-        [Inject] public ILocalStorage Storage { get; set; }
+        [Inject] private ILocalStorage Storage { get; set; }
     }
 }
