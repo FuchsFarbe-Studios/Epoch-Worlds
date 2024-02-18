@@ -1,15 +1,33 @@
-﻿@inherits LayoutComponentBase
+﻿@using MudBlazor
+@inherits LayoutComponentBase
 
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 <FlatThemeProvider />
 
-<FlatLayout MaxWidth="MaxWidth.ExtraExtraLarge">
-	<LayoutHeader>
-		<NavMenu />
-	</LayoutHeader>
-	<MainContent>
+<MudLayout>
+	<MudAppBar Elevation="0">
+		<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
+		<AppBar />
+	</MudAppBar>
+	<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+		@*NavMenu*@
+		<NavMenu IsMudMenu="true" />
+	</MudDrawer>
+	<MudMainContent>
 		@Body
-	</MainContent>
-	<LayoutFooter>
-		<Footer />
-	</LayoutFooter>
-</FlatLayout>
+		<footer class="site-footer menu-items-wrapper">
+			<Footer />
+		</footer>
+	</MudMainContent>
+</MudLayout>
+
+@* <FlatLayout MaxWidth="MaxWidth.ExtraExtraLarge"> *@
+@* 	<LayoutHeader> *@
+@* 	</LayoutHeader> *@
+@* 	<MainContent> *@
+@* 	</MainContent> *@
+@* 	<LayoutFooter> *@
+@* 	</LayoutFooter> *@
+@* </FlatLayout> *@

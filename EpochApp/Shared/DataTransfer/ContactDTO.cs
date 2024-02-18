@@ -4,6 +4,7 @@
 // matsu
 // Modified: 17-2-2024
 using EpochApp.Shared.Client;
+using System.ComponentModel.DataAnnotations;
 
 namespace EpochApp.Shared
 {
@@ -12,11 +13,15 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The name of the contact.
         /// </summary>
+        [Required]
+        [MinLength(8)]
         public string? UserName { get; set; }
 
         /// <summary>
         ///     The email of the contact.
         /// </summary>
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
         /// <summary>
@@ -30,6 +35,8 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The message of the contact.
         /// </summary>
+        [Required]
+        [MaxLength(1000)]
         public string Message { get; set; }
 
         /// <summary>

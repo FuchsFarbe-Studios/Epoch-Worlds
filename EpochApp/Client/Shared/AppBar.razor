@@ -1,0 +1,44 @@
+@using Typo=MudBlazor.Typo
+@using Variant=MudBlazor.Variant
+@using MudBlazor
+
+<MudText Typo="Typo.h6" Color="Color.Inherit" Class="ml-3 width-25p">Epoch World Exchange</MudText>
+<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Outlined" Href="@NavRef.Site.Index">Home</MudButton>
+<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Outlined" Href="@NavRef.Site.Features">Features</MudButton>
+<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Outlined" Href="@NavRef.Site.About">About</MudButton>
+<AuthorizeView Roles="ADMIN,INTERNAL">
+	<Authorized>
+		<MudButton Color="Color.Warning" Size="Size.Small" Variant="Variant.Outlined" Href="@NavRef.AdminNav.Index">Internal</MudButton>
+	</Authorized>
+</AuthorizeView>
+<MudSpacer />
+<AuthorizeView>
+	<Authorized>
+		<MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Dense="true">
+			<MudMenuItem Href="@NavRef.UserNav.Profile">Profile</MudMenuItem>
+			<MudMenuItem Href="@NavRef.UserNav.Account">Account</MudMenuItem>
+			<MudMenuItem Href="@NavRef.UserNav.Settings">Settings</MudMenuItem>
+			<MudMenuItem Icon="@Icons.Material.Rounded.Logout" IconColor="Color.Error" Href="@NavRef.Auth.Logout">Logout</MudMenuItem>
+		</MudMenu>
+	</Authorized>
+	<NotAuthorized>
+		<MudButton Variant="Variant.Outlined" DisableElevation="true" Href="@NavRef.Auth.Registration" Color="Color.Inherit" Size="Size.Small">
+			<MudIcon Icon="@Icons.Material.Rounded.AppRegistration" Color="Color.Info" />
+			Register
+		</MudButton>
+		<MudButton Variant="Variant.Outlined" DisableElevation="true" Href="@NavRef.Auth.Login" Color="Color.Inherit" Size="Size.Small">
+			<MudIcon Icon="@Icons.Material.Rounded.Login" />
+			Log-In
+		</MudButton>
+	</NotAuthorized>
+</AuthorizeView>
+
+@code {
+	private bool _showMenu = false;
+
+	private async Task ShowMenuAsync(MouseEventArgs mouseEventArgs)
+	{
+		_showMenu = !_showMenu;
+		await Task.CompletedTask;
+	}
+}

@@ -6,8 +6,5 @@
 
 @foreach (var item in AboutContents)
 {
-	<FlatTypo Typo="Typo.Body1">
-		@((MarkupString)item.Content)
-	</FlatTypo>
-	<FlatBreak BreakType="BreakType.Short" Color="FlatColor.Accent" />
+	@((MarkupString)item.Content)
 }

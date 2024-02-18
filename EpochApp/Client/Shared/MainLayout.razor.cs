@@ -2,7 +2,7 @@ namespace EpochApp.Client.Shared
 {
     public partial class MainLayout
     {
-        private bool _drawerOpen = true;
+        private bool _drawerOpen;
         private bool _isDarkMode;
         private void DrawerToggle()
         {

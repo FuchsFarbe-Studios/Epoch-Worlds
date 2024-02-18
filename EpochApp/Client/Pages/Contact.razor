@@ -1,65 +1,78 @@
 @page "/Contact"
-@using EpochApp.Client.Services
+@using ButtonType=MudBlazor.ButtonType
+@using Variant=MudBlazor.Variant
+@using Typo=MudBlazor.Typo
+@using FTypo=Flatify.Typo
+@using MudBlazor
+@using System.Text
 @using EpochApp.Shared.Client
-<FlatTypo Typo="Typo.Heading3">Contact Us</FlatTypo>
+
+<FlatTypo Typo="FTypo.Heading3">Contact Us</FlatTypo>
 <FlatBreak BreakType="BreakType.Short" Color="FlatColor.Blue" />
+
 <EditForm Model="@_model" OnSubmit="async ctx => await HandleContactSubmitAsync(ctx)">
-	<FlatGrid Cols="RowCols.Cols2">
-		<FlatGridItem Span="GridCols.Default">
-			<FlatTextInput @bind-Value="@_model.UserName" Placeholder="@(nameof(_model.UserName))" Label="@(nameof(_model.UserName))" Floating="true" Disabled="@(!string.IsNullOrWhiteSpace(Auth.CurrentUser.UserName))" />
-			<FlatTextInput @bind-Value="@_model.Email" Placeholder="@(nameof(_model.Email))" Label="@(nameof(_model.Email))" Floating="true" Disabled="@(!string.IsNullOrWhiteSpace(Auth.CurrentUser.Email))" />
-		</FlatGridItem>
-		<FlatGridItem Span="GridCols.Default">
-			<FlatSelectInput TValue="ContactType" @bind-Value="@_model.ContactType" Label="Contact Type" Floating="false" Placeholder="Contact Type">
-				@foreach (var option in Enum.GetValues<ContactType>())
+	<DataAnnotationsValidator />
+	<MudGrid>
+		<MudItem xs="12" sm="7">
+			<MudCard Outlined="true">
+				<MudCardContent>
+					<MudGrid>
+						<MudItem xs="12" sm="4">
+							<MudTextField Label="User Name" @bind-Value="@_model.UserName" For="@(() => _model.UserName)" ReadOnly="@(!string.IsNullOrWhiteSpace(Auth.CurrentUser.UserName))" />
+						</MudItem>
+						<MudItem xs="12" sm="4">
+							<MudTextField Label="Email" @bind-Value="@_model.Email" For="@(() => _model.Email)" ReadOnly="@(!string.IsNullOrWhiteSpace(Auth.CurrentUser.Email))" />
+						</MudItem>
+						<MudItem xs="12" sm="4">
+							<MudSelect T="ContactType" Label="Type" AnchorOrigin="Origin.BottomCenter" @bind-Value="@_model.ContactType" For="@(() => _model.ContactType)">
+								@foreach (var option in Enum.GetValues<ContactType>())
+								{
+									<MudSelectItem Value="@option">@option.ToDescriptionString()</MudSelectItem>
+								}
+							</MudSelect>
+						</MudItem>
+						<MudItem xs="12" sm="12">
+							<MudTextField FullWidth="true" Lines="3" Label="Content" @bind-Value="@_model.Message" For="@(() => _model.Message)" />
+						</MudItem>
+					</MudGrid>
+				</MudCardContent>
+				<MudCardActions>
+					<MudButton ButtonType="ButtonType.Submit" DisableElevation="true" Variant="Variant.Filled" Disabled="@_submitting">
+						@if (_submitting)
+						{
+							<MudProgressCircular Color="Color.Primary" Size="Size.Small" />
+							<MudText Typo="Typo.button">Submitting...</MudText>
+						}
+						else
+						{
+							<MudText Typo="Typo.button">Submit</MudText>
+						}
+					</MudButton>
+				</MudCardActions>
+			</MudCard>
+		</MudItem>
+		<MudItem xs="12" sm="5">
+			<MudPaper Class="pa-4 mud-height-full" Outlined="true">
+				<MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+				@if (_success)
 				{
-					<FlatOption Value="@option">@option.ToDescriptionString()</FlatOption>
+					<MudText Color="Color.Success">Success</MudText>
 				}
-			</FlatSelectInput>
-		</FlatGridItem>
-		<FlatGridItem Span="GridCols.Default">
-			<FlatTextArea @bind-Value="@_model.Message" Placeholder="Content" Label="Content" Floating="true" />
-		</FlatGridItem>
-		<FlatGridItem Span="GridCols.Col2">
-			<FlatButton Disabled="@_submitting" ButtonType="ButtonType.Submit">Submit</FlatButton>
-		</FlatGridItem>
-	</FlatGrid>
+				else
+				{
+					<MudText Color="@Color.Error">
+						<ValidationSummary />
+						@foreach (var (error, messages) in _errorDict)
+						{
+							var sb = new StringBuilder();
+							sb.Append(error);
+							sb.Append(": ");
+							sb.AppendJoin(", ", messages);
+							<p>@sb.ToString()</p>
+						}
+					</MudText>
+				}
+			</MudPaper>
+		</MudItem>
+	</MudGrid>
 </EditForm>
-
-@code {
-	private ContactDTO _model = new ContactDTO();
-	private bool _submitting;
-
-	/// <summary> Injected HttpClient </summary>
-	[Inject] public HttpClient Client { get; set; }
-
-	/// <summary>
-	///     Injected EpochAuthProvider
-	/// </summary>
-	[Inject] public EpochAuthProvider Auth { get; set; }
-
-	/// <summary> Injected ILogger </summary>
-	[Inject] public ILogger<Contact> Logger { get; set; }
-
-	/// <inheritdoc />
-	protected override async Task OnInitializedAsync()
-	{
-		await base.OnInitializedAsync();
-		if (Auth.CurrentUser != null)
-		{
-			_model.UserName = Auth.CurrentUser.UserName;
-			_model.Email = Auth.CurrentUser.Email;
-		}
-	}
-
-	private async Task HandleContactSubmitAsync(EditContext arg)
-	{
-		_submitting = true;
-		var response = await Client.PostAsJsonAsync("api/v1/Contact", _model);
-		if (!response.IsSuccessStatusCode)
-			Logger.LogError("Contact form failed to submit");
-		else
-			Logger.LogInformation("Contact form submitted");
-		_submitting = false;
-	}
-}
