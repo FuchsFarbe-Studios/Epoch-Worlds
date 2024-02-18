@@ -1,3 +1,9 @@
 @page "/Internal"
 @attribute [Authorize(Roles = "ADMIN,INTERNAL")]
 <FlatTypo Color="FlatColor.Error" Typo="Typo.Heading3">Internal</FlatTypo>
+
+<ul class="navbar">
+	<FlatLink MenuItem="true" Link="@NavRef.AdminNav.Blogs" MatchMode="NavLinkMatch.All">Manage Blogs</FlatLink>
+	<FlatLink MenuItem="true" Link="@NavRef.AdminNav.Contacts" MatchMode="NavLinkMatch.All">Contacts</FlatLink>
+	<FlatLink MenuItem="true" Link="@NavRef.AdminNav.Logs" MatchMode="NavLinkMatch.All">View Logs</FlatLink>
+</ul>

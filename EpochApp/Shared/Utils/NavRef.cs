@@ -27,6 +27,7 @@ namespace EpochApp.Shared.Utils
             public const string Index = "/Internal";
             public const string Blogs = "/Internal/Blogs";
             public const string Logs = "/Internal/Logs";
+            public const string Contacts = "/Internal/Contacts";
         }
 
         public static class ResourceNav

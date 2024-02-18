@@ -5,9 +5,9 @@
 
 <FlatButton Disabled="@_loading" OnClick="LoadBlogsAsync">Get Blogs</FlatButton>
 
-@if (!_loading && Blogs.Any())
+@if (!_loading && _blogs.Any())
 {
-	@foreach (var blog in Blogs)
+	@foreach (var blog in _blogs)
 	{
 		<FlatCard @key="@blog" HeadingText="@blog.Name" MaxWidth="400">
 			<CardContent>
@@ -31,10 +31,13 @@
 
 @code {
 	private bool _loading;
-	public IEnumerable<Blog> Blogs { get; private set; } = new List<Blog>();
+	private IEnumerable<Blog> _blogs = new List<Blog>();
 	private Blog _currentEditingBlog;
+
+	/// <summary> </summary>
 	[Inject] public HttpClient Client { get; set; }
 
+	/// <inheritdoc />
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
@@ -45,7 +48,7 @@
 		_loading = true;
 		await Task.Delay(500);
 		var blogs = await Client.GetFromJsonAsync<IEnumerable<Blog>>("api/v1/Blogs");
-		Blogs = blogs.ToList();
+		_blogs = blogs.ToList();
 		_loading = false;
 	}
 

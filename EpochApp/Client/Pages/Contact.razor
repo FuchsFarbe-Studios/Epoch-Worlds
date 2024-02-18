@@ -1,18 +1,29 @@
 @page "/Contact"
+@using EpochApp.Client.Services
 @using EpochApp.Shared.Client
 <FlatTypo Typo="Typo.Heading3">Contact Us</FlatTypo>
+<FlatBreak BreakType="BreakType.Short" Color="FlatColor.Blue" />
 <EditForm Model="@_model" OnSubmit="async ctx => await HandleContactSubmitAsync(ctx)">
-	<FlatTextInput @bind-Value="@_model.UserName" Placeholder="@(nameof(_model.UserName))" Label="@(nameof(_model.UserName))" Floating="true" />
-	<FlatTextInput @bind-Value="@_model.Email" Placeholder="@(nameof(_model.Email))" Label="@(nameof(_model.Email))" Floating="true" />
-	<FlatSelectInput TValue="ContactType" @bind-Value="@_model.ContactType" Label="Contact Type" Floating="false">
-		@foreach (var option in Enum.GetValues<ContactType>())
-		{
-			<FlatOption Value="@option">@option.ToDescriptionString()</FlatOption>
-		}
-	</FlatSelectInput>
-	<FlatTextInput @bind-Value="@_model.Phone" Placeholder="@(nameof(_model.Phone))" Label="@(nameof(_model.Phone))" Floating="true" />
-	<FlatTextArea @bind-Value="@_model.Message" Placeholder="Content" Label="Content" Floating="true" />
-	<FlatButton Disabled="@_submitting" ButtonType="ButtonType.Submit">Submit</FlatButton>
+	<FlatGrid Cols="RowCols.Cols2">
+		<FlatGridItem Span="GridCols.Default">
+			<FlatTextInput @bind-Value="@_model.UserName" Placeholder="@(nameof(_model.UserName))" Label="@(nameof(_model.UserName))" Floating="true" Disabled="@(!string.IsNullOrWhiteSpace(Auth.CurrentUser.UserName))" />
+			<FlatTextInput @bind-Value="@_model.Email" Placeholder="@(nameof(_model.Email))" Label="@(nameof(_model.Email))" Floating="true" Disabled="@(!string.IsNullOrWhiteSpace(Auth.CurrentUser.Email))" />
+		</FlatGridItem>
+		<FlatGridItem Span="GridCols.Default">
+			<FlatSelectInput TValue="ContactType" @bind-Value="@_model.ContactType" Label="Contact Type" Floating="false" Placeholder="Contact Type">
+				@foreach (var option in Enum.GetValues<ContactType>())
+				{
+					<FlatOption Value="@option">@option.ToDescriptionString()</FlatOption>
+				}
+			</FlatSelectInput>
+		</FlatGridItem>
+		<FlatGridItem Span="GridCols.Default">
+			<FlatTextArea @bind-Value="@_model.Message" Placeholder="Content" Label="Content" Floating="true" />
+		</FlatGridItem>
+		<FlatGridItem Span="GridCols.Col2">
+			<FlatButton Disabled="@_submitting" ButtonType="ButtonType.Submit">Submit</FlatButton>
+		</FlatGridItem>
+	</FlatGrid>
 </EditForm>
 
 @code {
@@ -22,8 +33,24 @@
 	/// <summary> Injected HttpClient </summary>
 	[Inject] public HttpClient Client { get; set; }
 
+	/// <summary>
+	///     Injected EpochAuthProvider
+	/// </summary>
+	[Inject] public EpochAuthProvider Auth { get; set; }
+
 	/// <summary> Injected ILogger </summary>
 	[Inject] public ILogger<Contact> Logger { get; set; }
+
+	/// <inheritdoc />
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		if (Auth.CurrentUser != null)
+		{
+			_model.UserName = Auth.CurrentUser.UserName;
+			_model.Email = Auth.CurrentUser.Email;
+		}
+	}
 
 	private async Task HandleContactSubmitAsync(EditContext arg)
 	{

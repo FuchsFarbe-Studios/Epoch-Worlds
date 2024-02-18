@@ -6,17 +6,32 @@
 <FlatTypo Typo="Typo.Body1">Here are the main builders for your world. </FlatTypo>
 <FlatBreak />
 
-<FlatCard HeadingText="Constructed Language Generator" MaxWidth="512">
-	<CardContent>
-		Create a new constructed language for your world. Several generation options are available, such as Phonology, Grammar, and Vocabulary.
-	</CardContent>
-	<CardButtons>
-		<FlatButton Color="FlatColor.Green" Variant="Variant.Outline">Edit Language</FlatButton>
-	</CardButtons>
-	<CardLinks>
-		<FlatLink Link="/Builders/ConLang/C" MenuItem="false">Create New Constructed Language</FlatLink>
-	</CardLinks>
-</FlatCard>
+<FlatAccordion>
+	<AccordionItem>
+		<TitleContent>
+			<FlatTypo Typo="Typo.Heading6">Constructed Language Generator</FlatTypo>
+		</TitleContent>
+		<Content>
+			<FlatTypo Typo="Typo.Body1">Create a new constructed language for your world. Several generation options are available, such as Phonology, Grammar, and Vocabulary.</FlatTypo>
+		</Content>
+	</AccordionItem>
+	<AccordionItem>
+		<TitleContent>
+			<FlatTypo Typo="Typo.Heading6">Character Creator</FlatTypo>
+		</TitleContent>
+		<Content>
+			<FlatTypo Typo="Typo.Body1">Create a new character from scratch, or allow our creative generators to create one for you that utilizes your world's data to generate a character.</FlatTypo>
+		</Content>
+	</AccordionItem>
+	<AccordionItem>
+		<TitleContent>
+			<FlatTypo Typo="Typo.Heading6">State Manager</FlatTypo>
+		</TitleContent>
+		<Content>
+			<FlatTypo Typo="Typo.Body1">Create, manage, or generate world states, countries, or territories.</FlatTypo>
+		</Content>
+	</AccordionItem>
+</FlatAccordion>
 
 @code {
 }
