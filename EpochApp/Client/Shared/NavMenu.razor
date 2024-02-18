@@ -2,11 +2,13 @@
 	<LeftBar>
 		<FlatLink MenuItem="true" Link="@NavRef.Site.Index" MatchMode="NavLinkMatch.All">Home</FlatLink>
 		<FlatLink MenuItem="true" Link="@NavRef.Site.Features" MatchMode="NavLinkMatch.All">Features</FlatLink>
+		<FlatLink MenuItem="true" Link="/EloisPage" MatchMode="NavLinkMatch.All">Eloi's Page</FlatLink>
 	</LeftBar>
 
 	<RightBar>
 		<AuthorizeView Roles="ADMIN,INTERNAL">
 			<FlatLink MenuItem="true" Link="@NavRef.AdminNav.Index" MatchMode="NavLinkMatch.All">Internal</FlatLink>
+			<FlatLink MenuItem="true" Link="/Internal/Contacts" MatchMode="NavLinkMatch.All">Contacts</FlatLink>
 		</AuthorizeView>
 		<AuthorizeView>
 			<Authorized>

@@ -26,6 +26,9 @@ namespace EpochApp.Server.Data
         }
         public string ConnectionString { get; private set; } = @"Data Source=C:\myFolder\myAccessFile.accdb;";
 
+        // Client
+        public DbSet<ContactPoint> ContactPoints { get; set; }
+
         // Settings
         public DbSet<ClientSetting> ClientSettings { get; set; }
 
@@ -61,6 +64,20 @@ namespace EpochApp.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ContactPoint>(entity =>
+            {
+                entity.ToTable("ContactPoints", "Client");
+                entity.HasKey(e => e.ContactPointId);
+                entity.Property(e => e.ContactPointId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(e => e.UserName)
+                      .HasMaxLength(64);
+                entity.Property(e => e.Email)
+                      .HasMaxLength(128);
+                entity.Property(e => e.ContactType)
+                      .HasConversion<string>();
+            });
+
             modelBuilder.Entity<ClientSetting>(entity =>
             {
                 entity.ToTable("ClientSettings", "Client");

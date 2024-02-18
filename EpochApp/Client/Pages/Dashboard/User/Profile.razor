@@ -5,6 +5,47 @@
 <PageTitle>@StaticUtils.Constants.AppName - @Auth.CurrentUser.UserName - Profile</PageTitle>
 <FlatTypo Typo="Typo.Heading3">Profile</FlatTypo>
 
+<button @onclick="ToggleComponent">Press Me</button>
+
+@if (_showComponent)
+{
+	<p>Put your component here...</p>
+}
+
+@if (_profileData != null)
+{
+	@*		Display Profile Data	*@
+	<p>@_profileData.FirstName</p>
+	<p>@_profileData.LastName</p>
+	<p>@_profileData.Bio</p>
+	<p>@_profileData.Signature</p>
+	@foreach (var social in _profileData.Socials)
+	{
+		<div>
+			<p>@social.Social</p>
+			<p>@social.Handle</p>
+		</div>
+	}
+}
+
 @code {
+	private bool _showComponent;
+
+	private void ToggleComponent()
+	{
+		_showComponent = !_showComponent;
+	}
+
 	[Inject] public EpochAuthProvider Auth { get; set; }
+	[Inject] private HttpClient Client { get; set; }
+	private ProfileDTO _profileData = null!;
+
+	/// <inheritdoc />
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		var userId = Auth.CurrentUser.UserID;
+		var profileData = await Client.GetFromJsonAsync<ProfileDTO>($"api/v1/Profiles/{userId}");
+		_profileData = profileData;
+	}
 }

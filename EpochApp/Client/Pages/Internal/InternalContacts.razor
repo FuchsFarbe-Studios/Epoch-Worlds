@@ -1,0 +1,34 @@
+@page "/Internal/Contacts"
+<FlatTypo Typo="Typo.Heading3">Contact Attempts</FlatTypo>
+<FlatTable>
+	<TableHeaders>
+		<th>Id</th>
+		<th>Username</th>
+		<th>Email</th>
+		<th>Content</th>
+	</TableHeaders>
+	<TableData>
+		<Virtualize TItem="InternalContactDTO" Items="@_contacts">
+			<tr>
+				<td>@context.ContactPointId</td>
+				<td>@context.UserName</td>
+				<td>@context.Email</td>
+				<td>@context.Message</td>
+			</tr>
+		</Virtualize>
+	</TableData>
+</FlatTable>
+
+@code {
+	/// <summary> Injected HttpClient </summary>
+	[Inject] public HttpClient Client { get; set; }
+
+	private List<InternalContactDTO> _contacts { get; set; } = new List<InternalContactDTO>();
+
+	/// <inheritdoc />
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		_contacts = await Client.GetFromJsonAsync<List<InternalContactDTO>>("api/v1/Contact/Internal");
+	}
+}
