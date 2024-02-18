@@ -2,13 +2,55 @@
 @if (IsMudMenu)
 {
 	<MudNavMenu>
-		<MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-		<MudNavLink Href="/servers" Match="NavLinkMatch.Prefix">Servers</MudNavLink>
-		<MudNavGroup Title="Settings" Expanded="true">
-			<MudNavLink Href="/users" Match="NavLinkMatch.Prefix">Users</MudNavLink>
-			<MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink>
+		<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+
+		<!-- User -->
+		<AuthorizeView>
+			<Authorized>
+				<MudNavLink Href="@NavRef.Site.Dash" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+				<!-- Builders -->
+				<MudNavGroup Title="Builders" Expanded="false" Icon="@Icons.Material.Filled.Build">
+					<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.BuildCircle">Builders</MudNavLink>
+					<MudNavGroup Title="Constructed Language" Expanded="false" Icon="@Icons.Material.Filled.Language">
+						<MudNavLink Href="@NavRef.BuilderNav.CongLang.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Create">Create Language</MudNavLink>
+						<MudNavLink Href="@NavRef.BuilderNav.CongLang.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Language</MudNavLink>
+					</MudNavGroup>
+					<MudNavGroup Title="Character" Expanded="false" Icon="@Icons.Material.Filled.Person">
+						<MudNavLink Href="@NavRef.BuilderNav.Character.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Create">Create Character</MudNavLink>
+						<MudNavLink Href="@NavRef.BuilderNav.Character.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Character</MudNavLink>
+					</MudNavGroup>
+				</MudNavGroup>
+				<MudNavGroup Title="User" Expanded="false">
+					<MudNavLink Href="@NavRef.UserNav.Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PermIdentity">Profile</MudNavLink>
+					<MudNavLink Href="@NavRef.UserNav.Account" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AccountCircle">Account</MudNavLink>
+					<MudNavLink Href="@NavRef.UserNav.Settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Settings">Settings</MudNavLink>
+					<MudNavLink Href="@NavRef.Auth.Logout" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error">Log-Out</MudNavLink>
+				</MudNavGroup>
+			</Authorized>
+			<NotAuthorized>
+				<MudNavLink Href="@NavRef.Auth.Registration" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AppRegistration" IconColor="Color.Success">Register</MudNavLink>
+				<MudNavLink Href="@NavRef.Auth.Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Login" IconColor="Color.Success">Log-In</MudNavLink>
+			</NotAuthorized>
+
+		</AuthorizeView>
+
+		<!-- Internal -->
+		<AuthorizeView Roles="ADMIN,INTERNAL">
+			<MudNavGroup Title="Internal" Expanded="false" Icon="@Icons.Material.Filled.Warning" IconColor="Color.Warning">
+				<MudNavLink Href="@NavRef.AdminNav.Index" Match="NavLinkMatch.Prefix">Internal</MudNavLink>
+				<MudNavLink Href="@NavRef.AdminNav.Blogs" Match="NavLinkMatch.Prefix">Manage Blogs</MudNavLink>
+				<MudNavLink Href="@NavRef.AdminNav.BlogPosts" Match="NavLinkMatch.Prefix">Blog Posts</MudNavLink>
+				<MudNavLink Href="@NavRef.AdminNav.Contacts" Match="NavLinkMatch.Prefix">Contacts</MudNavLink>
+				<MudNavLink Href="@NavRef.AdminNav.Logs" Match="NavLinkMatch.Prefix">Site Logs</MudNavLink>
+			</MudNavGroup>
+		</AuthorizeView>
+
+		<MudNavGroup Title="Site" Expanded="false">
+			<MudNavLink Href="@NavRef.Site.Features" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ViewList">Features</MudNavLink>
+			<MudNavLink Href="@NavRef.Site.About" Icon="@Icons.Material.Filled.QuestionMark" Match="NavLinkMatch.Prefix">About</MudNavLink>
+			<MudNavLink Href="@NavRef.Site.Faq" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.QuestionAnswer">FAQ</MudNavLink>
+			<MudNavLink Href="@NavRef.Site.Contact" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ContactPage">Contact Us!</MudNavLink>
 		</MudNavGroup>
-		<MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
 	</MudNavMenu>
 }
 else

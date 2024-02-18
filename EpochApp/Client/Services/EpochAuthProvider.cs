@@ -56,6 +56,15 @@ namespace EpochApp.Client.Services
                 CurrentUser = UserData.FromClaimsPrincipal(authState.User);
         }
 
+        /// <summary>
+        ///     Logs in the user and updates the authentication state.
+        /// </summary>
+        /// <param name="username">
+        ///     The username of the user.
+        /// </param>
+        /// <param name="password">
+        ///     The password of the user.
+        /// </param>
         public async Task LoginAsync(string username, string password)
         {
             var principal = new ClaimsPrincipal();
@@ -73,6 +82,9 @@ namespace EpochApp.Client.Services
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
         }
 
+        /// <summary>
+        ///     Logs out the user and updates the authentication state.
+        /// </summary>
         public void Logout()
         {
             _logger.LogInformation($"User: {CurrentUser.UserName} logged out.");

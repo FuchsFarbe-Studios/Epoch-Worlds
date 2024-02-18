@@ -15,9 +15,9 @@
 <AuthorizeView>
 	<Authorized>
 		<MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Dense="true">
-			<MudMenuItem Href="@NavRef.UserNav.Profile">Profile</MudMenuItem>
-			<MudMenuItem Href="@NavRef.UserNav.Account">Account</MudMenuItem>
-			<MudMenuItem Href="@NavRef.UserNav.Settings">Settings</MudMenuItem>
+			<MudMenuItem Icon="@Icons.Material.Filled.PermIdentity" Href="@NavRef.UserNav.Profile">Profile</MudMenuItem>
+			<MudMenuItem Icon="@Icons.Material.Filled.AccountCircle" Href="@NavRef.UserNav.Account">Account</MudMenuItem>
+			<MudMenuItem Icon="@Icons.Material.Filled.Settings" Href="@NavRef.UserNav.Settings">Settings</MudMenuItem>
 			<MudMenuItem Icon="@Icons.Material.Rounded.Logout" IconColor="Color.Error" Href="@NavRef.Auth.Logout">Logout</MudMenuItem>
 		</MudMenu>
 	</Authorized>
