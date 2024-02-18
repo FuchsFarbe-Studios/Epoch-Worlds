@@ -50,8 +50,9 @@ namespace EpochApp.Server
             var app = builder.Build();
 
             app.UseStatusCodePages();
+            var env = app.Environment;
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(
@@ -72,7 +73,21 @@ namespace EpochApp.Server
             app.UseHttpsRedirection();
 
             app.UseBlazorFrameworkFiles();
+
             app.UseStaticFiles();
+
+            var userContentDirectory = Path.Combine(env.ContentRootPath, "UserContent");
+            if (!Directory.Exists(userContentDirectory))
+            {
+                Directory.CreateDirectory(userContentDirectory);
+            }
+            app.UseStaticFiles(
+            new StaticFileOptions
+            {
+                FileProvider = null,
+                RequestPath = "/UserContent"
+            }
+            );
 
             app.UseRouting();
 
