@@ -41,7 +41,7 @@ namespace EpochApp.Shared.Utils
         public static class WorldNav
         {
             public const string Index = "/Worlds";
-            public const string Create = "/Worlds/Create";
+            public const string Create = "/World/Create";
             public const string Explore = "/Worlds/Explore";
 
             public static class Current

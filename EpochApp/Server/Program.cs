@@ -1,4 +1,5 @@
 using EpochApp.Server.Data;
+using EpochApp.Shared;
 using EpochApp.Shared.Services;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,6 +45,7 @@ namespace EpochApp.Server
                                                                 ClockSkew = TimeSpan.Zero
                                                             };
                     });
+            ConfigBuilder.ConfigureCommonServices(services);
             services.AddRazorPages();
             services.AddSwaggerGen();
 

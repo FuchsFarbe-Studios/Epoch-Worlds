@@ -1,0 +1,8 @@
+@using MudBlazor
+<MudSelect T="WorldDTO" Value="@_selectedWorld" ValueChanged="@(async w => await WorldChanged(w))" Label="World Selection">
+	@* <MudSelectItem Value="null" Href="@NavRef.WorldNav.Create">Create New World</MudSelectItem> *@
+	@foreach (var world in _userWorlds)
+	{
+		<MudSelectItem Value="@world">@world.WorldName</MudSelectItem>
+	}
+</MudSelect>

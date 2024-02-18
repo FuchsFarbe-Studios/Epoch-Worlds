@@ -1,0 +1,22 @@
+@using Position=MudBlazor.Position
+@using MudBlazor
+@inherits BuilderFormBase
+
+@if (Lang != null)
+{
+	<EditForm Model="@Lang">
+
+		<MudTabs Outlined="true" Position="Position.Right" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-2">
+			<MudTabPanel Text="Basics">
+				<MudTextField @bind-Value="@Lang.LangName" For="@(() => Lang.LangName)" Label="Language Name" Margin="Margin.Dense" />
+				<MudTextField @bind-Value="@Lang.NativePronunciation" For="@(() => Lang.NativePronunciation)" Label="Pronunciation" Margin="Margin.Dense" />
+				<MudTextField @bind-Value="@Lang.Description" For="@(() => Lang.Description)" Label="Description" Margin="Margin.Dense" />
+			</MudTabPanel>
+
+			<MudTabPanel Text="Phonology">
+
+			</MudTabPanel>
+		</MudTabs>
+
+	</EditForm>
+}

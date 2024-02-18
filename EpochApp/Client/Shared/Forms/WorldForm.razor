@@ -1,0 +1,100 @@
+@using ButtonType=MudBlazor.ButtonType
+@using EpochApp.Client.Services
+@using MudBlazor
+
+@if (World != null)
+{
+	<EditForm Model="@World" OnSubmit="@HandleWorldSubmit">
+		<MudCard>
+			<MudCardHeader>
+				<MudText>World Editor</MudText>
+			</MudCardHeader>
+			<MudCardContent>
+				<MudGrid>
+					<MudItem xs="12" sm="6">
+						<MudTextField Label="Name" @bind-Value="@World.WorldName" For="@(() => World.WorldName)" />
+					</MudItem>
+					<MudItem xs="12" sm="6">
+						<MudTextField Label="Pronunciation" @bind-Value="@World.Pronunciation" For="@(() => World.Pronunciation)" />
+					</MudItem>
+					<MudItem xs="12">
+						<MudTextField Label="Description" @bind-Value="@World.Description" For="@(() => World.Description)" Lines="3" />
+					</MudItem>
+					<MudItem xs="12" sm="6" md="4">
+						<MudNumericField Label="Current Day" T="int?" @bind-Value="@World.CurrentDay" For="@(() => World.CurrentDay)" />
+					</MudItem>
+					<MudItem xs="12" sm="6" md="4">
+						<MudNumericField Label="Current Month" T="int?" @bind-Value="@World.CurrentMonth" For="@(() => World.CurrentMonth)" />
+					</MudItem>
+					<MudItem xs="12" sm="6" md="4">
+						<MudNumericField Label="Current Year" T="int?" @bind-Value="@World.CurrentYear" For="@(() => World.CurrentYear)" />
+					</MudItem>
+					<MudItem xs="12">
+						<MudTextField Label="Current World Age" @bind-Value="@World.CurrentAge" For="@(() => World.CurrentAge)" />
+					</MudItem>
+				</MudGrid>
+			</MudCardContent>
+			<MudCardActions>
+				<MudButton ButtonType="ButtonType.Submit">Submit</MudButton>
+			</MudCardActions>
+		</MudCard>
+	</EditForm>
+}
+
+@code {
+	[Parameter] public bool IsEditMode { get; set; } = false;
+
+	[Parameter] public WorldDTO World { get; set; } = null!;
+
+	[Inject] private EpochAuthProvider Auth { get; set; }
+
+	[Inject] private ILogger<WorldForm> Logger { get; set; }
+
+	[Inject] private HttpClient Client { get; set; }
+
+	[Inject] private NavigationManager Nav { get; set; }
+
+	/// <inheritdoc />
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		World ??= new WorldDTO
+		          {
+			          DateCreated = DateTime.Now,
+			          IsActiveWorld = true
+		          };
+		if (Auth?.CurrentUser?.UserID != Guid.Empty)
+		{
+			World.AuthorID = Auth.CurrentUser.UserID;
+		}
+	}
+
+	private async Task HandleWorldSubmit(EditContext arg)
+	{
+		var world = arg.Model as WorldDTO;
+		world.AuthorID = Auth.CurrentUser.UserID;
+
+		if (IsEditMode)
+		{
+			// Update
+			var response = await Client.PutAsJsonAsync<WorldDTO>($"api/v1/Worlds/{world.WorldID}", world);
+			if (response.IsSuccessStatusCode)
+			{
+				// Success
+				Logger.LogInformation("Updated world {WorldID}", world.WorldID);
+			}
+			else
+			{
+				Logger.LogWarning("World failed to update!");
+			}
+		}
+		else
+		{
+			// Create
+			var response = await Client.PostAsJsonAsync<WorldDTO>("api/v1/Worlds/Create", world);
+			if (response.IsSuccessStatusCode)
+				Nav.NavigateTo(NavRef.WorldNav.Index);
+		}
+
+	}
+}

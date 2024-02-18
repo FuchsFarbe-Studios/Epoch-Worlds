@@ -1,4 +1,5 @@
 using EpochApp.Server.Data;
+using EpochApp.Shared;
 using EpochApp.Shared.Worlds;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,21 +31,144 @@ namespace EpochApp.Server.Controllers
             return await _context.Worlds.ToListAsync();
         }
 
-        [HttpGet("User/{ownerId}")]
-        public async Task<ActionResult<IEnumerable<World>>> GetUserWorlds(Guid ownerId)
+        [HttpGet("User")]
+        public async Task<ActionResult<IEnumerable<WorldDTO>>> GetUserWorlds([FromQuery] Guid ownerId)
         {
-            return await _context.Worlds
-                                 .Where(x => x.OwnerID == ownerId)
-                                 .Include(x => x.CurrentWorldDate)
-                                 .Include(x => x.MetaData)
-                                 .ToListAsync();
+            var worlds = await _context.Worlds
+                                       .Where(x => x.OwnerID == ownerId)
+                                       .Include(x => x.CurrentWorldDate)
+                                       .Include(x => x.MetaData)
+                                       .Include(x => x.Owner)
+                                       .Select(x => new WorldDTO
+                                                    {
+                                                        AuthorID = x.OwnerID,
+                                                        WorldID = x.WorldID,
+                                                        WorldName = x.WorldName,
+                                                        Pronunciation = x.Pronunciation,
+                                                        Description = x.Description,
+                                                        DateCreated = x.DateCreated,
+                                                        DateModified = x.DateModified,
+                                                        DateRemoved = x.DateRemoved,
+                                                        CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                        CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                        CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                        CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                        MetaData = x.MetaData,
+                                                        IsActiveWorld = x.IsActiveWorld.Value
+                                                    })
+                                       .ToListAsync();
+            return Ok(worlds);
         }
 
-        // GET: api/Worlds/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<World>> GetWorld(Guid id)
+        [HttpGet("ActiveWorld")]
+        public async Task<IActionResult> GetActiveUserWorld([FromQuery] Guid ownerId)
         {
-            var world = await _context.Worlds.FindAsync(id);
+            var activeWorld = await _context.Worlds
+                                            .Where(x => x.OwnerID == ownerId && x.IsActiveWorld.Value == true)
+                                            .Include(x => x.CurrentWorldDate)
+                                            .Include(x => x.MetaData)
+                                            .Include(x => x.Owner)
+                                            .Select(x => new WorldDTO
+                                                         {
+                                                             AuthorID = x.OwnerID,
+                                                             WorldID = x.WorldID,
+                                                             WorldName = x.WorldName,
+                                                             Pronunciation = x.Pronunciation,
+                                                             Description = x.Description,
+                                                             DateCreated = x.DateCreated,
+                                                             DateModified = x.DateModified.Value,
+                                                             DateRemoved = x.DateRemoved.Value,
+                                                             CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                             CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                             CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                             CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                             MetaData = x.MetaData,
+                                                             IsActiveWorld = x.IsActiveWorld.Value
+                                                         })
+                                            .FirstOrDefaultAsync();
+            return Ok(activeWorld);
+        }
+
+        [HttpPut("ActiveWorld")]
+        public async Task<IActionResult> UpdateActiveUserWorlds([FromBody] WorldDTO active)
+        {
+            var userWorlds = await _context.Worlds
+                                           .Where(x => x.OwnerID == active.AuthorID)
+                                           .ToListAsync();
+            var activeWorld = await _context.Worlds
+                                            .Where(x => x.OwnerID == active.AuthorID && x.WorldID == active.WorldID)
+                                            .FirstOrDefaultAsync();
+            foreach (var world in userWorlds)
+            {
+                if (world == activeWorld)
+                    world.IsActiveWorld = true;
+                else
+                    world.IsActiveWorld = false;
+                _context.Entry(world).State = EntityState.Modified;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WorldExists(active.WorldID))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            var updatedWorld = await _context.Worlds
+                                             .Where(x => x.OwnerID == active.AuthorID && x.IsActiveWorld.Value == true)
+                                             .Include(x => x.CurrentWorldDate)
+                                             .Include(x => x.MetaData)
+                                             .Select(x => new WorldDTO
+                                                          {
+                                                              AuthorID = x.OwnerID,
+                                                              WorldID = x.WorldID,
+                                                              WorldName = x.WorldName,
+                                                              Pronunciation = x.Pronunciation,
+                                                              Description = x.Description,
+                                                              DateCreated = x.DateCreated,
+                                                              DateModified = x.DateModified,
+                                                              DateRemoved = x.DateRemoved,
+                                                              CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                              CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                              CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                              CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                              MetaData = x.MetaData,
+                                                              IsActiveWorld = x.IsActiveWorld.Value
+                                                          })
+                                             .FirstOrDefaultAsync();
+            return Ok(updatedWorld);
+        }
+
+        [HttpGet("{ownerId:guid}/{worldId:guid}")]
+        public async Task<ActionResult<WorldDTO>> GetWorld(Guid ownerId, Guid worldId)
+        {
+            var world = await _context.Worlds
+                                      .Include(x => x.CurrentWorldDate)
+                                      .Include(x => x.MetaData)
+                                      .Include(x => x.Owner)
+                                      .Select(x => new WorldDTO
+                                                   {
+                                                       AuthorID = x.OwnerID,
+                                                       WorldID = x.WorldID,
+                                                       WorldName = x.WorldName,
+                                                       Pronunciation = x.Pronunciation,
+                                                       Description = x.Description,
+                                                       DateCreated = x.DateCreated,
+                                                       DateModified = x.DateModified.Value,
+                                                       DateRemoved = x.DateRemoved.Value,
+                                                       CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                       CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                       CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                       CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                       MetaData = x.MetaData,
+                                                       IsActiveWorld = x.IsActiveWorld.Value
+                                                   })
+                                      .FirstOrDefaultAsync(x => x.WorldID == worldId);
 
             if (world == null)
             {
@@ -54,17 +178,33 @@ namespace EpochApp.Server.Controllers
             return world;
         }
 
-        // PUT: api/Worlds/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutWorld(Guid id, World world)
+        [HttpPut("{worldId}")]
+        public async Task<IActionResult> PutWorld(Guid worldId, WorldDTO updatedWorld)
         {
-            if (id != world.WorldID)
+            if (worldId != updatedWorld.WorldID)
             {
                 return BadRequest();
             }
 
-            world.DateModified = DateTime.Now;
+            var world = await _context.Worlds
+                                      .Where(x => x.WorldID == worldId && x.OwnerID == updatedWorld.AuthorID)
+                                      .Include(x => x.Owner)
+                                      .Include(x => x.CurrentWorldDate)
+                                      .Include(x => x.MetaData)
+                                      .FirstOrDefaultAsync();
+            if (world == null)
+            {
+                world.DateModified = DateTime.Now;
+                world.WorldName = updatedWorld.WorldName ?? "";
+                world.Pronunciation = updatedWorld.Pronunciation ?? "";
+                world.Description = updatedWorld.Description ?? "";
+                world.IsActiveWorld = updatedWorld.IsActiveWorld ?? false;
+                world.CurrentWorldDate.CurrentDay = updatedWorld.CurrentDay ?? 1;
+                world.CurrentWorldDate.CurrentMonth = updatedWorld.CurrentMonth ?? 1;
+                world.CurrentWorldDate.CurrentYear = updatedWorld.CurrentYear ?? 1;
+                world.CurrentWorldDate.CurrentAge = updatedWorld.CurrentAge ?? "Age";
+                world.MetaData = updatedWorld.MetaData;
+            }
             _context.Entry(world).State = EntityState.Modified;
             try
             {
@@ -72,7 +212,7 @@ namespace EpochApp.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!WorldExists(id))
+                if (!WorldExists(worldId))
                 {
                     return NotFound();
                 }
@@ -82,16 +222,31 @@ namespace EpochApp.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Worlds
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<World>> PostWorld(World world)
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> PostWorld(WorldDTO world)
         {
-            world.DateCreated = DateTime.Now;
-            _context.Worlds.Add(world);
+            var newWorld = new World
+                           {
+                               OwnerID = world.AuthorID,
+                               WorldName = world.WorldName,
+                               Pronunciation = world.Pronunciation,
+                               Description = world.Description,
+                               IsActiveWorld = false,
+                               DateCreated = DateTime.Now,
+                               CurrentWorldDate = new WorldDate
+                                                  {
+                                                      CurrentDay = world.CurrentDay ?? 1,
+                                                      CurrentMonth = world.CurrentMonth ?? 1,
+                                                      CurrentYear = world.CurrentYear ?? 1,
+                                                      CurrentAge = world.CurrentAge
+                                                  },
+                               MetaData = new List<WorldMeta>()
+                           };
+            _context.Worlds.Add(newWorld);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorld", new { id = world.WorldID }, world);
+            return CreatedAtAction("GetWorld", new { ownerId = newWorld.OwnerID, worldId = newWorld.WorldID }, newWorld);
         }
 
         // DELETE: api/Worlds/5

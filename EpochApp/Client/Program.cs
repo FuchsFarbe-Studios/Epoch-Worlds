@@ -23,6 +23,7 @@ namespace EpochApp.Client
             builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<EpochAuthProvider>());
             builder.Services.AddAuthorizationCore();
             builder.Services.AddMudServices();
+            ConfigBuilder.ConfigureCommonServices(builder.Services);
             await builder.Build().RunAsync();
         }
     }

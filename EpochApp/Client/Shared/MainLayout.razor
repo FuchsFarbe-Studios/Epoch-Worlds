@@ -13,12 +13,17 @@
 		<AppBar />
 	</MudAppBar>
 	<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-		@*NavMenu*@
+		@*	NavMenu	*@
 		<NavMenu IsMudMenu="true" />
+		<AuthorizeView>
+			<WorldSelector OnWorldChanged="@HandleWorldChanged" />
+		</AuthorizeView>
 	</MudDrawer>
 	<MudMainContent>
 		<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
-			@Body
+			<CascadingValue Value="@_activeWorld" Name="ActiveWorld">
+				@Body
+			</CascadingValue>
 		</MudContainer>
 		<footer class="site-footer menu-items-wrapper">
 			<Footer />

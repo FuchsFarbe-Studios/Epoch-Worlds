@@ -1,6 +1,40 @@
 @page "/Worlds"
+@using FTypo=Flatify.Typo
+@using Typo=MudBlazor.Typo
+@using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard
-<FlatTypo Typo="Typo.Heading3">My Worlds</FlatTypo>
 
-@code {
-}
+<FlatTypo Typo="FTypo.Heading3">My Worlds</FlatTypo>
+
+<MudGrid>
+	@foreach (var world in _userWorlds)
+	{
+		<MudItem xs="12" sm="6" md="4" lg="3">
+			<MudCard Outlined="true">
+				<MudCardHeader>
+					<MudText Typo="Typo.body1">@world.WorldName</MudText>
+					<MudText Typo="Typo.body2">@world.WorldID</MudText>
+				</MudCardHeader>
+				<MudCardContent>
+					<MudText Typo="Typo.body1">@world.Description</MudText>
+				</MudCardContent>
+				<MudCardActions>
+					<MudButton>Edit World</MudButton>
+				</MudCardActions>
+			</MudCard>
+		</MudItem>
+	}
+	<MudItem xs="12" sm="6" md="4" lg="3">
+		<MudCard Outlined="true">
+			<MudCardHeader>
+				Create a New World
+			</MudCardHeader>
+			<MudCardContent>
+				Create a new world to start your adventure!
+			</MudCardContent>
+			<MudCardActions>
+				<MudButton OnClick="@(() => Nav.NavigateTo(NavRef.WorldNav.Create))">Create World</MudButton>
+			</MudCardActions>
+		</MudCard>
+	</MudItem>
+</MudGrid>

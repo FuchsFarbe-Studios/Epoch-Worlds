@@ -1,21 +1,22 @@
 @using Typo=MudBlazor.Typo
 @using Variant=MudBlazor.Variant
+@using EpochApp.Client.Services
 @using MudBlazor
 
 <MudText Typo="Typo.h6" Color="Color.Inherit" Class="ml-3 width-25p">Epoch World Exchange</MudText>
-<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Outlined" Href="@NavRef.Site.Index">Home</MudButton>
-<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Outlined" Href="@NavRef.Site.Features">Features</MudButton>
-<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Outlined" Href="@NavRef.Site.About">About</MudButton>
+<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.Index">Home</MudButton>
+<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.Features">Features</MudButton>
+<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.About">About</MudButton>
 <AuthorizeView Roles="ADMIN,INTERNAL">
 	<Authorized>
-		<MudButton Color="Color.Warning" Size="Size.Small" Variant="Variant.Outlined" Href="@NavRef.AdminNav.Index">Internal</MudButton>
+		<MudButton Color="Color.Warning" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.AdminNav.Index">Internal</MudButton>
 	</Authorized>
 </AuthorizeView>
 <MudSpacer />
 <AuthorizeView>
 	<Authorized>
-		<MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Dense="true">
-			<MudMenuItem Icon="@Icons.Material.Filled.PermIdentity" Href="@NavRef.UserNav.Profile">Profile</MudMenuItem>
+		<MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" DisableElevation="true">
+			<MudMenuItem Icon="@Icons.Material.Filled.PermIdentity" Href="@NavRef.UserNav.Profile">@($"{Auth.CurrentUser.UserName.ToUpperInvariant()}'s Profile")</MudMenuItem>
 			<MudMenuItem Icon="@Icons.Material.Filled.AccountCircle" Href="@NavRef.UserNav.Account">Account</MudMenuItem>
 			<MudMenuItem Icon="@Icons.Material.Filled.Settings" Href="@NavRef.UserNav.Settings">Settings</MudMenuItem>
 			<MudMenuItem Icon="@Icons.Material.Rounded.Logout" IconColor="Color.Error" Href="@NavRef.Auth.Logout">Logout</MudMenuItem>
@@ -35,6 +36,8 @@
 
 @code {
 	private bool _showMenu = false;
+
+	[Inject] private EpochAuthProvider Auth { get; set; }
 
 	private async Task ShowMenuAsync(MouseEventArgs mouseEventArgs)
 	{

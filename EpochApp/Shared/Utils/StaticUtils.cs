@@ -6,7 +6,6 @@
 
 namespace EpochApp.Shared.Utils
 {
-
     public static class StaticUtils
     {
         public static class Auth
