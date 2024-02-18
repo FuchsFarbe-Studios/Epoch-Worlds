@@ -189,7 +189,10 @@ namespace EpochApp.Server.Controllers
             if (string.IsNullOrEmpty(token))
                 return BadRequest("No refresh token found");
 
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.RefreshToken == token);
+            var user = await _context.Users
+                                     .Include(user => user.UserRoles)
+                                     .ThenInclude(userRole => userRole.Role)
+                                     .FirstOrDefaultAsync(x => x.RefreshToken == token);
             if (user is null)
                 return BadRequest("No user found with this refresh token");
             if (user.TokenExpires < DateTime.Now)
@@ -257,6 +260,31 @@ namespace EpochApp.Server.Controllers
                 return BadRequest(ModelState);
             }
 
+            // Other validations
+            if (registration.DateOfBirth > DateTime.Now)
+            {
+                ModelState.AddModelError(nameof(registration.DateOfBirth), "Date of Birth cannot be in the future");
+                return BadRequest(ModelState);
+            }
+
+            if (registration.UserName.Contains(" "))
+            {
+                ModelState.AddModelError(nameof(registration.UserName), "Username cannot contain spaces");
+                return BadRequest(ModelState);
+            }
+
+            if (registration.Password.Length < 8)
+            {
+                ModelState.AddModelError(nameof(registration.Password), "Password must be at least 8 characters long");
+                return BadRequest(ModelState);
+            }
+
+            if (registration.Password != registration.Password2)
+            {
+                ModelState.AddModelError(nameof(registration.Password2), "Passwords do not match!");
+                return BadRequest(ModelState);
+            }
+
             var user = new User
                        {
                            UserID = Guid.NewGuid(),
@@ -265,7 +293,7 @@ namespace EpochApp.Server.Controllers
                            DateOfBirth = registration.DateOfBirth.Value
                        };
 
-            var hash = HashPasword(registration.Password, out var salt);
+            var hash = HashPassword(registration.Password, out var salt);
             user.PasswordHash = hash;
             user.PasswordSalt = salt;
             user.UserRoles.Add(new UserRole { DateAssigned = DateTime.Today, User = user, Role = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 1) });
@@ -316,7 +344,7 @@ namespace EpochApp.Server.Controllers
             return _context.Users.Any(e => e.UserID == id);
         }
 
-        private string HashPasword(string password, out byte[] salt)
+        private string HashPassword(string password, out byte[] salt)
         {
             salt = RandomNumberGenerator.GetBytes(keySize);
             var hash = Rfc2898DeriveBytes.Pbkdf2(
