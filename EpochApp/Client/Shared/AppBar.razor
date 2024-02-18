@@ -1,6 +1,5 @@
 @using Typo=MudBlazor.Typo
 @using Variant=MudBlazor.Variant
-@using EpochApp.Client.Services
 @using MudBlazor
 
 <MudText Typo="Typo.h6" Color="Color.Inherit" Class="ml-3 width-25p">Epoch World Exchange</MudText>
@@ -23,25 +22,13 @@
 		</MudMenu>
 	</Authorized>
 	<NotAuthorized>
-		<MudButton Variant="Variant.Outlined" DisableElevation="true" Href="@NavRef.Auth.Registration" Color="Color.Inherit" Size="Size.Small">
-			<MudIcon Icon="@Icons.Material.Rounded.AppRegistration" Color="Color.Info" />
+		<MudButton Variant="Variant.Text" DisableElevation="true" Href="@NavRef.Auth.Registration" Color="Color.Inherit" Size="Size.Small">
+			<MudIcon Icon="@Icons.Material.Rounded.AppRegistration" Color="Color.Inherit" />
 			Register
 		</MudButton>
-		<MudButton Variant="Variant.Outlined" DisableElevation="true" Href="@NavRef.Auth.Login" Color="Color.Inherit" Size="Size.Small">
-			<MudIcon Icon="@Icons.Material.Rounded.Login" />
+		<MudButton Variant="Variant.Text" DisableElevation="true" Href="@NavRef.Auth.Login" Color="Color.Inherit" Size="Size.Small">
+			<MudIcon Icon="@Icons.Material.Rounded.Login" Color="Color.Inherit" />
 			Log-In
 		</MudButton>
 	</NotAuthorized>
 </AuthorizeView>
-
-@code {
-	private bool _showMenu = false;
-
-	[Inject] private EpochAuthProvider Auth { get; set; }
-
-	private async Task ShowMenuAsync(MouseEventArgs mouseEventArgs)
-	{
-		_showMenu = !_showMenu;
-		await Task.CompletedTask;
-	}
-}

@@ -1,0 +1,23 @@
+@page "/World/Edit"
+@page "/World/E"
+@page "/World/Edit/{WorldId?}"
+@page "/World/E/{WorldId?}"
+@using MudBlazor
+@using EpochApp.Client.Shared.Forms
+
+<PageTitle>@StaticUtils.Constants.AppName - Edit World</PageTitle>
+
+@if (string.IsNullOrEmpty(WorldId) || _selectedWorld == null)
+{
+	<MudSelect @bind-Value="@WorldId" Label="Select World">
+		@foreach (var world in _userWorlds)
+		{
+			<MudSelectItem Value="@(world.WorldID.ToString())">@world.WorldName</MudSelectItem>
+		}
+	</MudSelect>
+	<MudButton Disabled="@(string.IsNullOrWhiteSpace(WorldId))" OnClick="@(() => Nav.NavigateTo($"/World/Edit/{WorldId}"))">Edit Selected World</MudButton>
+}
+else
+{
+	<WorldForm World="@_selectedWorld" IsEditMode="true" />
+}

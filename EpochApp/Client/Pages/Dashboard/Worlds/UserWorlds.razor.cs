@@ -3,7 +3,7 @@ using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
-namespace EpochApp.Client.Pages.Dashboard
+namespace EpochApp.Client.Pages.Dashboard.Worlds
 {
     public partial class UserWorlds
     {

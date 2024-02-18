@@ -1,4 +1,5 @@
 using EpochApp.Shared;
+using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http.Json;
 
@@ -55,7 +56,7 @@ namespace EpochApp.Client.Shared
                     await Auth.LoginAsync(_loginDto.UserName, _loginDto.Password);
                     _loggingIn = false;
                     if (Auth.CurrentUser != null)
-                        Nav.NavigateTo("/");
+                        Nav.NavigateTo(NavRef.UserNav.Dashboard);
                 }
                 else
                 {

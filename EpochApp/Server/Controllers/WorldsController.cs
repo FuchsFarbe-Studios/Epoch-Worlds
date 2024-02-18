@@ -38,7 +38,6 @@ namespace EpochApp.Server.Controllers
                                        .Where(x => x.OwnerID == ownerId)
                                        .Include(x => x.CurrentWorldDate)
                                        .Include(x => x.MetaData)
-                                       .Include(x => x.Owner)
                                        .Select(x => new WorldDTO
                                                     {
                                                         AuthorID = x.OwnerID,
@@ -144,7 +143,7 @@ namespace EpochApp.Server.Controllers
             return Ok(updatedWorld);
         }
 
-        [HttpGet("{ownerId:guid}/{worldId:guid}")]
+        [HttpGet("World/{ownerId:guid}/{worldId:guid}")]
         public async Task<ActionResult<WorldDTO>> GetWorld(Guid ownerId, Guid worldId)
         {
             var world = await _context.Worlds
@@ -168,7 +167,7 @@ namespace EpochApp.Server.Controllers
                                                        MetaData = x.MetaData,
                                                        IsActiveWorld = x.IsActiveWorld.Value
                                                    })
-                                      .FirstOrDefaultAsync(x => x.WorldID == worldId);
+                                      .FirstOrDefaultAsync(x => x.WorldID == worldId && x.AuthorID == ownerId);
 
             if (world == null)
             {
@@ -182,16 +181,19 @@ namespace EpochApp.Server.Controllers
         public async Task<IActionResult> PutWorld(Guid worldId, WorldDTO updatedWorld)
         {
             if (worldId != updatedWorld.WorldID)
-            {
                 return BadRequest();
-            }
 
+            var userWorlds = await _context.Worlds.Where(x => x.OwnerID == updatedWorld.AuthorID).ToListAsync();
             var world = await _context.Worlds
                                       .Where(x => x.WorldID == worldId && x.OwnerID == updatedWorld.AuthorID)
                                       .Include(x => x.Owner)
                                       .Include(x => x.CurrentWorldDate)
                                       .Include(x => x.MetaData)
                                       .FirstOrDefaultAsync();
+
+            if (!userWorlds.Contains(world))
+                return BadRequest("Not your world!");
+
             if (world == null)
             {
                 world.DateModified = DateTime.Now;
@@ -221,7 +223,6 @@ namespace EpochApp.Server.Controllers
 
             return NoContent();
         }
-
 
         [HttpPost("Create")]
         public async Task<IActionResult> PostWorld(WorldDTO world)

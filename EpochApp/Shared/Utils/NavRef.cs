@@ -7,6 +7,14 @@ namespace EpochApp.Shared.Utils
 {
     public static class NavRef
     {
+        public static class ArticleNav
+        {
+            public const string Index = "/Articles";
+            public const string Create = "/Article/Create";
+            public const string Edit = "/Article/Edit";
+            public const string View = "/Article/View";
+        }
+
         public static class Auth
         {
             public const string Login = "/Auth/Login";
@@ -20,6 +28,7 @@ namespace EpochApp.Shared.Utils
             public const string Account = "/User/Account";
             public const string Profile = "/User/Profile";
             public const string Settings = "/User/Settings";
+            public const string Dashboard = "/Dashboard";
         }
 
         public static class AdminNav
@@ -42,6 +51,7 @@ namespace EpochApp.Shared.Utils
         {
             public const string Index = "/Worlds";
             public const string Create = "/World/Create";
+            public const string Edit = "/World/E";
             public const string Explore = "/Worlds/Explore";
 
             public static class Current
