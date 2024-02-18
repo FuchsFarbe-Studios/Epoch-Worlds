@@ -1,4 +1,6 @@
 using EpochApp.Server.Data;
+using EpochApp.Shared.Services;
+using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,23 +16,22 @@ namespace EpochApp.Server
         {
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
+            var services = builder.Services;
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true)
-                   .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
-                   .ConfigureApiBehaviorOptions(options =>
-                   {
-                       options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState);
-                   });
-
-            // Database
-            builder.Services.AddDbContext<EpochDataDbContext>(
+            services.AddSingleton(builder.Configuration.GetSection("MailSettings").Get<MailSettings>());
+            services.AddScoped<IMailService, MailService>();
+            services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true)
+                    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+                    .ConfigureApiBehaviorOptions(options =>
+                    {
+                        options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState);
+                    });
+            services.AddDbContext<EpochDataDbContext>(
             options =>
             {
                 options.UseSqlServer(config.GetConnectionString("LocalUserConnection"));
             });
-
-            var services = builder.Services;
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
@@ -43,9 +44,8 @@ namespace EpochApp.Server
                                                                 ClockSkew = TimeSpan.Zero
                                                             };
                     });
-
-            builder.Services.AddRazorPages();
-            builder.Services.AddSwaggerGen();
+            services.AddRazorPages();
+            services.AddSwaggerGen();
 
             var app = builder.Build();
 

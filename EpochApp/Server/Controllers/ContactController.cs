@@ -103,6 +103,7 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
+        [HttpGet("/Contact/{id:long}")]
         public IActionResult GetContactPoint(long id)
         {
             var contactPoint = _context.ContactPoints.Find(id);
@@ -121,4 +122,5 @@ namespace EpochApp.Server.Controllers
                       });
         }
     }
+
 }

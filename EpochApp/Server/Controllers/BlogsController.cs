@@ -52,7 +52,7 @@ namespace EpochApp.Server.Controllers
         }
 
         // Get blog posts
-        [HttpGet("BlogPosts/{blogId}")]
+        [HttpGet("BlogPosts/{blogId:int}")]
         public async Task<ActionResult<IEnumerable<PostDTO>>> GetBlogPosts(int blogId)
         {
             var blogPosts = await _context.Blogs.Where(x => x.BlogID == blogId)
@@ -250,6 +250,7 @@ namespace EpochApp.Server.Controllers
             return _context.Blogs.Any(e => e.BlogID == id);
         }
 
+        [HttpGet("BlogPosts/Post/{id:guid}")]
         public async Task<PostDTO> GetBlogPost(Guid id)
         {
             return await _context.Posts
