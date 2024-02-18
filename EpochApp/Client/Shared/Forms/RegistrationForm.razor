@@ -1,3 +1,10 @@
+@using ButtonType=MudBlazor.ButtonType
+@using InputType=MudBlazor.InputType
+@using Justify=MudBlazor.Justify
+@using Typo=MudBlazor.Typo
+@using Variant=MudBlazor.Variant
+@using Color=MudBlazor.Color
+@using MudBlazor
 @namespace EpochApp.Client.Shared
 @inherits RequestComponent<RegistrationDTO>
 
@@ -5,34 +12,36 @@
 	<DataAnnotationsValidator />
 	<EpochValidator @ref="@_validator" />
 
-	<FlatGrid Cols="RowCols.Cols2">
-		<FlatGridItem Span="GridCols.Default">
-			<FlatTextInput Required="true" @bind-Value="_registration.Email" DisplayName="E-Mail" InputType="InputType.Email" MaxLength="128" Label="E-Mail" Placeholder="Email" Inline="true" />
-			<FlatTextInput Required="true" @bind-Value="_registration.UserName" MaxLength="64" Label="Username" Placeholder="Login name" Inline="true" />
-		</FlatGridItem>
+	<MudCard Outlined="true">
+		<MudCardContent>
+			<MudGrid>
+				<MudItem xs="12" sm="6">
+					<MudTextField Label="Username" Placeholder="UserName" Required="true" @bind-Value="@_registration.UserName" For="@(() => _registration.UserName)" />
+				</MudItem>
+				<MudItem xs="12" sm="6">
+					<MudTextField Label="Email" Placeholder="user@email.com" Required="true" @bind-Value="@_registration.Email" For="@(() => _registration.Email)" InputType="InputType.Email" />
+				</MudItem>
+				<MudItem xs="12" sm="6">
+					<MudTextField Label="Password" Placeholder="Password" Required="true" @bind-Value="@_registration.Password" For="@(() => _registration.Password)" InputType="InputType.Password" />
+				</MudItem>
+				<MudItem xs="12" sm="6">
+					<MudTextField Label="Confirm Password" Placeholder="Password" Required="true" @bind-Value="@_registration.Password2" For="@(() => _registration.Password2)" InputType="InputType.Password" />
+				</MudItem>
+				<MudItem xs="12" sm="6">
+					<MudDatePicker Label="Date of Birth" @bind-Date="@_registration.DateOfBirth" For="@(() => _registration.DateOfBirth)" Required="true" />
+				</MudItem>
+				<MudItem xs="12" sm="6">
+					<MudSwitch Label="Agree to the terms?" Required="true" @bind-Value="@_registration.TermAgreement" For="@(() => _registration.TermAgreement)" />
+				</MudItem>
 
-		<FlatGridItem Span="GridCols.Default">
-			<FlatTextInput Required="true" @bind-Value="_registration.Password" InputType="InputType.Password" DisplayName="Password" MaxLength="64" Label="Password" Placeholder="Password" Inline="true" />
-			<FlatTextInput Required="true" @bind-Value="_registration.Password2" InputType="InputType.Password" DisplayName="Confirm Password" MaxLength="64" Label="Confirm Password" Placeholder="Confirm Password" Inline="true" />
-		</FlatGridItem>
-
-		<FlatGridItem Span="GridCols.Default">
-			<FlatDateInput Required="true" Type="InputDateType.Date" InputType="InputType.Date" TDateTime="DateTime?" @bind-Value="_registration.DateOfBirth" Label="Date of Birth" Placeholder="Date of Birth" />
-			<FlatSwitchInput @bind-Value="_registration.TermAgreement" Label="Agree to the terms?" Placeholder="Agree to the terms?" Required="true" />
-		</FlatGridItem>
-	</FlatGrid>
-
-	<FlatBreak BreakType="BreakType.Default" Color="FlatColor.Accent" />
-
-	<FlatGrid Cols="RowCols.Cols1">
-		<FlatGridItem Span="GridCols.Default">
-			<FlatButton Width="ElementWidth.ExtraLarge" Edge="EdgeType.RoundLg" Variant="Variant.Outline" Color="FlatColor.Accent" ButtonType="ButtonType.Submit">Register!</FlatButton>
-		</FlatGridItem>
-		<FlatGridItem Span="GridCols.Default">
-			<FlatTypo Typo="Typo.Body1" Text="Already have an account? ">
-				<FlatElement HtmlTag="a" href="/Auth/Login" target="_self">Log in!</FlatElement>
-			</FlatTypo>
-		</FlatGridItem>
-	</FlatGrid>
+				<MudItem xs="12">
+					<MudStack Justify="Justify.Center">
+						<MudButton DisableElevation="true" Disabled="@_loading" Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Login</MudButton>
+						<MudText Typo="Typo.body2">Already have an account? <MudLink Disabled="@_loading" Color="Color.Primary" Target="_self" Href="@($"{StaticUtils.Auth.LoginNav}")">Log-In!</MudLink></MudText>
+					</MudStack>
+				</MudItem>
+			</MudGrid>
+		</MudCardContent>
+	</MudCard>
 
 </EditForm>

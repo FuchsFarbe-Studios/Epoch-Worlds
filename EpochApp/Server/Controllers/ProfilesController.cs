@@ -63,6 +63,7 @@ namespace EpochApp.Server.Controllers
         {
             var profile = await _context.Profiles
                                         .Include(x => x.Socials)
+                                        .ThenInclude(x => x.Social)
                                         .Select(x => new ProfileDTO
                                                      {
                                                          UserID = x.UserID,
@@ -98,13 +99,16 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="Task{T}" /> where TResult is <see cref="IActionResult" />.
         /// </returns>
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> PutProfile(Guid id, ProfileDTO profileData)
         {
             if (id != profileData.UserID)
                 return BadRequest();
 
-            var profile = await _context.Profiles.FirstOrDefaultAsync(x => x.UserID == id);
+            var profile = await _context.Profiles
+                                        .Include(u => u.Socials)
+                                        .ThenInclude(userSocial => userSocial.Social)
+                                        .FirstOrDefaultAsync(x => x.UserID == id);
             // Map profile data to profile
             profile.FirstName = profileData.FirstName;
             profile.LastName = profileData.LastName;
@@ -113,12 +117,25 @@ namespace EpochApp.Server.Controllers
             profile.AvatarImg = profileData.AvatarImg;
             profile.CoverImg = profileData.CoverImg;
             profile.WebAddress = profileData.WebAddress;
-            profile.Socials = profileData.Socials.Select(x => new UserSocial
-                                                              {
-                                                                  Social = x.Social,
-                                                                  SocialHandle = x.Handle
-                                                              })
-                                         .ToList();
+            // Clear existing socials
+            profile.Socials.Clear();
+
+            // Add or update socials
+            foreach (var socialData in profileData.Socials)
+            {
+                var social = _context.UserSocials.FirstOrDefault(x => x.Social == socialData.Social && x.UserID == profile.UserID);
+
+                if (social != null)
+                {
+                    profile.Socials.Add(new UserSocial
+                                        {
+                                            Social = social.Social,
+                                            SocialHandle = socialData.Handle
+                                        });
+                }
+                // If social is not found, you may want to handle this case
+            }
+
             _context.Entry(profile).State = EntityState.Modified;
 
             try

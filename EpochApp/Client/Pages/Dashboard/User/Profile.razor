@@ -1,44 +1,136 @@
 @page "/User/Profile"
+@using ButtonType=MudBlazor.ButtonType
+@using Typo=MudBlazor.Typo
+@using Variant=MudBlazor.Variant
 @using EpochApp.Client.Services
+@using MudBlazor
 @namespace EpochApp.Client.Pages.User
 
 <PageTitle>@StaticUtils.Constants.AppName - @Auth.CurrentUser.UserName - Profile</PageTitle>
-<FlatTypo Typo="Typo.Heading3">Profile</FlatTypo>
+<MudText Typo="Typo.h3">Profile</MudText>
 
-<button @onclick="ToggleComponent">Press Me</button>
-
-@if (_showComponent)
+@if (_showProfileEdit)
 {
-	<p>Put your component here...</p>
+	@*		Display Profile Edit Form	*@
+	<EditForm Model="@_profileData" OnSubmit="@(async ctx => await UpdateProfileAsync(ctx))">
+		<MudGrid Spacing="2">
+			<MudItem xs="12" sm="7">
+				<MudCard Outlined="true">
+					<MudCardHeader>
+						<MudText>Edit Profile</MudText>
+					</MudCardHeader>
+					<MudCardContent>
+						<MudGrid>
+							<MudItem xs="12" sm="6">
+								<MudTextField Label="First Name" @bind-Value="@_profileData.FirstName" For="@(() => _profileData.FirstName)" />
+							</MudItem>
+							<MudItem xs="12" sm="6">
+								<MudTextField Label="Last Name" @bind-Value="@_profileData.LastName" For="@(() => _profileData.LastName)" />
+							</MudItem>
+							<MudItem xs="12">
+								<MudTextField Label="Profile Bio" @bind-Value="@_profileData.Bio" For="@(() => _profileData.Bio)" Lines="3" />
+							</MudItem>
+							<MudItem xs="12">
+								<MudTextField Label="Signature" @bind-Value="@_profileData.Signature" For="@(() => _profileData.Signature)" HelperText="Signatures are appended to messages." />
+							</MudItem>
+						</MudGrid>
+					</MudCardContent>
+					<MudCardActions>
+						<MudButton ButtonType="ButtonType.Submit" DisableElevation="true" Color="Color.Primary" Variant="Variant.Filled">Save Profile <MudIcon Icon="@Icons.Material.Filled.Save"></MudIcon></MudButton>
+					</MudCardActions>
+				</MudCard>
+			</MudItem>
+			<MudItem xs="12" sm="5">
+				<MudCard Outlined="true">
+					<MudCardHeader>
+						<MudText>Edit Socials</MudText>
+					</MudCardHeader>
+					<MudCardContent>
+						<MudStack>
+							@foreach (var social in _profileData.Socials)
+							{
+								<MudGrid @key=@social>
+									<MudItem xs="5">
+										<MudSelect Label="Select Social" @bind-Value="@social.Social">
+											@foreach (var s in _socials)
+											{
+												<MudSelectItem Value="@s">@s.SocialMediaName</MudSelectItem>
+											}
+										</MudSelect>
+									</MudItem>
+									<MudItem xs="6">
+										<MudTextField @bind-Value="@social.Handle" For="@(() => social.Handle)" Label="Handle" />
+									</MudItem>
+									<MudItem xs="1">
+										<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(async e => await RemoveSocialAsync(social))" />
+									</MudItem>
+								</MudGrid>
+							}
+						</MudStack>
+					</MudCardContent>
+					<MudCardActions>
+						<MudButton OnClick="@(async () => await AddSocialMediaAsync())">Add Social</MudButton>
+					</MudCardActions>
+				</MudCard>
+			</MudItem>
+		</MudGrid>
+	</EditForm>
 }
 
-@if (_profileData != null)
+@if (_profileData != null && !_showProfileEdit)
 {
 	@*		Display Profile Data	*@
-	<p>@_profileData.FirstName</p>
-	<p>@_profileData.LastName</p>
-	<p>@_profileData.Bio</p>
-	<p>@_profileData.Signature</p>
-	@foreach (var social in _profileData.Socials)
-	{
-		<div>
-			<p>@social.Social</p>
-			<p>@social.Handle</p>
-		</div>
-	}
+	<MudGrid Spacing="2">
+		<MudItem xs="12" sm="7">
+			<MudCard Outlined="true">
+				<MudCardHeader>
+					<MudText>@_profileData.FirstName @_profileData.LastName</MudText>
+				</MudCardHeader>
+				<MudCardContent>
+					<MudStack>
+						<MudText>@_profileData.FirstName @_profileData.LastName</MudText>
+						<MudText>@_profileData.Bio</MudText>
+						<MudText>@_profileData.Signature</MudText>
+					</MudStack>
+				</MudCardContent>
+				<MudCardActions>
+					<MudIconButton Icon="@Icons.Material.Filled.Edit" Title="Edit your profile" OnClick="@(async e => await ToggleEditAsync())" />
+				</MudCardActions>
+			</MudCard>
+		</MudItem>
+		<MudItem xs="12" sm="5">
+			<MudCard Outlined="true">
+				<MudCardHeader>
+					<MudText>User Socials</MudText>
+				</MudCardHeader>
+				<MudCardContent>
+					<MudTable Bordered="true" Dense="true" Outlined="true" Striped="true" Items="@_profileData.Socials">
+						<HeaderContent>
+							<MudTh>Social</MudTh>
+							<MudTh>Link</MudTh>
+						</HeaderContent>
+						<RowTemplate>
+							<MudTd>@context.Social.SocialMediaName</MudTd>
+							<MudTd>
+								<MudLink Href="@($"{context.Social.URLAffix}{context.Handle}")">@context.Handle</MudLink>
+							</MudTd>
+						</RowTemplate>
+					</MudTable>
+				</MudCardContent>
+			</MudCard>
+		</MudItem>
+	</MudGrid>
 }
 
 @code {
-	private bool _showComponent;
-
-	private void ToggleComponent()
-	{
-		_showComponent = !_showComponent;
-	}
-
-	[Inject] public EpochAuthProvider Auth { get; set; }
-	[Inject] private HttpClient Client { get; set; }
+	private bool _showProfileEdit;
+	private bool _updatingProfile;
 	private ProfileDTO _profileData = null!;
+	private List<SocialMedia> _socials = new List<SocialMedia>();
+
+	[Inject] private EpochAuthProvider Auth { get; set; }
+	[Inject] private HttpClient Client { get; set; }
+	[Inject] private ILogger<Profile> Logger { get; set; }
 
 	/// <inheritdoc />
 	protected override async Task OnInitializedAsync()
@@ -47,5 +139,54 @@
 		var userId = Auth.CurrentUser.UserID;
 		var profileData = await Client.GetFromJsonAsync<ProfileDTO>($"api/v1/Profiles/{userId}");
 		_profileData = profileData;
+	}
+
+	private async Task ToggleEditAsync()
+	{
+		_showProfileEdit = !_showProfileEdit;
+		var socials = await Client.GetFromJsonAsync<List<SocialMedia>>("api/v1/Lookups/lkSocials");
+		if (socials.Any())
+			_socials = socials;
+		await Task.CompletedTask;
+	}
+
+	private async Task RemoveSocialAsync(SocialDTO social)
+	{
+		if (_profileData.Socials.Contains(social))
+			_profileData.Socials.Remove(social);
+		//StateHasChanged();
+		await Task.CompletedTask;
+	}
+
+	private async Task AddSocialMediaAsync()
+	{
+		_profileData.Socials.Add(new SocialDTO
+		                         {
+			                         Social = _socials.FirstOrDefault(),
+			                         Handle = ""
+		                         });
+		//StateHasChanged();
+		await Task.CompletedTask;
+	}
+
+	private async Task UpdateProfileAsync(EditContext ctx)
+	{
+		_updatingProfile = true;
+		var profile = ctx.Model as ProfileDTO;
+		profile.UserID = Auth.CurrentUser.UserID;
+
+		var response = await Client.PutAsJsonAsync<ProfileDTO>($"api/v1/Profiles/{Auth.CurrentUser.UserID}", profile);
+		if (response.IsSuccessStatusCode)
+		{
+			_showProfileEdit = false;
+			_profileData = await Client.GetFromJsonAsync<ProfileDTO>($"api/v1/Profiles/{Auth.CurrentUser.UserID}");
+			Logger.LogInformation("Profile Updated!");
+			StateHasChanged();
+		}
+		else
+		{
+			Logger.LogError("Failed to update profile...");
+		}
+		_updatingProfile = false;
 	}
 }
