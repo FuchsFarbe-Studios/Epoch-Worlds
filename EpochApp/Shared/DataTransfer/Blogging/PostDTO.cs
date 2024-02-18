@@ -1,17 +1,16 @@
 // EpochWorlds
-// Post.cs
-// FuchsFarbe Studios 2023
-// Oliver MacDougall
-// Modified: 29-11-2023
-
+// PostDTO.cs
+// FuchsFarbe Studios 2024
+// matsu
+// Modified: 18-2-2024
 namespace EpochApp.Shared
 {
-    public class Post
+    public class PostDTO
     {
-        public Post()
-        {
-            BlogPosts = new HashSet<BlogPost>();
-        }
+        /// <summary>
+        ///     Blog this post belongs to.
+        /// </summary>
+        public int BlogId { get; set; }
 
         /// <summary> Unique post id. </summary>
         public Guid PostID { get; set; }
@@ -40,7 +39,7 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The date the post is scheduled to be posted.
         /// </summary>
-        public DateTime ScheduledTime { get; set; }
+        public DateTime? ScheduledTime { get; set; }
 
         /// <summary>
         ///     The date the post was posted.
@@ -56,10 +55,5 @@ namespace EpochApp.Shared
         ///     The username of the last person to modify the post.
         /// </summary>
         public string? ModifiedBy { get; set; }
-
-        /// <summary>
-        ///     The blog posts that reference this post.
-        /// </summary>
-        public virtual ICollection<BlogPost> BlogPosts { get; set; }
     }
 }

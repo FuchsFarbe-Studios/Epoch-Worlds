@@ -1,4 +1,37 @@
-<h3>BlogView</h3>
+@using Typo=MudBlazor.Typo
+@using MudBlazor
+
+@if (_blogPosts.Any())
+{
+	<Virtualize Items="@_blogPosts">
+		<MudCard Outlined="true">
+			<MudCardHeader>
+				<MudText Typo="Typo.h6">@context.Title</MudText>
+			</MudCardHeader>
+			<MudCardContent>
+				@((MarkupString)context.Content)
+			</MudCardContent>
+		</MudCard>
+	</Virtualize>
+}
 
 @code {
+	private List<PostDTO> _blogPosts = new List<PostDTO>();
+
+	/// <summary>
+	///     The blog type to display.
+	/// </summary>
+	[Parameter] public BlogType BlogType { get; set; }
+
+	/// <summary>
+	///     The HTTP client to use for the request.
+	/// </summary>
+	[Inject] public HttpClient Client { get; set; }
+
+	/// <inheritdoc />
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		_blogPosts = await Client.GetFromJsonAsync<List<PostDTO>>($"api/v1/Blogs/BlogPosts/Type/{(int)BlogType}");
+	}
 }

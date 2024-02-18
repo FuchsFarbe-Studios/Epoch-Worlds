@@ -10,10 +10,10 @@ namespace EpochApp.Shared
     {
         public int BlogID { get; set; }
         public Guid PostID { get; set; }
-        public DateTime PostedOn { get; set; }
+        public DateTime? PostedOn { get; set; }
         public DateTime? ModifiedOn { get; set; }
 
-        public Blog Blog { get; set; }
-        public Post Post { get; set; }
+        public virtual Blog Blog { get; set; }
+        public virtual Post Post { get; set; }
     }
 }

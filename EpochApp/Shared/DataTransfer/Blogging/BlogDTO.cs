@@ -1,26 +1,12 @@
 // EpochWorlds
-// Blog.cs
-// FuchsFarbe Studios 2023
-// Oliver MacDougall
-// Modified: 29-11-2023
-
-
-// EpochWorlds
-// Blog.cs
-// FuchsFarbe Studios 2023
-// Oliver MacDougall
-// Modified: 29-11-2023
-
+// BlogDTO.cs
+// FuchsFarbe Studios 2024
+// matsu
+// Modified: 18-2-2024
 namespace EpochApp.Shared
 {
-    /// <summary> A blog entity. </summary>
-    public class Blog
+    public class BlogDTO
     {
-        public Blog()
-        {
-            BlogPosts = new HashSet<BlogPost>();
-        }
-
         /// <summary> Unique blog id. </summary>
         public int BlogID { get; set; }
 
@@ -49,8 +35,5 @@ namespace EpochApp.Shared
         ///     The username of the last person to modify the blog.
         /// </summary>
         public string ModifiedBy { get; set; }
-
-        /// <summary> The blog's posts. </summary>
-        public ICollection<BlogPost> BlogPosts { get; set; }
     }
 }

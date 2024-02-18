@@ -51,12 +51,9 @@ namespace EpochApp.Server.Data
         public DbSet<Vowel> Vowels { get; set; }
         public DbSet<Consonant> Consonants { get; set; }
         // Blogs
-        public DbSet<BlogType> BlogTypes { get; set; }
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<BlogOwner> BlogsOwners { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Post> Posts { get; set; }
-        public DbSet<PostType> PostTypes { get; set; }
 
         // Content generation
 
@@ -245,102 +242,42 @@ namespace EpochApp.Server.Data
             });
 
             // Blogging
-            modelBuilder.Entity<BlogOwner>(entity =>
+
+            modelBuilder.Entity<BlogPost>(entity =>
             {
-                entity.ToTable("BlogOwners", "Blogs");
-                entity.HasKey(e => new { e.BlogID, e.OwnerID });
-                entity.HasOne(b => b.Blog)
-                      .WithMany(b => b.BlogOwners)
-                      .HasForeignKey(b => b.BlogID)
-                      .HasConstraintName("FK_BlogOwners_Blogs");
-                entity.HasOne(b => b.Owner)
-                      .WithMany(bp => bp.OwnedBlogs)
-                      .HasForeignKey(bp => bp.OwnerID)
-                      .HasConstraintName("FK_BlogOwners_Users")
-                      .OnDelete(DeleteBehavior.Cascade);
+                entity.ToTable("BlogPosts", "Blogs");
+                entity.HasKey(bp => new { bp.BlogID, bp.PostID });
+                entity.HasOne(bp => bp.Post)
+                      .WithMany(p => p.BlogPosts)
+                      .HasForeignKey(bp => bp.PostID)
+                      .HasConstraintName("FK_BlogPosts_Posts");
+                entity.HasOne(bp => bp.Blog)
+                      .WithMany(b => b.BlogPosts)
+                      .HasForeignKey(bp => bp.BlogID)
+                      .HasConstraintName("FK_BlogPosts_Blogs");
             });
 
             modelBuilder.Entity<Blog>(entity =>
             {
                 entity.ToTable("Blogs", "Blogs");
-                entity.HasKey(e => e.BlogID);
-                entity.HasOne(b => b.BlogType)
-                      .WithMany()
-                      .HasForeignKey(b => b.BlogTypeID)
-                      .HasConstraintName("FK_Blogs_BlogTypes");
-                entity.HasMany(b => b.BlogPosts)
-                      .WithOne(bp => bp.Blog)
-                      .HasForeignKey(bp => bp.BlogID)
-                      .HasConstraintName("FK_BlogPosts_Blogs");
-            });
-
-            modelBuilder.Entity<BlogType>(entity =>
-            {
-                entity.ToTable("lkBlogTypes", "Blogs");
-                entity.HasKey(e => e.BlogTypeID);
-                entity.HasData(new List<BlogType>
-                               {
-                                   new BlogType
-                                   {
-                                       BlogTypeID = 1, Description = "NEWS"
-                                   },
-                                   new BlogType
-                                   {
-                                       BlogTypeID = 2, Description = "UPDATES"
-                                   },
-                                   new BlogType
-                                   {
-                                       BlogTypeID = 3, Description = "EVENTS"
-                                   },
-                                   new BlogType
-                                   {
-                                       BlogTypeID = 4, Description = "FAQ"
-                                   },
-                                   new BlogType
-                                   {
-                                       BlogTypeID = 5, Description = "DOCUMENTATION"
-                                   }
-                               });
+                entity.HasKey(x => x.BlogID);
+                entity.Property(x => x.BlogID)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.BlogType)
+                      .HasConversion<string>();
             });
 
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Posts", "Blogs");
-                entity.HasKey(e => e.PostID);
-                entity.HasOne(p => p.Author)
-                      .WithMany()// replace with .WithMany(u => u.Posts) if User class have collection of posts
-                      .HasForeignKey(p => p.AuthorID)
-                      .HasConstraintName("FK_Posts_Users");
-                entity.HasMany(p => p.BlogPosts)
-                      .WithOne(bp => bp.Post)
-                      .HasForeignKey(bp => bp.PostID)
-                      .HasConstraintName("FK_BlogPosts_Posts");
+                entity.HasKey(x => x.PostID);
+                entity.Property(x => x.PostID)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.PostType)
+                      .HasConversion<string>();
             });
 
-            modelBuilder.Entity<BlogPost>(entity =>
-            {
-                entity.ToTable("BlogPosts", "Blogs");
-                entity.HasKey(bp => new
-                                    {
-                                        bp.BlogID, bp.PostID
-                                    });
-
-                entity.HasOne(bp => bp.Blog)
-                      .WithMany(b => b.BlogPosts)
-                      .HasForeignKey(bp => bp.BlogID)
-                      .HasConstraintName("FK_BlogPosts_Blogs");
-                entity.HasOne(bp => bp.Post)
-                      .WithMany(p => p.BlogPosts)
-                      .HasForeignKey(bp => bp.PostID)
-                      .HasConstraintName("FK_BlogPosts_Posts");
-            });
-
-            modelBuilder.Entity<PostType>(entity =>
-            {
-                entity.ToTable("lkPostTypes", "Blogs");
-                entity.HasKey(e => e.PostTypeID);
-            });
-
+            // Worlds
             modelBuilder.Entity<World>(entity =>
             {
                 entity.HasKey(e => e.WorldID);
