@@ -28,7 +28,7 @@ namespace EpochApp.Client.Shared.Forms
         /// <summary>
         ///     The active world relating to the builder form.
         /// </summary>
-        [CascadingParameter(Name = "ActiveWorld")] public WorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
 
         /// <summary>
         ///     Injected <see cref="HttpClient" />.

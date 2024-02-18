@@ -1,13 +1,25 @@
 @page "/Builders/ConLang/C"
+@using FTypo=Flatify.Typo
+@using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 
 <PageTitle>@StaticUtils.Constants.AppName - Create Constructed Language</PageTitle>
 
-<FlatTypo Typo="Typo.Heading3">Create Constructed Language</FlatTypo>
-<FlatTypo Typo="Typo.Body1">Create a new constructed language by filling out the form below.</FlatTypo>
-<FlatBreak BreakType="BreakType.Short" />
+<FlatTypo Typo="FTypo.Heading3">Create Constructed Language</FlatTypo>
+<FlatTypo Typo="FTypo.Body1">Create a new constructed language by filling out the form below.</FlatTypo>
+
+<AuthorizeView Roles="ADMIN,INTERNAL">
+	@if (ActiveWorld != null)
+	{
+		<MudText>Active World: @ActiveWorld.WorldName @ActiveWorld.WorldID.ToString()</MudText>
+	}
+</AuthorizeView>
 
 <ConLangForm IsEditMode="false" />
 
 @code {
+	/// <summary>
+	///     The active world the user has selected.
+	/// </summary>
+	[CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
 }

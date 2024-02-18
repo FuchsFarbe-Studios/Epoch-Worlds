@@ -8,14 +8,17 @@ namespace EpochApp.Client.Shared
     /// <inheritdoc />
     public partial class MainLayout
     {
-        private bool _drawerOpen;
 
         private WorldDTO _activeWorld;
+
+        private bool _drawerOpen;
         // private bool _isDarkMode;
 
         [Inject] private HttpClient Client { get; set; }
 
         [Inject] private EpochAuthProvider Auth { get; set; }
+
+        [Inject] private ILogger<MainLayout> Logger { get; set; }
 
         private void DrawerToggle()
         {
@@ -24,8 +27,11 @@ namespace EpochApp.Client.Shared
 
         private async Task HandleWorldChanged(WorldDTO arg)
         {
-            var activeWorld = await Client.GetFromJsonAsync<WorldDTO>($"api/v1/Worlds/ActiveWorld?ownderId={Auth.CurrentUser.UserID}");
-            _activeWorld = activeWorld;
+            Logger.LogInformation("World Changed: {WorldID}", arg.WorldID);
+            var activeWorld = await Client.GetFromJsonAsync<WorldDTO>($"api/v1/Worlds/ActiveWorld?ownerId={Auth.CurrentUser.UserID}");
+            if (activeWorld.WorldID == arg.WorldID)
+                _activeWorld = arg;
+            await Task.CompletedTask;
         }
     }
 }

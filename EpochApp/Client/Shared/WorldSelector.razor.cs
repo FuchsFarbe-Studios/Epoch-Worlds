@@ -28,6 +28,7 @@ namespace EpochApp.Client.Shared
                     _userWorlds.AddRange(worlds);
             }
             _selectedWorld = _userWorlds.FirstOrDefault(x => x?.IsActiveWorld == true) ?? _userWorlds.FirstOrDefault();
+            await WorldChanged(_selectedWorld);
         }
 
         private async Task WorldChanged(WorldDTO e)
