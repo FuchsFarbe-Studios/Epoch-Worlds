@@ -13,10 +13,10 @@ namespace EpochApp.Shared
     public class DerivedWord
     {
         /// <summary>
-        ///     Derived translations for the conlang word.
+        ///     Derived translations for the conlang word. Separated by commas.
         /// </summary>
-        [XmlElement("DerivedTranslations")]
-        public List<string> Translations { get; set; } = new List<string>();
+        [XmlElement("Translations")]
+        public string Translations { get; set; }
 
         /// <summary>
         ///     Part of speech for this word.

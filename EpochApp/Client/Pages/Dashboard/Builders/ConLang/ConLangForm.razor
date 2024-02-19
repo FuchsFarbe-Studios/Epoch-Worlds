@@ -381,6 +381,111 @@
 
 		<MudGrid Spacing="2">
 
+			<MudItem xs="12">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Vocabulary.AddAndRemoveWords" For="@(() => Lang.Vocabulary.AddAndRemoveWords)" Label="Customize Vocabulary" />
+			</MudItem>
+
+			@if (Lang.Vocabulary.AddAndRemoveWords)
+			{
+				var vocab = Lang.Vocabulary;
+				<MudItem xs="12">
+					<MudText Typo="Typo.h5" Align="Align.Center">Custom Vocabulary</MudText>
+				</MudItem>
+
+				<!-- Custom Vocabulary -->
+				<MudItem xs="12" sm="6" md="9">
+					<MudDataGrid Virtualize="true" Outlined="true" Height="250px" T="LangWord" Items="@vocab.SavedWords" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+						<Columns>
+							<PropertyColumn Property="x => x.Translations" />
+							<PropertyColumn Property="x => x.PartOfSpeech" />
+							<PropertyColumn Property="x => x.WordInIPA" />
+							<PropertyColumn Property="x => x.SpellingOverride" />
+							<TemplateColumn >
+								<CellTemplate Context="editCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@editCtx.Actions.StartEditingItemAsync" />
+								</CellTemplate>
+							</TemplateColumn>
+							<TemplateColumn>
+								<CellTemplate Context="deleteCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(() => vocab.SavedWords.Remove(deleteCtx.Item))" />
+								</CellTemplate>
+							</TemplateColumn>
+						</Columns>
+					</MudDataGrid>
+				</MudItem>
+
+				<MudItem xs="12" sm="6" md="3">
+					<EditForm Model="@_wordModel" OnSubmit="@OnVocabSumbitted">
+						<ChildContent Context="langWord">
+							<MudStack>
+								<MudTextField FullWidth="true" @bind-Value="@_wordModel.Translations" Label="Translations" Margin="Margin.Dense" />
+								<MudTextField FullWidth="true" @bind-Value="@_wordModel.PartOfSpeech" Label="Part of Speech" Margin="Margin.Dense" MaxLength="10" />
+								<MudTextField FullWidth="true" @bind-Value="@_wordModel.WordInIPA" Label="IPA" Margin="Margin.Dense" />
+								<MudTextField FullWidth="true" @bind-Value="@_wordModel.SpellingOverride" Label="Irregular Spelling" Margin="Margin.Dense" />
+							</MudStack>
+
+							<MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+								<MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+								<MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" OnClick="@(() => _wordModel = new LangWord())" />
+							</MudButtonGroup>
+						</ChildContent>
+					</EditForm>
+				</MudItem>
+
+				<!-- Derived Words -->
+				@* <MudItem xs="12" sm="6" md="3"> *@
+				@* 	<EditForm Model="@_derivedWordModel" OnSubmit="@HandleDerivedWordSubmitted"> *@
+				@* 		<ChildContent Context="derivedWord"> *@
+				@* 			<MudGrid> *@
+				@* 				<MudItem xs="12" sm="6"> *@
+				@* 					<MudTextField FullWidth="true" @bind-Value="@_derivedWordModel.Translations" Label="Translations" Margin="Margin.Dense" /> *@
+				@* 				</MudItem> *@
+				@* 				<MudItem xs="12" xs="6" md="3"> *@
+				@* 					<MudTextField FullWidth="true" @bind-Value="@_derivedWordModel.PartOfSpeech" Label="Part of Speech" Margin="Margin.Dense" MaxLength="10" /> *@
+				@* 				</MudItem> *@
+				@* *@
+				@* 			</MudGrid> *@
+				@* 			<MudButtonGroup Size="Size.Small" Variant="Variant.Outlined"> *@
+				@* 				<MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" ButtonType="ButtonType.Submit" /> *@
+				@* 				<MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" OnClick="@(() => _derivedWordModel = new DerivedWord())" /> *@
+				@* 			</MudButtonGroup> *@
+				@* 		</ChildContent> *@
+				@* 	</EditForm> *@
+				@* </MudItem> *@
+			}
+
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5" Align="Align.Center">Vocabulary Settings</MudText>
+			</MudItem>
+			<MudItem xs="12" sm="6">
+				<MudCheckBox Dense="true" @bind-Value="@Lang.Vocabulary.UseDefaultDerivations" For="@(() => Lang.Vocabulary.UseDefaultDerivations)" Label="Use Default Derivations?" />
+				<MudCheckBox Dense="true" @bind-Value="@Lang.Vocabulary.RemoveTranslations" For="@(() => Lang.Vocabulary.RemoveTranslations)" Label="Remove Translations?" />
+				<MudCheckBox Dense="true" @bind-Value="@Lang.Vocabulary.RemoveDefaults" For="@(() => Lang.Vocabulary.RemoveDefaults)" Label="Remove Default Words?" />
+			</MudItem>
+
+			<!-- Morphology -->
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5" Align="Align.Center">Number Morphology</MudText>
+			</MudItem>
+			<MudItem xs="12" sm="6">
+				<MudTextField @bind-Value="@Lang.Vocabulary.NumberBase" For="@(() => Lang.Vocabulary.NumberBase)" Label="Number Base" FullWidth="true" />
+			</MudItem>
+			<MudItem xs="12" sm="6">
+				<MudCheckBox @bind-Value="@Lang.Vocabulary.ListNumbersInOutput" For="@(() => Lang.Vocabulary.ListNumbersInOutput)" Label="List Numbers in Output?" />
+			</MudItem>
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5">Morphology</MudText>
+			</MudItem>
+			<MudItem xs="12" sm="6">
+				<MudCheckBox @bind-Value="@Lang.Vocabulary.UsePartOfSpeechMorphology" For="@(() => Lang.Vocabulary.UsePartOfSpeechMorphology)" Label="Use Part Of Speech Morphology?" />
+			</MudItem>
+			@if (Lang.Vocabulary.UsePartOfSpeechMorphology)
+			{
+				<MudItem xs="12" sm="6">
+					<MudTextField @bind-Value="@Lang.Vocabulary.MorphologyRules" For="@(() => Lang.Vocabulary.MorphologyRules)" Label="Morphology Rules" FullWidth="true" Lines="5" />
+				</MudItem>
+			}
+
 		</MudGrid>
 
 	</MudTabPanel>

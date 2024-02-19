@@ -12,10 +12,10 @@ namespace EpochApp.Shared
     public class LangWord
     {
         /// <summary>
-        ///     Translations for the conlang word.
+        ///     Translations for the conlang word. Comma separated.
         /// </summary>
         [XmlElement("WordTranslations")]
-        public List<string> Translations { get; set; } = new List<string>();
+        public string Translations { get; set; }
 
         /// <summary>
         ///     Part of speech for this word.
