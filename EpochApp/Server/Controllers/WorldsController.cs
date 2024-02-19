@@ -201,12 +201,26 @@ namespace EpochApp.Server.Controllers
                 world.Pronunciation = updatedWorld.Pronunciation ?? "";
                 world.Description = updatedWorld.Description ?? "";
                 world.IsActiveWorld = updatedWorld.IsActiveWorld ?? false;
+                world.MetaData = updatedWorld.MetaData;
+            }
+            if (world.CurrentWorldDate == null)
+            {
+                world.CurrentWorldDate = new WorldDate
+                                         {
+                                             CurrentDay = updatedWorld.CurrentDay ?? 1,
+                                             CurrentMonth = updatedWorld.CurrentMonth ?? 1,
+                                             CurrentYear = updatedWorld.CurrentYear ?? 1,
+                                             CurrentAge = updatedWorld.CurrentAge ?? "Age"
+                                         };
+            }
+            else
+            {
                 world.CurrentWorldDate.CurrentDay = updatedWorld.CurrentDay ?? 1;
                 world.CurrentWorldDate.CurrentMonth = updatedWorld.CurrentMonth ?? 1;
                 world.CurrentWorldDate.CurrentYear = updatedWorld.CurrentYear ?? 1;
                 world.CurrentWorldDate.CurrentAge = updatedWorld.CurrentAge ?? "Age";
-                world.MetaData = updatedWorld.MetaData;
             }
+
             _context.Entry(world).State = EntityState.Modified;
             try
             {

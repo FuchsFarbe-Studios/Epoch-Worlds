@@ -11,32 +11,26 @@
 <MudGrid>
 	@foreach (var world in _userWorlds)
 	{
-		<MudItem xs="12" sm="6" md="4" lg="3">
-			<MudCard Outlined="true">
+		<MudItem @key=@world.WorldID xs="12" sm="6" md="4" lg="3">
+			<MudCard Outlined="true" Style="min-height: 250px;">
 				<MudCardHeader>
-					<MudText Typo="Typo.body1">@world.WorldName</MudText>
-					<MudText Typo="Typo.body2">@world.WorldID</MudText>
+					<MudStack>
+						<MudText Typo="Typo.h6" Color="@(world.WorldID == ActiveWorld?.WorldID ? Color.Success : Color.Default)">@world.WorldName @($"{(world.WorldID == ActiveWorld?.WorldID ? "(Active)" : "")}")</MudText>
+						<MudText Typo="Typo.caption">@world.WorldID</MudText>
+					</MudStack>
 				</MudCardHeader>
 				<MudCardContent>
 					<MudText Typo="Typo.body1">@world.Description</MudText>
 				</MudCardContent>
 				<MudCardActions>
-					<MudButton>Edit World</MudButton>
+					<MudIconButton Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand]" OnClick="@(() => Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{world.WorldID}"))" Title="Edit this world." Color="Color.Primary" />
 				</MudCardActions>
 			</MudCard>
 		</MudItem>
 	}
 	<MudItem xs="12" sm="6" md="4" lg="3">
-		<MudCard Outlined="true">
-			<MudCardHeader>
-				Create a New World
-			</MudCardHeader>
-			<MudCardContent>
-				Create a new world to start your adventure!
-			</MudCardContent>
-			<MudCardActions>
-				<MudButton OnClick="@(() => Nav.NavigateTo(NavRef.WorldNav.Create))">Create World</MudButton>
-			</MudCardActions>
-		</MudCard>
+		<MudPaper Outlined="true" MinHeight="250px" Width="100%" Class="p-1">
+			<MudButton Class="m-auto" Style="height: 240px;" FullWidth="true" Color="Color.Primary" OnClick="@(() => Nav.NavigateTo(NavRef.WorldNav.Create))">Create World</MudButton>
+		</MudPaper>
 	</MudItem>
 </MudGrid>

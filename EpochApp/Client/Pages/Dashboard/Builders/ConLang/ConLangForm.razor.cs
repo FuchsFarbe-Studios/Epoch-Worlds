@@ -37,5 +37,10 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
         {
             await base.GenerateAsync();
         }
+
+        private Task HandleConlangSubmit(EditContext arg)
+        {
+            return null;
+        }
     }
 }

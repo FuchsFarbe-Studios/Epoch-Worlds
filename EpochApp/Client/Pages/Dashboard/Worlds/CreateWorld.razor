@@ -1,8 +1,15 @@
 @page "/World/Create"
+@using MaxWidth=MudBlazor.MaxWidth
+@using Typo=MudBlazor.Typo
+@using MudBlazor
 @using EpochApp.Client.Shared.Forms
 @namespace EpochApp.Client.Pages.Dashboard.Worlds
 
 <PageTitle>@StaticUtils.Constants.AppName - Create World</PageTitle>
 
-<FlatTypo Typo="Typo.Heading3">Create World</FlatTypo>
-<WorldForm IsEditMode="false" />
+<MudPaper MinHeight="400px" Outlined="true" Width="100%">
+	<MudContainer MaxWidth="MaxWidth.Medium">
+		<MudText Typo="Typo.h3" Class="mb-1">Create World</MudText>
+		<WorldForm IsEditMode="false" />
+	</MudContainer>
+</MudPaper>

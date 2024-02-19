@@ -2,22 +2,34 @@
 @page "/World/E"
 @page "/World/Edit/{WorldId?}"
 @page "/World/E/{WorldId?}"
+@using Justify=MudBlazor.Justify
+@using MaxWidth=MudBlazor.MaxWidth
+@using Typo=MudBlazor.Typo
 @using MudBlazor
 @using EpochApp.Client.Shared.Forms
 
 <PageTitle>@StaticUtils.Constants.AppName - Edit World</PageTitle>
 
-@if (string.IsNullOrEmpty(WorldId) || _selectedWorld == null)
-{
-	<MudSelect @bind-Value="@WorldId" Label="Select World">
-		@foreach (var world in _userWorlds)
-		{
-			<MudSelectItem Value="@(world.WorldID.ToString())">@world.WorldName</MudSelectItem>
-		}
-	</MudSelect>
-	<MudButton Disabled="@(string.IsNullOrWhiteSpace(WorldId))" OnClick="@(() => Nav.NavigateTo($"/World/Edit/{WorldId}"))">Edit Selected World</MudButton>
-}
-else
-{
-	<WorldForm World="@_selectedWorld" IsEditMode="true" />
-}
+<MudPaper MinHeight="400px" Outlined="true" Width="100%">
+	@if (string.IsNullOrEmpty(WorldId) || _selectedWorld == null)
+	{
+		<MudPaper Outlined="true" Class="pa-2 m-auto mud-theme-dark">
+			<MudStack Justify="Justify.Center" Spacing="2">
+				<MudSelect @bind-Value="@WorldId" Label="Select World">
+					@foreach (var world in _userWorlds)
+					{
+						<MudSelectItem Value="@(world.WorldID.ToString())">@world.WorldName</MudSelectItem>
+					}
+				</MudSelect>
+				<MudButton Disabled="@(string.IsNullOrWhiteSpace(WorldId))" OnClick="@(() => Nav.NavigateTo($"/World/Edit/{WorldId}"))">Edit Selected World</MudButton>
+			</MudStack>
+		</MudPaper>
+	}
+	else
+	{
+		<MudContainer MaxWidth="MaxWidth.Medium">
+			<MudText Typo="Typo.h3" Class="mb-1">Edit World</MudText>
+			<WorldForm World="@_selectedWorld" IsEditMode="true" />
+		</MudContainer>
+	}
+</MudPaper>

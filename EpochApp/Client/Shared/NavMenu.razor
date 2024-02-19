@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 @if (IsMudMenu)
 {
-	<MudNavMenu>
+	<MudNavMenu Color="Color.Dark" Rounded="true" Bordered="true" Dense="true" Margin="Margin.Dense">
 		<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
 
 		<!-- User -->
@@ -11,7 +11,7 @@
 
 				<!-- Worlds -->
 				<MudNavGroup Title="Worlds" Expanded="false" Icon="@Icons.Material.Filled.SouthAmerica">
-					<MudNavLink Href="@NavRef.WorldNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.SouthAmerica">My Worlds</MudNavLink>
+					<MudNavLink Href="@NavRef.WorldNav.Index" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAmericas]">My Worlds</MudNavLink>
 					<MudNavLink Href="@NavRef.WorldNav.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create World</MudNavLink>
 					<MudNavLink Href="@NavRef.WorldNav.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit World</MudNavLink>
 				</MudNavGroup>
@@ -27,11 +27,11 @@
 				<MudNavGroup Title="Builders" Expanded="false" Icon="@Icons.Material.Filled.Build">
 					<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.BuildCircle">Builders</MudNavLink>
 					<MudNavGroup Title="Constructed Language" Expanded="false" Icon="@Icons.Material.Filled.Language">
-						<MudNavLink Href="@NavRef.BuilderNav.CongLang.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Create">Create Language</MudNavLink>
+						<MudNavLink Href="@NavRef.BuilderNav.CongLang.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Language</MudNavLink>
 						<MudNavLink Href="@NavRef.BuilderNav.CongLang.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Language</MudNavLink>
 					</MudNavGroup>
 					<MudNavGroup Title="Character" Expanded="false" Icon="@Icons.Material.Filled.Person">
-						<MudNavLink Href="@NavRef.BuilderNav.Character.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Create">Create Character</MudNavLink>
+						<MudNavLink Href="@NavRef.BuilderNav.Character.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Character</MudNavLink>
 						<MudNavLink Href="@NavRef.BuilderNav.Character.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Character</MudNavLink>
 					</MudNavGroup>
 				</MudNavGroup>

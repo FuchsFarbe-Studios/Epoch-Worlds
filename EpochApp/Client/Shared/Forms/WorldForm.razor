@@ -1,14 +1,11 @@
 @using ButtonType=MudBlazor.ButtonType
-@using EpochApp.Client.Services
+@using Variant=MudBlazor.Variant
 @using MudBlazor
 
 @if (World != null)
 {
 	<EditForm Model="@World" OnSubmit="@HandleWorldSubmit">
-		<MudCard>
-			<MudCardHeader>
-				<MudText>World Editor</MudText>
-			</MudCardHeader>
+		<MudCard Outlined="true">
 			<MudCardContent>
 				<MudGrid>
 					<MudItem xs="12" sm="6">
@@ -35,66 +32,9 @@
 				</MudGrid>
 			</MudCardContent>
 			<MudCardActions>
-				<MudButton ButtonType="ButtonType.Submit">Submit</MudButton>
+				<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true"><MudIcon Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")" Class="mr-1" /> Submit</MudButton>
+				<MudIconButton Size="Size.Large" ButtonType="ButtonType.Button" Color="Color.Error" DisableElevation="true" Icon="@Icons.Material.Filled.Cancel" Title="Cancel editing this world." Href="@($"{NavRef.WorldNav.Index}")" />
 			</MudCardActions>
 		</MudCard>
 	</EditForm>
-}
-
-@code {
-	[Parameter] public bool IsEditMode { get; set; } = false;
-
-	[Parameter] public WorldDTO World { get; set; } = null!;
-
-	[Inject] private EpochAuthProvider Auth { get; set; }
-
-	[Inject] private ILogger<WorldForm> Logger { get; set; }
-
-	[Inject] private HttpClient Client { get; set; }
-
-	[Inject] private NavigationManager Nav { get; set; }
-
-	/// <inheritdoc />
-	protected override async Task OnInitializedAsync()
-	{
-		await base.OnInitializedAsync();
-		World ??= new WorldDTO
-		          {
-			          DateCreated = DateTime.Now,
-			          IsActiveWorld = true
-		          };
-		if (Auth?.CurrentUser?.UserID != Guid.Empty)
-		{
-			World.AuthorID = Auth.CurrentUser.UserID;
-		}
-	}
-
-	private async Task HandleWorldSubmit(EditContext arg)
-	{
-		var world = arg.Model as WorldDTO;
-		world.AuthorID = Auth.CurrentUser.UserID;
-
-		if (IsEditMode)
-		{
-			// Update
-			var response = await Client.PutAsJsonAsync<WorldDTO>($"api/v1/Worlds/{world.WorldID}", world);
-			if (response.IsSuccessStatusCode)
-			{
-				// Success
-				Logger.LogInformation("Updated world {WorldID}", world.WorldID);
-			}
-			else
-			{
-				Logger.LogWarning("World failed to update!");
-			}
-		}
-		else
-		{
-			// Create
-			var response = await Client.PostAsJsonAsync<WorldDTO>("api/v1/Worlds/Create", world);
-			if (response.IsSuccessStatusCode)
-				Nav.NavigateTo(NavRef.WorldNav.Index);
-		}
-
-	}
 }

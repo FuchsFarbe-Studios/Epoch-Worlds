@@ -7,6 +7,9 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
 {
     public partial class UserWorlds
     {
+        /// <summary> The active world. </summary>
+        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
+
         private List<WorldDTO> _userWorlds = new List<WorldDTO>();
         [Inject] private HttpClient Client { get; set; }
 

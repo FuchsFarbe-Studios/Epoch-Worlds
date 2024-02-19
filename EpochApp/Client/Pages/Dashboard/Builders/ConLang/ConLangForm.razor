@@ -5,19 +5,36 @@
 
 @if (Lang != null)
 {
-	<EditForm Model="@Lang">
+	<EditForm Model="@Lang" OnSubmit="@HandleConlangSubmit">
 
-		<MudTabs Outlined="true" Position="Position.Right" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-2">
-			<MudTabPanel Text="Basics">
-				<MudTextField @bind-Value="@Lang.LangName" For="@(() => Lang.LangName)" Label="Language Name" Margin="Margin.Dense" />
-				<MudTextField @bind-Value="@Lang.NativePronunciation" For="@(() => Lang.NativePronunciation)" Label="Pronunciation" Margin="Margin.Dense" />
-				<MudTextField @bind-Value="@Lang.Description" For="@(() => Lang.Description)" Label="Description" Margin="Margin.Dense" />
-			</MudTabPanel>
+		<MudPaper Outlined="true">
+			<DataAnnotationsValidator />
+			<ValidationSummary />
+		</MudPaper>
 
-			<MudTabPanel Text="Phonology">
+		<MudPaper Class="my-1 pa-1 mud-color-dark">
 
-			</MudTabPanel>
-		</MudTabs>
+			<MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-2" Color="Color.Primary" SliderColor="Color.Dark" KeepPanelsAlive="true">
+				<MudTabPanel Text="Basics" Icon="@Icons.Material.Filled.Details" ToolTip="Basic information about this constructed language.">
+					<MudGrid Spacing="2">
+						<MudItem xs="12" sm="6">
+							<MudTextField @bind-Value="@Lang.LangName" For="@(() => Lang.LangName)" Label="Language Name" Margin="Margin.Dense" />
+						</MudItem>
+						<MudItem xs="12" sm="6">
+							<MudTextField @bind-Value="@Lang.NativePronunciation" For="@(() => Lang.NativePronunciation)" Label="Pronunciation" Margin="Margin.Dense" />
+						</MudItem>
+						<MudItem xs="12">
+							<MudTextField @bind-Value="@Lang.Description" For="@(() => Lang.Description)" Label="Description" Margin="Margin.Dense" Lines="2" />
+						</MudItem>
+					</MudGrid>
+				</MudTabPanel>
+
+				<MudTabPanel Text="Phonology" Icon="@Icons.Material.Filled.Phone" ToolTip="Describes how a language sounds.">
+
+				</MudTabPanel>
+			</MudTabs>
+
+		</MudPaper>
 
 	</EditForm>
 }
