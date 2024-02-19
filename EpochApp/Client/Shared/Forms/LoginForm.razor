@@ -3,6 +3,7 @@
 @using Justify=MudBlazor.Justify
 @using Variant=MudBlazor.Variant
 @using Typo=MudBlazor.Typo
+@using AlignItems=MudBlazor.AlignItems
 @using MudBlazor
 @namespace EpochApp.Client.Shared
 @inherits RequestComponent<LoginDTO>
@@ -12,10 +13,10 @@
 	<EpochValidator @ref="@_validator" />
 	<MudCard Outlined="true">
 		<MudCardContent>
-			<MudStack Justify="Justify.Center">
-				<MudTextField Label="Username" Placeholder="UserName" Required="true" @bind-Value="@_loginDto.UserName" For="@(() => _loginDto.UserName)" />
-				<MudTextField Label="Password" Placeholder="Password" Required="true" @bind-Value="@_loginDto.Password" For="@(() => _loginDto.Password)" InputType="InputType.Password" />
-				<MudButton DisableElevation="true" Disabled="@_loggingIn" Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit">Login</MudButton>
+			<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
+				<MudTextField Variant="Variant.Outlined" Label="Username" Placeholder="UserName" Required="true" @bind-Value="@_loginDto.UserName" For="@(() => _loginDto.UserName)" FullWidth="true" />
+				<MudTextField Variant="Variant.Outlined" Label="Password" Placeholder="Password" Required="true" @bind-Value="@_loginDto.Password" For="@(() => _loginDto.Password)" InputType="InputType.Password" FullWidth="true" />
+				<MudButton DisableElevation="true" Disabled="@_loggingIn" Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit" FullWidth="true">Login</MudButton>
 				<MudText Typo="Typo.body2">Don't have an account yet? <MudLink Disabled="@_loggingIn" Color="Color.Primary" Target="_self" Href="@($"{StaticUtils.Auth.RegistrationNav}")">Register!</MudLink></MudText>
 			</MudStack>
 		</MudCardContent>

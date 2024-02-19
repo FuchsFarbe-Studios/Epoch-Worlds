@@ -3,6 +3,8 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 2-2-2024
+using System.ComponentModel.DataAnnotations;
+
 namespace EpochApp.Shared
 {
     [Serializable]
@@ -21,7 +23,7 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Toggle for intermediate settings.
         /// </summary>
-        public bool? UseIntermediateWordStructure { get; set; }
+        public bool UseIntermediateWordStructure { get; set; } = false;
 
         /// <summary> Initial consonants. </summary>
         public string InitialConsonants { get; set; }
@@ -35,7 +37,7 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Setting to toggle vowel harmony.
         /// </summary>
-        public bool? UseVowelHarmony { get; set; }
+        public bool UseVowelHarmony { get; set; } = false;
 
         /// <summary>
         ///     Complimentary vowel pairing.
@@ -48,7 +50,7 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Advanced phonology setting toggle.
         /// </summary>
-        public bool? UseAdvancedWordStructure { get; set; }
+        public bool UseAdvancedWordStructure { get; set; } = false;
 
         /// <summary> Phoneme classes. </summary>
         public string PhonemeClasses { get; set; }
@@ -82,12 +84,14 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Probability of a vowel at the start of a word.
         /// </summary>
-        public float? VowelAtStartProbability { get; set; }
+        [Range(0, 100)]
+        public float VowelAtStartProbability { get; set; } = 35f;
 
         /// <summary>
         ///     Probability of a vowel at the end of a word.
         /// </summary>
-        public float? VowelAtEndProbability { get; set; }
+        [Range(0, 100)]
+        public float VowelAtEndProbability { get; set; } = 15f;
 
         /// <summary>
         ///     Toggles the usage of vowel tones.
