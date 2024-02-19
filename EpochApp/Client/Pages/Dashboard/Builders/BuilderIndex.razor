@@ -1,38 +1,59 @@
 @page "/Builders"
+@using MaxWidth=MudBlazor.MaxWidth
+@using Typo=MudBlazor.Typo
+@using Variant=MudBlazor.Variant
+@using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 
 <PageTitle>@StaticUtils.Constants.AppName - Builders</PageTitle>
-<FlatTypo Typo="Typo.Heading3">Builders</FlatTypo>
 
-<FlatTypo Typo="Typo.Body1">Here are the main builders for your world. </FlatTypo>
-<FlatBreak />
+<MudContainer MaxWidth="MaxWidth.Medium">
 
-<FlatAccordion>
-	<AccordionItem>
-		<TitleContent>
-			<FlatTypo Typo="Typo.Heading6">Constructed Language Generator</FlatTypo>
-		</TitleContent>
-		<Content>
-			<FlatTypo Typo="Typo.Body1">Create a new constructed language for your world. Several generation options are available, such as Phonology, Grammar, and Vocabulary.</FlatTypo>
-		</Content>
-	</AccordionItem>
-	<AccordionItem>
-		<TitleContent>
-			<FlatTypo Typo="Typo.Heading6">Character Creator</FlatTypo>
-		</TitleContent>
-		<Content>
-			<FlatTypo Typo="Typo.Body1">Create a new character from scratch, or allow our creative generators to create one for you that utilizes your world's data to generate a character.</FlatTypo>
-		</Content>
-	</AccordionItem>
-	<AccordionItem>
-		<TitleContent>
-			<FlatTypo Typo="Typo.Heading6">State Manager</FlatTypo>
-		</TitleContent>
-		<Content>
-			<FlatTypo Typo="Typo.Body1">Create, manage, or generate world states, countries, or territories.</FlatTypo>
-		</Content>
-	</AccordionItem>
-</FlatAccordion>
+	<MudText Typo="Typo.h3">Builders</MudText>
+	<MudText Typo="Typo.body1">Here are the main builders for your world. </MudText>
+
+	<MudExpansionPanels Dense="true" Elevation="0" MultiExpansion="true" DisableBorders="false">
+
+		<MudExpansionPanel>
+			<TitleContent>
+				<MudText Typo="Typo.h6">Constructed Language Generator</MudText>
+			</TitleContent>
+			<ChildContent>
+				<MudStack>
+					<MudText Typo="Typo.body1">Create a new constructed language for your world. Several generation options are available, such as Phonology, Grammar, and Vocabulary.</MudText>
+					<MudButtonGroup Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary" DisableElevation="true">
+						<MudButton Href="@NavRef.BuilderNav.CongLang.Create">Create Language</MudButton>
+						<MudButton Href="@NavRef.BuilderNav.CongLang.Edit">Edit Language</MudButton>
+					</MudButtonGroup>
+				</MudStack>
+			</ChildContent>
+		</MudExpansionPanel>
+
+		<MudExpansionPanel>
+			<TitleContent>
+				<MudText Typo="Typo.h6">Character Creator</MudText>
+			</TitleContent>
+			<ChildContent>
+				<MudText Typo="Typo.body1">Create a new character from scratch, or allow our creative generators to create one for you that utilizes your world's data to generate a character.</MudText>
+				<MudButtonGroup Variant="Variant.Outlined" Size="Size.Large" Color="Color.Secondary" DisableElevation="true">
+					<MudButton Href="@NavRef.BuilderNav.Character.Create">Create Character</MudButton>
+					<MudButton Href="@NavRef.BuilderNav.Character.Edit">Edit Character</MudButton>
+				</MudButtonGroup>
+			</ChildContent>
+		</MudExpansionPanel>
+
+		<MudExpansionPanel>
+			<TitleContent>
+				<MudText Typo="Typo.h6">State Manager</MudText>
+			</TitleContent>
+			<ChildContent>
+				<MudText Typo="Typo.body1">Create, manage, or generate world states, countries, or territories.</MudText>
+			</ChildContent>
+		</MudExpansionPanel>
+
+	</MudExpansionPanels>
+
+</MudContainer>
 
 @code {
 }

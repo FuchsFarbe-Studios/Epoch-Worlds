@@ -20,7 +20,6 @@ namespace EpochApp.Client.Shared.Forms
         /// <summary> The world to edit. </summary>
         [Parameter] public WorldDTO World { get; set; } = null!;
 
-
         [Inject] private EpochAuthProvider Auth { get; set; }
         [Inject] private ILogger<WorldForm> Logger { get; set; }
         [Inject] private HttpClient Client { get; set; }
@@ -44,10 +43,10 @@ namespace EpochApp.Client.Shared.Forms
         /// <summary>
         ///     Handles the form submission of the world data.
         /// </summary>
-        /// <param name="arg"> </param>
-        private async Task HandleWorldSubmit(EditContext arg)
+        /// <param name="ctx"> The edit context. </param>
+        private async Task HandleWorldSubmit(EditContext ctx)
         {
-            var world = arg.Model as WorldDTO;
+            var world = ctx.Model as WorldDTO;
             world.AuthorID = Auth.CurrentUser.UserID;
 
             if (IsEditMode)
@@ -58,10 +57,12 @@ namespace EpochApp.Client.Shared.Forms
                 {
                     // Success
                     Logger.LogInformation("Updated world {WorldID}", world.WorldID);
+                    Nav.NavigateTo(NavRef.WorldNav.Index);
                 }
                 else
                 {
                     Logger.LogWarning("World failed to update!");
+                    Nav.NavigateTo(NavRef.WorldNav.Index);
                 }
             }
             else
@@ -69,9 +70,11 @@ namespace EpochApp.Client.Shared.Forms
                 // Create
                 var response = await Client.PostAsJsonAsync<WorldDTO>("api/v1/Worlds/Create", world);
                 if (response.IsSuccessStatusCode)
+                {
+                    Logger.LogInformation("World has been created!");
                     Nav.NavigateTo(NavRef.WorldNav.Index);
+                }
             }
-
         }
     }
 }

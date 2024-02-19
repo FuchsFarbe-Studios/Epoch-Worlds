@@ -1,21 +1,13 @@
-<AuthorizeView>
-	<FlatNavBar BrandLink="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="false" Color="FlatColor.Default">
-		<LeftBar>
-			<FlatLink MenuItem="true" Link="@NavRef.Site.Dash" MatchMode="NavLinkMatch.All">Dashboard</FlatLink>
-			<!-- Eventual sub-menu with specific builders -->
-			<FlatLink MenuItem="true" Link="@NavRef.BuilderNav.Index" MatchMode="NavLinkMatch.All">Builders</FlatLink>
-			<FlatLink MenuItem="true" Link="@NavRef.WorldNav.Index" MatchMode="NavLinkMatch.All">Worlds</FlatLink>
-			<FlatLink MenuItem="true" Link="@NavRef.WorldNav.Current.Articles" MatchMode="NavLinkMatch.All">Articles</FlatLink>
-		</LeftBar>
-
-		<RightBar>
-			<FlatLink MenuItem="true" Link="@NavRef.ResourceNav.Guides" MatchMode="NavLinkMatch.All">Writing Guides</FlatLink>
-			<FlatLink MenuItem="true" Link="@NavRef.ResourceNav.Manuals" MatchMode="NavLinkMatch.All">Builder Manuals</FlatLink>
-			<FlatLink MenuItem="true" Link="@NavRef.ResourceNav.Tips" MatchMode="NavLinkMatch.All">Tips and Tricks</FlatLink>
-		</RightBar>
-
-	</FlatNavBar>
-</AuthorizeView>
-
-@code {
-}
+@using MudBlazor
+<MudPaper Width="100%" Outlined="true" Square="true" Class="rounded-b-lg mud-theme-primary">
+	<MudToolBar Dense="true">
+		<MudIconButton Color="Color.Inherit" Href="@NavRef.UserNav.Dashboard" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Table]" Title="Dashboard" />
+		<MudIconButton Color="Color.Inherit" Href="@NavRef.BuilderNav.Index" Icon="@Icons.Material.Filled.BuildCircle" Title="Content Builders" />
+		<MudIconButton Color="Color.Inherit" Href="@NavRef.WorldNav.Index" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAmericas]" Title="@($"{Auth.CurrentUser.UserName}'s Worlds")" />
+		<MudIconButton Color="Color.Inherit" Href="@NavRef.ArticleNav.Index" Icon="@Icons.Material.Filled.Article" Title="@($"{ActiveWorld.WorldName}'s Articles")" />
+		<MudSpacer />
+		<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.BookOnline" Href="@NavRef.ResourceNav.Manuals" Title="Builder Manuals" />
+		<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Edit" Href="@NavRef.ResourceNav.Guides" Title="Writing Guides" />
+		<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Lightbulb" Href="@NavRef.ResourceNav.Tips" Title="Tips and Tricks" />
+	</MudToolBar>
+</MudPaper>

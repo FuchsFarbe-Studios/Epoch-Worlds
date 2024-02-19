@@ -23,7 +23,13 @@
 					<MudText Typo="Typo.body1">@world.Description</MudText>
 				</MudCardContent>
 				<MudCardActions>
-					<MudIconButton Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand]" OnClick="@(() => Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{world.WorldID}"))" Title="Edit this world." Color="Color.Primary" />
+					<MudPaper Outlined="true" Width="100%">
+						<MudToolBar>
+							<MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{world.WorldID}"))" Title="Edit this world." />
+							<MudSpacer />
+							<MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await HandleWorldDeletionAsync(world))" Title="Delete world." />
+						</MudToolBar>
+					</MudPaper>
 				</MudCardActions>
 			</MudCard>
 		</MudItem>

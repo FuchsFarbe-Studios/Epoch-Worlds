@@ -1,5 +1,12 @@
 @inherits LayoutComponentBase
 @layout MainLayout
 
-<SubNav />
-@Body
+<AuthorizeView>
+	<Authorized>
+		<SubNav />
+		@Body
+	</Authorized>
+	<NotAuthorized>
+		<RedirectToLogin LoginUrl="@NavRef.Auth.Login" />
+	</NotAuthorized>
+</AuthorizeView>
