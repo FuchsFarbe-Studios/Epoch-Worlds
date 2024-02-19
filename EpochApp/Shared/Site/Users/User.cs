@@ -22,12 +22,16 @@ namespace EpochApp.Shared.Users
         public DateTime DateOfBirth { get; set; }
         public string PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public bool IsVerified { get; set; } = false;
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public DateTime? DateRemoved { get; set; }
         public string RefreshToken { get; set; }
         public DateTime? TokenCreated { get; set; }
         public DateTime? TokenExpires { get; set; }
+        public string VerificationToken { get; set; }
+        public DateTime? VerificationTokenCreated { get; set; }
+        public DateTime? VerificationTokenExpires { get; set; }
         public string NormalizedUserName => UserName.ToUpper();
         public string NormalizedEmail => Email.ToUpper();
 
@@ -45,6 +49,5 @@ namespace EpochApp.Shared.Users
         ///     The worlds owned by this user.
         /// </summary>
         public virtual ICollection<World> OwnedWorlds { get; set; }
-
     }
 }

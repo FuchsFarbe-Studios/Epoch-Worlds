@@ -213,6 +213,42 @@ namespace EpochApp.Server.Controllers
             return Ok(jwt);
         }
 
+        [HttpPost("Verification")]
+        public async Task<IActionResult> PostUserVerification(VerificationDTO verification)
+        {
+            var user = await _context.Users
+                                     .Where(x => x.VerificationToken == verification.Token)
+                                     .Include(user => user.UserRoles)
+                                     .ThenInclude(userRole => userRole.Role)
+                                     .FirstOrDefaultAsync();
+            if (user is null)
+                return BadRequest("Invalid token");
+            if (user.VerificationTokenExpires < DateTime.Now)
+                return BadRequest("Token has expired");
+
+            user.IsVerified = true;
+            user.VerificationToken = null;
+            user.VerificationTokenCreated = null;
+            user.VerificationTokenExpires = null;
+
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            var data = new UserData
+                       {
+                           UserID = user.UserID,
+                           UserName = user.UserName,
+                           Hash = user.PasswordHash,
+                           Email = user.Email,
+                           DateOfBirth = user.DateOfBirth,
+                           Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
+                       };
+            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
+            var refreshToken = GenerateRefreshToken();
+            await SetRefreshTokenAsync(user, refreshToken);
+            return Ok(jwt);
+        }
+
         private async Task SetRefreshTokenAsync(User user, RefreshToken refreshToken)
         {
             var cookieOpts = new CookieOptions
@@ -299,6 +335,9 @@ namespace EpochApp.Server.Controllers
             user.UserRoles.Add(new UserRole { DateAssigned = DateTime.Today, User = user, Role = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 1) });
             user.Profile = new Profile();
             user.DateCreated = DateTime.Now;
+            user.VerificationToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+            user.VerificationTokenCreated = DateTime.Now;
+            user.VerificationTokenExpires = DateTime.Now.AddDays(7);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 

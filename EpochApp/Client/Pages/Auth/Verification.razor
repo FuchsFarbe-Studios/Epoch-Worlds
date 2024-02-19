@@ -1,0 +1,8 @@
+@page "/Verification"
+@page "/Verification/{Token?}"
+@using Typo=MudBlazor.Typo
+@using Variant=MudBlazor.Variant
+@using MudBlazor
+
+<MudText Typo="Typo.h3">Verification</MudText>
+<MudTextField @bind-Value="@_verificationDTO.Token" For="@(() => _verificationDTO.Token)" Label="Verification Token" ReadOnly="true" Variant="Variant.Filled" />
