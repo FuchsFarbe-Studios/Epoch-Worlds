@@ -8,227 +8,498 @@
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 
 <MudPaper Outlined="true" Class="pa-4">
-	@if (Lang != null)
-	{
-		<EditForm Model="@Lang" OnSubmit="@HandleConlangSubmit">
-			<DataAnnotationsValidator />
-			<ValidationSummary />
+@if (Lang != null)
+{
+	<EditForm Model="@Lang" OnSubmit="@HandleConlangSubmit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
 
-			<MudTabs Outlined="true" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="my-4" PanelClass="pa-4" SliderColor="Color.Primary" KeepPanelsAlive="true">
-				<!-- Basic Information -->
-				<MudTabPanel Text="Basics" Icon="@Icons.Material.Filled.Details" ToolTip="Basic information about this constructed language.">
-					<MudGrid Spacing="2">
-						<MudItem xs="12" sm="6">
-							<MudTextField @bind-Value="@Lang.LangName" For="@(() => Lang.LangName)" Label="Language Name" Margin="Margin.Dense" />
-						</MudItem>
-						<MudItem xs="12" sm="6">
-							<MudTextField @bind-Value="@Lang.NativePronunciation" For="@(() => Lang.NativePronunciation)" Label="Pronunciation" Margin="Margin.Dense" />
-						</MudItem>
-						<MudItem xs="12">
-							<MudTextField @bind-Value="@Lang.Description" For="@(() => Lang.Description)" Label="Description" Margin="Margin.Dense" Lines="2" />
-						</MudItem>
-					</MudGrid>
-				</MudTabPanel>
+	<MudTabs Outlined="true" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="my-4" PanelClass="pa-4" SliderColor="Color.Primary" KeepPanelsAlive="true">
+	<!-- Basic Information -->
+	<MudTabPanel Text="Basics" Icon="@Icons.Material.Filled.Details" ToolTip="Basic information about this constructed language.">
+		<MudText Typo="Typo.h4" Align="Align.Center">Basics</MudText>
+		<MudGrid Spacing="2">
+			<MudItem xs="12" sm="6">
+				<MudTextField @bind-Value="@Lang.LangName" For="@(() => Lang.LangName)" Label="Language Name" Margin="Margin.Dense" />
+			</MudItem>
+			<MudItem xs="12" sm="6">
+				<MudTextField @bind-Value="@Lang.NativePronunciation" For="@(() => Lang.NativePronunciation)" Label="Pronunciation" Margin="Margin.Dense" />
+			</MudItem>
+			<MudItem xs="12">
+				<MudTextField @bind-Value="@Lang.Description" For="@(() => Lang.Description)" Label="Description" Margin="Margin.Dense" Lines="2" />
+			</MudItem>
+		</MudGrid>
+	</MudTabPanel>
 
-				<!-- Phonology -->
-				<MudTabPanel Text="Phonology" Icon="@Icons.Material.Filled.Phone" ToolTip="Describes how a language sounds.">
-					<MudGrid Spacing="2">
-						<!-- Basic -->
-						@if (!Lang.Phonology.UseIntermediateWordStructure && !Lang.Phonology.UseAdvancedWordStructure)
+	<!-- Phonology -->
+	<MudTabPanel Text="Phonology" Icon="@Icons.Material.Filled.Phone" ToolTip="Describes how a language sounds.">
+		<MudText Typo="Typo.h4" Align="Align.Center">Phonology</MudText>
+		<MudGrid Spacing="2">
+			<!-- Basic -->
+			@if (!Lang.Phonology.UseIntermediateWordStructure && !Lang.Phonology.UseAdvancedWordStructure)
+			{
+				<MudItem xs="12">
+					<MudText Typo="Typo.h5">Basic Word Structure</MudText>
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField FullWidth="true" @bind-Value="@Lang.Phonology.Consonants" For="@(() => Lang.Phonology.Consonants)" Label="Consonants" Variant="Variant.Filled" Lines="2" />
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField FullWidth="true" @bind-Value="@Lang.Phonology.Vowels" For="@(() => Lang.Phonology.Vowels)" Label="Vowels" Variant="Variant.Filled" Lines="2" />
+				</MudItem>
+			}
+
+			<!-- Intermediate -->
+			<MudItem xs="12">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseIntermediateWordStructure" For="@(() => Lang.Phonology.UseIntermediateWordStructure)" Label="Use intermediate word structure?" />
+			</MudItem>
+			@if (Lang.Phonology.UseIntermediateWordStructure && !Lang.Phonology.UseAdvancedWordStructure)
+			{
+				<MudItem xs="12">
+					<MudText Typo="Typo.h5">Intermediate Word Structure</MudText>
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField @bind-Value="@Lang.Phonology.InitialConsonants" For="@(() => Lang.Phonology.InitialConsonants)" Label="Onset Consonants and Consonant Clusters" FullWidth="true" Variant="Variant.Filled" Lines="2" />
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField @bind-Value="@Lang.Phonology.MedialConsonants" For="@(() => Lang.Phonology.MedialConsonants)" Label="Medial Consonants and Consonant Clusters" FullWidth="true" Variant="Variant.Filled" Lines="2" />
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField @bind-Value="@Lang.Phonology.FinalConsonants" For="@(() => Lang.Phonology.FinalConsonants)" Label="Word-Final Consonants and Consonant Clusters" FullWidth="true" Variant="Variant.Filled" Lines="2" />
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField @bind-Value="@Lang.Phonology.Vowels" For="@(() => Lang.Phonology.Vowels)" Label="Vowels and Diphthongs" FullWidth="true" Variant="Variant.Filled" Lines="2" />
+				</MudItem>
+				<MudItem xs="@(Lang.Phonology.UseVowelHarmony ? 4 : 12)">
+					<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.UseVowelHarmony" For="@(() => Lang.Phonology.UseVowelHarmony)" Label="Generate with vowel harmony?" />
+				</MudItem>
+				@if (Lang.Phonology.UseVowelHarmony)
+				{
+					<MudItem xs="8">
+						<MudTextField @bind-Value="@Lang.Phonology.HarmonicVowels" For="@(() => Lang.Phonology.HarmonicVowels)" Label="Harmonic Vowels" FullWidth="true" Variant="Variant.Filled" Lines="2" />
+					</MudItem>
+				}
+			}
+
+			<!-- Advanced -->
+			<MudItem xs="12">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseAdvancedWordStructure" For="@(() => Lang.Phonology.UseAdvancedWordStructure)" Label="Use advanced word structure?" />
+			</MudItem>
+			@if (Lang.Phonology.UseAdvancedWordStructure && !Lang.Phonology.UseIntermediateWordStructure)
+			{
+				<MudItem xs="12">
+					<MudText Typo="Typo.h5">Advanced Word Structure</MudText>
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField @bind-Value="@Lang.Phonology.PhonemeClasses" For="@(() => Lang.Phonology.PhonemeClasses)" Label="Phoneme Classes" Lines="5" FullWidth="true" Variant="Variant.Filled" />
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField @bind-Value="@Lang.Phonology.WordPatterns" For="@(() => Lang.Phonology.WordPatterns)" Label="Word Patterns" Lines="5" FullWidth="true" Variant="Variant.Filled" />
+				</MudItem>
+				<MudItem xs="12">
+					<MudTextField @bind-Value="@Lang.Phonology.AffixPatterns" For="@(() => Lang.Phonology.AffixPatterns)" Label="Affix Patterns" Lines="5" FullWidth="true" Variant="Variant.Filled" />
+				</MudItem>
+			}
+
+			<!-- Phoneme Frequency -->
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5">Frequency Settings</MudText>
+			</MudItem>
+			<MudItem xs="12">
+				<MudField Variant="Variant.Outlined" Label="Phoneme Frequency" FullWidth="true" Margin="Margin.Dense" InnerPadding="true">
+					<MudRadioGroup T="PhonemeFrequency" @bind-Value="@Lang.Phonology.PhonemeFrequency" For="@(() => Lang.Phonology.PhonemeFrequency)">
+						@foreach (var freq in Enum.GetValues(typeof(PhonemeFrequency)).Cast<PhonemeFrequency>())
 						{
-							<MudItem xs="12">
-								<MudText Typo="Typo.h5">Basic Word Structure</MudText>
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField FullWidth="true" @bind-Value="@Lang.Phonology.Consonants" For="@(() => Lang.Phonology.Consonants)" Label="Consonants" Variant="Variant.Filled" Lines="2" />
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField FullWidth="true" @bind-Value="@Lang.Phonology.Vowels" For="@(() => Lang.Phonology.Vowels)" Label="Vowels" Variant="Variant.Filled" Lines="2" />
-							</MudItem>
+							<MudRadio T="PhonemeFrequency" Value="@freq">@freq.ToDescriptionString()</MudRadio>
 						}
+					</MudRadioGroup>
+				</MudField>
+			</MudItem>
 
-						<!-- Intermediate -->
-						<MudItem xs="12">
-							<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseIntermediateWordStructure" For="@(() => Lang.Phonology.UseIntermediateWordStructure)" Label="Use intermediate word structure?" />
-						</MudItem>
-						@if (Lang.Phonology.UseIntermediateWordStructure && !Lang.Phonology.UseAdvancedWordStructure)
-						{
-							<MudItem xs="12">
-								<MudText Typo="Typo.h5">Intermediate Word Structure</MudText>
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField @bind-Value="@Lang.Phonology.InitialConsonants" For="@(() => Lang.Phonology.InitialConsonants)" Label="Onset Consonants and Consonant Clusters" FullWidth="true" Variant="Variant.Filled" Lines="2" />
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField @bind-Value="@Lang.Phonology.MedialConsonants" For="@(() => Lang.Phonology.MedialConsonants)" Label="Medial Consonants and Consonant Clusters" FullWidth="true" Variant="Variant.Filled" Lines="2" />
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField @bind-Value="@Lang.Phonology.FinalConsonants" For="@(() => Lang.Phonology.FinalConsonants)" Label="Word-Final Consonants and Consonant Clusters" FullWidth="true" Variant="Variant.Filled" Lines="2" />
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField @bind-Value="@Lang.Phonology.Vowels" For="@(() => Lang.Phonology.Vowels)" Label="Vowels and Diphthongs" FullWidth="true" Variant="Variant.Filled" Lines="2" />
-							</MudItem>
-							<MudItem xs="@(Lang.Phonology.UseVowelHarmony ? 4 : 12)">
-								<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.UseVowelHarmony" For="@(() => Lang.Phonology.UseVowelHarmony)" Label="Generate with vowel harmony?" />
-							</MudItem>
-							@if (Lang.Phonology.UseVowelHarmony)
+			<!-- Illegal Combos -->
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5">Illegal Combination Options</MudText>
+			</MudItem>
+			<MudItem xs="12">
+				<MudTextField @bind-Value="@Lang.Phonology.IllegalCombos" For="@(() => Lang.Phonology.IllegalCombos)" Label="Illegal Combinations" Lines="3" FullWidth="true" Margin="Margin.Dense" />
+			</MudItem>
+			<MudItem xs="12" sm="6">
+				<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.BanSameVowelTwiceInARow" For="@(() => Lang.Phonology.BanSameVowelTwiceInARow)" Label="Ban same vowel twice in a row?" />
+			</MudItem>
+			<MudItem xs="12" sm="6">
+				<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.BanSameSyllableTwiceInARow" For="@(() => Lang.Phonology.BanSameSyllableTwiceInARow)" Label="Ban same syllable twice in a row?" />
+			</MudItem>
+
+			<!-- Vowel Probabilities -->
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5">Vowel Probability Settings</MudText>
+			</MudItem>
+			<MudItem xs="12">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseVowelProbabilities" For="@(() => Lang.Phonology.UseVowelProbabilities)" Label="Modify vowel settings?" />
+			</MudItem>
+			@if (Lang.Phonology.UseVowelProbabilities)
+			{
+				<MudItem xs="12" sm="6">
+					<MudNumericField T="float" @bind-Value="@Lang.Phonology.VowelAtStartProbability" For="@(() => Lang.Phonology.VowelAtStartProbability)" Label="Vowel generates at the start of a word probability" FullWidth="true" Margin="Margin.Dense" Min="0" Max="100" Step="0.25f" />
+				</MudItem>
+				<MudItem xs="12" sm="6">
+					<MudNumericField T="float" @bind-Value="@Lang.Phonology.VowelAtEndProbability" For="@(() => Lang.Phonology.VowelAtEndProbability)" Label="Vowel generates at the end of a word probability" FullWidth="true" Margin="Margin.Dense" Min="0" Max="100" Step="0.25f" />
+				</MudItem>
+			}
+
+			<!-- Vowel Tones -->
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5">Vowel Tone Settings</MudText>
+			</MudItem>
+			<MudItem xs="12">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseVowelTones" For="@(() => Lang.Phonology.UseVowelTones)" Label="Use tones?" />
+			</MudItem>
+			@if (Lang.Phonology.UseVowelTones)
+			{
+				<MudItem xs="12" sm="6">
+					<MudTextField @bind-Value="@Lang.Phonology.Tones" For="@(() => Lang.Phonology.Tones)" Label="Tones" FullWidth="true" Margin="Margin.Dense" />
+				</MudItem>
+				<MudItem xs="12" sm="6">
+					<MudField Variant="Variant.Outlined" Label="Tone Representation" FullWidth="true" Margin="Margin.Dense" InnerPadding="true">
+						<MudRadioGroup T="ToneRepresentation" @bind-Value="@Lang.Phonology.ToneRepresentation" For="@(() => Lang.Phonology.ToneRepresentation)">
+							@foreach (var representation in Enum.GetValues(typeof(ToneRepresentation)).Cast<ToneRepresentation>())
 							{
-								<MudItem xs="8">
-									<MudTextField @bind-Value="@Lang.Phonology.HarmonicVowels" For="@(() => Lang.Phonology.HarmonicVowels)" Label="Harmonic Vowels" FullWidth="true" Variant="Variant.Filled" Lines="2" />
-								</MudItem>
+								<MudRadio T="ToneRepresentation" Value="@representation">@representation.ToDescriptionString()</MudRadio>
 							}
-						}
+						</MudRadioGroup>
+					</MudField>
+				</MudItem>
+			}
 
-						<!-- Advanced -->
-						<MudItem xs="12">
-							<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseAdvancedWordStructure" For="@(() => Lang.Phonology.UseAdvancedWordStructure)" Label="Use advanced word structure?" />
-						</MudItem>
-						@if (Lang.Phonology.UseAdvancedWordStructure && !Lang.Phonology.UseIntermediateWordStructure)
+			<!-- Sound Changes -->
+			<MudItem xs="12">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseSoundChanges" For="@(() => Lang.Phonology.UseSoundChanges)" Label="Use sound changes?" />
+			</MudItem>
+			@if (Lang.Phonology.UseSoundChanges)
+			{
+				<MudItem xs="12" sm="6">
+					<MudTextField @bind-Value="@Lang.Phonology.SoundChanges" For="@(() => Lang.Phonology.SoundChanges)" Label="Sound Changes" FullWidth="true" Margin="Margin.Dense" Lines="8" />
+				</MudItem>
+				<MudItem xs="12" sm="6">
+					<MudStack AlignItems="AlignItems.Start" Justify="Justify.FlexStart">
+						<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.ReflectSoundChangeInSpelling" For="@(() => Lang.Phonology.ReflectSoundChangeInSpelling)" Label="Reflect sound changes in spelling?" />
+						<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.ShowChangesInBrackets" For="@(() => Lang.Phonology.ShowChangesInBrackets)" Label="Show sound changes with brackets?" />
+						<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.RemoveSlashAroundIPA" For="@(() => Lang.Phonology.RemoveSlashAroundIPA)" Label="Remove /slashes/ around the IPA in the output?" />
+					</MudStack>
+				</MudItem>
+			}
+
+			<!-- Stress Patterns -->
+			<MudItem xs="12" sm="6" md="4">
+				<MudSelect T="StressPattern" @bind-Value="@Lang.Phonology.StressPattern" For="@(() => Lang.Phonology.StressPattern)" Label="Stress Pattern">
+					@foreach (var pattern in Enum.GetValues(typeof(StressPattern)).Cast<StressPattern>())
+					{
+						<MudSelectItem Value="@pattern">@pattern.ToDescriptionString()</MudSelectItem>
+					}
+				</MudSelect>
+			</MudItem>
+			<MudItem xs="12" sm="6" md="4">
+				<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.AllowContrastiveStress" For="@(() => Lang.Phonology.AllowContrastiveStress)" Label="Allow for contrastive stress patterns?" />
+			</MudItem>
+			<MudItem xs="12" sm="6" md="4">
+				<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.OverrideVocabStress" For="@(() => Lang.Phonology.OverrideVocabStress)" Label="Override vocabulary stress?" />
+			</MudItem>
+
+		</MudGrid>
+
+	</MudTabPanel>
+
+	<!-- Spelling -->
+	<MudTabPanel Text="Spelling" Icon="@Icons.Material.Filled.TextFormat" ToolTip="How the language is written or romanized.">
+		<MudText Typo="Typo.h4" Align="Align.Center">Spelling</MudText>
+
+		<MudGrid Spacing="2">
+			<!-- Spelling Rule Toggles -->
+			<MudItem xs="12" sm="6">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Spelling.UseSpellingRules" For="@(() => Lang.Spelling.UseSpellingRules)" Label="Use spelling rules?" />
+			</MudItem>
+			<MudItem xs="12" sm="6">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Spelling.UseSecondSpelling" For="@(() => Lang.Spelling.UseSecondSpelling)" Label="Use second spelling?" />
+			</MudItem>
+
+			<!-- Spelling Rules -->
+			@if (Lang.Spelling.UseSpellingRules)
+			{
+				var spelling = Lang.Spelling;
+				<MudItem xs="12">
+					<MudText Typo="Typo.h5" Align="Align.Center">Spelling Rules</MudText>
+				</MudItem>
+				<MudItem xs="12" sm="6" md="9">
+					<MudDataGrid Virtualize="true" Outlined="true" Height="250px" T="SpellingRule" Items="@spelling.SpellingRules" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+						<Columns>
+							<PropertyColumn Property="x => x.Order" Title="Ord.">
+								<EditTemplate Context="spellingCtx">
+									<MudNumericField T="int" @bind-Value="@spellingCtx.Item.Order" Margin="Margin.Dense" Step="1" Label="Order" />
+								</EditTemplate>
+							</PropertyColumn>
+							<PropertyColumn Property="x => x.Predicate" Title="Pred." />
+							<PropertyColumn Property="x => x.Replacement" Title="Repl." />
+							<PropertyColumn Property="x => x.Environment" Title="Env." />
+							<PropertyColumn Property="x => x.Exception" Title="Ex." />
+							<TemplateColumn>
+								<CellTemplate Context="editCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@editCtx.Actions.StartEditingItemAsync" />
+								</CellTemplate>
+							</TemplateColumn>
+							<TemplateColumn>
+								<CellTemplate Context="deleteCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(() => spelling.SpellingRules.Remove(deleteCtx.Item))" />
+								</CellTemplate>
+							</TemplateColumn>
+						</Columns>
+					</MudDataGrid>
+				</MudItem>
+				<MudItem xs="12" sm="6" md="3">
+					<EditForm Model="@_spellingRuleModel" OnSubmit="@HandleSpellingRuleSubmitted">
+						<ChildContent Context="spellingRuleModelCtx">
+							<MudGrid>
+								<MudItem xs="12">
+									<MudNumericField T="int" @bind-Value="@_spellingRuleModel.Order" Margin="Margin.Dense" Step="1" Label="Order" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_spellingRuleModel.Predicate" Label="Predicate" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_spellingRuleModel.Replacement" Label="Replacement" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_spellingRuleModel.Environment" Label="In Environment Of" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_spellingRuleModel.Exception" Label="Except" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12">
+									<MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+										<MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+										<MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" OnClick="@(() => _spellingRuleModel = new SpellingRule { Order = spelling.SpellingRules.Count + 1 })" />
+									</MudButtonGroup>
+								</MudItem>
+							</MudGrid>
+						</ChildContent>
+					</EditForm>
+				</MudItem>
+			}
+
+			<!-- Second Spelling Rules -->
+
+			@if (Lang.Spelling.UseSecondSpelling)
+			{
+				var spelling = Lang.Spelling;
+				<MudItem xs="12">
+					<MudText Typo="Typo.h5" Align="Align.Center">SecondSpelling Rules</MudText>
+				</MudItem>
+				<MudItem xs="12" sm="6" md="3">
+					<EditForm Model="@_altSpellingRuleModel" OnSubmit="@HandleAltSpellingRuleSubmitted">
+						<ChildContent Context="altSpellingRuleModelCtx">
+							<MudGrid>
+								<MudItem xs="12">
+									<MudNumericField T="int" @bind-Value="@_altSpellingRuleModel.Order" Margin="Margin.Dense" Step="1" Label="Order" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_altSpellingRuleModel.Predicate" Label="Predicate" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_altSpellingRuleModel.Replacement" Label="Replacement" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_altSpellingRuleModel.Environment" Label="In Environment Of" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_altSpellingRuleModel.Exception" Label="Except" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12">
+									<MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+										<MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+										<MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" OnClick="@(() => _altSpellingRuleModel = new SpellingRule { Order = spelling.SecondSpelling.Count + 1 })" />
+									</MudButtonGroup>
+								</MudItem>
+							</MudGrid>
+						</ChildContent>
+					</EditForm>
+				</MudItem>
+				<MudItem xs="12" sm="6" md="9">
+					<MudDataGrid Virtualize="true" Outlined="true" Height="250px" T="SpellingRule" Items="@spelling.SecondSpelling" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+						<Columns>
+							<PropertyColumn Property="x => x.Order" Title="Ord.">
+								<EditTemplate Context="secondSpellingCtx">
+									<MudNumericField T="int" @bind-Value="@secondSpellingCtx.Item.Order" Margin="Margin.Dense" Step="1" Label="Order" />
+								</EditTemplate>
+							</PropertyColumn>
+							<PropertyColumn Property="x => x.Predicate" Title="Pred." />
+							<PropertyColumn Property="x => x.Replacement" Title="Repl." />
+							<PropertyColumn Property="x => x.Environment" Title="Env." />
+							<PropertyColumn Property="x => x.Exception" Title="Ex." />
+							<TemplateColumn >
+								<CellTemplate Context="editCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@editCtx.Actions.StartEditingItemAsync" />
+								</CellTemplate>
+							</TemplateColumn>
+							<TemplateColumn>
+								<CellTemplate Context="deleteCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(() => spelling.SecondSpelling.Remove(deleteCtx.Item))" />
+								</CellTemplate>
+							</TemplateColumn>
+						</Columns>
+					</MudDataGrid>
+				</MudItem>
+			}
+
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5" Align="Align.Center">Language Orthography Settings</MudText>
+			</MudItem>
+
+			<MudItem xs="12" sm="6">
+				<MudStack>
+					<MudCheckBox @bind-Value="@Lang.Spelling.MakeSpellingStressSensitive" For="@(() => Lang.Spelling.MakeSpellingStressSensitive)" Label="Make spelling sensitive to stress?" />
+					<MudCheckBox @bind-Value="@Lang.Spelling.ApplyDefaultSpelling" For="@(() => Lang.Spelling.ApplyDefaultSpelling)" Label="Apply default spelling rules?" />
+					<MudCheckBox @bind-Value="@Lang.Spelling.ConvertDiacritics" For="@(() => Lang.Spelling.ConvertDiacritics)" Label="Convert diacritics phonemes to single character?" />
+					<MudCheckBox @bind-Value="@Lang.Spelling.ArrangeJamo" For="@(() => Lang.Spelling.ArrangeJamo)" Label="Arrange Korean Jame characters into syllables?" />
+					<MudCheckBox @bind-Value="@Lang.Spelling.NoSpelling" For="@(() => Lang.Spelling.NoSpelling)" Label="Disable spelling (even default)?" />
+				</MudStack>
+			</MudItem>
+
+			<MudItem xs="12" sm="6">
+				<MudStack>
+					<MudTextField FullWidth="true" @bind-Value="@Lang.Spelling.CustomFontPath" For="@(() => Lang.Spelling.CustomFontPath)" Label="Font Path" />
+					<MudTextField FullWidth="true" @bind-Value="@Lang.Spelling.AlphabetOrder" For="@(() => Lang.Spelling.AlphabetOrder)" Label="Custom Alphabet Order" Variant="Variant.Outlined" />
+				</MudStack>
+			</MudItem>
+
+		</MudGrid>
+
+	</MudTabPanel>
+
+	<!-- Vocabulary -->
+	<MudTabPanel Text="Vocabulary" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Keyboard]}")" ToolTip="Customize language vocabulary.">
+
+		<MudText Typo="Typo.h4" Align="Align.Center">Vocabulary</MudText>
+
+		<MudGrid Spacing="2">
+
+		</MudGrid>
+
+	</MudTabPanel>
+
+	<!-- Grammar -->
+	<MudTabPanel Text="Grammar" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")" ToolTip="Rules of the language.">
+
+		<MudText Typo="Typo.h4" Align="Align.Center">Grammar</MudText>
+		<MudGrid Spacing="2">
+
+			<MudItem xs="12">
+				<MudField FullWidth="true" Variant="Variant.Outlined" Label="Word Order">
+					<MudRadioGroup T="WordOrderType" @bind-Value="@Lang.Grammar.WordOrder" For="@(() => Lang.Grammar.WordOrder)">
+						@foreach (var orderType in Enum.GetValues(typeof(WordOrderType)).Cast<WordOrderType>())
 						{
-							<MudItem xs="12">
-								<MudText Typo="Typo.h5">Advanced Word Structure</MudText>
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField @bind-Value="@Lang.Phonology.PhonemeClasses" For="@(() => Lang.Phonology.PhonemeClasses)" Label="Phoneme Classes" Lines="5" FullWidth="true" Variant="Variant.Filled" />
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField @bind-Value="@Lang.Phonology.WordPatterns" For="@(() => Lang.Phonology.WordPatterns)" Label="Word Patterns" Lines="5" FullWidth="true" Variant="Variant.Filled" />
-							</MudItem>
-							<MudItem xs="12">
-								<MudTextField @bind-Value="@Lang.Phonology.AffixPatterns" For="@(() => Lang.Phonology.AffixPatterns)" Label="Affix Patterns" Lines="5" FullWidth="true" Variant="Variant.Filled" />
-							</MudItem>
+							<MudRadio T="WordOrderType" Value="@orderType">@orderType.ToDescriptionString()</MudRadio>
 						}
+					</MudRadioGroup>
+				</MudField>
+			</MudItem>
 
-						<!-- Phoneme Frequency -->
-						<MudItem xs="12">
-							<MudText Typo="Typo.h5">Frequency Settings</MudText>
-						</MudItem>
-						<MudItem xs="12">
-							<MudField Variant="Variant.Outlined" Label="Phoneme Frequency" FullWidth="true" Margin="Margin.Dense" InnerPadding="true">
-								<MudRadioGroup T="PhonemeFrequency" @bind-Value="@Lang.Phonology.PhonemeFrequency" For="@(() => Lang.Phonology.PhonemeFrequency)">
-									@foreach (var freq in Enum.GetValues(typeof(PhonemeFrequency)).Cast<PhonemeFrequency>())
-									{
-										<MudRadio T="PhonemeFrequency" Value="@freq">@freq.ToDescriptionString()</MudRadio>
-									}
-								</MudRadioGroup>
-							</MudField>
-						</MudItem>
-
-						<!-- Illegal Combos -->
-						<MudItem xs="12">
-							<MudText Typo="Typo.h5">Illegal Combination Options</MudText>
-						</MudItem>
-						<MudItem xs="12">
-							<MudTextField @bind-Value="@Lang.Phonology.IllegalCombos" For="@(() => Lang.Phonology.IllegalCombos)" Label="Illegal Combinations" Lines="3" FullWidth="true" Margin="Margin.Dense" />
-						</MudItem>
-						<MudItem xs="12" sm="6">
-							<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.BanSameVowelTwiceInARow" For="@(() => Lang.Phonology.BanSameVowelTwiceInARow)" Label="Ban same vowel twice in a row?" />
-						</MudItem>
-						<MudItem xs="12" sm="6">
-							<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.BanSameSyllableTwiceInARow" For="@(() => Lang.Phonology.BanSameSyllableTwiceInARow)" Label="Ban same syllable twice in a row?" />
-						</MudItem>
-
-						<!-- Vowel Probabilities -->
-						<MudItem xs="12">
-							<MudText Typo="Typo.h5">Vowel Probability Settings</MudText>
-						</MudItem>
-						<MudItem xs="12">
-							<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseVowelProbabilities" For="@(() => Lang.Phonology.UseVowelProbabilities)" Label="Modify vowel settings?" />
-						</MudItem>
-						@if (Lang.Phonology.UseVowelProbabilities)
+			<MudItem xs="12">
+				<MudField FullWidth="true" Variant="Variant.Outlined" Label="Adjective Order">
+					<MudRadioGroup T="AdjectiveOrderType" @bind-Value="@Lang.Grammar.AdjectiveOrder" For="@(() => Lang.Grammar.AdjectiveOrder)">
+						@foreach (var adjectiveOrderType in Enum.GetValues(typeof(AdjectiveOrderType)).Cast<AdjectiveOrderType>())
 						{
-							<MudItem xs="12" sm="6">
-								<MudNumericField T="float" @bind-Value="@Lang.Phonology.VowelAtStartProbability" For="@(() => Lang.Phonology.VowelAtStartProbability)" Label="Vowel generates at the start of a word probability" FullWidth="true" Margin="Margin.Dense" Min="0" Max="100" Step="0.25f" />
-							</MudItem>
-							<MudItem xs="12" sm="6">
-								<MudNumericField T="float" @bind-Value="@Lang.Phonology.VowelAtEndProbability" For="@(() => Lang.Phonology.VowelAtEndProbability)" Label="Vowel generates at the end of a word probability" FullWidth="true" Margin="Margin.Dense" Min="0" Max="100" Step="0.25f" />
-							</MudItem>
+							<MudRadio T="AdjectiveOrderType" Value="@adjectiveOrderType">@adjectiveOrderType.ToDescriptionString()</MudRadio>
 						}
+					</MudRadioGroup>
+				</MudField>
+			</MudItem>
 
-						<!-- Vowel Tones -->
-						<MudItem xs="12">
-							<MudText Typo="Typo.h5">Vowel Tone Settings</MudText>
-						</MudItem>
-						<MudItem xs="12">
-							<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseVowelTones" For="@(() => Lang.Phonology.UseVowelTones)" Label="Use tones?" />
-						</MudItem>
-						@if (Lang.Phonology.UseVowelTones)
+			<MudItem xs="12">
+				<MudField FullWidth="true" Variant="Variant.Outlined" Label="Adjective Order">
+					<MudRadioGroup T="AdPositionType" @bind-Value="@Lang.Grammar.AdPosition" For="@(() => Lang.Grammar.AdPosition)">
+						@foreach (var positionType in Enum.GetValues(typeof(AdPositionType)).Cast<AdPositionType>())
 						{
-							<MudItem xs="12" sm="6">
-								<MudTextField @bind-Value="@Lang.Phonology.Tones" For="@(() => Lang.Phonology.Tones)" Label="Tones" FullWidth="true" Margin="Margin.Dense" />
-							</MudItem>
-							<MudItem xs="12" sm="6">
-								<MudField Variant="Variant.Outlined" Label="Tone Representation" FullWidth="true" Margin="Margin.Dense" InnerPadding="true">
-									<MudRadioGroup T="ToneRepresentation" @bind-Value="@Lang.Phonology.ToneRepresentation" For="@(() => Lang.Phonology.ToneRepresentation)">
-										@foreach (var representation in Enum.GetValues(typeof(ToneRepresentation)).Cast<ToneRepresentation>())
-										{
-											<MudRadio T="ToneRepresentation" Value="@representation">@representation.ToDescriptionString()</MudRadio>
-										}
-									</MudRadioGroup>
-								</MudField>
-							</MudItem>
+							<MudRadio T="AdPositionType" Value="@positionType">@positionType.ToDescriptionString()</MudRadio>
 						}
+					</MudRadioGroup>
+				</MudField>
+			</MudItem>
 
-						<!-- Sound Changes -->
-						<MudItem xs="12">
-							<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Phonology.UseSoundChanges" For="@(() => Lang.Phonology.UseSoundChanges)" Label="Use sound changes?" />
-						</MudItem>
-						@if (Lang.Phonology.UseSoundChanges)
+			<MudItem xs="12">
+				<MudField FullWidth="true" Variant="Variant.Outlined" Label="Adjective Order">
+					<MudRadioGroup T="RandomAffixType" @bind-Value="@Lang.Grammar.AffixType" For="@(() => Lang.Grammar.AffixType)">
+						@foreach (var affixType in Enum.GetValues(typeof(RandomAffixType)).Cast<RandomAffixType>())
 						{
-							<MudItem xs="12" sm="6">
-								<MudTextField @bind-Value="@Lang.Phonology.SoundChanges" For="@(() => Lang.Phonology.SoundChanges)" Label="Sound Changes" FullWidth="true" Margin="Margin.Dense" Lines="8" />
-							</MudItem>
-							<MudItem xs="12" sm="6">
-								<MudStack AlignItems="AlignItems.Start" Justify="Justify.FlexStart">
-									<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.ReflectSoundChangeInSpelling" For="@(() => Lang.Phonology.ReflectSoundChangeInSpelling)" Label="Reflect sound changes in spelling?" />
-									<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.ShowChangesInBrackets" For="@(() => Lang.Phonology.ShowChangesInBrackets)" Label="Show sound changes with brackets?" />
-									<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.RemoveSlashAroundIPA" For="@(() => Lang.Phonology.RemoveSlashAroundIPA)" Label="Remove /slashes/ around the IPA in the output?" />
-								</MudStack>
-							</MudItem>
+							<MudRadio T="RandomAffixType" Value="@affixType">@affixType.ToDescriptionString()</MudRadio>
 						}
+					</MudRadioGroup>
+				</MudField>
+			</MudItem>
 
-						<!-- Stress Patterns -->
-						<MudItem xs="12" sm="6" md="4">
-							<MudSelect T="StressPattern" @bind-Value="@Lang.Phonology.StressPattern" For="@(() => Lang.Phonology.StressPattern)" Label="Stress Pattern">
-								@foreach (var pattern in Enum.GetValues(typeof(StressPattern)).Cast<StressPattern>())
-								{
-									<MudSelectItem Value="@pattern">@pattern.ToDescriptionString()</MudSelectItem>
-								}
-							</MudSelect>
-						</MudItem>
-						<MudItem xs="12" sm="6" md="4">
-							<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.AllowContrastiveStress" For="@(() => Lang.Phonology.AllowContrastiveStress)" Label="Allow for contrastive stress patterns?" />
-						</MudItem>
-						<MudItem xs="12" sm="6" md="4">
-							<MudSwitch Color="Color.Primary" @bind-Value="@Lang.Phonology.OverrideVocabStress" For="@(() => Lang.Phonology.OverrideVocabStress)" Label="Override vocabulary stress?" />
-						</MudItem>
+			<MudItem xs="12">
+				<MudText Typo="Typo.h5" Align="Align.Center">Noun Genders</MudText>
+			</MudItem>
+			<MudItem xs="12">
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@Lang.Grammar.UseNounGender" For="@(() => Lang.Grammar.UseNounGender)" Label="Use Noun Genders?" />
+			</MudItem>
+			@if (Lang.Grammar.UseNounGender)
+			{
+				<MudItem xs="12" sm="6">
+					<EditForm Model="@_genderModel" OnSubmit="@HandleNounGenderSubmitted">
+						<ChildContent Context="genderModelCtx">
+							<MudGrid>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_genderModel.Gender" Label="Gender Description" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12" sm="6">
+									<MudTextField @bind-Value="@_genderModel.Abbreviation" Label="Gender Description" Margin="Margin.Dense" />
+								</MudItem>
+								<MudItem xs="12">
+									<MudButtonGroup Size="Size.Small" Variant="Variant.Outlined">
+										<MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+										<MudIconButton Icon="@Icons.Material.Filled.Clear" Color="Color.Error" OnClick="@(() => _genderModel = new NounGender())" />
+									</MudButtonGroup>
+								</MudItem>
+							</MudGrid>
+						</ChildContent>
+					</EditForm>
+				</MudItem>
 
-					</MudGrid>
+				<MudItem xs="12" sm="6">
+					<MudDataGrid Virtualize="true" Outlined="true" Height="250px" T="NounGender" Items="@Lang.Grammar.NounGenders" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+						<Columns>
+							<PropertyColumn Property="x => x.Gender" Title="Gender" />
+							<PropertyColumn Property="x => x.Abbreviation" Title="Abbreviation" />
+							<TemplateColumn >
+								<CellTemplate Context="editCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@editCtx.Actions.StartEditingItemAsync" />
+								</CellTemplate>
+							</TemplateColumn>
+							<TemplateColumn>
+								<CellTemplate Context="deleteCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(() => Lang.Grammar.NounGenders.Remove(deleteCtx.Item))" />
+								</CellTemplate>
+							</TemplateColumn>
+						</Columns>
+					</MudDataGrid>
+				</MudItem>
+			}
 
-				</MudTabPanel>
+		</MudGrid>
 
-				<!-- Spelling -->
-				<MudTabPanel Text="Spelling" Icon="@Icons.Material.Filled.TextFormat" ToolTip="How the language is written or romanized.">
+	</MudTabPanel>
 
-				</MudTabPanel>
+	</MudTabs>
 
-				<!-- Grammar -->
-				<MudTabPanel Text="Grammar" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")" ToolTip="Rules of the language.">
+	<MudPaper Outlined="true" Width="100%">
+		<MudToolBar Dense="true">
+			<MudButton Size="Size.Large" IconColor="Color.Secondary" StartIcon="@Icons.Material.Filled.Download">Download</MudButton>
+			<MudButton Size="Size.Large" IconColor="Color.Warning" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")">Publish</MudButton>
+			<MudSpacer />
+			<MudButton Class="mr-5" Size="Size.Large" IconColor="Color.Primary" ButtonType="ButtonType.Submit" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")">Save</MudButton>
+			<MudButton Size="Size.Large" Color="Color.Success" IconColor="Color.Success" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand]}")" Label="Generate!" Title="Saves unsaved data and generates content to view before publishing." />
+		</MudToolBar>
+	</MudPaper>
 
-				</MudTabPanel>
-
-			</MudTabs>
-
-			<MudPaper Outlined="true" Width="100%">
-				<MudToolBar Dense="true">
-					<MudButton Size="Size.Large" IconColor="Color.Secondary" StartIcon="@Icons.Material.Filled.Download">Download</MudButton>
-					<MudButton Size="Size.Large" IconColor="Color.Warning" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")">Publish</MudButton>
-					<MudSpacer />
-					<MudButton Class="mr-5" Size="Size.Large" IconColor="Color.Primary" ButtonType="ButtonType.Submit" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")">Save</MudButton>
-					<MudButton Size="Size.Large" Color="Color.Success" IconColor="Color.Success" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand]}")" Label="Generate!" Title="Saves unsaved data and generates content to view before publishing." />
-				</MudToolBar>
-			</MudPaper>
-
-		</EditForm>
-	}
+	</EditForm>
+}
 </MudPaper>

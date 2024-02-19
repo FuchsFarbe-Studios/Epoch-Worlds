@@ -12,6 +12,11 @@ namespace EpochApp.Shared
     public class SpellingRule
     {
         /// <summary>
+        ///     Order of this spelling rule.
+        /// </summary>
+        public int Order { get; set; } = 0;
+
+        /// <summary>
         ///     Predicate for this spelling rule.
         /// </summary>
         public string Predicate { get; set; } = "";
@@ -25,5 +30,10 @@ namespace EpochApp.Shared
         ///     Environment for this spelling rule, if exists.
         /// </summary>
         public string Environment { get; set; } = "";
+
+        /// <summary>
+        ///     Exception for this spelling rule, if exists.
+        /// </summary>
+        public string Exception { get; set; } = "";
     }
 }

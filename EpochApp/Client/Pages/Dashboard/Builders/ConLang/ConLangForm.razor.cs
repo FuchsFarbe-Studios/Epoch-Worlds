@@ -9,6 +9,11 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
     /// </summary>
     public partial class ConLangForm
     {
+        private SpellingRule _altSpellingRuleModel = new SpellingRule();
+        private DerivedWord _derivedWordModel = new DerivedWord();
+        private NounGender _genderModel = new NounGender();
+        private SpellingRule _spellingRuleModel = new SpellingRule();
+
         /// <summary>
         ///     Whether the form is in edit mode or create mode.
         /// </summary>
@@ -38,9 +43,55 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
             await base.GenerateAsync();
         }
 
-        private Task HandleConlangSubmit(EditContext arg)
+        private async Task HandleConlangSubmit(EditContext ctx)
         {
-            return null;
+            if (Content == null)
+            {
+                Content = new BuilderContent
+                          {
+                              AuthorID = Auth.CurrentUser.UserID,
+                              WorldID = ActiveWorld.WorldID,
+                              ContentType = ContentType.ConstructedLanguage,
+                              DateCreated = DateTime.Now
+                          };
+            }
+            var contextXml = await Serializer.SerializeToXml(Lang);
+            Logger.LogInformation(contextXml);
+            Content.ContentXml = contextXml;
+        }
+
+
+        private Task HandleSpellingRuleSubmitted(EditContext arg)
+        {
+            var rule = arg.Model as SpellingRule;
+            if (rule.Order == 0)
+                rule.Order = Lang.Spelling.SpellingRules.Count + 1;
+            Lang.Spelling.SpellingRules.Add(rule);
+            _spellingRuleModel = new SpellingRule
+                                 { Order = Lang.Spelling.SpellingRules.Count + 1 };
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        private Task HandleAltSpellingRuleSubmitted(EditContext arg)
+        {
+            var rule = arg.Model as SpellingRule;
+            if (rule.Order == 0)
+                rule.Order = Lang.Spelling.SecondSpelling.Count + 1;
+            Lang.Spelling.SecondSpelling.Add(rule);
+            _altSpellingRuleModel = new SpellingRule
+                                    { Order = Lang.Spelling.SecondSpelling.Count + 1 };
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        private Task HandleNounGenderSubmitted(EditContext arg)
+        {
+            var noun = arg.Model as NounGender;
+            Lang.Grammar.NounGenders.Add(noun);
+            _genderModel = new NounGender();
+            StateHasChanged();
+            return Task.CompletedTask;
         }
     }
 }
