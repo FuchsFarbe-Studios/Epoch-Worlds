@@ -24,7 +24,7 @@ namespace EpochApp.Shared.Config
         /// <summary>
         ///     The category of the word, for sorting and exclusion purposes.
         /// </summary>
-        public WordCategory? Category { get; set; }
+        public WordCategory Category { get; set; } = WordCategory.General;
         public int PartOfSpeechId { get; set; }
 
         public virtual PartOfSpeech PartOfSpeech { get; set; }

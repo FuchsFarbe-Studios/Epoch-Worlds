@@ -173,6 +173,7 @@ namespace EpochApp.Server.Services
             if (dictionaryWords.Contains(wordToUpdate))
             {
                 _context.DictionaryWords.Update(wordToUpdate);
+                _context.Entry(wordToUpdate).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             else

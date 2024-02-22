@@ -239,6 +239,13 @@ namespace EpochApp.Server.Controllers
             return Ok(partsOfSpeech);
         }
 
+        /// <summary>
+        ///     Get all dictionary words.
+        /// </summary>
+        /// <returns>
+        ///     <see cref="Task{TResult}" /> where TResult is <see cref="IEnumerable{T}" /> where T is
+        ///     <see cref="DictionaryWord" />.
+        /// </returns>
         [HttpGet("Dictionary")]
         public async Task<ActionResult<List<DictionaryWord>>> GetDictionaryWords()
         {
@@ -246,6 +253,16 @@ namespace EpochApp.Server.Controllers
             return Ok(words);
         }
 
+        /// <summary>
+        ///     Adds a dictionary word to the database.
+        /// </summary>
+        /// <param name="wordToAdd">
+        ///     The <see cref="DictionaryWord" /> to add to the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="IActionResult" />
+        /// </returns>
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         [HttpPost("Dictionary")]
         public async Task<IActionResult> AddDictionaryWord(DictionaryWord wordToAdd)
         {
@@ -254,20 +271,45 @@ namespace EpochApp.Server.Controllers
             return Ok(words);
         }
 
+        /// <summary>
+        ///     Updates a dictionary word in the database.
+        /// </summary>
+        /// <param name="wordToUpdate">
+        ///     The <see cref="DictionaryWord" /> to update in the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="IActionResult" />
+        /// </returns>
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         [HttpPut("Dictionary")]
         public async Task<IActionResult> UpdateDictionaryWord(DictionaryWord wordToUpdate)
         {
-            await _language.UpdateDictionaryWord(wordToUpdate);
-            var words = await _language.GetDictionaryWords();
-            return Ok(words);
+            var dictWord = await _context.DictionaryWords.Where(x => x.WordId == wordToUpdate.WordId)
+                                         .FirstOrDefaultAsync();
+            dictWord.Translations = wordToUpdate.Translations;
+            dictWord.Category = wordToUpdate.Category;
+            dictWord.PartOfSpeechId = wordToUpdate.PartOfSpeechId;
+            _context.Entry(dictWord).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
+        /// <summary>
+        ///     Removes a dictionary word from the database.
+        /// </summary>
+        /// <param name="wordId">
+        ///     The <see cref="DictionaryWord" />'s ID to remove from the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="IActionResult" />
+        /// </returns>
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         [HttpDelete("Dictionary")]
-        public async Task<IActionResult> RemoveDictionaryWord(DictionaryWord wordToRemove)
+        public async Task<IActionResult> RemoveDictionaryWord([FromQuery] int wordId)
         {
+            var wordToRemove = await _context.DictionaryWords.FirstOrDefaultAsync(x => x.WordId == wordId);
             await _language.RemoveDictionaryWord(wordToRemove);
-            var words = await _language.GetDictionaryWords();
-            return Ok(words);
+            return Ok();
         }
     }
 }
