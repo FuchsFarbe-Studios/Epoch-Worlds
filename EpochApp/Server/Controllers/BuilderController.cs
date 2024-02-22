@@ -42,6 +42,7 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
+        [Authorize]
         [HttpGet("Content")]
         public async Task<IActionResult> GetBuilderContent([FromQuery] Guid contentId)
         {
@@ -62,6 +63,7 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
+        [Authorize]
         [HttpGet("ContentByAuthor/{userId:guid}")]
         public async Task<IActionResult> GetBuilderContentByAuthor(Guid userId)
         {
@@ -82,6 +84,7 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
+        [Authorize]
         [HttpGet("ContentByWorld")]
         public async Task<IActionResult> GetBuilderContentByWorld([FromQuery] Guid worldId)
         {
@@ -94,6 +97,7 @@ namespace EpochApp.Server.Controllers
             return Ok(content);
         }
 
+        [Authorize]
         [HttpGet("ContentByType")]
         public async Task<IActionResult> GetBuilderContentByType([FromQuery] Guid userId, [FromQuery] int contentType)
         {
@@ -115,7 +119,8 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
-        [HttpPost("Create")]
+        [Authorize]
+        [HttpPost("Content")]
         public async Task<IActionResult> CreateNewContent(BuilderContent content)
         {
             // Add created content to database
@@ -133,7 +138,7 @@ namespace EpochApp.Server.Controllers
             }
         }
 
-        [Authorize(Roles = "ADMIN,INTERNAL")]
+        [Authorize]
         [HttpPut("Content")]
         public async Task<IActionResult> UpdateContent([FromQuery] Guid userId, [FromQuery] Guid contentId, [FromBody] BuilderContent content)
         {
@@ -143,6 +148,7 @@ namespace EpochApp.Server.Controllers
             if (contentToUpdate == null)
                 return NotFound("No content to update or you do not have permission to update this content.");
 
+            contentToUpdate.ContentName = content.ContentName;
             contentToUpdate.ContentID = content.ContentID;
             contentToUpdate.ContentXml = content.ContentXml;
             contentToUpdate.ContentType = content.ContentType;

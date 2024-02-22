@@ -21,7 +21,7 @@ namespace EpochApp.Shared.Articles
         /// <summary>
         ///     Article this section is associated with.
         /// </summary>
-        public Guid ArticleID { get; set; }
+        public Guid ArticleId { get; set; }
 
         /// <summary> Title of this section. </summary>
         public string Title { get; set; }

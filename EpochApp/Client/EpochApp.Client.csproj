@@ -71,7 +71,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Pages\Discover\"/>
         <Folder Include="wwwroot\images\"/>
         <Folder Include="wwwroot\pdfs\"/>
         <Folder Include="wwwroot\Styles\"/>

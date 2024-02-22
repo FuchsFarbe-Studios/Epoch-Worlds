@@ -127,13 +127,16 @@ namespace EpochApp.Server.Data
             modelBuilder.Entity<ArticleSection>(entity =>
             {
                 entity.ToTable("Sections", "Articles");
-                entity.HasKey(a => new { a.ArticleID, a.SectionID });
+                entity.HasKey(a => new
+                                   {
+                                       ArticleID = a.ArticleId, a.SectionID
+                                   });
                 entity.Property(a => a.SectionID)
                       .ValueGeneratedOnAdd();
                 entity.Property(a => a.Title).HasMaxLength(255);
                 entity.HasOne(a => a.Article)
                       .WithMany(a => a.Sections)
-                      .HasForeignKey(x => x.ArticleID)
+                      .HasForeignKey(x => x.ArticleId)
                       .HasConstraintName("FK_ArticleSections_Articles");
             });
 

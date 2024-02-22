@@ -34,21 +34,6 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
             Lang ??= new ConstructedLanguage();
         }
 
-        private async Task SaveNewLanguageAsync(EditContext ctx)
-        {
-            var newLang = ctx.Model as ConstructedLanguage;
-            newLang.CreatedOn = DateTime.Now;
-
-            // Send data to database
-            var response = await Client.PostAsJsonAsync<BuilderContent>("api/v1/Builder/Create", Content);
-            // Verify it has been saved to database
-            if (!response.IsSuccessStatusCode)
-                return;
-
-            var newContent = await response.Content.ReadFromJsonAsync<BuilderContent>();
-            // If it has, redirect to the edit language page with the new content ID
-            Nav.NavigateTo($"{NavRef.BuilderNav.CongLang.Edit}/{newContent.ContentID}");
-        }
 
         /// <inheritdoc />
         protected override async Task GenerateAsync()
@@ -64,6 +49,7 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
                           {
                               AuthorID = Auth.CurrentUser.UserID,
                               WorldID = ActiveWorld.WorldID,
+                              ContentName = Lang?.LangName,
                               ContentType = ContentType.ConstructedLanguage,
                               DateCreated = DateTime.Now
                           };
@@ -77,9 +63,26 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
                 await UpdateConLangAsync(ctx);
         }
 
+        private async Task SaveNewLanguageAsync(EditContext ctx)
+        {
+            var newLang = ctx.Model as ConstructedLanguage;
+            newLang.CreatedOn = DateTime.Now;
+
+            // Send data to database
+            var response = await Client.PostAsJsonAsync<BuilderContent>("api/v1/Builder/Content", Content);
+            // Verify it has been saved to database
+            if (!response.IsSuccessStatusCode)
+                return;
+
+            var newContent = await response.Content.ReadFromJsonAsync<BuilderContent>();
+            // If it has, redirect to the edit language page with the new content ID
+            Nav.NavigateTo($"{NavRef.BuilderNav.CongLang.Edit}/{newContent.ContentID}");
+        }
+
         private async Task UpdateConLangAsync(EditContext ctx)
         {
             var newLang = ctx.Model as ConstructedLanguage;
+            Content.ContentName = newLang.LangName;
             Content.ContentXml = await Serializer.SerializeToXml(newLang) ?? "";
             var response = await Client.PutAsJsonAsync<BuilderContent>($"api/v1/Builder/Content?userId={Auth.CurrentUser.UserID}&contentId={Content.ContentID}", Content);
             if (!response.IsSuccessStatusCode)

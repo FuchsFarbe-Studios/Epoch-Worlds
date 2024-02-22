@@ -1,6 +1,7 @@
 @page "/Builders/ConLang/E"
 @page "/Builders/ConLang/E/{ContentId?}"
 @using Typo=MudBlazor.Typo
+@using Variant=MudBlazor.Variant
 @using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 
@@ -11,7 +12,7 @@
 @if (string.IsNullOrWhiteSpace(ContentId))
 {
 	<ContentSelector Type="ContentType.ConstructedLanguage" OnContentChanged="@HandleContentChanged" />
-	<MudButton Disabled="@(_editContent == null)" Href="@($"{NavRef.BuilderNav.CongLang.Edit}/{_editContent?.ContentID}")">Edit Selected Language</MudButton>
+	<MudButton EndIcon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Disabled="@(_editContent == null)" Href="@($"{NavRef.BuilderNav.CongLang.Edit}/{_editContent?.ContentID}")">Edit Selected Language</MudButton>
 }
 else
 {

@@ -1,4 +1,6 @@
 @using ButtonType=MudBlazor.ButtonType
+@using Position=MudBlazor.Position
+@using Variant=MudBlazor.Variant
 @using MudBlazor
 @inherits RequestComponent<ArticleEditDTO>
 
@@ -7,42 +9,125 @@
 	<EditForm Model="@Model" OnSubmit="@OnArticleSubmit">
 		<EpochValidator @ref=@_validator />
 
-		<MudGrid Spacing="2">
+		<MudTabs Border="true" Color="Color.Info" Outlined="true" Rounded="true" PanelClass="pa-2" KeepPanelsAlive="true" Position="Position.Left">
 
-			<AuthorizeView Roles="ADMIN,INTERNAL" Context="AuthCtx">
-				<Authorized>
+			<MudTabPanel ID="@("ArticleContent")" Icon="@Icons.Material.Filled.Article" Text="Article">
+
+				<MudGrid Spacing="2">
+
+					<AuthorizeView Roles="ADMIN,INTERNAL" Context="AuthCtx">
+						<Authorized>
+							<MudItem xs="12" md="6">
+								<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="WorldId" @bind-Value="@Model.WorldId" For="@(() => Model.WorldId)" ReadOnly="true" />
+							</MudItem>
+
+							<MudItem xs="12" md="6">
+								<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="AuthorId" @bind-Value="@Model.AuthorId" For="@(() => Model.AuthorId)" ReadOnly="true" />
+							</MudItem>
+						</Authorized>
+					</AuthorizeView>
+
 					<MudItem xs="12" md="6">
-						<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="WorldId" @bind-Value="@Model.WorldId" For="@(() => Model.WorldId)" ReadOnly="true" />
+						<MudTextField Label="Title" @bind-Value="@Model.Title" For="@(() => Model.Title)" MaxLength="255" Required="true" />
 					</MudItem>
 
 					<MudItem xs="12" md="6">
-						<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="AuthorId" @bind-Value="@Model.AuthorId" For="@(() => Model.AuthorId)" ReadOnly="true" />
+						<MudSelect T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)">
+							<MudSelectItem Value="0">None</MudSelectItem>
+							@if (_categories.Any())
+							{
+								@foreach (var cat in _categories)
+								{
+									<MudSelectItem Value="@cat.CategoryID">@cat.Description</MudSelectItem>
+								}
+							}
+						</MudSelect>
 					</MudItem>
-				</Authorized>
-			</AuthorizeView>
 
-			<MudItem xs="12" md="6">
-				<MudTextField Label="Title" @bind-Value="@Model.Title" For="@(() => Model.Title)" MaxLength="255" Required="true" />
-			</MudItem>
+					<MudItem xs="12">
+						<MudTextField Lines="5" Label="Content" @bind-Value="@Model.Content" For="@(() => Model.Content)" />
+					</MudItem>
 
-			<MudItem xs="12" md="6">
-				<MudSelect T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)">
-					<MudSelectItem Value="0">None</MudSelectItem>
-					@if (_categories.Any())
-					{
-						@foreach (var cat in _categories)
-						{
-							<MudSelectItem Value="@cat.CategoryID">@cat.Description</MudSelectItem>
-						}
-					}
-				</MudSelect>
-			</MudItem>
+				</MudGrid>
 
-			<MudItem xs="12">
-				<MudTextField Lines="5" Label="Content" @bind-Value="@Model.Content" For="@(() => Model.Content)" />
-			</MudItem>
+			</MudTabPanel>
 
-		</MudGrid>
+			<MudTabPanel ID="@("ArticleSections")" Icon="@Icons.Material.Filled.LibraryBooks" Text="Sections">
+
+				<MudGrid Spacing="2">
+
+					<!-- Article Sections -->
+					<MudItem xs="12">
+						<MudText>Article Sections</MudText>
+
+						<MudExpansionPanels>
+							@if (Model.Sections.Any())
+							{
+								@foreach (var sec in Model.Sections)
+								{
+									<MudExpansionPanel @key=@sec Dense="true">
+										<TitleContent>@sec.Title</TitleContent>
+										<ChildContent>
+											<MudGrid>
+												<AuthorizeView Roles="ADMIN,INTERNAL" Context="SecAuthCtx">
+													<Authorized>
+														<MudItem xs="12" md="6">
+															<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="Section Id" @bind-Value="@sec.SectionId" For="@(() => sec.SectionId)" ReadOnly="true" />
+														</MudItem>
+													</Authorized>
+												</AuthorizeView>
+
+												<MudItem xs="12" sm="6">
+													<MudTextField @bind-Value="@sec.Title" For="@(() => sec.Title)" Label="Section Header" />
+												</MudItem>
+												<MudItem xs="12">
+													<MudTextField @bind-Value="@sec.Content" For="@(() => sec.Content)" Label="Section Content" Lines="3" />
+												</MudItem>
+												<MudItem xs="12">
+													<MudPaper Class="mt-2" Outlined="true" Width="100%">
+														<MudToolBar Dense="false" DisableGutters="false" WrapContent="true">
+															<MudSpacer />
+															<MudTooltip Text="Saves your data to the database.">
+																<MudButton OnClick="@(async () => await DeleteSectionAsync(sec))" Color="Color.Error" Size="Size.Small" IconColor="Color.Error" ButtonType="ButtonType.Button" EndIcon="@(Icons.Material.Filled.Delete)">Delete</MudButton>
+															</MudTooltip>
+														</MudToolBar>
+													</MudPaper>
+												</MudItem>
+											</MudGrid>
+										</ChildContent>
+									</MudExpansionPanel>
+								}
+							}
+						</MudExpansionPanels>
+						<MudButton FullWidth="true" OnClick="@AddArticleSectionAsync" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.AddCircle" IconColor="Color.Primary" ButtonType="ButtonType.Button" Color="Color.Primary">Add Section</MudButton>
+					</MudItem>
+
+				</MudGrid>
+
+			</MudTabPanel>
+
+			<MudTabPanel ID="@("ArticlePreferences")" Icon="@Icons.Material.Filled.Settings" Text="Preferences">
+
+				<MudGrid Spacing="2">
+
+					<MudItem xs="12">
+						<MudSwitch @bind-Value="@Model.IsPublished" For="@(() => Model.IsPublished)" Label="@($"{(Model.IsPublished ? "Published" : "Unpublished")}")" />
+					</MudItem>
+					<MudItem xs="12">
+						<MudSwitch @bind-Value="@Model.IsNSFW" For="@(() => Model.IsNSFW)" Label="@($"{(Model.IsNSFW ? "Not safe for work" : "Safe for work")}")" />
+					</MudItem>
+					<MudItem xs="12">
+						<MudSwitch @bind-Value="@Model.ShowTableOfContents" For="@(() => Model.ShowTableOfContents)" Label="@($"{(Model.ShowTableOfContents ? "Display Table of Contents" : "No Table of Contents")}")" />
+					</MudItem>
+					<MudItem xs="12">
+						<MudSwitch @bind-Value="@Model.ShowInTableOfContents" For="@(() => Model.ShowInTableOfContents)" Label="@($"{(Model.ShowInTableOfContents ? "Show in World Table of Contents" : "Do not display in World Table of Contents")}")" />
+					</MudItem>
+
+				</MudGrid>
+
+			</MudTabPanel>
+
+		</MudTabs>
 
 		<MudPaper Class="mud-theme-dark mt-2" Outlined="true" Width="100%">
 			<MudToolBar Dense="false" DisableGutters="false" WrapContent="true">

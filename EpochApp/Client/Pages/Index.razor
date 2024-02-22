@@ -1,13 +1,19 @@
 ﻿@page "/"
+@using Typo=MudBlazor.Typo
+@using MudBlazor
 @namespace EpochApp.Client.Pages
 
 <PageTitle>@StaticUtils.Constants.AppName</PageTitle>
 
-<section>
-	<FlatTypo Typo="Typo.Heading1" Text="Welcome to the Epoch World Exchange!" />
-	<FlatTypo Typo="Typo.Heading2">A World first in Collaborative and Generative Content Generation</FlatTypo>
-</section>
-<section>
-	<FlatTypo Typo="Typo.Heading4">News</FlatTypo>
-	<BlogView BlogType="BlogType.NEWS" />
-</section>
+<MudContainer>
+	<section class="mud-theme-primary">
+		<MudPaper Class="my-2" Outlined="true">
+			<MudText Typo="Typo.h1" Align="Align.Center">Welcome to the Epoch World Exchange!</MudText>
+			<MudText Typo="Typo.h2" Align="Align.Center">A World first in Collaborative and Generative Content Generation</MudText>
+		</MudPaper>
+	</section>
+	<section class="mud-theme-secondary">
+		<MudText Typo="Typo.h4" Align="Align.Center">Latest Site News</MudText>
+		<BlogView BlogType="BlogType.NEWS" />
+	</section>
+</MudContainer>

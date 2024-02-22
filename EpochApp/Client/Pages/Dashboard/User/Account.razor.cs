@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages.User
 {
+    /// <summary> The user account page. </summary>
     [Authorize]
     public partial class Account
     {
-        [Inject] public EpochAuthProvider Auth { get; set; }
+        [Inject] private EpochAuthProvider Auth { get; set; }
     }
 }

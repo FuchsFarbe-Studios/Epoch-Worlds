@@ -4,6 +4,8 @@ using EpochApp.Shared.Config;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
+using MudBlazor;
 using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.Articles
@@ -13,13 +15,15 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
     /// </summary>
     public partial class ArticleForm
     {
+        private int _activePanelIndex;
         private List<ArticleCategory> _categories = new List<ArticleCategory>();
+        private MudDynamicTabs _sectionTabs;
         private EpochValidator _validator;
 
         /// <summary>
         ///     Article edit information.
         /// </summary>
-        [Parameter] public ArticleEditDTO ArticleEdit { get; set; }
+        [Parameter] public ArticleEditDTO ArticleEdit { get; set; } = null!;
 
         /// <summary>
         ///     Determines if the form is in edit mode or create mode.
@@ -79,6 +83,24 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
                 {
                     Logger.LogError("Failed to create article!");
                 }
+            }
+        }
+        private Task AddArticleSectionAsync(MouseEventArgs arg)
+        {
+            Model.Sections.Add(new SectionEditDTO
+                               {
+                                   Title = "New Section"
+                               });
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        private async Task DeleteSectionAsync(SectionEditDTO section)
+        {
+            if (Model.Sections.Contains(section))
+            {
+                Model.Sections.Remove(section);
+                StateHasChanged();
             }
         }
     }

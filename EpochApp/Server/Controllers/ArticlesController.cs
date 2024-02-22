@@ -9,6 +9,7 @@ using EpochApp.Shared.Articles;
 using EpochApp.Shared.Config;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EpochApp.Server.Controllers
 {
@@ -100,6 +101,11 @@ namespace EpochApp.Server.Controllers
                                                          Content = x.Content,
                                                          CreatedOn = x.CreatedOn,
                                                          ModifiedOn = x.ModifiedOn,
+                                                         IsPublished = x.IsPublished,
+                                                         IsNSFW = x.IsNSFW,
+                                                         DisplayAuthor = x.DisplayAuthor,
+                                                         ShowTableOfContents = x.ShowInTableOfContents,
+                                                         ShowInTableOfContents = x.ShowInTableOfContents,
                                                          Sections = x.Sections.Select(s => new SectionDTO
                                                                                            {
                                                                                                SectionID = s.SectionID,
@@ -107,6 +113,46 @@ namespace EpochApp.Server.Controllers
                                                                                                Content = s.Content,
                                                                                                CreatedOn = s.CreatedOn
                                                                                            })
+                                                     })
+                                        .FirstOrDefaultAsync(x => x.ArticleId == articleId);
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(article);
+        }
+
+        [HttpGet("Article/Edited/{articleId:guid}")]
+        public async Task<ActionResult<ArticleEditDTO>> GetEditArticleAsync(Guid articleId)
+        {
+            var article = await _context.Articles
+                                        .Include(a => a.Sections)
+                                        .Include(a => a.Category)
+                                        .Include(a => a.World)
+                                        .Include(a => a.Author)
+                                        .Select(x => new ArticleEditDTO
+                                                     {
+                                                         ArticleId = x.ArticleId,
+                                                         Title = x.Title,
+                                                         CategoryId = x.CategoryId ?? 0,
+                                                         Content = x.Content,
+                                                         CreatedOn = x.CreatedOn,
+                                                         ModifiedOn = x.ModifiedOn,
+                                                         IsPublished = x.IsPublished,
+                                                         IsNSFW = x.IsNSFW,
+                                                         DisplayAuthor = x.DisplayAuthor,
+                                                         ShowTableOfContents = x.ShowInTableOfContents,
+                                                         ShowInTableOfContents = x.ShowInTableOfContents,
+                                                         Sections = x.Sections.Select(s => new SectionEditDTO
+                                                                                           {
+                                                                                               SectionId = s.SectionID,
+                                                                                               Title = s.Title,
+                                                                                               Content = s.Content,
+                                                                                               CreatedOn = s.CreatedOn
+                                                                                           })
+                                                                     .ToList()
                                                      })
                                         .FirstOrDefaultAsync(x => x.ArticleId == articleId);
 
@@ -145,6 +191,11 @@ namespace EpochApp.Server.Controllers
                                                           Content = x.Content,
                                                           CreatedOn = x.CreatedOn,
                                                           ModifiedOn = x.ModifiedOn,
+                                                          IsPublished = x.IsPublished,
+                                                          IsNSFW = x.IsNSFW,
+                                                          DisplayAuthor = x.DisplayAuthor,
+                                                          ShowTableOfContents = x.ShowInTableOfContents,
+                                                          ShowInTableOfContents = x.ShowInTableOfContents,
                                                           Sections = x.Sections.Select(s => new SectionDTO
                                                                                             {
                                                                                                 SectionID = s.SectionID,
@@ -186,6 +237,11 @@ namespace EpochApp.Server.Controllers
                                                           Content = x.Content,
                                                           CreatedOn = x.CreatedOn,
                                                           ModifiedOn = x.ModifiedOn,
+                                                          IsPublished = x.IsPublished,
+                                                          IsNSFW = x.IsNSFW,
+                                                          DisplayAuthor = x.DisplayAuthor,
+                                                          ShowTableOfContents = x.ShowInTableOfContents,
+                                                          ShowInTableOfContents = x.ShowInTableOfContents,
                                                           Sections = x.Sections.Select(s => new SectionDTO
                                                                                             {
                                                                                                 SectionID = s.SectionID,
@@ -216,6 +272,11 @@ namespace EpochApp.Server.Controllers
                           CreatedOn = DateTime.Now,
                           AuthorId = article.AuthorId,
                           WorldId = article.WorldId,
+                          IsPublished = article.IsPublished,
+                          IsNSFW = article.IsNSFW,
+                          DisplayAuthor = article.DisplayAuthor,
+                          ShowTableOfContents = article.ShowInTableOfContents,
+                          ShowInTableOfContents = article.ShowInTableOfContents,
                           Sections = article.Sections.Select(x => new ArticleSection
                                                                   {
                                                                       Title = x.Title,
@@ -247,25 +308,59 @@ namespace EpochApp.Server.Controllers
         public async Task<IActionResult> UpdateArticleAsync([FromQuery] Guid userId, [FromQuery] Guid articleId, ArticleEditDTO article)
         {
             var articleToUpdate = await _context.Articles.FirstOrDefaultAsync(x => x.ArticleId == articleId);
+            var articleSections = await _context.ArticleSections
+                                                .Where(x => x.ArticleId == articleId)
+                                                .ToListAsync();
             if (articleToUpdate == null)
                 return NotFound();
             if (articleToUpdate.AuthorId != userId)
                 return Unauthorized();
 
+            // Update or delete sections
+            if (article.Sections.IsNullOrEmpty())
+                if (articleSections.Any())
+                    foreach (var section in articleSections)
+                        _context.ArticleSections.Remove(section);
+
+            // Remove sections not found in the updated article
+            foreach (var section in articleSections)
+            {
+                var sectionToUpdate = article.Sections.FirstOrDefault(x => x.SectionId == section.SectionID);
+                if (sectionToUpdate == null)
+                    _context.ArticleSections.Remove(section);
+            }
+
+            foreach (var section in article.Sections)
+            {
+                var sectionToUpdate = articleSections.FirstOrDefault(x => x.SectionID == section.SectionId);
+                if (sectionToUpdate == null)
+                {
+                    articleSections.Add(new ArticleSection
+                                        {
+                                            Title = section.Title,
+                                            Content = section.Content,
+                                            CreatedOn = DateTime.Now
+                                        });
+                }
+                else
+                {
+                    sectionToUpdate.Title = section.Title;
+                    sectionToUpdate.Content = section.Content;
+                    sectionToUpdate.CreatedOn = DateTime.Now;
+                    _context.Entry(sectionToUpdate).State = EntityState.Modified;
+                }
+            }
+
             articleToUpdate.Title = article.Title;
             articleToUpdate.Content = article.Content;
             articleToUpdate.ModifiedOn = DateTime.Now;
-            articleToUpdate.Sections.Clear();
-            articleToUpdate.Sections = article.Sections.Select(x => new ArticleSection
-                                                                    {
-                                                                        Title = x.Title,
-                                                                        Content = x.Content,
-                                                                        CreatedOn = DateTime.Now
-                                                                    })
-                                              .ToList();
-
+            articleToUpdate.IsPublished = article.IsPublished;
+            articleToUpdate.IsNSFW = article.IsNSFW;
+            articleToUpdate.DisplayAuthor = article.DisplayAuthor;
+            articleToUpdate.ShowTableOfContents = article.ShowInTableOfContents;
+            articleToUpdate.ShowInTableOfContents = article.ShowInTableOfContents;
+            articleToUpdate.Sections = articleSections;
             _context.Entry(articleToUpdate).State = EntityState.Modified;
-
             try
             {
                 _context.Articles.Update(articleToUpdate);
