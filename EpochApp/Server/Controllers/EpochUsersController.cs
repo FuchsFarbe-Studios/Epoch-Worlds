@@ -403,12 +403,12 @@ namespace EpochApp.Server.Controllers
 
         private string CreateJWT(IEnumerable<Claim> claims)
         {
-            var secretkey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
-            var credentials = new SigningCredentials(secretkey, SecurityAlgorithms.HmacSha256);
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
+            var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-            "https://localhost:5001",
-            "https://localhost:5001",
+            _configuration.GetSection("Jwt:Issuer").Value,
+            _configuration.GetSection("Jwt:Audience").Value,
             claims,
             expires: DateTime.Now.AddMinutes(60),
             signingCredentials: credentials);

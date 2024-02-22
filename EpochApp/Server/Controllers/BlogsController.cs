@@ -1,5 +1,6 @@
 using EpochApp.Server.Data;
 using EpochApp.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace EpochApp.Server.Controllers
 
         // GET: api/Blogs
         [HttpGet]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<ActionResult<IEnumerable<BlogDTO>>> GetBlogs()
         {
             return await _context.Blogs.Select(x => new BlogDTO
@@ -116,6 +118,7 @@ namespace EpochApp.Server.Controllers
 
         // Create blog post
         [HttpPost("BlogPosts/{blogId}")]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<ActionResult<PostDTO>> CreateBlogPost(int blogId, PostDTO postDto)
         {
             var blog = await _context.Blogs.FindAsync(blogId);
@@ -182,6 +185,7 @@ namespace EpochApp.Server.Controllers
         ///     <see cref="IActionResult" />
         /// </returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<IActionResult> PutBlog(int id, BlogDTO blogData)
         {
             if (id != blogData.BlogID)
@@ -211,6 +215,7 @@ namespace EpochApp.Server.Controllers
         // POST: api/Blogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<ActionResult<Blog>> PostBlog(BlogDTO blogData)
         {
             var blog = new Blog
@@ -230,7 +235,8 @@ namespace EpochApp.Server.Controllers
         }
 
         // DELETE: api/Blogs/5
-        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteBlog(int id)
         {
             var blog = await _context.Blogs.FindAsync(id);
@@ -250,6 +256,7 @@ namespace EpochApp.Server.Controllers
             return _context.Blogs.Any(e => e.BlogID == id);
         }
 
+        [AllowAnonymous]
         [HttpGet("BlogPosts/Post/{id:guid}")]
         public async Task<PostDTO> GetBlogPost(Guid id)
         {

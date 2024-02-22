@@ -38,10 +38,12 @@ namespace EpochApp.Server
                     {
                         options.TokenValidationParameters = new TokenValidationParameters
                                                             {
+                                                                ValidateAudience = true,
+                                                                ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
                                                                 ValidateIssuerSigningKey = true,
                                                                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value)),
-                                                                ValidateIssuer = false,
-                                                                ValidateAudience = false,
+                                                                ValidateIssuer = true,
+                                                                ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
                                                                 ClockSkew = TimeSpan.Zero
                                                             };
                     });
@@ -73,9 +75,7 @@ namespace EpochApp.Server
             }
 
             app.UseHttpsRedirection();
-
             app.UseBlazorFrameworkFiles();
-
             app.UseStaticFiles();
 
             var userContentDirectory = Path.Combine(env.ContentRootPath, "UserContent");
@@ -91,9 +91,9 @@ namespace EpochApp.Server
             }
             );
 
+            app.UseAuthentication();
             app.UseRouting();
-
-
+            app.UseAuthorization();
             app.MapRazorPages();
             app.MapControllers();
             app.MapFallbackToFile("index.html");
