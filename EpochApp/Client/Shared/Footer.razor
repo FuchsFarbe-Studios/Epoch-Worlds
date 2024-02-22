@@ -1,7 +1,13 @@
+@using MudBlazor
 <div class="flex-center">
-	@ChildContent
-	<FlatLink MenuItem="false" Link="@NavRef.Site.About" MatchMode="NavLinkMatch.All">About</FlatLink>
-	<FlatLink MenuItem="false" Link="@NavRef.Site.Faq" MatchMode="NavLinkMatch.All">FAQ</FlatLink>
-	<FlatLink MenuItem="false" Link="@NavRef.Site.Support" MatchMode="NavLinkMatch.All">Support</FlatLink>
-	<FlatLink MenuItem="false" Link="@NavRef.Site.Contact" MatchMode="NavLinkMatch.All">Contact</FlatLink>
+	<MudContainer>
+		@ChildContent
+	</MudContainer>
+	<MudContainer Class="flex-center">
+		<MudLink Href="@NavRef.Site.About" Underline="Underline.None">About</MudLink>
+		<MudLink Href="@NavRef.Site.Policy" Underline="Underline.None">Policy</MudLink>
+		<MudLink Href="@NavRef.Site.Contact" Underline="Underline.None">Contact</MudLink>
+		<MudLink Href="@NavRef.Site.Faq" Underline="Underline.None">FAQ</MudLink>
+		<MudLink Href="@NavRef.Site.Support" Underline="Underline.None">Support</MudLink>
+	</MudContainer>
 </div>

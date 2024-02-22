@@ -6,7 +6,6 @@
 
 namespace EpochApp.Shared.Utils
 {
-
     public static class StaticUtils
     {
         public static class AwesomeIcons
@@ -71,7 +70,8 @@ namespace EpochApp.Shared.Utils
         public static class Constants
         {
             public const string CompanyName = "FuchsFarbe Studios";
-            public const string Author = "Oliver Conover";
+            public const string ProjectName = "The Epoch World Exchange";
+            public static readonly string[] Authors = { "Oliver Conover", "Eloi Genier" };
             public const string AppName = "Epoch Worlds";
         }
     }

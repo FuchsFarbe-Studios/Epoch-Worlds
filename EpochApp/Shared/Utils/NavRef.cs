@@ -83,6 +83,7 @@ namespace EpochApp.Shared.Utils
             public const string Index = "/";
             public const string About = "/About";
             public const string Contact = "/Contact";
+            public const string Policy = "/Policy";
             public const string Support = "/Support";
             public const string Faq = "/FAQ";
             public const string Features = "/Features";

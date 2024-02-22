@@ -1,13 +1,17 @@
 @using MudBlazor
-<MudPaper Width="100%" Outlined="true" Square="true" Class="rounded-b-lg mud-theme-primary">
-	<MudToolBar Dense="true">
-		<MudIconButton Color="Color.Inherit" Href="@NavRef.UserNav.Dashboard" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Table]" Title="Dashboard" />
-		<MudIconButton Color="Color.Inherit" Href="@NavRef.BuilderNav.Index" Icon="@Icons.Material.Filled.BuildCircle" Title="Content Builders" />
-		<MudIconButton Color="Color.Inherit" Href="@NavRef.WorldNav.Index" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAmericas]" Title="@($"{Auth.CurrentUser.UserName}'s Worlds")" />
-		<MudIconButton Color="Color.Inherit" Href="@NavRef.ArticleNav.Index" Icon="@Icons.Material.Filled.Article" Title="@($"{ActiveWorld.WorldName}'s Articles")" />
-		<MudSpacer />
-		<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.BookOnline" Href="@NavRef.ResourceNav.Manuals" Title="Builder Manuals" />
-		<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Edit" Href="@NavRef.ResourceNav.Guides" Title="Writing Guides" />
-		<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Lightbulb" Href="@NavRef.ResourceNav.Tips" Title="Tips and Tricks" />
-	</MudToolBar>
-</MudPaper>
+<AuthorizeView>
+	<Authorized>
+		<MudPaper Width="100%" Outlined="true" Square="true" Class="rounded-b-lg mud-theme-primary">
+			<MudToolBar Dense="true">
+				<MudIconButton Color="Color.Inherit" Href="@NavRef.UserNav.Dashboard" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Table]" Title="Dashboard" />
+				<MudIconButton Color="Color.Inherit" Href="@NavRef.BuilderNav.Index" Icon="@Icons.Material.Filled.BuildCircle" Title="Content Builders" />
+				<MudIconButton Color="Color.Inherit" Href="@NavRef.WorldNav.Index" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAmericas]" Title="@($"{Auth?.CurrentUser?.UserName}'s Worlds")" />
+				<MudIconButton Color="Color.Inherit" Href="@NavRef.ArticleNav.Index" Icon="@Icons.Material.Filled.Article" Title="@($"{ActiveWorld?.WorldName}'s Articles")" />
+				<MudSpacer />
+				<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.BookOnline" Href="@NavRef.ResourceNav.Manuals" Title="Builder Manuals" />
+				<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Edit" Href="@NavRef.ResourceNav.Guides" Title="Writing Guides" />
+				<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Lightbulb" Href="@NavRef.ResourceNav.Tips" Title="Tips and Tricks" />
+			</MudToolBar>
+		</MudPaper>
+	</Authorized>
+</AuthorizeView>
