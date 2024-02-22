@@ -6,6 +6,7 @@
 using EpochApp.Server.Data;
 using EpochApp.Shared;
 using EpochApp.Shared.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -61,16 +62,15 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
-        [HttpGet("ContentByAuthor")]
-        public async Task<IActionResult> GetBuilderContentByAuthor([FromQuery] Guid userId)
+        [HttpGet("ContentByAuthor/{userId:guid}")]
+        public async Task<IActionResult> GetBuilderContentByAuthor(Guid userId)
         {
-            var content = await _context.BuilderContents
-                                        .Where(x => x.AuthorID == userId)
-                                        .ToListAsync();
-            if (content.Count == 0)
-                return NotFound("No content found.");
-
-            return Ok(content);
+            var builderContents = await _context.BuilderContents
+                                                .Where(x => x.AuthorID == userId)
+                                                .Include(x => x.Author)
+                                                .ToListAsync()
+                                  ?? new List<BuilderContent>();
+            return Ok(builderContents);
         }
 
         /// <summary>
@@ -94,10 +94,76 @@ namespace EpochApp.Server.Controllers
             return Ok(content);
         }
 
-        [HttpPost("Create")]
-        public async Task<IActionResult> CreateUser(BuilderContent content)
+        [HttpGet("ContentByType")]
+        public async Task<IActionResult> GetBuilderContentByType([FromQuery] Guid userId, [FromQuery] int contentType)
         {
-            return Ok();
+            var content = await _context.BuilderContents
+                                        .Where(x => x.AuthorID == userId && x.ContentType == (ContentType)contentType)
+                                        .ToListAsync();
+            if (content.Count == 0)
+                return NotFound("No content found.");
+
+            return Ok(content);
+        }
+
+        /// <summary>
+        ///     Adds new builder content to the database.
+        /// </summary>
+        /// <param name="content">
+        ///     The content to add to the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="IActionResult" />
+        /// </returns>
+        [HttpPost("Create")]
+        public async Task<IActionResult> CreateNewContent(BuilderContent content)
+        {
+            // Add created content to database
+            content.DateCreated = DateTime.Now;
+            try
+            {
+                await _context.BuilderContents.AddAsync(content);
+                await _context.SaveChangesAsync();
+                // return created content with its id
+                return CreatedAtAction("GetBuilderContent", new { contentId = content.ContentID }, content);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        [HttpPut("Content")]
+        public async Task<IActionResult> UpdateContent([FromQuery] Guid userId, [FromQuery] Guid contentId, [FromBody] BuilderContent content)
+        {
+            // Verify the this is the sending users content to update
+            var contentToUpdate = await _context.BuilderContents
+                                                .FirstOrDefaultAsync(x => x.ContentID == contentId && x.AuthorID == userId);
+            if (contentToUpdate == null)
+                return NotFound("No content to update or you do not have permission to update this content.");
+
+            contentToUpdate.ContentID = content.ContentID;
+            contentToUpdate.ContentXml = content.ContentXml;
+            contentToUpdate.ContentType = content.ContentType;
+            contentToUpdate.DateCreated = content.DateCreated;
+            contentToUpdate.DateModified = DateTime.Now;
+            contentToUpdate.WorldID = content.WorldID;
+            contentToUpdate.AuthorID = content.AuthorID;
+            //TODO: Add IsPublic to BuilderContent
+            // contentToUpdate.IsPublic = content.IsPublic;
+
+            // Update content in database
+            try
+            {
+                _context.BuilderContents.Update(contentToUpdate);
+                await _context.SaveChangesAsync();
+                return Ok(contentToUpdate);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

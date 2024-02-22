@@ -1,12 +1,19 @@
 @page "/Builders/ConLang/E"
 @page "/Builders/ConLang/E/{ContentId?}"
+@using Typo=MudBlazor.Typo
+@using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 
 <PageTitle>@StaticUtils.Constants.AppName - Edit Constructed Language</PageTitle>
 
-<FlatTypo Typo="Typo.Heading3">Edit Constructed Language</FlatTypo>
+<MudText Typo="Typo.h3">Edit Constructed Language</MudText>
 
-@if (LangContent != null)
+@if (string.IsNullOrWhiteSpace(ContentId))
 {
-	<ConLangForm Lang="@LangContent" IsEditMode="true" />
+	<ContentSelector Type="ContentType.ConstructedLanguage" OnContentChanged="@HandleContentChanged" />
+	<MudButton Disabled="@(_editContent == null)" Href="@($"{NavRef.BuilderNav.CongLang.Edit}/{_editContent?.ContentID}")">Edit Selected Language</MudButton>
+}
+else
+{
+	<ConLangForm Content="@_editContent" Lang="@LangContent" IsEditMode="true" />
 }

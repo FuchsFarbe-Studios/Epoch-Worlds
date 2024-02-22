@@ -1,6 +1,8 @@
 using EpochApp.Shared;
+using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.Builders
 {
@@ -34,8 +36,18 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
 
         private async Task SaveNewLanguageAsync(EditContext ctx)
         {
-            Lang.CreatedOn = DateTime.Now;
-            await Task.CompletedTask;
+            var newLang = ctx.Model as ConstructedLanguage;
+            newLang.CreatedOn = DateTime.Now;
+
+            // Send data to database
+            var response = await Client.PostAsJsonAsync<BuilderContent>("api/v1/Builder/Create", Content);
+            // Verify it has been saved to database
+            if (!response.IsSuccessStatusCode)
+                return;
+
+            var newContent = await response.Content.ReadFromJsonAsync<BuilderContent>();
+            // If it has, redirect to the edit language page with the new content ID
+            Nav.NavigateTo($"{NavRef.BuilderNav.CongLang.Edit}/{newContent.ContentID}");
         }
 
         /// <inheritdoc />
@@ -46,7 +58,7 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
 
         private async Task HandleConlangSubmit(EditContext ctx)
         {
-            if (Content == null)
+            if (!IsEditMode)
             {
                 Content = new BuilderContent
                           {
@@ -55,12 +67,32 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
                               ContentType = ContentType.ConstructedLanguage,
                               DateCreated = DateTime.Now
                           };
+                var contextXml = await Serializer.SerializeToXml(Lang) ?? "";
+                Content.ContentXml = contextXml;
+                Logger.LogInformation(contextXml);
+                await SaveNewLanguageAsync(ctx);
             }
-            var contextXml = await Serializer.SerializeToXml(Lang);
-            Logger.LogInformation(contextXml);
-            Content.ContentXml = contextXml;
+
+            if (IsEditMode)
+                await UpdateConLangAsync(ctx);
         }
 
+        private async Task UpdateConLangAsync(EditContext ctx)
+        {
+            var newLang = ctx.Model as ConstructedLanguage;
+            Content.ContentXml = await Serializer.SerializeToXml(newLang) ?? "";
+            var response = await Client.PutAsJsonAsync<BuilderContent>($"api/v1/Builder/Content?userId={Auth.CurrentUser.UserID}&contentId={Content.ContentID}", Content);
+            if (!response.IsSuccessStatusCode)
+            {
+                Logger.LogWarning("Updating language un-successful!");
+                var error = await response.Content.ReadAsStringAsync();
+                Logger.LogWarning(error);
+                return;
+            }
+            var updatedContent = await response.Content.ReadFromJsonAsync<BuilderContent>();
+            Logger.LogInformation("Updating language successful!");
+            Nav.NavigateTo($"{NavRef.BuilderNav.CongLang.Edit}/{updatedContent.ContentID}");
+        }
 
         private Task HandleSpellingRuleSubmitted(EditContext arg)
         {

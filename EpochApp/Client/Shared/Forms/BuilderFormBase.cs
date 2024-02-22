@@ -23,7 +23,7 @@ namespace EpochApp.Client.Shared.Forms
         /// <summary>
         ///     The content of the form.
         /// </summary>
-        protected BuilderContent Content { get; set; }
+        [Parameter] public BuilderContent Content { get; set; }
 
         /// <summary>
         ///     The active world relating to the builder form.
