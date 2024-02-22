@@ -39,5 +39,9 @@
         <ProjectReference Include="..\Shared\EpochApp.Shared.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="Controllers\ArticleCategoriesController.cs"/>
+    </ItemGroup>
+
 
 </Project>

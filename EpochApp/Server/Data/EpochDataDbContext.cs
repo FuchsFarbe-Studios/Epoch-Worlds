@@ -47,7 +47,10 @@ namespace EpochApp.Server.Data
         public DbSet<WorldMeta> WorldMetas { get; set; }
         public DbSet<MetaCategory> MetaCategories { get; set; }
         public DbSet<MetaTemplate> MetaTemplates { get; set; }
+        // Articles
         public DbSet<ArticleCategory> ArticleCategories { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<ArticleSection> ArticleSections { get; set; }
         public DbSet<Phoneme> Phonemes { get; set; }
         public DbSet<Vowel> Vowels { get; set; }
         public DbSet<Consonant> Consonants { get; set; }
@@ -99,8 +102,8 @@ namespace EpochApp.Server.Data
             modelBuilder.Entity<Article>(entity =>
             {
                 entity.ToTable("Articles", "Articles");
-                entity.HasKey(a => a.ArticleID);
-                entity.Property(a => a.ArticleID)
+                entity.HasKey(a => a.ArticleId);
+                entity.Property(a => a.ArticleId)
                       .ValueGeneratedOnAdd();
                 entity.Property(a => a.Title).HasMaxLength(255);
                 entity.HasOne(a => a.Category)
@@ -113,11 +116,11 @@ namespace EpochApp.Server.Data
                       .HasConstraintName("FK_Articles_BuilderContents");
                 entity.HasOne(a => a.Author)
                       .WithMany(a => a.OwnedArticles)
-                      .HasForeignKey(x => x.AuthorID)
+                      .HasForeignKey(x => x.AuthorId)
                       .HasConstraintName("FK_Articles_Users");
                 entity.HasOne(a => a.World)
                       .WithMany(w => w.WorldArticles)
-                      .HasForeignKey(x => x.WorldID)
+                      .HasForeignKey(x => x.WorldId)
                       .HasConstraintName("FK_Articles_Worlds");
             });
 

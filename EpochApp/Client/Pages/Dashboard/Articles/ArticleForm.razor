@@ -1,9 +1,58 @@
-@inherits RequestComponent<EpochApp.Shared.Articles.ArticleEditDTO>
+@using ButtonType=MudBlazor.ButtonType
+@using MudBlazor
+@inherits RequestComponent<ArticleEditDTO>
 
-<EditForm Model="@Model">
+@if (Model != null)
+{
+	<EditForm Model="@Model" OnSubmit="@OnArticleSubmit">
+		<EpochValidator @ref=@_validator />
 
-</EditForm>
+		<MudGrid Spacing="2">
 
-@code {
-	[Parameter] public bool IsEditMode { get; set; }
+			<AuthorizeView Roles="ADMIN,INTERNAL" Context="AuthCtx">
+				<Authorized>
+					<MudItem xs="12" md="6">
+						<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="WorldId" @bind-Value="@Model.WorldId" For="@(() => Model.WorldId)" ReadOnly="true" />
+					</MudItem>
+
+					<MudItem xs="12" md="6">
+						<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="AuthorId" @bind-Value="@Model.AuthorId" For="@(() => Model.AuthorId)" ReadOnly="true" />
+					</MudItem>
+				</Authorized>
+			</AuthorizeView>
+
+			<MudItem xs="12" md="6">
+				<MudTextField Label="Title" @bind-Value="@Model.Title" For="@(() => Model.Title)" MaxLength="255" Required="true" />
+			</MudItem>
+
+			<MudItem xs="12" md="6">
+				<MudSelect T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)">
+					<MudSelectItem Value="0">None</MudSelectItem>
+					@if (_categories.Any())
+					{
+						@foreach (var cat in _categories)
+						{
+							<MudSelectItem Value="@cat.CategoryID">@cat.Description</MudSelectItem>
+						}
+					}
+				</MudSelect>
+			</MudItem>
+
+			<MudItem xs="12">
+				<MudTextField Lines="5" Label="Content" @bind-Value="@Model.Content" For="@(() => Model.Content)" />
+			</MudItem>
+
+		</MudGrid>
+
+		<MudPaper Class="mud-theme-dark mt-2" Outlined="true" Width="100%">
+			<MudToolBar Dense="false" DisableGutters="false" WrapContent="true">
+				<MudButton Color="Color.Inherit" Disabled="@(!IsEditMode)" Size="Size.Large" IconColor="@(IsEditMode ? Color.Warning : Color.Default)" StartIcon="@(Model.IsPublished ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)" OnClick="@(() => Model.IsPublished = !Model.IsPublished)">Publish</MudButton>
+				<MudSpacer />
+				<MudTooltip Text="Saves your data to the database.">
+					<MudButton Color="Color.Inherit" Class="mr-5" Size="Size.Large" IconColor="Color.Primary" ButtonType="ButtonType.Submit" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")">Save</MudButton>
+				</MudTooltip>
+			</MudToolBar>
+		</MudPaper>
+
+	</EditForm>
 }

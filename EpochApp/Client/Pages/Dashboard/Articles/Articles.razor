@@ -1,9 +1,41 @@
 @page "/Articles"
+@using Typo=MudBlazor.Typo
+@using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Articles
 
 <PageTitle>@StaticUtils.Constants.AppName - Articles</PageTitle>
+<MudContainer>
+	<MudText Align="Align.Center" Typo="Typo.h3">World Articles</MudText>
 
-<FlatTypo Typo="Typo.Heading3">World Articles</FlatTypo>
+	<MudLink Href="@($"{NavRef.ArticleNav.Create}")">Create Article</MudLink>
 
-@code {
-}
+	@if (_worldArticles.Any())
+	{
+		<MudGrid Spacing="4">
+			@foreach (var article in _worldArticles)
+			{
+				var content = article.Content;
+				<MudItem xs="12" md="6" lg="4" xl="3">
+					<MudCard @key=@article Outlined="true" Class="pa-2 ma-1">
+						<MudCardHeader>
+							<MudText>@article.Title</MudText>
+						</MudCardHeader>
+						<MudCardContent>
+							@if (content.Length > 100)
+							{
+								@($"{content.Substring(0, 100)}...")
+							}
+							else
+							{
+								@content
+							}
+						</MudCardContent>
+						<MudCardActions>
+							<MudLink Href="@($"{NavRef.ArticleNav.Edit}/{article.ArticleId}")">Edit</MudLink>
+						</MudCardActions>
+					</MudCard>
+				</MudItem>
+			}
+		</MudGrid>
+	}
+</MudContainer>

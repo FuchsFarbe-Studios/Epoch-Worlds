@@ -17,17 +17,17 @@ namespace EpochApp.Shared.Articles
         /// <summary>
         ///     Unique identifier for this article.
         /// </summary>
-        public Guid ArticleID { get; set; }
+        public Guid ArticleId { get; set; }
 
         /// <summary>
         ///     Author of this article.
         /// </summary>
-        public Guid? AuthorID { get; set; }
+        public Guid? AuthorId { get; set; }
 
         /// <summary>
         ///     World this article is associated with.
         /// </summary>
-        public Guid? WorldID { get; set; }
+        public Guid? WorldId { get; set; }
 
         /// <summary> Article category. </summary>
         public int? CategoryId { get; set; }

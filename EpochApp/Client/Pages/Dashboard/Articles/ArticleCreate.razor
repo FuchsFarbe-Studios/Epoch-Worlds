@@ -1,9 +1,16 @@
 @page "/Article/Create"
 @page "/Article/C"
+@using Typo=MudBlazor.Typo
+@using MudBlazor
 
 <PageTitle>@StaticUtils.Constants.AppName - Article Create</PageTitle>
 
-<h3>Create Article</h3>
+<MudContainer>
+	<MudPaper Width="100%" Square="true" Outlined="true" Height="100%" Class="pa-2">
+		<MudText Align="Align.Center" Typo="Typo.h3">Create Article</MudText>
+		<ArticleForm IsEditMode="false" />
+	</MudPaper>
+</MudContainer>
 
 @code {
 }
