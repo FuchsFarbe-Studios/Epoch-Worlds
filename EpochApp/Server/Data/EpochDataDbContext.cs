@@ -5,6 +5,7 @@
 // Modified: 29-11-2023
 
 using EpochApp.Shared;
+using EpochApp.Shared.Articles;
 using EpochApp.Shared.Client;
 using EpochApp.Shared.Config;
 using EpochApp.Shared.Users;
@@ -84,6 +85,55 @@ namespace EpochApp.Server.Data
             });
 
             modelBuilder.HasDefaultSchema("Users");
+
+            modelBuilder.Entity<ArticleCategory>(entity =>
+            {
+                entity.ToTable("lkArticleCategories", "Lookups");
+                entity.HasKey(a => a.CategoryID);
+                entity.Property(a => a.CategoryID)
+                      .ValueGeneratedOnAdd();
+                entity.Property(a => a.Description)
+                      .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Article>(entity =>
+            {
+                entity.ToTable("Articles", "Articles");
+                entity.HasKey(a => a.ArticleID);
+                entity.Property(a => a.ArticleID)
+                      .ValueGeneratedOnAdd();
+                entity.Property(a => a.Title).HasMaxLength(255);
+                entity.HasOne(a => a.Category)
+                      .WithMany()
+                      .HasForeignKey(a => a.CategoryId)
+                      .HasConstraintName("FK_Articles_ArticleCategories");
+                entity.HasOne(a => a.Builder)
+                      .WithOne()
+                      .HasForeignKey<Article>(a => a.BuilderId)
+                      .HasConstraintName("FK_Articles_BuilderContents");
+                entity.HasOne(a => a.Author)
+                      .WithMany(a => a.OwnedArticles)
+                      .HasForeignKey(x => x.AuthorID)
+                      .HasConstraintName("FK_Articles_Users");
+                entity.HasOne(a => a.World)
+                      .WithMany(w => w.WorldArticles)
+                      .HasForeignKey(x => x.WorldID)
+                      .HasConstraintName("FK_Articles_Worlds");
+            });
+
+            modelBuilder.Entity<ArticleSection>(entity =>
+            {
+                entity.ToTable("Sections", "Articles");
+                entity.HasKey(a => new { a.ArticleID, a.SectionID });
+                entity.Property(a => a.SectionID)
+                      .ValueGeneratedOnAdd();
+                entity.Property(a => a.Title).HasMaxLength(255);
+                entity.HasOne(a => a.Article)
+                      .WithMany(a => a.Sections)
+                      .HasForeignKey(x => x.ArticleID)
+                      .HasConstraintName("FK_ArticleSections_Articles");
+            });
+
             modelBuilder.Entity<User>(user =>
             {
                 user.Property(p => p.UserName)

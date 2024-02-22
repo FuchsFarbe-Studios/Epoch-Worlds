@@ -1,6 +1,9 @@
-<EditForm>
+@inherits RequestComponent<EpochApp.Shared.Articles.ArticleEditDTO>
+
+<EditForm Model="@Model">
 
 </EditForm>
 
 @code {
+	[Parameter] public bool IsEditMode { get; set; }
 }

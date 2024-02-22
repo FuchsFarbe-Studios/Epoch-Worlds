@@ -457,9 +457,14 @@
 			<MudItem xs="12">
 				<MudText Typo="Typo.h5" Align="Align.Center">Vocabulary Settings</MudText>
 			</MudItem>
+
 			<MudItem xs="12" sm="6">
 				<MudCheckBox Dense="true" @bind-Value="@Lang.Vocabulary.UseDefaultDerivations" For="@(() => Lang.Vocabulary.UseDefaultDerivations)" Label="Use Default Derivations?" />
+			</MudItem>
+			<MudItem xs="12" sm="6">
 				<MudCheckBox Dense="true" @bind-Value="@Lang.Vocabulary.RemoveTranslations" For="@(() => Lang.Vocabulary.RemoveTranslations)" Label="Remove Translations?" />
+			</MudItem>
+			<MudItem xs="12" sm="6">
 				<MudCheckBox Dense="true" @bind-Value="@Lang.Vocabulary.RemoveDefaults" For="@(() => Lang.Vocabulary.RemoveDefaults)" Label="Remove Default Words?" />
 			</MudItem>
 
@@ -595,13 +600,17 @@
 
 	</MudTabs>
 
-	<MudPaper Outlined="true" Width="100%">
-		<MudToolBar Dense="true">
+	<MudPaper Class="mud-theme-dark" Outlined="true" Width="100%">
+		<MudToolBar Dense="false" DisableGutters="false" WrapContent="true">
 			<MudButton Size="Size.Large" IconColor="Color.Secondary" StartIcon="@Icons.Material.Filled.Download">Download</MudButton>
-			<MudButton Size="Size.Large" IconColor="Color.Warning" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")">Publish</MudButton>
+			<MudButton Disabled="@(!IsEditMode)" Size="Size.Large" IconColor="Color.Warning" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")">Publish</MudButton>
 			<MudSpacer />
-			<MudButton Class="mr-5" Size="Size.Large" IconColor="Color.Primary" ButtonType="ButtonType.Submit" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")">Save</MudButton>
-			<MudButton Size="Size.Large" Color="Color.Success" IconColor="Color.Success" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand]}")" Label="Generate!" Title="Saves unsaved data and generates content to view before publishing." />
+			<MudTooltip Text="Saves your data to the database.">
+				<MudButton Class="mr-5" Size="Size.Large" IconColor="Color.Primary" ButtonType="ButtonType.Submit" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")">Save</MudButton>
+			</MudTooltip>
+			<MudTooltip Text="Saves unsaved content, or updates it, then generates the content based on the parameters given above.">
+				<MudButton Size="Size.Large" Color="Color.Success" IconColor="Color.Success" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand]}")">Generate!</MudButton>
+			</MudTooltip>
 		</MudToolBar>
 	</MudPaper>
 

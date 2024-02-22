@@ -3,6 +3,10 @@
 // FuchsFarbe Studios 2023
 // matsu
 // Modified: 26-12-2023
+using EpochApp.Shared.Config;
+using EpochApp.Shared.Users;
+using EpochApp.Shared.Worlds;
+
 namespace EpochApp.Shared.Articles
 {
     /// <summary>
@@ -10,14 +14,94 @@ namespace EpochApp.Shared.Articles
     /// </summary>
     public class Article
     {
+        /// <summary>
+        ///     Unique identifier for this article.
+        /// </summary>
         public Guid ArticleID { get; set; }
-        public Guid AuthorID { get; set; }
-        public Guid WorldID { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public string Author { get; set; }
+
+        /// <summary>
+        ///     Author of this article.
+        /// </summary>
+        public Guid? AuthorID { get; set; }
+
+        /// <summary>
+        ///     World this article is associated with.
+        /// </summary>
+        public Guid? WorldID { get; set; }
+
+        /// <summary> Article category. </summary>
+        public int? CategoryId { get; set; }
+
+        /// <summary> Title of this article. </summary>
+        public string? Title { get; set; }
+
+        /// <summary>
+        ///     Content of this article.
+        /// </summary>
+        public string? Content { get; set; }
+
+        /// <summary>
+        ///     The builder content associated with this article.
+        /// </summary>
+        public Guid? BuilderId { get; set; }
+
+        /// <summary>
+        ///     Generated article content will go here.
+        /// </summary>
+        public string? GeneratedContentXml { get; set; }
+
+        /// <summary>
+        ///     Determines the type of content to generate.
+        /// </summary>
+        public ContentType? ContentType { get; set; }
+
+        /// <summary>
+        ///     Published articles are viewable by other users.
+        /// </summary>
+        public bool IsPublished { get; set; } = false;
+
+        /// <summary>
+        ///     Date this article was created.
+        /// </summary>
         public DateTime? CreatedOn { get; set; }
+
+        /// <summary>
+        ///     Date this article was last modified.
+        /// </summary>
         public DateTime? ModifiedOn { get; set; }
+
+        /// <summary>
+        ///     Date this article was deleted.
+        /// </summary>
         public DateTime? DeletedOn { get; set; }
+
+        /// <summary>
+        ///     Author navigation property.
+        /// </summary>
+        public virtual User? Author { get; set; }
+
+        /// <summary>
+        ///     World navigation property.
+        /// </summary>
+        public virtual World? World { get; set; }
+
+        /// <summary>
+        ///     Category navigation property.
+        /// </summary>
+        public virtual ArticleCategory? Category { get; set; }
+
+        /// <summary>
+        ///     Sections navigation property.
+        /// </summary>
+        /// <remarks>
+        ///     This contains any sections this article may have.
+        /// </remarks>
+        public virtual ICollection<ArticleSection> Sections { get; set; }
+
+        /// <summary>
+        ///     The builder content associated with this article.
+        /// </summary>
+        public virtual BuilderContent Builder { get; set; }
     }
+
 }

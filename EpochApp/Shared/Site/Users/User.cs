@@ -4,6 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using EpochApp.Shared.Articles;
 using EpochApp.Shared.Worlds;
 
 namespace EpochApp.Shared.Users
@@ -49,5 +50,10 @@ namespace EpochApp.Shared.Users
         ///     The worlds owned by this user.
         /// </summary>
         public virtual ICollection<World> OwnedWorlds { get; set; }
+
+        /// <summary>
+        ///     The articles this user has created.
+        /// </summary>
+        public virtual ICollection<Article> OwnedArticles { get; set; }
     }
 }

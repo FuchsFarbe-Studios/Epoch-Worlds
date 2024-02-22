@@ -4,6 +4,7 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+using EpochApp.Shared.Articles;
 using EpochApp.Shared.Users;
 
 namespace EpochApp.Shared.Worlds
@@ -14,6 +15,12 @@ namespace EpochApp.Shared.Worlds
     /// </summary>
     public class World
     {
+        public World()
+        {
+            MetaData = new HashSet<WorldMeta>();
+            WorldArticles = new HashSet<Article>();
+        }
+
         /// <summary>
         ///     The user that owns this world.
         /// </summary>
@@ -71,6 +78,11 @@ namespace EpochApp.Shared.Worlds
         ///     The meta information of the world.
         /// </summary>
         public virtual ICollection<WorldMeta> MetaData { get; set; }
+
+        /// <summary>
+        ///     Articles associated with this world.
+        /// </summary>
+        public virtual ICollection<Article> WorldArticles { get; set; }
     }
 
 }

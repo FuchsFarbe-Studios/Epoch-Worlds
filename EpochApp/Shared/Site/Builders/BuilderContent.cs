@@ -28,6 +28,8 @@ namespace EpochApp.Shared
         /// </summary>
         public Guid? WorldID { get; set; }
 
+        public string? ContentName { get; set; }
+
         /// <summary> Type of content. </summary>
         public ContentType ContentType { get; set; }
 
