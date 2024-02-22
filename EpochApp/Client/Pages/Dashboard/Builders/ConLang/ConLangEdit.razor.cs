@@ -34,7 +34,7 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
                 if (content != null)
                 {
                     _editContent = content;
-                    var langContent = await Serializer.DeserializeFromXml<ConstructedLanguage>(_editContent.ContentXml);
+                    var langContent = await Serializer.DeserializeFromXmlAsync<ConstructedLanguage>(_editContent.ContentXml);
                     if (langContent != null)
                         LangContent = langContent;
                 }
@@ -53,7 +53,7 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
                 if (content != null)
                 {
                     _editContent = content;
-                    var langContent = await Serializer.DeserializeFromXml<ConstructedLanguage>(_editContent.ContentXml);
+                    var langContent = await Serializer.DeserializeFromXmlAsync<ConstructedLanguage>(_editContent.ContentXml);
                     if (langContent != null)
                         LangContent = langContent;
                     Logger.LogInformation("Changing state");

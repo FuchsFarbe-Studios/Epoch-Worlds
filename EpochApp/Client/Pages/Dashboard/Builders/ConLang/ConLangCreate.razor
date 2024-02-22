@@ -5,7 +5,9 @@
 
 <PageTitle>@StaticUtils.Constants.AppName - Create Constructed Language</PageTitle>
 
-<MudText Typo="Typo.h3">Create Constructed Language</MudText>
-<MudText Typo="Typo.body1">Create a new constructed language by filling out the form below. You can save at any time and your options will be uploaded to our servers.</MudText>
-
-<ConLangForm IsEditMode="false" />
+<MudPaper Outlined="true" Class="pa-4" Width="100%">
+	<MudText Typo="Typo.h3" Align="Align.Center">Create Constructed Language</MudText>
+	<MudText Typo="Typo.body1" Align="Align.Center">Create a new constructed language by filling out the form below. You can save at any time and your options will be uploaded to our servers.</MudText>
+	<MudDivider DividerType="DividerType.Middle" />
+	<ConLangForm IsEditMode="false" />
+</MudPaper>

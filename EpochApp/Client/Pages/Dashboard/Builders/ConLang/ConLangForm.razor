@@ -7,12 +7,25 @@
 @inherits EpochApp.Client.Shared.Forms.BuilderFormBase
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 
-<MudPaper Outlined="true" Class="pa-4">
 @if (Lang != null)
 {
-	<EditForm Model="@Lang" OnSubmit="@HandleConlangSubmit">
+	<EditForm Model="@Lang" OnSubmit="@HandleConLangSubmit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
+
+	<MudPaper Class="rounded-t-xl" Outlined="true" Width="100%">
+		<MudToolBar Dense="false" DisableGutters="false" WrapContent="true" Class="rounded-t-xl">
+			<MudButton Size="Size.Large" IconColor="Color.Secondary" StartIcon="@Icons.Material.Filled.Download">Download</MudButton>
+			<MudButton Disabled="@(!IsEditMode)" Size="Size.Large" IconColor="Color.Warning" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")">Publish</MudButton>
+			<MudSpacer />
+			<MudTooltip Text="Saves your data to the database.">
+				<MudButton Class="mr-5" Size="Size.Large" IconColor="Color.Primary" ButtonType="ButtonType.Submit" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")">Save</MudButton>
+			</MudTooltip>
+			<MudTooltip Text="Saves unsaved content, or updates it, then generates the content based on the parameters given above.">
+				<MudButton OnClick="@(async () => await GenerateAsync(context))" Size="Size.Large" Color="Color.Success" IconColor="Color.Success" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand]}")">Generate!</MudButton>
+			</MudTooltip>
+		</MudToolBar>
+	</MudPaper>
 
 	<MudTabs Outlined="true" Rounded="true" Border="true" ApplyEffectsToContainer="true" Class="my-4" PanelClass="pa-4" SliderColor="Color.Primary" KeepPanelsAlive="true">
 	<!-- Basic Information -->
@@ -600,20 +613,15 @@
 
 	</MudTabs>
 
-	<MudPaper Class="mud-theme-dark" Outlined="true" Width="100%">
-		<MudToolBar Dense="false" DisableGutters="false" WrapContent="true">
-			<MudButton Size="Size.Large" IconColor="Color.Secondary" StartIcon="@Icons.Material.Filled.Download">Download</MudButton>
-			<MudButton Disabled="@(!IsEditMode)" Size="Size.Large" IconColor="Color.Warning" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")">Publish</MudButton>
-			<MudSpacer />
-			<MudTooltip Text="Saves your data to the database.">
-				<MudButton Class="mr-5" Size="Size.Large" IconColor="Color.Primary" ButtonType="ButtonType.Submit" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")">Save</MudButton>
-			</MudTooltip>
-			<MudTooltip Text="Saves unsaved content, or updates it, then generates the content based on the parameters given above.">
-				<MudButton Size="Size.Large" Color="Color.Success" IconColor="Color.Success" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand]}")">Generate!</MudButton>
-			</MudTooltip>
-		</MudToolBar>
-	</MudPaper>
-
 	</EditForm>
 }
-</MudPaper>
+@if (_results != null && !_generatingContent)
+{
+	<ConLangResults GeneratedResult="@_results" />
+}
+else if (_generatingContent)
+{
+	<MudPaper Width="100%" Class="pa-8 flex-center" Outlined="true">
+		<MudProgressCircular Indeterminate="true" Class="ma-auto" Color="Color.Primary" Size="Size.Large" />
+	</MudPaper>
+}

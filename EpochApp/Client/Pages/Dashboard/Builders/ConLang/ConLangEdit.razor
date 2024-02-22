@@ -7,14 +7,17 @@
 
 <PageTitle>@StaticUtils.Constants.AppName - Edit Constructed Language</PageTitle>
 
-<MudText Typo="Typo.h3">Edit Constructed Language</MudText>
-
-@if (string.IsNullOrWhiteSpace(ContentId))
-{
-	<ContentSelector Type="ContentType.ConstructedLanguage" OnContentChanged="@HandleContentChanged" />
-	<MudButton EndIcon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Disabled="@(_editContent == null)" Href="@($"{NavRef.BuilderNav.CongLang.Edit}/{_editContent?.ContentID}")">Edit Selected Language</MudButton>
-}
-else
-{
-	<ConLangForm Content="@_editContent" Lang="@LangContent" IsEditMode="true" />
-}
+<MudPaper Outlined="true" Class="pa-4" Width="100%">
+	<MudText Typo="Typo.h3" Align="Align.Center">Edit Constructed Language</MudText>
+	<MudText Typo="Typo.body1" Align="Align.Center">Edit your existing language and regenerate content.</MudText>
+	<MudDivider DividerType="DividerType.Middle" />
+	@if (string.IsNullOrWhiteSpace(ContentId))
+	{
+		<ContentSelector Type="ContentType.ConstructedLanguage" OnContentChanged="@HandleContentChanged" />
+		<MudButton EndIcon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Disabled="@(_editContent == null)" Href="@($"{NavRef.BuilderNav.CongLang.Edit}/{_editContent?.ContentID}")">Edit Selected Language</MudButton>
+	}
+	else
+	{
+		<ConLangForm Content="@_editContent" Lang="@LangContent" IsEditMode="true" />
+	}
+</MudPaper>

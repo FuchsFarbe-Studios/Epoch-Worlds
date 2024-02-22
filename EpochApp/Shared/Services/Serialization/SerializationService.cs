@@ -13,7 +13,7 @@ namespace EpochApp.Shared.Services
     public class SerializationService : ISerializationService
     {
         /// <inheritdoc />
-        public Task<string> SerializeToXml<TObject>(TObject objToSerialize) where TObject : class
+        public Task<string> SerializeToXmlAsync<TObject>(TObject objToSerialize) where TObject : class
         {
             var xmlSerializer = new XmlSerializer(typeof(TObject));
             using (var textWriter = new StringWriter())
@@ -25,7 +25,7 @@ namespace EpochApp.Shared.Services
         }
 
         /// <inheritdoc />
-        public Task<TObject> DeserializeFromXml<TObject>(string xmlString) where TObject : class
+        public Task<TObject> DeserializeFromXmlAsync<TObject>(string xmlString) where TObject : class
         {
             var xmlSerializer = new XmlSerializer(typeof(TObject));
             using (var textReader = new StringReader(xmlString))

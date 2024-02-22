@@ -14,6 +14,9 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
         private SpellingRule _altSpellingRuleModel = new SpellingRule();
         private DerivedWord _derivedWordModel = new DerivedWord();
         private NounGender _genderModel = new NounGender();
+        private bool _generatingContent = false;
+        private ConstructedLanguageResult _results = null!;
+        private bool _savingOrUpdatingContent = false;
         private SpellingRule _spellingRuleModel = new SpellingRule();
         private LangWord _wordModel = new LangWord();
 
@@ -36,12 +39,24 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
 
 
         /// <inheritdoc />
-        protected override async Task GenerateAsync()
+        protected override async Task GenerateAsync(EditContext ctx)
         {
-            await base.GenerateAsync();
+            _generatingContent = true;
+            await base.GenerateAsync(ctx);
+            // await HandleConLangSubmit(ctx);
+
+            await Task.Delay(1000);
+            var response = await Client.GetFromJsonAsync<BuilderContent>($"api/v1/Builder/GeneratedContent?contentId={Content.ContentID}&userId={Auth.CurrentUser.UserID}");
+            if (response == null)
+                return;
+
+            Content = response;
+            _results = await Serializer.DeserializeFromXmlAsync<ConstructedLanguageResult>(Content.GeneratedXml);
+            _generatingContent = false;
+            StateHasChanged();
         }
 
-        private async Task HandleConlangSubmit(EditContext ctx)
+        private async Task HandleConLangSubmit(EditContext ctx)
         {
             if (!IsEditMode)
             {
@@ -53,7 +68,7 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
                               ContentType = ContentType.ConstructedLanguage,
                               DateCreated = DateTime.Now
                           };
-                var contextXml = await Serializer.SerializeToXml(Lang) ?? "";
+                var contextXml = await Serializer.SerializeToXmlAsync(Lang) ?? "";
                 Content.ContentXml = contextXml;
                 Logger.LogInformation(contextXml);
                 await SaveNewLanguageAsync(ctx);
@@ -65,6 +80,7 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
 
         private async Task SaveNewLanguageAsync(EditContext ctx)
         {
+            _savingOrUpdatingContent = true;
             var newLang = ctx.Model as ConstructedLanguage;
             newLang.CreatedOn = DateTime.Now;
 
@@ -75,15 +91,17 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
                 return;
 
             var newContent = await response.Content.ReadFromJsonAsync<BuilderContent>();
+            _savingOrUpdatingContent = false;
             // If it has, redirect to the edit language page with the new content ID
             Nav.NavigateTo($"{NavRef.BuilderNav.CongLang.Edit}/{newContent.ContentID}");
         }
 
         private async Task UpdateConLangAsync(EditContext ctx)
         {
+            _savingOrUpdatingContent = true;
             var newLang = ctx.Model as ConstructedLanguage;
             Content.ContentName = newLang.LangName;
-            Content.ContentXml = await Serializer.SerializeToXml(newLang) ?? "";
+            Content.ContentXml = await Serializer.SerializeToXmlAsync(newLang) ?? "";
             var response = await Client.PutAsJsonAsync<BuilderContent>($"api/v1/Builder/Content?userId={Auth.CurrentUser.UserID}&contentId={Content.ContentID}", Content);
             if (!response.IsSuccessStatusCode)
             {
@@ -94,6 +112,7 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
             }
             var updatedContent = await response.Content.ReadFromJsonAsync<BuilderContent>();
             Logger.LogInformation("Updating language successful!");
+            _savingOrUpdatingContent = false;
             Nav.NavigateTo($"{NavRef.BuilderNav.CongLang.Edit}/{updatedContent.ContentID}");
         }
 

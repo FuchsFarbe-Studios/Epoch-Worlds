@@ -16,7 +16,7 @@ namespace EpochApp.Shared.Services
         /// <returns>
         ///     <see cref="Task" />
         /// </returns>
-        Task<string> SerializeToXml<TObject>(TObject objToSerialize) where TObject : class;
+        Task<string> SerializeToXmlAsync<TObject>(TObject objToSerialize) where TObject : class;
 
         /// <summary>
         ///     Deserializes an object from XML.
@@ -24,7 +24,7 @@ namespace EpochApp.Shared.Services
         /// <returns>
         ///     <see cref="Task" />
         /// </returns>
-        Task<TObject> DeserializeFromXml<TObject>(string xmlString) where TObject : class;
+        Task<TObject> DeserializeFromXmlAsync<TObject>(string xmlString) where TObject : class;
     }
 
 }

@@ -1,6 +1,7 @@
 using EpochApp.Server.Data;
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
+using EpochApp.Shared.Worlds;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -326,8 +327,17 @@ namespace EpochApp.Server.Controllers
                            UserID = Guid.NewGuid(),
                            UserName = registration.UserName,
                            Email = registration.Email,
-                           DateOfBirth = registration.DateOfBirth.Value
+                           DateOfBirth = registration.DateOfBirth.Value,
+                           OwnedWorlds = new List<World>()
                        };
+
+            var newUserWorld = new World
+                               {
+                                   WorldName = registration.WorldName,
+                                   DateCreated = DateTime.Now,
+                                   Owner = user
+                               };
+            user.OwnedWorlds.Add(newUserWorld);
 
             var hash = HashPassword(registration.Password, out var salt);
             user.PasswordHash = hash;

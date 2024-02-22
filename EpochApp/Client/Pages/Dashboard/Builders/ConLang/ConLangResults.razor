@@ -1,0 +1,32 @@
+@using Typo=MudBlazor.Typo
+@using MudBlazor
+@namespace EpochApp.Client.Pages.Dashboard.Builders
+@if (GeneratedResult != null)
+{
+	<section id="generated-content">
+		<MudPaper Outlined="true" Class="pa-2 mud-theme-dark" Width="100%" MinHeight="400px">
+
+			<MudPaper Outlined="true" Class="pa-2" Width="100%" MinHeight="400px">
+				<MudText Typo="Typo.h5" Align="Align.Center">Dictionary</MudText>
+				<MudGrid Spacing="2">
+					@foreach (var word in GeneratedResult.Words)
+					{
+						<MudItem xs="6" sm="4" md="3" lg="2">
+							<MudPaper Outlined="true" Width="100%" Class="pa-1">
+								<MudText Typo="Typo.body2">
+									<MudText Typo="Typo.body1" Inline="true" Color="Color.Info">@word.ConLangWordAlt</MudText> @word.ConLangWord <MudText Typo="Typo.caption" Color="Color.Dark" Inline="true">@word.PartOfSpeech</MudText>
+								</MudText>
+								<MudText Typo="Typo.caption" Color="Color.Info">@($"/{word?.IPA}/")</MudText>
+								<MudText Color="Color.Dark" Typo="Typo.body1">@word.Translations</MudText>
+							</MudPaper>
+						</MudItem>
+					}
+				</MudGrid>
+			</MudPaper>
+		</MudPaper>
+	</section>
+}
+
+@code {
+	[Parameter] public ConstructedLanguageResult GeneratedResult { get; set; }
+}

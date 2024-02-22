@@ -2,6 +2,7 @@ using EpochApp.Client.Services;
 using EpochApp.Shared;
 using EpochApp.Shared.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace EpochApp.Client.Shared.Forms
 {
@@ -58,7 +59,8 @@ namespace EpochApp.Client.Shared.Forms
         /// <summary>
         ///     Generate data from the form.
         /// </summary>
-        protected virtual async Task GenerateAsync()
+        /// <param name="ctx"> </param>
+        protected virtual async Task GenerateAsync(EditContext ctx)
         {
             Logger.LogInformation("Generating...");
             await Task.CompletedTask;

@@ -15,8 +15,9 @@ namespace EpochApp.Server.Controllers
     /// <summary>
     ///     A controller for handling user builder requests.
     /// </summary>
-    [Route("api/v1/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/v1/[controller]")]
     public class BuilderController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
@@ -42,7 +43,6 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
-        [Authorize]
         [HttpGet("Content")]
         public async Task<IActionResult> GetBuilderContent([FromQuery] Guid contentId)
         {
@@ -63,7 +63,6 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
-        [Authorize]
         [HttpGet("ContentByAuthor/{userId:guid}")]
         public async Task<IActionResult> GetBuilderContentByAuthor(Guid userId)
         {
@@ -84,7 +83,6 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
-        [Authorize]
         [HttpGet("ContentByWorld")]
         public async Task<IActionResult> GetBuilderContentByWorld([FromQuery] Guid worldId)
         {
@@ -97,7 +95,6 @@ namespace EpochApp.Server.Controllers
             return Ok(content);
         }
 
-        [Authorize]
         [HttpGet("ContentByType")]
         public async Task<IActionResult> GetBuilderContentByType([FromQuery] Guid userId, [FromQuery] int contentType)
         {
@@ -119,7 +116,6 @@ namespace EpochApp.Server.Controllers
         /// <returns>
         ///     <see cref="IActionResult" />
         /// </returns>
-        [Authorize]
         [HttpPost("Content")]
         public async Task<IActionResult> CreateNewContent(BuilderContent content)
         {
@@ -138,7 +134,6 @@ namespace EpochApp.Server.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut("Content")]
         public async Task<IActionResult> UpdateContent([FromQuery] Guid userId, [FromQuery] Guid contentId, [FromBody] BuilderContent content)
         {
@@ -170,6 +165,87 @@ namespace EpochApp.Server.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpDelete("Content")]
+        public async Task<IActionResult> DeleteContent([FromQuery] Guid userId, [FromQuery] Guid contentId)
+        {
+            // Verify the this is the sending users content to delete
+            var contentToDelete = await _context.BuilderContents
+                                                .FirstOrDefaultAsync(x => x.ContentID == contentId && x.AuthorID == userId);
+            if (contentToDelete == null)
+                return NotFound("No content to delete or you do not have permission to delete this content.");
+
+            // Delete content from database
+            try
+            {
+                _context.BuilderContents.Remove(contentToDelete);
+                await _context.SaveChangesAsync();
+                return Ok("Content deleted.");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("GeneratedContent")]
+        public async Task<IActionResult> GenerateContentAsync([FromQuery] Guid userId, [FromQuery] Guid contentId)
+        {
+            var content = await _context.BuilderContents
+                                        .FirstOrDefaultAsync(x => x.ContentID == contentId && x.AuthorID == userId);
+            if (content == null)
+                return NotFound("No content found or you do not have access.");
+
+            var generatedContentXml = "";
+
+            switch (content.ContentType)
+            {
+                case ContentType.ConstructedLanguage:
+                    generatedContentXml = await GenerateLanguageContentAsync(content);
+                    break;
+                case ContentType.Character:
+                    break;
+                case ContentType.Map:
+                    break;
+                case ContentType.World:
+                    break;
+                case ContentType.Calendar:
+                    break;
+                case ContentType.Religion:
+                    break;
+                case ContentType.System:
+                    break;
+                default:
+                    return NoContent();
+            }
+
+            content.GeneratedXml = generatedContentXml;
+            content.DateModified = DateTime.Now;
+            _context.Entry(content).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(content);
+        }
+
+        private async Task<string> GenerateLanguageContentAsync(BuilderContent content)
+        {
+            var settings = await _serializer.DeserializeFromXmlAsync<ConstructedLanguage>(content.ContentXml);
+            var result = new ConstructedLanguageResult
+                         {
+                             Words = new List<GeneratedWord>
+                                     {
+                                         new GeneratedWord
+                                         {
+                                             Translations = "Some Translation",
+                                             PartOfSpeech = "Some part of speech",
+                                             IPA = "/IPA/",
+                                             ConLangWord = "sadasdfd"
+                                         }
+                                     }
+                         };
+            var resultXml = await _serializer.SerializeToXmlAsync(result);
+            return await Task.FromResult(resultXml);
         }
     }
 }

@@ -32,6 +32,9 @@
 					<MudDatePicker Label="Date of Birth" @bind-Date="@_registration.DateOfBirth" For="@(() => _registration.DateOfBirth)" Required="true" />
 				</MudItem>
 				<MudItem xs="12" sm="6">
+					<MudTextField Label="World Name" @bind-Value="@_registration.WorldName" For="@(() => _registration.WorldName)" Required="true" HelperText="This can be changed later." />
+				</MudItem>
+				<MudItem xs="12" sm="6">
 					<MudSwitch Label="Agree to the terms?" Color="Color.Primary" Required="true" @bind-Value="@_registration.TermAgreement" For="@(() => _registration.TermAgreement)" />
 				</MudItem>
 
