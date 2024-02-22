@@ -4,7 +4,9 @@
 // matsu
 // Modified: 9-2-2024
 using EpochApp.Server.Data;
+using EpochApp.Server.Services;
 using EpochApp.Shared;
+using EpochApp.Shared.Config;
 using EpochApp.Shared.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +23,7 @@ namespace EpochApp.Server.Controllers
     public class BuilderController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
+        private readonly ILanguageService _language;
         private readonly ISerializationService _serializer;
 
         /// <summary>
@@ -28,10 +31,12 @@ namespace EpochApp.Server.Controllers
         /// </summary>
         /// <param name="context"> The injected <see cref="EpochDataDbContext" /> to use for the controller. </param>
         /// <param name="serializer"> The injected <see cref="ISerializationService" /> to use for the controller. </param>
-        public BuilderController(EpochDataDbContext context, ISerializationService serializer)
+        /// <param name="language"> The injected <see cref="ILanguageService" /> to use for the controller. </param>
+        public BuilderController(EpochDataDbContext context, ISerializationService serializer, ILanguageService language)
         {
             _context = context;
             _serializer = serializer;
+            _language = language;
         }
 
         /// <summary>
@@ -197,12 +202,10 @@ namespace EpochApp.Server.Controllers
             if (content == null)
                 return NotFound("No content found or you do not have access.");
 
-            var generatedContentXml = "";
-
             switch (content.ContentType)
             {
                 case ContentType.ConstructedLanguage:
-                    generatedContentXml = await GenerateLanguageContentAsync(content);
+                    await _language.GenerateLanguage(content);
                     break;
                 case ContentType.Character:
                     break;
@@ -220,32 +223,51 @@ namespace EpochApp.Server.Controllers
                     return NoContent();
             }
 
-            content.GeneratedXml = generatedContentXml;
-            content.DateModified = DateTime.Now;
-            _context.Entry(content).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
             return Ok(content);
         }
 
-        private async Task<string> GenerateLanguageContentAsync(BuilderContent content)
+        /// <summary>
+        ///     Get all parts of speech.
+        /// </summary>
+        /// <returns>
+        ///     <see cref="Task{TResult}" /> where TResult is <see cref="IEnumerable{T}" /> where T is <see cref="PartOfSpeech" />.
+        /// </returns>
+        [HttpGet("PartOfSpeech")]
+        public async Task<ActionResult<List<PartOfSpeech>>> GetPartsOfSpeech()
         {
-            var settings = await _serializer.DeserializeFromXmlAsync<ConstructedLanguage>(content.ContentXml);
-            var result = new ConstructedLanguageResult
-                         {
-                             Words = new List<GeneratedWord>
-                                     {
-                                         new GeneratedWord
-                                         {
-                                             Translations = "Some Translation",
-                                             PartOfSpeech = "Some part of speech",
-                                             IPA = "/IPA/",
-                                             ConLangWord = "sadasdfd"
-                                         }
-                                     }
-                         };
-            var resultXml = await _serializer.SerializeToXmlAsync(result);
-            return await Task.FromResult(resultXml);
+            var partsOfSpeech = await _language.GetPartsOfSpeech();
+            return Ok(partsOfSpeech);
+        }
+
+        [HttpGet("Dictionary")]
+        public async Task<ActionResult<List<DictionaryWord>>> GetDictionaryWords()
+        {
+            var words = await _language.GetDictionaryWords();
+            return Ok(words);
+        }
+
+        [HttpPost("Dictionary")]
+        public async Task<IActionResult> AddDictionaryWord(DictionaryWord wordToAdd)
+        {
+            await _language.AddDictionaryWord(wordToAdd);
+            var words = await _language.GetDictionaryWords();
+            return Ok(words);
+        }
+
+        [HttpPut("Dictionary")]
+        public async Task<IActionResult> UpdateDictionaryWord(DictionaryWord wordToUpdate)
+        {
+            await _language.UpdateDictionaryWord(wordToUpdate);
+            var words = await _language.GetDictionaryWords();
+            return Ok(words);
+        }
+
+        [HttpDelete("Dictionary")]
+        public async Task<IActionResult> RemoveDictionaryWord(DictionaryWord wordToRemove)
+        {
+            await _language.RemoveDictionaryWord(wordToRemove);
+            var words = await _language.GetDictionaryWords();
+            return Ok(words);
         }
     }
 }

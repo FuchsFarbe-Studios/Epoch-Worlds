@@ -1,4 +1,5 @@
 using EpochApp.Server.Data;
+using EpochApp.Server.Services;
 using EpochApp.Shared;
 using EpochApp.Shared.Services;
 using EpochApp.Shared.Utils;
@@ -48,6 +49,7 @@ namespace EpochApp.Server
                                                             };
                     });
             ConfigBuilder.ConfigureCommonServices(services);
+            services.AddScoped<ILanguageService, LanguageService>();
             services.AddRazorPages();
             services.AddSwaggerGen();
 

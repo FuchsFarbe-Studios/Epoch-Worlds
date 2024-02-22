@@ -42,6 +42,8 @@ namespace EpochApp.Server.Data
         public DbSet<Profile> Profiles { get; set; }
         // Lookups
         public DbSet<SocialMedia> SocialMediae { get; set; }
+        public DbSet<PartOfSpeech> PartsOfSpeech { get; set; }
+        public DbSet<DictionaryWord> DictionaryWords { get; set; }
         // Worlds
         public DbSet<World> Worlds { get; set; }
         public DbSet<WorldMeta> WorldMetas { get; set; }
@@ -65,6 +67,8 @@ namespace EpochApp.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
             modelBuilder.Entity<ContactPoint>(entity =>
             {
                 entity.ToTable("ContactPoints", "Client");
@@ -227,6 +231,36 @@ namespace EpochApp.Server.Data
                       .HasForeignKey<Profile>(p => p.UserID)
                       .HasConstraintName("FK_Profile_User")
                       .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Lookups
+
+            modelBuilder.Entity<PartOfSpeech>(entity =>
+            {
+                entity.ToTable("lkPartOfSpeech", "Lookups");
+                entity.HasKey(x => x.PartOfSpeechId);
+                entity.Property(x => x.PartOfSpeechId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.Description)
+                      .HasMaxLength(50);
+                entity.Property(x => x.Abbreviation)
+                      .HasMaxLength(10);
+            });
+
+            modelBuilder.Entity<DictionaryWord>(entity =>
+            {
+                entity.ToTable("lkDictionaryWords", "Lookups");
+                entity.HasKey(x => x.WordId);
+                entity.Property(x => x.WordId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.Translations)
+                      .HasMaxLength(1000);
+                entity.HasOne(x => x.PartOfSpeech)
+                      .WithMany()
+                      .HasForeignKey(x => x.PartOfSpeechId)
+                      .HasConstraintName("FK_DictionaryWords_PartsOfSpeech");
+                entity.Property(x => x.Category)
+                      .HasConversion<string>();
             });
 
             modelBuilder.Entity<MetaTemplate>(entity =>
