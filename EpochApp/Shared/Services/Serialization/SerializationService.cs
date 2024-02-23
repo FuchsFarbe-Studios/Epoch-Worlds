@@ -18,6 +18,9 @@ namespace EpochApp.Shared.Services
             var xmlSerializer = new XmlSerializer(typeof(TObject));
             using (var textWriter = new StringWriter())
             {
+                if (objToSerialize == null)
+                    return Task.FromResult("");
+
                 xmlSerializer.Serialize(textWriter, objToSerialize);
                 var xmlString = textWriter.ToString();
                 return Task.FromResult(xmlString);

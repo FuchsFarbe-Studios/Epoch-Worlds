@@ -2,6 +2,8 @@
 @page "/Builders/ConLang/E/{ContentId?}"
 @using Typo=MudBlazor.Typo
 @using Variant=MudBlazor.Variant
+@using AlignItems=MudBlazor.AlignItems
+@using Justify=MudBlazor.Justify
 @using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 
@@ -13,11 +15,17 @@
 	<MudDivider DividerType="DividerType.Middle" />
 	@if (string.IsNullOrWhiteSpace(ContentId))
 	{
-		<ContentSelector Type="ContentType.ConstructedLanguage" OnContentChanged="@HandleContentChanged" />
-		<MudButton EndIcon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Disabled="@(_editContent == null)" Href="@($"{NavRef.BuilderNav.CongLang.Edit}/{_editContent?.ContentID}")">Edit Selected Language</MudButton>
+		<MudPaper Width="100%" Elevation="0" Outlined="true" Class="pa-2">
+			<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4">
+				<MudPaper Width="50%" Class="flex-center pa-2" Outlined="false" Elevation="0">
+					<ContentSelector Type="ContentType.ConstructedLanguage" OnContentChanged="@HandleContentChanged" />
+				</MudPaper>
+				<MudButton Class="py-4" StartIcon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Color="Color.Secondary" Disabled="@(_editContent == null)" Href="@($"{NavRef.BuilderNav.CongLang.Edit}/{_editContent?.ContentID}")">Edit Language</MudButton>
+			</MudStack>
+		</MudPaper>
 	}
 	else
 	{
-		<ConLangForm Content="@_editContent" Lang="@LangContent" IsEditMode="true" />
+		<ConLangForm BuilderContent="@_editContent" IsEditMode="true" />
 	}
 </MudPaper>

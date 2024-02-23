@@ -2,10 +2,12 @@
 @using MudBlazor
 
 @* <MudText Typo="Typo.h6" Color="Color.Inherit" Class="ml-3 width-25p">Epoch World Exchange</MudText> *@
-<MudImage Src="images/logos/SVG/world-svg.svg" Height="64" />
-<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.Index">Home</MudButton>
-<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.Features">Features</MudButton>
-<MudButton Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.About">About</MudButton>
+<MudLink Href="/">
+	<MudImage Src="images/logos/SVG/world-svg.svg" Height="48" Alt="The logo for the website's application bar." Elevation="0" Class="mx-2" />
+</MudLink>
+<MudButton StartIcon="@Icons.Material.Filled.Home" Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.Index">Home</MudButton>
+<MudButton StartIcon="@Icons.Material.Filled.List" Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.Features">Features</MudButton>
+<MudButton StartIcon="@Icons.Material.Filled.ContactPage" Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.About">About</MudButton>
 <AuthorizeView Roles="ADMIN,INTERNAL">
 	<Authorized>
 		<MudButton Color="Color.Warning" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.AdminNav.Index">Internal</MudButton>

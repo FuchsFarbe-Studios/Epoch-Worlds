@@ -3,10 +3,14 @@
 
 @if (Type != null && _userContent.Any())
 {
-	<MudSelect T="BuilderContent" Value="@_selectedContent" ValueChanged="@(async c => await ContentChanged(c))" Label="Content Selection">
+	<MudSelect T="BuilderContent" Value="@_selectedContent" ValueChanged="@(async c => await ContentChanged(c))" Label="Content Selection" Margin="Margin.Normal" Dense="false" FullWidth="true">
 		@foreach (var content in _userContent)
 		{
-			<MudSelectItem Value="@content">@content.ContentType @content.ContentID</MudSelectItem>
+			<MudSelectItem Value="@content">@content.ContentName</MudSelectItem>
 		}
 	</MudSelect>
+}
+else
+{
+	<MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Primary" />
 }

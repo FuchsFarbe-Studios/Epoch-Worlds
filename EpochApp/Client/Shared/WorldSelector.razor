@@ -1,8 +1,11 @@
+@using Variant=MudBlazor.Variant
 @using MudBlazor
-<MudSelect T="WorldDTO" Value="@_selectedWorld" ValueChanged="@(async w => await WorldChanged(w))" Label="World Selection">
-	@* <MudSelectItem Value="null" Href="@NavRef.WorldNav.Create">Create New World</MudSelectItem> *@
+<MudPaper Class="pa-3 flex-center" Width="100%" Outlined="false" Elevation="0">
+	<MudSelect Adornment="Adornment.Start" AdornmentIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" AdornmentColor="Color.Success" T="WorldDTO" Value="@_selectedWorld" ValueChanged="@(async w => await WorldChanged(w))" Label="Active World" Margin="Margin.Dense" Dense="true" HelperText="Change your active world." Variant="Variant.Filled" FullWidth="true">
+		@* <MudSelectItem Value="null" Href="@NavRef.WorldNav.Create">Create New World</MudSelectItem	> *@
 	@foreach (var world in _userWorlds)
 	{
 		<MudSelectItem Value="@world">@world.WorldName</MudSelectItem>
 	}
 </MudSelect>
+</MudPaper>
