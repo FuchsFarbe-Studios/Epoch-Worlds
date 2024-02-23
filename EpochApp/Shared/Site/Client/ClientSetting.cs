@@ -22,4 +22,5 @@ namespace EpochApp.Shared.Client
         /// <summary> The setting field id. </summary>
         public int SettingFieldId { get; set; }
     }
+
 }

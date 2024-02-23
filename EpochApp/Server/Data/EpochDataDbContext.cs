@@ -34,6 +34,7 @@ namespace EpochApp.Server.Data
         // Client
         public DbSet<ContactPoint> ContactPoints { get; set; }
         public DbSet<ClientSetting> ClientSettings { get; set; }
+        public DbSet<EmailTemplate> EmailTemplates { get; set; }
 
         // Users
         public DbSet<User> Users { get; set; }
@@ -79,6 +80,26 @@ namespace EpochApp.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<EmailTemplate>(entity =>
+            {
+                entity.ToTable("EmailTemplates", "Client");
+                entity.HasKey(e => e.TemplateId);
+                entity.Property(e => e.TemplateId)
+                      .HasConversion<string>();
+                entity.Property(e => e.Subject)
+                      .HasMaxLength(255);
+                var templates = Enum.GetValues<EmailTemplateType>()
+                                    .Select(type => new EmailTemplate
+                                                    {
+                                                        TemplateId = type,
+                                                        Subject = "",
+                                                        HtmlBody = ""
+
+                                                    })
+                                    .ToList();
+                entity.HasData(templates);
+            });
+
             modelBuilder.Entity<ContactPoint>(entity =>
             {
                 entity.ToTable("ContactPoints", "Client");
