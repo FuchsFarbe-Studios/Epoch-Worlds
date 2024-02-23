@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http.Json;
 
-namespace EpochApp.Client.Shared.Forms
+namespace EpochApp.Client.Pages.Dashboard.Worlds
 {
     /// <summary>
     ///     A form for creating or editing a world.

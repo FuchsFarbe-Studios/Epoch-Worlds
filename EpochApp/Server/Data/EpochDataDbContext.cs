@@ -8,6 +8,7 @@ using EpochApp.Shared;
 using EpochApp.Shared.Articles;
 using EpochApp.Shared.Client;
 using EpochApp.Shared.Config;
+using EpochApp.Shared.Social;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
 using Microsoft.EntityFrameworkCore;
@@ -69,6 +70,12 @@ namespace EpochApp.Server.Data
         // Content generation
 
         public DbSet<BuilderContent> BuilderContents { get; set; }
+
+        // Social
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<UserTag> UserTags { get; set; }
+        public DbSet<WorldTag> WorldTags { get; set; }
+        public DbSet<ArticleTag> ArticleTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -376,6 +383,7 @@ namespace EpochApp.Server.Data
             // Worlds
             modelBuilder.Entity<World>(entity =>
             {
+                entity.ToTable("Worlds", "Worlds");
                 entity.HasKey(e => e.WorldID);
                 entity.HasMany(w => w.MetaData)
                       .WithOne(m => m.World)
@@ -388,6 +396,7 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<WorldDate>(entity =>
             {
+                entity.ToTable("WorldDates", "Worlds");
                 entity.HasKey(e => e.WorldID);
                 entity.HasOne(d => d.World)
                       .WithOne(w => w.CurrentWorldDate)
@@ -397,6 +406,7 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<WorldMeta>(entity =>
             {
+                entity.ToTable("WorldMetas", "Worlds");
                 entity.HasKey(e => new { e.WorldID, e.MetaID });
                 entity.HasOne(wm => wm.Template)
                       .WithMany()// assuming no navigation back from MetaTemplate
@@ -480,6 +490,58 @@ namespace EpochApp.Server.Data
                           .HasForeignKey(bc => bc.WorldID)
                           .OnDelete(DeleteBehavior.Restrict);// Or DeleteBehavior.SetNull, Cascade etc. based on your needs.
                 });
+            });
+
+            modelBuilder.Entity<Tag>(entity =>
+            {
+                entity.ToTable("Tags", "Social");
+                entity.HasKey(e => e.TagId);
+                entity.Property(e => e.TagId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(e => e.Text)
+                      .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<UserTag>(entity =>
+            {
+                entity.ToTable("UserTags", "Social");
+                entity.HasKey(e => new { e.UserId, e.TagId });
+                entity.HasOne(ut => ut.User)
+                      .WithMany(u => u.UserTags)
+                      .HasForeignKey(ut => ut.UserId)
+                      .HasConstraintName("FK_UserTags_Users");
+                entity.HasOne(ut => ut.Tag)
+                      .WithMany(t => t.UserTags)
+                      .HasForeignKey(ut => ut.TagId)
+                      .HasConstraintName("FK_UserTags_Tags");
+            });
+
+            modelBuilder.Entity<WorldTag>(entity =>
+            {
+                entity.ToTable("WorldTags", "Social");
+                entity.HasKey(e => new { e.WorldId, e.TagId });
+                entity.HasOne(wt => wt.World)
+                      .WithMany(w => w.WorldTags)
+                      .HasForeignKey(wt => wt.WorldId)
+                      .HasConstraintName("FK_WorldTags_Worlds");
+                entity.HasOne(wt => wt.Tag)
+                      .WithMany(t => t.WorldTags)
+                      .HasForeignKey(wt => wt.TagId)
+                      .HasConstraintName("FK_WorldTags_Tags");
+            });
+
+            modelBuilder.Entity<ArticleTag>(entity =>
+            {
+                entity.ToTable("ArticleTags", "Social");
+                entity.HasKey(e => new { e.ArticleId, e.TagId });
+                entity.HasOne(at => at.Article)
+                      .WithMany(a => a.ArticleTags)
+                      .HasForeignKey(at => at.ArticleId)
+                      .HasConstraintName("FK_ArticleTags_Articles");
+                entity.HasOne(at => at.Tag)
+                      .WithMany(t => t.ArticleTags)
+                      .HasForeignKey(at => at.TagId)
+                      .HasConstraintName("FK_ArticleTags_Tags");
             });
         }
     }

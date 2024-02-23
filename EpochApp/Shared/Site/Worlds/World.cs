@@ -5,6 +5,7 @@
 // Modified: 29-11-2023
 
 using EpochApp.Shared.Articles;
+using EpochApp.Shared.Social;
 using EpochApp.Shared.Users;
 
 namespace EpochApp.Shared.Worlds
@@ -19,6 +20,7 @@ namespace EpochApp.Shared.Worlds
         {
             MetaData = new HashSet<WorldMeta>();
             WorldArticles = new HashSet<Article>();
+            WorldTags = new HashSet<WorldTag>();
         }
 
         /// <summary>
@@ -38,6 +40,26 @@ namespace EpochApp.Shared.Worlds
         ///     The pronunciation of the <see cref="WorldName" />.
         /// </summary>
         public string Pronunciation { get; set; }
+
+        /// <summary>
+        ///     The short blurb to be used when linked to social media sites.
+        /// </summary>
+        public string Excerpt { get; set; }
+
+        /// <summary>
+        ///     The image to display when the world is viewed.
+        /// </summary>
+        public string Image { get; set; }
+
+        /// <summary>
+        ///     The header to display when the world is viewed.
+        /// </summary>
+        public string Header { get; set; }
+
+        /// <summary>
+        ///     The sub-header to display when the world is viewed.
+        /// </summary>
+        public string SubHeader { get; set; }
 
         /// <summary>
         ///     A brief description of the world.
@@ -83,6 +105,11 @@ namespace EpochApp.Shared.Worlds
         ///     Articles associated with this world.
         /// </summary>
         public virtual ICollection<Article> WorldArticles { get; set; }
+
+        /// <summary>
+        ///     Tags associated with this world.
+        /// </summary>
+        public virtual ICollection<WorldTag> WorldTags { get; set; }
     }
 
 }

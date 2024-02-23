@@ -4,6 +4,7 @@
 // matsu
 // Modified: 26-12-2023
 using EpochApp.Shared.Config;
+using EpochApp.Shared.Social;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
 
@@ -14,6 +15,12 @@ namespace EpochApp.Shared.Articles
     /// </summary>
     public class Article
     {
+        public Article()
+        {
+            Sections = new HashSet<ArticleSection>();
+            ArticleTags = new HashSet<ArticleTag>();
+        }
+
         /// <summary>
         ///     Unique identifier for this article.
         /// </summary>
@@ -111,6 +118,11 @@ namespace EpochApp.Shared.Articles
         public virtual ArticleCategory? Category { get; set; }
 
         /// <summary>
+        ///     The builder content associated with this article.
+        /// </summary>
+        public virtual BuilderContent Builder { get; set; }
+
+        /// <summary>
         ///     Sections navigation property.
         /// </summary>
         /// <remarks>
@@ -119,9 +131,9 @@ namespace EpochApp.Shared.Articles
         public virtual ICollection<ArticleSection> Sections { get; set; }
 
         /// <summary>
-        ///     The builder content associated with this article.
+        /// Tags navigation property.
         /// </summary>
-        public virtual BuilderContent Builder { get; set; }
+        public virtual ICollection<ArticleTag> ArticleTags { get; set; }
     }
 
 }

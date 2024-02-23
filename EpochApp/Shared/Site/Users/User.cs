@@ -5,6 +5,7 @@
 // Modified: 29-11-2023
 
 using EpochApp.Shared.Articles;
+using EpochApp.Shared.Social;
 using EpochApp.Shared.Worlds;
 
 namespace EpochApp.Shared.Users
@@ -15,6 +16,8 @@ namespace EpochApp.Shared.Users
         {
             UserRoles = new HashSet<UserRole>();
             OwnedWorlds = new HashSet<World>();
+            OwnedArticles = new HashSet<Article>();
+            UserTags = new HashSet<UserTag>();
         }
 
         public Guid UserID { get; set; }
@@ -55,5 +58,10 @@ namespace EpochApp.Shared.Users
         ///     The articles this user has created.
         /// </summary>
         public virtual ICollection<Article> OwnedArticles { get; set; }
+
+        /// <summary>
+        ///     The tags this user has created.
+        /// </summary>
+        public virtual ICollection<UserTag> UserTags { get; set; }
     }
 }

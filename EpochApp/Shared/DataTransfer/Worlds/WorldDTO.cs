@@ -7,6 +7,7 @@ using EpochApp.Shared.Worlds;
 
 namespace EpochApp.Shared
 {
+
     public class WorldDTO
     {
         public Guid AuthorID { get; set; }
@@ -27,5 +28,6 @@ namespace EpochApp.Shared
 
         public virtual ICollection<WorldMeta> MetaData { get; set; } = new List<WorldMeta>();
         public bool? IsActiveWorld { get; set; }
+        public WorldDateDTO WorldDate { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace EpochApp.Client.Pages.ViewContent
     {
         private ArticleDTO _article;
 
+        [Parameter] public string WorldId { get; set; }
         [Parameter] public string ArticleId { get; set; }
     }
 }

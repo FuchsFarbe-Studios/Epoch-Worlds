@@ -1,4 +1,5 @@
 using EpochApp.Server.Data;
+using EpochApp.Server.Services.WorldService;
 using EpochApp.Shared;
 using EpochApp.Shared.Worlds;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +15,17 @@ namespace EpochApp.Server.Controllers
     public class WorldsController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
+        private readonly IWorldService _worldService;
 
         /// <summary>
         ///     Constructor for WorldsController
         /// </summary>
-        /// <param name="context"> EpochDataDbContext </param>
-        public WorldsController(EpochDataDbContext context)
+        /// <param name="context"> Injected <see cref="EpochDataDbContext"/>. </param>
+        /// <param name="worldService"> Injected <see cref="IWorldService"/>. </param>
+        public WorldsController(EpochDataDbContext context, IWorldService worldService)
         {
             _context = context;
+            _worldService = worldService;
         }
 
         // GET: api/Worlds
@@ -53,10 +57,29 @@ namespace EpochApp.Server.Controllers
                                                         CurrentYear = x.CurrentWorldDate.CurrentYear,
                                                         CurrentAge = x.CurrentWorldDate.CurrentAge,
                                                         MetaData = x.MetaData,
-                                                        IsActiveWorld = x.IsActiveWorld.Value
+                                                        IsActiveWorld = x.IsActiveWorld.Value,
+                                                        WorldDate = new WorldDateDTO
+                                                                    {
+                                                                        CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                                        CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                                        CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                                        CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                                        BeforeEra = x.CurrentWorldDate.BeforeEraName,
+                                                                        AfterEra = x.CurrentWorldDate.AfterEraName,
+                                                                        BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
+                                                                        AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
+                                                                        CurrentEra = x.CurrentWorldDate.CurrentAge
+                                                                    }
                                                     })
                                        .ToListAsync();
             return Ok(worlds);
+        }
+
+        [HttpGet("MetaTemplates")]
+        public async Task<IActionResult> IndexMetaTemplatesAsync()
+        {
+            var metaTemplates = await _worldService.IndexMetaTemplatesAsync();
+            return Ok(metaTemplates);
         }
 
         [HttpGet("ActiveWorld")]
@@ -82,7 +105,19 @@ namespace EpochApp.Server.Controllers
                                                              CurrentYear = x.CurrentWorldDate.CurrentYear,
                                                              CurrentAge = x.CurrentWorldDate.CurrentAge,
                                                              MetaData = x.MetaData,
-                                                             IsActiveWorld = x.IsActiveWorld.Value
+                                                             IsActiveWorld = x.IsActiveWorld.Value,
+                                                             WorldDate = new WorldDateDTO
+                                                                         {
+                                                                             CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                                             CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                                             CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                                             CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                                             BeforeEra = x.CurrentWorldDate.BeforeEraName,
+                                                                             AfterEra = x.CurrentWorldDate.AfterEraName,
+                                                                             BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
+                                                                             AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
+                                                                             CurrentEra = x.CurrentWorldDate.CurrentAge
+                                                                         }
                                                          })
                                             .FirstOrDefaultAsync();
             return Ok(activeWorld);
@@ -137,7 +172,19 @@ namespace EpochApp.Server.Controllers
                                                               CurrentYear = x.CurrentWorldDate.CurrentYear,
                                                               CurrentAge = x.CurrentWorldDate.CurrentAge,
                                                               MetaData = x.MetaData,
-                                                              IsActiveWorld = x.IsActiveWorld.Value
+                                                              IsActiveWorld = x.IsActiveWorld.Value,
+                                                              WorldDate = new WorldDateDTO
+                                                                          {
+                                                                              CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                                              CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                                              CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                                              CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                                              BeforeEra = x.CurrentWorldDate.BeforeEraName,
+                                                                              AfterEra = x.CurrentWorldDate.AfterEraName,
+                                                                              BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
+                                                                              AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
+                                                                              CurrentEra = x.CurrentWorldDate.CurrentAge
+                                                                          }
                                                           })
                                              .FirstOrDefaultAsync();
             return Ok(updatedWorld);
@@ -165,7 +212,19 @@ namespace EpochApp.Server.Controllers
                                                        CurrentYear = x.CurrentWorldDate.CurrentYear,
                                                        CurrentAge = x.CurrentWorldDate.CurrentAge,
                                                        MetaData = x.MetaData,
-                                                       IsActiveWorld = x.IsActiveWorld.Value
+                                                       IsActiveWorld = x.IsActiveWorld.Value,
+                                                       WorldDate = new WorldDateDTO
+                                                                   {
+                                                                       CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                                       CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                                       CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                                       CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                                       BeforeEra = x.CurrentWorldDate.BeforeEraName,
+                                                                       AfterEra = x.CurrentWorldDate.AfterEraName,
+                                                                       BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
+                                                                       AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
+                                                                       CurrentEra = x.CurrentWorldDate.CurrentAge
+                                                                   }
                                                    })
                                       .FirstOrDefaultAsync(x => x.WorldID == worldId && x.AuthorID == ownerId && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null));
 
@@ -212,15 +271,23 @@ namespace EpochApp.Server.Controllers
                                              CurrentDay = updatedWorld.CurrentDay ?? 1,
                                              CurrentMonth = updatedWorld.CurrentMonth ?? 1,
                                              CurrentYear = updatedWorld.CurrentYear ?? 1,
-                                             CurrentAge = updatedWorld.CurrentAge ?? "Age"
+                                             CurrentAge = updatedWorld.WorldDate.CurrentAge ?? "Age",
+                                             BeforeEraAbbreviation = updatedWorld.WorldDate.BeforeEraAbbreviation ?? "",
+                                             AfterEraAbbreviation = updatedWorld.WorldDate.AfterEraAbbreviation ?? "",
+                                             BeforeEraName = updatedWorld.WorldDate.BeforeEra ?? "",
+                                             AfterEraName = updatedWorld.WorldDate.AfterEra ?? ""
                                          };
             }
             else
             {
-                world.CurrentWorldDate.CurrentDay = updatedWorld.CurrentDay ?? 1;
-                world.CurrentWorldDate.CurrentMonth = updatedWorld.CurrentMonth ?? 1;
-                world.CurrentWorldDate.CurrentYear = updatedWorld.CurrentYear ?? 1;
-                world.CurrentWorldDate.CurrentAge = updatedWorld.CurrentAge ?? "Age";
+                world.CurrentWorldDate.CurrentDay = updatedWorld.WorldDate.CurrentDay;
+                world.CurrentWorldDate.CurrentMonth = updatedWorld.WorldDate.CurrentMonth;
+                world.CurrentWorldDate.CurrentYear = updatedWorld.WorldDate.CurrentYear;
+                world.CurrentWorldDate.CurrentAge = updatedWorld.WorldDate.CurrentAge;
+                world.CurrentWorldDate.BeforeEraName = updatedWorld.WorldDate.BeforeEra;
+                world.CurrentWorldDate.BeforeEraAbbreviation = updatedWorld.WorldDate.BeforeEraAbbreviation;
+                world.CurrentWorldDate.AfterEraName = updatedWorld.WorldDate.AfterEra;
+                world.CurrentWorldDate.AfterEraAbbreviation = updatedWorld.WorldDate.AfterEraAbbreviation;
             }
 
             _context.Entry(world).State = EntityState.Modified;
@@ -238,6 +305,44 @@ namespace EpochApp.Server.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("WorldDate")]
+        public async Task<ActionResult<WorldDateDTO>> GetWorldDateAsync([FromQuery] Guid worldId)
+        {
+            var worldDate = await _worldService.GetWorldDate(worldId);
+            return Ok(worldDate);
+        }
+
+        [HttpPut("WorldDate")]
+        public async Task<IActionResult> UpdateWorldDateAsync([FromQuery] Guid userId, [FromQuery] Guid worldId, WorldDateDTO dateDto)
+        {
+            var dateObject = await _worldService.GetWorldDate(worldId);
+            var user = await _context.Users
+                                     .Include(x => x.OwnedWorlds)
+                                     .ThenInclude(x => x.CurrentWorldDate)
+                                     .FirstOrDefaultAsync(x => x.UserID == userId);
+            if (user == null)
+                return BadRequest();
+
+            var world = user.OwnedWorlds.FirstOrDefault(x => x.WorldID == worldId);
+            if (world == null)
+                return BadRequest();
+            if (world.CurrentWorldDate.WorldID != dateObject.WorldId)
+                return BadRequest();
+
+            dateObject.CurrentDay = dateDto.CurrentDay;
+            dateObject.CurrentMonth = dateDto.CurrentMonth;
+            dateObject.CurrentYear = dateDto.CurrentYear;
+            dateObject.CurrentAge = dateDto.CurrentAge;
+            dateObject.BeforeEra = dateDto.BeforeEra;
+            dateObject.AfterEra = dateDto.AfterEra;
+            dateObject.BeforeEraAbbreviation = dateDto.BeforeEraAbbreviation;
+            dateObject.AfterEraAbbreviation = dateDto.AfterEraAbbreviation;
+            dateObject.CurrentEra = dateDto.CurrentEra;
+            _context.Entry(dateObject).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         [HttpPost("Create")]
