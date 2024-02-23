@@ -1,0 +1,44 @@
+@page "/P/{UserId?}"
+@using Typo=MudBlazor.Typo
+@using MudBlazor
+<PageTitle>@StaticUtils.Constants.AppName - @(_profile?.UserName) Profile</PageTitle>
+
+<MudPaper Outlined="true" Class="pa-4">
+	@if (_profile != null)
+	{
+		<MudGrid Spacing="2">
+
+			<MudItem xs="12" sm="8">
+
+				<MudStack>
+
+					<MudText Align="Align.Center" Typo="Typo.h3">@_profile.UserName</MudText>
+					<MudDivider DividerType="DividerType.Middle" Class="my-1" />
+					<MudStack Row="true">
+						<MudLink Href="@_profile.Website" Target="_blank" Color="Color.Primary">@_profile.Website</MudLink>
+						<MudStack>
+							<MudText>Followers: <MudText Color="Color.Primary" Inline="true">@_profile.FollowerCount</MudText></MudText>
+							<MudText>Following: <MudText Color="Color.Primary" Inline="true">@_profile.FollowingCount</MudText></MudText>
+						</MudStack>
+					</MudStack>
+					<MudDivider DividerType="DividerType.Middle" Class="my-1" />
+					<MudText Typo="Typo.caption">@_profile.Bio</MudText>
+				</MudStack>
+
+			</MudItem>
+
+			<MudItem xs="12" sm="4">
+				<MudStack>
+					@foreach (var social in _profile.Socials)
+					{
+						<MudStack Row="true">
+							<MudText Typo="Typo.body1">@social.SocialName</MudText>
+							<MudText Typo="Typo.body2" Color="Color.Primary">@social.Handle</MudText>
+						</MudStack>
+					}
+				</MudStack>
+			</MudItem>
+
+		</MudGrid>
+	}
+</MudPaper>

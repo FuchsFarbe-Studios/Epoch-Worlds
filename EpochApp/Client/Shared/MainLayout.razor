@@ -1,4 +1,5 @@
 ﻿@using MaxWidth=MudBlazor.MaxWidth
+@using Variant=MudBlazor.Variant
 @using MudBlazor
 @inherits LayoutComponentBase
 
@@ -9,7 +10,7 @@
 
 <MudLayout>
 	<MudAppBar Elevation="0" Color="Color.Dark" WrapContent="true">
-		<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
+		<MudIconButton Icon="@Icons.Material.Filled.Menu" Variant="Variant.Outlined" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
 		<AppBar />
 	</MudAppBar>
 	<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0">

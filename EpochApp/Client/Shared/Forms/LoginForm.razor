@@ -11,14 +11,17 @@
 <EditForm Model="@_loginDto" OnSubmit="@(async e => await AttemptLoginAsync(e))">
 	<DataAnnotationsValidator />
 	<EpochValidator @ref="@_validator" />
-	<MudCard Outlined="true">
-		<MudCardContent>
-			<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
-				<MudTextField Variant="Variant.Outlined" Label="Username" Placeholder="UserName" Required="true" @bind-Value="@_loginDto.UserName" For="@(() => _loginDto.UserName)" FullWidth="true" />
-				<MudTextField Variant="Variant.Outlined" Label="Password" Placeholder="Password" Required="true" @bind-Value="@_loginDto.Password" For="@(() => _loginDto.Password)" InputType="InputType.Password" FullWidth="true" />
-				<MudButton DisableElevation="true" Disabled="@_loggingIn" Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit" FullWidth="true">Login</MudButton>
-				<MudText Typo="Typo.body2">Don't have an account yet? <MudLink Disabled="@_loggingIn" Color="Color.Primary" Target="_self" Href="@($"{StaticUtils.Auth.RegistrationNav}")">Register!</MudLink></MudText>
-			</MudStack>
-		</MudCardContent>
-	</MudCard>
+
+	<MudPaper Class="mt-4 pa-4" Outlined="true" Width="100%">
+		<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
+			<MudText Typo="Typo.h3" Color="Color.Primary" Align="Align.Center">Log-In</MudText>
+			<MudText Typo="Typo.body1" Color="Color.Default" Align="Align.Center">Log in as an existing user.</MudText>
+			<MudDivider Class="my-1" DividerType="DividerType.Middle" />
+			<MudTextField Variant="Variant.Outlined" Label="Username" Placeholder="UserName" Required="true" @bind-Value="@_loginDto.UserName" For="@(() => _loginDto.UserName)" FullWidth="true" />
+			<MudTextField Variant="Variant.Outlined" Label="Password" Placeholder="Password" Required="true" @bind-Value="@_loginDto.Password" For="@(() => _loginDto.Password)" InputType="InputType.Password" FullWidth="true" />
+			<MudDivider Class="my-1" DividerType="DividerType.Middle" />
+			<MudButton Class="rounded-pill" DisableElevation="true" Disabled="@_loggingIn" Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit" FullWidth="true">Login</MudButton>
+			<MudText Typo="Typo.body2">Don't have an account yet? <MudLink Disabled="@_loggingIn" Color="Color.Primary" Target="_self" Href="@($"{StaticUtils.Auth.RegistrationNav}")">Register!</MudLink></MudText>
+		</MudStack>
+	</MudPaper>
 </EditForm>

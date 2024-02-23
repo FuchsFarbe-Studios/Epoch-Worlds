@@ -1,4 +1,5 @@
 using EpochApp.Shared.Config;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http.Json;
@@ -8,6 +9,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
     /// <summary>
     ///     Component for configuring phonemes.
     /// </summary>
+    [Authorize(Roles = "ADMIN,INTERNAL")]
     public partial class ConfigurePhonemes
     {
         private Consonant _consonantModel = new Consonant

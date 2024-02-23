@@ -1,4 +1,5 @@
 using EpochApp.Shared.Config;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http.Json;
 
@@ -7,6 +8,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
     /// <summary>
     ///     Page to configure dictionary for constructed language words.
     /// </summary>
+    [Authorize(Roles = "ADMIN,INTERNAL")]
     public partial class ConfigureDictionary
     {
         private List<DictionaryWord> _dictionaryWords = new List<DictionaryWord>();

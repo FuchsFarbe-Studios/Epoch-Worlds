@@ -1,0 +1,23 @@
+@page "/Internal/Users"
+@using Variant=MudBlazor.Variant
+@using MudBlazor
+
+<MudTable T="UserData" Items="@_users" Dense="true" Loading="@(!_users.Any())" Hover="true" Outlined="true" Striped="true" Bordered="true">
+	<HeaderContent>
+		<MudTh>User</MudTh>
+		<MudTh>Profile</MudTh>
+		<MudTh>Roles</MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="User">@context.UserName</MudTd>
+		<MudTd DataLabel="Profile">
+			<MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Href="@($"/P/{context.UserID}")" />
+		</MudTd>
+		<MudTd DataLabel="Roles">
+			@foreach (var role in context.Roles)
+			{
+				<MudChip Variant="Variant.Filled" Color="Color.Primary">@role</MudChip>
+			}
+		</MudTd>
+	</RowTemplate>
+</MudTable>

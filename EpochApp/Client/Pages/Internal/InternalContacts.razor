@@ -1,34 +1,21 @@
 @page "/Internal/Contacts"
-<FlatTypo Typo="Typo.Heading3">Contact Attempts</FlatTypo>
-<FlatTable>
-	<TableHeaders>
-		<th>Id</th>
-		<th>Username</th>
-		<th>Email</th>
-		<th>Content</th>
-	</TableHeaders>
-	<TableData>
-		<Virtualize TItem="InternalContactDTO" Items="@_contacts">
-			<tr>
-				<td>@context.ContactPointId</td>
-				<td>@context.UserName</td>
-				<td>@context.Email</td>
-				<td>@context.Message</td>
-			</tr>
-		</Virtualize>
-	</TableData>
-</FlatTable>
+@using MudBlazor
 
-@code {
-	/// <summary> Injected HttpClient </summary>
-	[Inject] public HttpClient Client { get; set; }
-
-	private List<InternalContactDTO> _contacts { get; set; } = new List<InternalContactDTO>();
-
-	/// <inheritdoc />
-	protected override async Task OnInitializedAsync()
-	{
-		await base.OnInitializedAsync();
-		_contacts = await Client.GetFromJsonAsync<List<InternalContactDTO>>("api/v1/Contact/Internal");
-	}
-}
+<MudTable Virtualize="true" Height="500px" T="InternalContactDTO" Items="@_contacts" Dense="true" Loading="@(!_contacts.Any())" Hover="true" Outlined="true" Striped="true" Bordered="true">
+	<HeaderContent>
+		<MudTh>Id</MudTh>
+		<MudTh>Username</MudTh>
+		<MudTh>Email</MudTh>
+		<MudTh>Type</MudTh>
+		<MudTh>Content</MudTh>
+		<MudTh>CreatedOn</MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Id">@context.ContactPointId</MudTd>
+		<MudTd DataLabel="Username">@context.UserName</MudTd>
+		<MudTd DataLabel="Email">@context.Email</MudTd>
+		<MudTd DataLabel="Type">@context.ContactType</MudTd>
+		<MudTd DataLabel="Content">@context.Message</MudTd>
+		<MudTd DataLabel="CreatedOn">@context.CreatedOn</MudTd>
+	</RowTemplate>
+</MudTable>

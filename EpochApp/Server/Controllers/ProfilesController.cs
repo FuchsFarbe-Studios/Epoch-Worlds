@@ -89,6 +89,35 @@ namespace EpochApp.Server.Controllers
             return profile;
         }
 
+        [HttpGet("PublicProfile")]
+        public async Task<ActionResult<UserProfileDTO>> GetPublicProfileAsync([FromQuery] Guid userId)
+        {
+            var userProfile = await _context.Users
+                                            .Include(x => x.Profile)
+                                            .Include(x => x.OwnedArticles)
+                                            .Include(x => x.OwnedWorlds)
+                                            .Select(x => new UserProfileDTO
+                                                         {
+                                                             UserId = x.UserID,
+                                                             UserName = x.UserName,
+                                                             ProfileImage = x.Profile.AvatarImg,
+                                                             CoverImage = x.Profile.CoverImg,
+                                                             Bio = x.Profile.Bio,
+                                                             Website = x.Profile.WebAddress,
+                                                             WorldCount = x.OwnedWorlds.Count,
+                                                             ArticleCount = x.OwnedArticles.Count,
+                                                             Socials = x.Profile.Socials.Select(s => new UserSocialDTO
+                                                                                                     {
+                                                                                                         Icon = s.Social.Icon,
+                                                                                                         SocialName = s.Social.SocialMediaName,
+                                                                                                         Handle = s.SocialHandle
+                                                                                                     })
+                                                                        .ToList()
+                                                         })
+                                            .FirstOrDefaultAsync(x => x.UserId == userId);
+            return Ok(userProfile);
+        }
+
         /// <summary>
         ///     Update a profile by id.
         /// </summary>

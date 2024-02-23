@@ -1,11 +1,17 @@
 @page "/Internal"
+@using Justify=MudBlazor.Justify
+@using Typo=MudBlazor.Typo
+@using MudBlazor
 @attribute [Authorize(Roles = "ADMIN,INTERNAL")]
-<FlatTypo Color="FlatColor.Error" Typo="Typo.Heading3">Internal</FlatTypo>
 
-<ul class="navbar">
-	<FlatLink MenuItem="true" Link="@NavRef.AdminNav.Blogs" MatchMode="NavLinkMatch.All">Manage Blogs</FlatLink>
-	<FlatLink MenuItem="true" Link="@NavRef.AdminNav.BlogPosts" MatchMode="NavLinkMatch.All">Blog Posts</FlatLink>
-	<FlatLink MenuItem="true" Link="@NavRef.AdminNav.Contacts" MatchMode="NavLinkMatch.All">Contacts</FlatLink>
-	<FlatLink MenuItem="true" Link="@NavRef.AdminNav.Logs" MatchMode="NavLinkMatch.All">View Logs</FlatLink>
-	<FlatLink MenuItem="true" Link="/Internal/Configuration" MatchMode="NavLinkMatch.All">Configuration</FlatLink>
-</ul>
+<MudText Typo="Typo.h3" Align="Align.Center">Internal</MudText>
+<MudPaper Width="100%" Class="pa-4" Outlined="true">
+	<MudStack Row="true" Spacing="2" Justify="Justify.Center">
+		<MudLink Href="@NavRef.AdminNav.Blogs">Manage Blogs</MudLink>
+		<MudLink Href="@NavRef.AdminNav.BlogPosts">Blog Posts</MudLink>
+		<MudLink Href="@NavRef.AdminNav.Contacts">Contacts</MudLink>
+		<MudLink Href="@NavRef.AdminNav.Logs">View Logs</MudLink>
+		<MudLink Href="/Internal/Configuration">Configuration</MudLink>
+		<MudLink Href="/Internal/Users">Users</MudLink>
+	</MudStack>
+</MudPaper>

@@ -1,4 +1,5 @@
 using EpochApp.Server.Data;
+using EpochApp.Server.Services;
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
@@ -22,6 +23,7 @@ namespace EpochApp.Server.Controllers
         private const int keySize = 64;
         private const int iterations = 350000;
         private readonly EpochDataDbContext _context;
+        private readonly IMailService _mail;
         private IConfiguration _configuration;
         private HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
 
@@ -34,10 +36,12 @@ namespace EpochApp.Server.Controllers
         /// <param name="configuration">
         ///     The injected <see cref="IConfiguration" /> configuration settings.
         /// </param>
-        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration)
+        /// <param name="mail"> The injected <see cref="IMailService" /> mail service. </param>
+        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration, IMailService mail)
         {
             _context = context;
             _configuration = configuration;
+            _mail = mail;
         }
 
         /// <summary>
@@ -47,9 +51,17 @@ namespace EpochApp.Server.Controllers
         ///     It returns a list of all User objects present in the users table.
         /// </returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync()
+        public async Task<ActionResult<IEnumerable<UserData>>> GetUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Select(x => new UserData
+                                                    {
+                                                        UserID = x.UserID,
+                                                        UserName = x.UserName,
+                                                        Email = x.Email,
+                                                        DateOfBirth = x.DateOfBirth,
+                                                        Roles = x.UserRoles.Select(ur => ur.Role.Description).ToList()
+                                                    })
+                                 .ToListAsync();
         }
 
         /// <summary>
@@ -290,37 +302,25 @@ namespace EpochApp.Server.Controllers
         {
             // check if user already exists based on username or email
             var isUserAlreadyExists = await _context.Users.AnyAsync(u => u.UserName == registration.UserName || u.Email == registration.Email);
+
             if (isUserAlreadyExists)
             {
                 ModelState.AddModelError(nameof(registration.UserName), "Username or Email already exists");
                 ModelState.AddModelError(nameof(registration.Email), "Username or Email already exists");
-                return BadRequest(ModelState);
             }
-
             // Other validations
             if (registration.DateOfBirth > DateTime.Now)
-            {
                 ModelState.AddModelError(nameof(registration.DateOfBirth), "Date of Birth cannot be in the future");
-                return BadRequest(ModelState);
-            }
-
             if (registration.UserName.Contains(" "))
-            {
                 ModelState.AddModelError(nameof(registration.UserName), "Username cannot contain spaces");
-                return BadRequest(ModelState);
-            }
-
             if (registration.Password.Length < 8)
-            {
                 ModelState.AddModelError(nameof(registration.Password), "Password must be at least 8 characters long");
-                return BadRequest(ModelState);
-            }
-
             if (registration.Password != registration.Password2)
-            {
                 ModelState.AddModelError(nameof(registration.Password2), "Passwords do not match!");
+            if (registration.TermAgreement == false)
+                ModelState.AddModelError(nameof(registration.TermAgreement), "You must agree to the terms and conditions!");
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            }
 
             var user = new User
                        {
@@ -350,6 +350,8 @@ namespace EpochApp.Server.Controllers
             user.VerificationTokenExpires = DateTime.Now.AddDays(7);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
+            await _mail.SendVerificationEmailAsync(user.Email, user.UserName, user.VerificationToken);
 
             var data = new UserData
                        {
