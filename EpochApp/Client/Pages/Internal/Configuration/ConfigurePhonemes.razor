@@ -1,0 +1,183 @@
+@page "/Internal/Configuration/Phonemes"
+
+@using ButtonType=MudBlazor.ButtonType
+@using Variant=MudBlazor.Variant
+@using MudBlazor
+
+<MudText Align="Align.Center">Configure Phonemes</MudText>
+
+<MudTabs Border="true" Outlined="true" TabPanelClass="pa-2" KeepPanelsAlive="true">
+
+	<!-- Consonants -->
+	<MudTabPanel Text="Consonants" ID="@("Consonants")">
+
+		<MudText Align="Align.Center">Consonants</MudText>
+		<MudDivider DividerType="DividerType.Middle" />
+
+		<MudPaper Width="100%" Class="pa-2" Outlined="true">
+
+			<MudGrid>
+				<MudItem xs="12" sm="9">
+					<MudDataGrid Virtualize="true" Outlined="true" Height="1000px" T="Consonant" Items="@_consonants" EditMode="DataGridEditMode.Form" CommittedItemChanges="@CommitConsonantChangesAsync" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+						<Columns>
+							<PropertyColumn Property="x => x.PhonemeID" Resizable="true" Title="Phoneme" />
+							<PropertyColumn Property="x => x.AudioFile" Resizable="true" />
+							<PropertyColumn Property="x => x.Manner">
+								<EditTemplate Context="cCtx">
+									<MudSelect T="ConsonantManner" @bind-Value="@cCtx.Item.Manner" For="@(() => cCtx.Item.Manner)" Label="Depth">
+										@foreach (var manner in Enum.GetValues<ConsonantManner>())
+										{
+											<MudSelectItem Value="@manner">@manner.ToDescriptionString()</MudSelectItem>
+										}
+									</MudSelect>
+								</EditTemplate>
+							</PropertyColumn>
+							<PropertyColumn Property="x => x.Place">
+								<EditTemplate Context="cCtx">
+									<MudSelect T="ConsonantPlace" @bind-Value="@cCtx.Item.Place" For="@(() => cCtx.Item.Place)">
+										@foreach (var place in Enum.GetValues<ConsonantPlace>())
+										{
+											<MudSelectItem Value="@place">@place.ToDescriptionString()</MudSelectItem>
+										}
+									</MudSelect>
+								</EditTemplate>
+							</PropertyColumn>
+							<PropertyColumn Property="x => x.IsVoiced" Resizable="true">
+								<EditTemplate Context="cCtx">
+									<MudSwitch @bind-Value="@cCtx.Item.IsVoiced" For="@(() => cCtx.Item.IsVoiced)" Label="Is Voiced?" />
+								</EditTemplate>
+							</PropertyColumn>
+							<TemplateColumn Title="Edit">
+								<CellTemplate Context="editCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@editCtx.Actions.StartEditingItemAsync" />
+								</CellTemplate>
+							</TemplateColumn>
+							<TemplateColumn Title="Delete">
+								<CellTemplate Context="deleteCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async () => await RemoveConsonantAsync(deleteCtx.Item))" />
+								</CellTemplate>
+							</TemplateColumn>
+						</Columns>
+					</MudDataGrid>
+				</MudItem>
+
+				<MudItem xs="12" sm="3">
+					<EditForm Model="@_consonantModel" OnValidSubmit="@AddConsonantAsync">
+
+						<MudTextField @bind-Value="@_consonantModel.PhonemeID" For="@(() => _consonantModel.PhonemeID)" Label="Phoneme" MaxLength="4" Required="true" />
+						<MudTextField @bind-Value="@_consonantModel.AudioFile" For="@(() => _consonantModel.AudioFile)" Label="File" MaxLength="155" />
+
+						<MudSelect T="ConsonantManner" @bind-Value="@_consonantModel.Manner" For="@(() => _consonantModel.Manner)" Label="Depth" Required="true">
+							@foreach (var manner in Enum.GetValues<ConsonantManner>())
+							{
+								<MudSelectItem Value="@manner">@manner.ToDescriptionString()</MudSelectItem>
+							}
+						</MudSelect>
+
+						<MudSelect T="ConsonantPlace" @bind-Value="@_consonantModel.Place" For="@(() => _consonantModel.Place)" Required="true">
+							@foreach (var place in Enum.GetValues<ConsonantPlace>())
+							{
+								<MudSelectItem Value="@place">@place.ToDescriptionString()</MudSelectItem>
+							}
+						</MudSelect>
+
+						<MudSwitch @bind-Value="@_consonantModel.IsVoiced" For="@(() => _consonantModel.IsVoiced)" Label="Is Voiced?" />
+
+						<MudDivider DividerType="DividerType.FullWidth" />
+
+						<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Add</MudButton>
+
+					</EditForm>
+				</MudItem>
+
+			</MudGrid>
+		</MudPaper>
+
+	</MudTabPanel>
+
+	<!-- Vowels -->
+	<MudTabPanel Text="Vowels" ID="@("Vowels")">
+
+		<MudText Align="Align.Center">Vowels</MudText>
+		<MudDivider DividerType="DividerType.Middle" />
+
+		<MudPaper Width="100%" Class="pa-2" Outlined="true">
+			<MudGrid>
+				<MudItem xs="12" sm="9">
+					<MudDataGrid Virtualize="true" Outlined="true" Height="1000px" T="Vowel" Items="@_vowels" EditMode="DataGridEditMode.Form" CommittedItemChanges="@CommitVowelChangesAsync" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+						<Columns>
+							<PropertyColumn Property="x => x.PhonemeID" Resizable="true" Title="Phoneme" />
+							<PropertyColumn Property="x => x.AudioFile" Resizable="true" />
+							<PropertyColumn Property="x => x.Depth" Title="Depth">
+								<EditTemplate Context="vCtx">
+									<MudSelect T="VowelDepth" @bind-Value="@vCtx.Item.Depth" For="@(() => vCtx.Item.Depth)" Label="Depth">
+										@foreach (var depth in Enum.GetValues<VowelDepth>())
+										{
+											<MudSelectItem Value="@depth">@depth.ToDescriptionString()</MudSelectItem>
+										}
+									</MudSelect>
+								</EditTemplate>
+							</PropertyColumn>
+							<PropertyColumn Property="x => x.Verticality" Title="Depth">
+								<EditTemplate Context="vCtx">
+									<MudSelect T="VowelVerticality" @bind-Value="@vCtx.Item.Verticality" For="@(() => vCtx.Item.Verticality)" Label="Verticality">
+										@foreach (var vert in Enum.GetValues<VowelVerticality>())
+										{
+											<MudSelectItem Value="@vert">@vert.ToDescriptionString()</MudSelectItem>
+										}
+									</MudSelect>
+								</EditTemplate>
+							</PropertyColumn>
+							<PropertyColumn Property="x => x.IsRounded" Resizable="true" Title="Rounded">
+								<EditTemplate Context="vCtx">
+									<MudSwitch @bind-Value="@vCtx.Item.IsRounded" For="@(() => vCtx.Item.IsRounded)" Label="Is Rounded?" />
+								</EditTemplate>
+							</PropertyColumn>
+							<TemplateColumn Title="Edit">
+								<CellTemplate Context="editCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@editCtx.Actions.StartEditingItemAsync" />
+								</CellTemplate>
+							</TemplateColumn>
+							<TemplateColumn Title="Delete">
+								<CellTemplate Context="deleteCtx">
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async () => await RemoveVowelAsync(deleteCtx.Item))" />
+								</CellTemplate>
+							</TemplateColumn>
+						</Columns>
+					</MudDataGrid>
+				</MudItem>
+
+				<MudItem xs="12" sm="3">
+					<EditForm Model="@_vowelModel" OnValidSubmit="@AddVowelAsync">
+
+						<MudTextField @bind-Value="@_vowelModel.PhonemeID" For="@(() => _vowelModel.PhonemeID)" Label="Phoneme" MaxLength="4" Required="true" />
+						<MudTextField @bind-Value="@_vowelModel.AudioFile" For="@(() => _vowelModel.AudioFile)" Label="File" MaxLength="155" />
+
+						<MudSelect T="VowelDepth" @bind-Value="@_vowelModel.Depth" For="@(() => _vowelModel.Depth)" Label="Depth" Required="true">
+							@foreach (var depth in Enum.GetValues<VowelDepth>())
+							{
+								<MudSelectItem Value="@depth">@depth.ToDescriptionString()</MudSelectItem>
+							}
+						</MudSelect>
+
+						<MudSelect T="VowelVerticality" @bind-Value="@_vowelModel.Verticality" For="@(() => _vowelModel.Verticality)" Label="Verticality" Required="true">
+							@foreach (var vert in Enum.GetValues<VowelVerticality>())
+							{
+								<MudSelectItem Value="@vert">@vert.ToDescriptionString()</MudSelectItem>
+							}
+						</MudSelect>
+
+						<MudSwitch @bind-Value="@_vowelModel.IsRounded" For="@(() => _vowelModel.IsRounded)" Label="Is Rounded?" />
+
+						<MudDivider DividerType="DividerType.FullWidth" />
+
+						<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Add</MudButton>
+
+					</EditForm>
+				</MudItem>
+			</MudGrid>
+		</MudPaper>
+
+	</MudTabPanel>
+
+</MudTabs>

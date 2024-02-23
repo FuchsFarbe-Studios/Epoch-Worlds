@@ -122,7 +122,7 @@ namespace EpochApp.Server.Controllers
         ///     <see cref="IActionResult" />
         /// </returns>
         [HttpPost("Content")]
-        public async Task<IActionResult> CreateNewContent(BuilderContent content)
+        public async Task<IActionResult> CreateNewContentAsync(BuilderContent content)
         {
             // Add created content to database
             content.DateCreated = DateTime.Now;
@@ -140,7 +140,7 @@ namespace EpochApp.Server.Controllers
         }
 
         [HttpPut("Content")]
-        public async Task<IActionResult> UpdateContent([FromQuery] Guid userId, [FromQuery] Guid contentId, [FromBody] BuilderContent content)
+        public async Task<IActionResult> UpdateContentAsync([FromQuery] Guid userId, [FromQuery] Guid contentId, [FromBody] BuilderContent content)
         {
             // Verify the this is the sending users content to update
             var contentToUpdate = await _context.BuilderContents
@@ -173,7 +173,7 @@ namespace EpochApp.Server.Controllers
         }
 
         [HttpDelete("Content")]
-        public async Task<IActionResult> DeleteContent([FromQuery] Guid userId, [FromQuery] Guid contentId)
+        public async Task<IActionResult> DeleteContentAsync([FromQuery] Guid userId, [FromQuery] Guid contentId)
         {
             // Verify the this is the sending users content to delete
             var contentToDelete = await _context.BuilderContents
@@ -310,6 +310,83 @@ namespace EpochApp.Server.Controllers
             var wordToRemove = await _context.DictionaryWords.FirstOrDefaultAsync(x => x.WordId == wordId);
             await _language.RemoveDictionaryWord(wordToRemove);
             return Ok();
+        }
+
+        [HttpGet("Phonemes")]
+        public async Task<List<Phoneme>> GetPhonemes()
+        {
+            var phonemes = await _context.Phonemes.ToListAsync();
+            return await Task.FromResult(phonemes);
+        }
+
+        [HttpPost("Consonant")]
+        public async Task<IActionResult> AddConsonantAsync(Consonant consonant)
+        {
+            await _language.AddConsonantAsync(consonant);
+            return Ok();
+        }
+
+        [HttpPost("Vowel")]
+        public async Task<IActionResult> AddVowelAsync(Vowel vowel)
+        {
+            await _language.AddVowelAsync(vowel);
+            return Ok();
+        }
+
+        [HttpPut("Consonant")]
+        public async Task<IActionResult> UpdateConsonantAsync(Consonant consonant)
+        {
+            var cons = await _context.Consonants.Where(x => x.PhonemeID == consonant.PhonemeID)
+                                     .FirstOrDefaultAsync();
+            cons.Manner = consonant.Manner;
+            cons.Place = consonant.Place;
+            cons.IsVoiced = consonant.IsVoiced;
+            _context.Entry(cons).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpPut("Vowel")]
+        public async Task<IActionResult> UpdateVowelAsync(Vowel vowel)
+        {
+            var vow = await _context.Vowels.Where(x => x.PhonemeID == vowel.PhonemeID)
+                                    .FirstOrDefaultAsync();
+            vow.Depth = vowel.Depth;
+            vow.Verticality = vowel.Verticality;
+            vow.IsRounded = vowel.IsRounded;
+            _context.Entry(vow).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("Consonant")]
+        public async Task<IActionResult> RemoveConsonantAsync([FromQuery] string phonemeId)
+        {
+            var consToRemove = await _context.Consonants.FirstOrDefaultAsync(x => x.PhonemeID == phonemeId);
+            await _language.RemoveConsonantAsync(consToRemove);
+            return Ok();
+        }
+
+        [HttpDelete("Vowel")]
+        public async Task<IActionResult> RemoveVowelAsync([FromQuery] string phonemeId)
+        {
+            var vowel = await _context.Vowels.FirstOrDefaultAsync(x => x.PhonemeID == phonemeId);
+            await _language.RemoveVowelAsync(vowel);
+            return Ok();
+        }
+
+        [HttpGet("Consonants")]
+        public async Task<ActionResult<List<Consonant>>> GetConsonantsAsync()
+        {
+            var cons = await _context.Consonants.ToListAsync();
+            return Ok(cons);
+        }
+
+        [HttpGet("Vowels")]
+        public async Task<ActionResult<List<Vowel>>> GetVowelsAsync()
+        {
+            var vowels = await _context.Vowels.ToListAsync();
+            return Ok(vowels);
         }
     }
 }

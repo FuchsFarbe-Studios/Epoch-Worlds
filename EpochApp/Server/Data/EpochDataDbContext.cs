@@ -14,9 +14,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Data
 {
+    /// <summary>
+    ///     The main database context for the application.
+    /// </summary>
     public class EpochDataDbContext : DbContext
     {
-
         public EpochDataDbContext(DbContextOptions<EpochDataDbContext> options) : base(options)
         {
         }
@@ -25,12 +27,11 @@ namespace EpochApp.Server.Data
         {
             ConnectionString = connectionString;
         }
+
         public string ConnectionString { get; private set; } = @"Data Source=C:\myFolder\myAccessFile.accdb;";
 
         // Client
         public DbSet<ContactPoint> ContactPoints { get; set; }
-
-        // Settings
         public DbSet<ClientSetting> ClientSettings { get; set; }
 
         // Users
@@ -40,15 +41,18 @@ namespace EpochApp.Server.Data
         public DbSet<UserSocial> UserSocials { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Profile> Profiles { get; set; }
+
         // Lookups
         public DbSet<SocialMedia> SocialMediae { get; set; }
         public DbSet<PartOfSpeech> PartsOfSpeech { get; set; }
         public DbSet<DictionaryWord> DictionaryWords { get; set; }
+
         // Worlds
         public DbSet<World> Worlds { get; set; }
         public DbSet<WorldMeta> WorldMetas { get; set; }
         public DbSet<MetaCategory> MetaCategories { get; set; }
         public DbSet<MetaTemplate> MetaTemplates { get; set; }
+
         // Articles
         public DbSet<ArticleCategory> ArticleCategories { get; set; }
         public DbSet<Article> Articles { get; set; }
@@ -56,6 +60,7 @@ namespace EpochApp.Server.Data
         public DbSet<Phoneme> Phonemes { get; set; }
         public DbSet<Vowel> Vowels { get; set; }
         public DbSet<Consonant> Consonants { get; set; }
+
         // Blogs
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
@@ -67,8 +72,6 @@ namespace EpochApp.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
             modelBuilder.Entity<ContactPoint>(entity =>
             {
                 entity.ToTable("ContactPoints", "Client");
@@ -313,22 +316,25 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("lkPhonemes", "Lookups");
                 entity.HasKey(e => e.PhonemeID);
-                entity.Property(e => e.PhonemeID).HasMaxLength(4).ValueGeneratedNever();
-                entity.Property(e => e.AudioFile).HasMaxLength(155);
+                entity.Property(e => e.PhonemeID)
+                      .HasMaxLength(4)
+                      .ValueGeneratedNever();
+                entity.Property(e => e.AudioFile)
+                      .HasMaxLength(155);
             });
 
             modelBuilder.Entity<Consonant>(entity =>
             {
                 entity.ToTable("lkConsonants", "Lookups");
-                entity.Property(e => e.Manner).HasMaxLength(35);
-                entity.Property(e => e.Place).HasMaxLength(35);
+                entity.Property(e => e.Manner).HasConversion<string>();
+                entity.Property(e => e.Place).HasConversion<string>();
             });
 
             modelBuilder.Entity<Vowel>(entity =>
             {
                 entity.ToTable("lkVowels", "Lookups");
-                entity.Property(e => e.Depth).HasMaxLength(35);
-                entity.Property(e => e.Verticality).HasMaxLength(35);
+                entity.Property(e => e.Depth).HasConversion<string>();
+                entity.Property(e => e.Verticality).HasConversion<string>();
             });
 
             // Blogging

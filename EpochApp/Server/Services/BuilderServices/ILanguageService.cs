@@ -14,6 +14,72 @@ namespace EpochApp.Server.Services
     public interface ILanguageService
     {
         /// <summary>
+        ///     Adds a consonant to the database.
+        /// </summary>
+        /// <param name="consonant">
+        ///     The <see cref="Consonant" /> to add to the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task" />
+        /// </returns>
+        Task AddConsonantAsync(Consonant consonant);
+
+        /// <summary>
+        ///     Adds a vowel to the database.
+        /// </summary>
+        /// <param name="vowel">
+        ///     The <see cref="Vowel" /> to add to the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task" />
+        /// </returns>
+        Task AddVowelAsync(Vowel vowel);
+
+        /// <summary>
+        ///     Removes a consonant from the database.
+        /// </summary>
+        /// <param name="consonant">
+        ///     The <see cref="Consonant" /> to remove from the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task" />
+        /// </returns>
+        Task RemoveConsonantAsync(Consonant consonant);
+
+        /// <summary>
+        ///     Removes a vowel from the database.
+        /// </summary>
+        /// <param name="vowel">
+        ///     The <see cref="Vowel" /> to remove from the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task" />
+        /// </returns>
+        Task RemoveVowelAsync(Vowel vowel);
+
+        /// <summary>
+        ///     Updates a consonant in the database.
+        /// </summary>
+        /// <param name="consonant">
+        ///     The <see cref="Consonant" /> to update in the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task" />
+        /// </returns>
+        Task UpdateConsonantAsync(Consonant consonant);
+
+        /// <summary>
+        ///     Updates a vowel in the database.
+        /// </summary>
+        /// <param name="vowel">
+        ///     The <see cref="Vowel" /> to update in the database.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task" />
+        /// </returns>
+        Task UpdateVowelAsync(Vowel vowel);
+
+        /// <summary>
         ///     Gets dictionary words that are used in the language generation.
         /// </summary>
         /// <returns>

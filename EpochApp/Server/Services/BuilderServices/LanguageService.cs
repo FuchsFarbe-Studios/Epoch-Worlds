@@ -8,6 +8,7 @@ using EpochApp.Shared;
 using EpochApp.Shared.Config;
 using EpochApp.Shared.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace EpochApp.Server.Services
@@ -102,6 +103,60 @@ namespace EpochApp.Server.Services
             await Task.CompletedTask;
         }
 
+        public async Task AddConsonantAsync(Consonant consonant)
+        {
+            await _context.Consonants.AddAsync(consonant);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddVowelAsync(Vowel vowel)
+        {
+            await _context.Vowels.AddAsync(vowel);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateConsonantAsync(Consonant consonant)
+        {
+            var cons = await _context.Consonants.ToListAsync();
+            if (cons.Contains(consonant))
+            {
+                _context.Consonants.Update(consonant);
+                _context.Entry(consonant).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                await AddConsonantAsync(consonant);
+            }
+        }
+
+        public async Task UpdateVowelAsync(Vowel vowel)
+        {
+            var vowels = await _context.Vowels.ToListAsync();
+            if (vowels.Contains(vowel))
+            {
+                _context.Vowels.Update(vowel);
+                _context.Entry(vowel).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                await AddVowelAsync(vowel);
+            }
+        }
+
+        public async Task RemoveConsonantAsync(Consonant consonant)
+        {
+            _context.Consonants.Remove(consonant);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveVowelAsync(Vowel vowel)
+        {
+            _context.Vowels.Remove(vowel);
+            await _context.SaveChangesAsync();
+        }
+
         private async Task GenerateDictionaryWordsAsync(Phonology phonology, Spelling spelling, ConstructedLanguageResult langResult)
         {
             var words = await GetDictionaryWords();
@@ -142,10 +197,36 @@ namespace EpochApp.Server.Services
         private async Task<string> GenerateLangWordIPAAsync(Phonology phonology)
         {
             var sb = new StringBuilder();
+            var consts = new List<string>();
+            var initConsts = new List<string>();
+            var medConsts = new List<string>();
+            var finalConsts = new List<string>();
+            var vowels = new List<string>();
+            var hVowels = new List<string>();// Harmonic vowels
+
+            if (!phonology.UseIntermediateWordStructure && !phonology.UseAdvancedWordStructure)
+            {
+                if (phonology.Consonants.IsNullOrEmpty())
+                {
+
+                }
+            }
 
             sb.Append("random ipa string here...");
 
             return await Task.FromResult(sb.ToString());
+        }
+
+        public async Task<List<Consonant>> GetConsonantsAsync()
+        {
+            var cons = await _context.Consonants.ToListAsync();
+            return await Task.FromResult(cons);
+        }
+
+        public async Task<List<Vowel>> GetVowelsAsync()
+        {
+            var vowels = await _context.Vowels.ToListAsync();
+            return await Task.FromResult(vowels);
         }
 
         #region Dictionary
