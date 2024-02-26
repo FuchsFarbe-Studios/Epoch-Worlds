@@ -1,0 +1,82 @@
+@using Typo=MudBlazor.Typo
+@using MudBlazor
+
+<MudPaper Outlined="true" MinHeight="250px" Class="pa-4">
+	<MudText Align="Align.Center" Color="Color.Primary" GutterBottom="true" Typo="Typo.h4">Epoch Keyboard</MudText>
+	<MudTextField @bind-Value="@_ipa" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Backspace" OnAdornmentClick="@BackspaceIPAAsync" Label="IPA" Placeholder="/ipa goes here/" FullWidth="true" />
+
+	<MudTabs Border="true" Outlined="true" TabPanelClass="pa-2" KeepPanelsAlive="true">
+
+		@if (Keyboard == KeyboardType.Phoneme || Keyboard == KeyboardType.Consonant)
+		{
+			<MudTabPanel Text="Consonants" ID="@("Consonants")">
+				<MudPaper Outlined="true" MinHeight="200px">
+					<MudStack Spacing="0">
+						@foreach (var manner in Enum.GetValues<ConsonantManner>())
+						{
+							@if (manner == ConsonantManner.Nasal)
+							{
+								<MudStack Row="true" Spacing="0">
+									<MudPaper Outlined="true" Class="pa-1" MinWidth="125px" MaxWidth="125px">
+										<MudText>
+											<b>Manner/Place</b>
+										</MudText>
+									</MudPaper>
+									@foreach (var place in Enum.GetValues<ConsonantPlace>())
+									{
+										<MudPaper Outlined="true" Class="pa-1" MinWidth="125px" MaxWidth="125px">
+											<MudText>
+												<b>@place.ToDescriptionString()</b>
+											</MudText>
+										</MudPaper>
+									}
+								</MudStack>
+							}
+							<MudStack Row="true" Spacing="0">
+								<MudPaper Outlined="true" Class="pa-1" MinWidth="125px" MaxWidth="125px">
+									<MudText>
+										<b>@manner.ToDescriptionString()</b>
+									</MudText>
+								</MudPaper>
+								@foreach (var place in Enum.GetValues<ConsonantPlace>())
+								{
+									var consonants = _consonants?.Where(x => x.Manner == manner && x.Place == place);
+									<MudPaper Outlined="true" Class="pa-1" MinWidth="125px" MaxWidth="125px">
+										@foreach (var con in consonants)
+										{
+											if (!con.IsVoiced)
+											{
+												<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(con.PhonemeID))" Color="Color.Primary" Text="@con.PhonemeID" />
+											}
+											if (con.IsVoiced)
+											{
+												<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(con.PhonemeID))" Color="Color.Secondary" Text="@con.PhonemeID" />
+											}
+										}
+									</MudPaper>
+								}
+							</MudStack>
+						}
+					</MudStack>
+				</MudPaper>
+			</MudTabPanel>
+		}
+
+		@if (Keyboard == KeyboardType.Phoneme || Keyboard == KeyboardType.Vowel)
+		{
+			<MudTabPanel Text="Vowels" ID="@("Vowels")">
+				<MudPaper Outlined="true" MinHeight="200px">
+
+					@if (_vowels.Any())
+					{
+						@foreach (var vowel in _vowels)
+						{
+							<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(vowel.PhonemeID))" Color="Color.Secondary" Text="@vowel.PhonemeID" />
+						}
+					}
+				</MudPaper>
+			</MudTabPanel>
+		}
+	</MudTabs>
+
+</MudPaper>

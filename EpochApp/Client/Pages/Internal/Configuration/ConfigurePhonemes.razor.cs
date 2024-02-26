@@ -45,11 +45,13 @@ namespace EpochApp.Client.Pages.Internal.Configuration
             _vowels = await Client.GetFromJsonAsync<List<Vowel>>("api/v1/Builder/Vowels");
             return _vowels;
         }
+
         private async Task<List<Consonant>> RefreshConsonants()
         {
             _consonants = await Client.GetFromJsonAsync<List<Consonant>>("api/v1/Builder/Consonants");
             return _consonants;
         }
+
         private async Task AddConsonantAsync(EditContext ctx)
         {
             var consonant = (Consonant)ctx.Model;
@@ -67,6 +69,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
             _consonants = await RefreshConsonants();
             StateHasChanged();
         }
+
         private async Task AddVowelAsync(EditContext ctx)
         {
             var vowel = (Vowel)ctx.Model;
@@ -84,6 +87,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
             _vowels = await RefreshVowels();
             StateHasChanged();
         }
+
         private async Task CommitConsonantChangesAsync(Consonant arg)
         {
             var response = await Client.PutAsJsonAsync("api/v1/Builder/Consonant", arg);
@@ -95,6 +99,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
             _consonants = await RefreshConsonants();
             StateHasChanged();
         }
+
         private async Task CommitVowelChangesAsync(Vowel arg)
         {
             var response = await Client.PutAsJsonAsync("api/v1/Builder/Vowel", arg);
@@ -106,6 +111,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
             _vowels = await RefreshVowels();
             StateHasChanged();
         }
+
         private async Task RemoveConsonantAsync(Consonant deleteCtxItem)
         {
             var response = await Client.DeleteAsync($"api/v1/Builder/Consonant?phonemeId={deleteCtxItem.PhonemeID}");
@@ -117,6 +123,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
             _consonants = await RefreshConsonants();
             StateHasChanged();
         }
+
         private async Task RemoveVowelAsync(Vowel deleteCtxItem)
         {
             var response = await Client.DeleteAsync($"api/v1/Builder/Vowel?phonemeId={deleteCtxItem.PhonemeID}");
