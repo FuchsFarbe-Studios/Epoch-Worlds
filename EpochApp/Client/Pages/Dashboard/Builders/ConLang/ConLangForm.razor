@@ -18,9 +18,11 @@
 		<MudPaper Class="rounded-t-xl" Outlined="true" Width="100%">
 			<MudToolBar Dense="false" DisableGutters="false" WrapContent="true" Class="rounded-t-xl flex-center">
 				<MudTooltip Text="Saves unsaved content, or updates it, then generates the content based on the parameters given above.">
-					<MudButton Variant="Variant.Outlined" Class="rounded-pill" Disabled="@(isLoading || isSavingOrUpdating)" OnClick="@(async () => await GenerateContentAsync())" Size="Size.Large" Color="Color.Success" IconColor="Color.Success" StartIcon="@($"{(isLoading || isSavingOrUpdating ? StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand] : "")}")">@(isLoading || isSavingOrUpdating
-						                                                                                                                                                                                                                                                                                                                                                               ? "Processing..."
-						                                                                                                                                                                                                                                                                                                                                                               : "Generate!")</MudButton>
+					<MudButton Variant="Variant.Outlined" Class="rounded-pill" Disabled="@(isLoading || isSavingOrUpdating)" OnClick="@(async () => await GenerateContentAsync())" Size="Size.Large" Color="Color.Success" IconColor="Color.Success" StartIcon="@($"{(isLoading || isSavingOrUpdating ? StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand] : "")}")">
+						@(isLoading || isSavingOrUpdating
+							  ? "Processing..."
+							  : "Generate!")
+					</MudButton>
 				</MudTooltip>
 			</MudToolBar>
 		</MudPaper>
@@ -631,19 +633,18 @@
 			</MudTooltip>
 			<MudSpacer />
 			<MudTooltip Text="Saves your data to the database.">
+				<MudSwitch @bind-Value="@showResults" Size="Size.Large" ThumbIcon="@(showResults ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)">@($"{(showResults ? "Results are shown" : "Results are hidden")}")</MudSwitch>
+			</MudTooltip>
+			<MudSpacer />
+			<MudTooltip Text="Saves your data to the database.">
 				<MudButton Class="mr-5" Size="Size.Large" IconColor="Color.Primary" ButtonType="ButtonType.Submit" StartIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.FloppyDisk]}")">Save</MudButton>
 			</MudTooltip>
 		</MudToolBar>
 	</MudPaper>
 	</EditForm>
 }
-@if (ResultModel != null && !isLoading)
+
+@if (showResults)
 {
-	<ConLangResults GeneratedResult="@ResultModel" />
-}
-else if (isLoading)
-{
-	<MudPaper Width="100%" Class="pa-8 flex-center" Outlined="true">
-		<MudProgressCircular Indeterminate="true" Class="ma-auto" Color="Color.Primary" Size="Size.Large" />
-	</MudPaper>
+	<ConLangResults GeneratedResult="@ResultModel" Generating="@(isLoading || isSavingOrUpdating)" />
 }

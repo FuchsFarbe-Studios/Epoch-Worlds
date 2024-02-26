@@ -22,6 +22,11 @@ namespace EpochApp.Client.Shared.Forms
         protected bool isSavingOrUpdating;
 
         /// <summary>
+        ///     Used to toggle results panels.
+        /// </summary>
+        protected bool showResults = false;
+
+        /// <summary>
         ///     Errors returned from the server's ModelState.
         /// </summary>
         protected Dictionary<string, List<string>> errorDict = new Dictionary<string, List<string>>();

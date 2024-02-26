@@ -1,12 +1,12 @@
 @using Typo=MudBlazor.Typo
 @using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Builders
-@if (GeneratedResult != null)
-{
-	<section id="generated-content" class="mt-4">
-		<MudPaper Outlined="true" Class="pa-2 mud-theme-dark" Width="100%" MinHeight="400px">
 
-			<MudPaper Outlined="true" Class="pa-2" Width="100%" MinHeight="1000px">
+<section id="generated-content" class="mt-4">
+	<MudPaper Outlined="true" Class="pa-2 mud-theme-dark" Width="100%" MinHeight="400px">
+		<MudPaper Outlined="true" Class="pa-2 flex-grow-1" Width="100%">
+			@if (GeneratedResult != null && !Generating)
+			{
 
 				<!-- Language Basics -->
 				<MudText Typo="Typo.h5" Color="Color.Primary" Align="Align.Center">@GeneratedResult.LanguageName</MudText>
@@ -14,30 +14,60 @@
 				<MudDivider DividerType="DividerType.FullWidth" Light="false" />
 
 				<!-- Word Dictionary -->
-				<MudText Typo="Typo.h5" Align="Align.Center">Dictionary</MudText>
-				<MudDivider DividerType="DividerType.FullWidth" Light="false" />
+				<MudPaper Outlined="true" Width="100%" Class="pa-2">
+					<MudText Typo="Typo.h5" Align="Align.Center">Dictionary</MudText>
+					<MudDivider DividerType="DividerType.FullWidth" Light="false" />
 
-				<MudGrid Spacing="2" Style="min-height: 500px; height: 50vh;">
-					<Virtualize TItem="GeneratedWord" Items="@GeneratedResult.Words" OverscanCount="15" Context="vCtx">
-						<ItemContent>
-							<MudItem xs="6" sm="4" md="3" lg="2">
-								<MudPaper Outlined="true" Width="100%" Class="pa-1">
-									<MudText Typo="Typo.body2">
-										<MudText Typo="Typo.body1" Inline="true" Color="Color.Info">@vCtx.ConLangWordAlt</MudText> @vCtx.ConLangWord <MudText Typo="Typo.caption" Color="Color.Dark" Inline="true">@vCtx.PartOfSpeech</MudText>
-									</MudText>
-									<MudText Typo="Typo.caption" Color="Color.Info">@($"/{vCtx?.IPA}/")</MudText>
-									<MudText Color="Color.Dark" Typo="Typo.body1">@vCtx.Translations</MudText>
+					<MudPaper Width="100%" Class="pa-1 mud-border-primary d-flex flex-wrap gap-1" Outlined="true" MinHeight="500px" MaxHeight="1000px" Style="overflow-y: scroll;">
+						@* @foreach (var word in GeneratedResult.Words) *@
+						@* { *@
+						@* 	<DictionaryEntry @key=@word Word="@word" /> *@
+						@* } *@
+
+						<Virtualize Items="@GeneratedResult.Words" Context="word">
+							<ItemContent>
+								<DictionaryEntry @key=@word Word="@word" />
+							</ItemContent>
+							<Placeholder>
+								<MudPaper Outlined="true" Width="100%" Class="pa-1" MinHeight="125px">
+									<MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Small" Class="ma-auto" />
 								</MudPaper>
-							</MudItem>
-						</ItemContent>
-					</Virtualize>
-				</MudGrid>
-
-			</MudPaper>
+							</Placeholder>
+							<EmptyContent>
+								<MudText>No words in dictionary...</MudText>
+							</EmptyContent>
+						</Virtualize>
+					</MudPaper>
+				</MudPaper>
+			}
+			else if (Generating)
+			{
+				<div class="d-flex justify-center flex-grow-1">
+					<MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" Class="ma-auto" />
+				</div>
+			}
 		</MudPaper>
-	</section>
-}
+	</MudPaper>
+</section>
 
 @code {
+	private List<List<GeneratedWord>> _wordRows = new List<List<GeneratedWord>>();
 	[Parameter] public ConstructedLanguageResult GeneratedResult { get; set; }
+	[Parameter] public bool Generating { get; set; } = false;
+
+	/// <inheritdoc />
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		var inputList = GeneratedResult?.Words;// replace with your list
+
+		var chunkSize = 5;
+
+		_wordRows = inputList
+		            .Select((s, i) => new { Value = s, Index = i })
+		            .GroupBy(x => x.Index / chunkSize)
+		            .Select(grp => grp.Select(x => x.Value).ToList())
+		            .ToList();
+
+	}
 }

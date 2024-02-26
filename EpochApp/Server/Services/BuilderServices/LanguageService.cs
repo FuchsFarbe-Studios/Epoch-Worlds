@@ -42,13 +42,6 @@ namespace EpochApp.Server.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<PartOfSpeech>> GetPartsOfSpeech()
-        {
-            var pos = await _context.PartsOfSpeech.ToListAsync();
-            return await Task.FromResult(pos);
-        }
-
-        /// <inheritdoc />
         public async Task GenerateLanguage(BuilderContent content)
         {
             if (content.ContentType != ContentType.ConstructedLanguage)
@@ -81,7 +74,7 @@ namespace EpochApp.Server.Services
             if (!string.IsNullOrWhiteSpace(language.NativePronunciation))
                 langResult.Pronunciation = language.NativePronunciation;
             else
-                langResult.Pronunciation = await GenerateLangWordIPAAsync(phonology);
+                langResult.Pronunciation = await GenerateWordAsync(phonology);
             if (!string.IsNullOrWhiteSpace(language.LangName))
                 langResult.LanguageName = language.LangName;
             else
@@ -94,13 +87,91 @@ namespace EpochApp.Server.Services
                                    ConLangWord = langResult.LanguageName,
                                    ConLangWordAlt = await ApplyAltSpellingRulesAsync(langResult.Pronunciation, spelling)
                                };
+            language.NativePronunciation = langNameWord.IPA;
             langResult.Words.Add(langNameWord);
 
             // Generate words from dictionary
+            _logger.LogInformation("Generating dictionary words...");
             await GenerateDictionaryWordsAsync(phonology, spelling, langResult);
+            _logger.LogInformation("Finished generating dictionary words!");
 
+            // Save changes to language settings and generated content
+            _logger.LogInformation("Saving changes to database...");
+            var xmlLang = await _serialization.SerializeToXmlAsync(language);
+            var xmlGen = await _serialization.SerializeToXmlAsync(langResult);
+            content.ContentXml = xmlLang;
+            content.GeneratedXml = xmlGen;
+            content.DateModified = DateTime.UtcNow;
 
-            await Task.CompletedTask;
+            // Save generated content to db
+            _context.Entry(content).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Changes saved!");
+        }
+        private async Task<string> GenerateWordAsync(Phonology phonology)
+        {
+            var consonants = new List<string>();
+            var initConsts = new List<string>();
+            var medConsts = new List<string>();
+            var finalConsts = new List<string>();
+            var vowels = new List<string>();
+            var hVowels = new List<string>();// Harmonic vowels
+
+            if (!phonology.UseIntermediateWordStructure && !phonology.UseAdvancedWordStructure)
+            {
+                if (phonology.Consonants.IsNullOrEmpty())
+                {
+                    consonants = await GetRandomConsonantsAsync(random.Next(7, 15));
+                }
+                else
+                {
+                    consonants = phonology.Consonants.Split(",", StringSplitOptions.TrimEntries).ToList();
+                    consonants.ForEach(x => x = x.Trim());
+                }
+                if (phonology.Vowels.IsNullOrEmpty())
+                {
+                    vowels = await GetRandomVowelsAsync(random.Next(3, 8));
+                }
+                else
+                {
+                    vowels = phonology.Vowels.Split(",", StringSplitOptions.TrimEntries).ToList();
+                    vowels.ForEach(x => x = x.Trim());
+                }
+                var consonantsBuilder = new StringBuilder();
+                consonants.ForEach(x =>
+                {
+                    consonantsBuilder.Append(x);
+                    consonantsBuilder.Append(", ");
+                });
+                var vowelsBuilder = new StringBuilder();
+                vowels.ForEach(x =>
+                {
+                    vowelsBuilder.Append(x);
+                    vowelsBuilder.Append(", ");
+                });
+                phonology.Consonants = consonantsBuilder.ToString();
+                phonology.Vowels = vowelsBuilder.ToString();
+                return await GenerateWordAsync(consonants, vowels, phonology);
+            }
+            if (phonology.UseIntermediateWordStructure && !phonology.UseAdvancedWordStructure)
+            {
+                initConsts = phonology.InitialConsonants.Split(",", StringSplitOptions.TrimEntries).ToList();
+                initConsts.ForEach(x => x = x?.Trim());
+                medConsts = phonology.MedialConsonants.Split(",", StringSplitOptions.TrimEntries).ToList();
+                medConsts.ForEach(x => x = x?.Trim());
+                finalConsts = phonology.FinalConsonants.Split(",", StringSplitOptions.TrimEntries).ToList();
+                finalConsts.ForEach(x => x = x?.Trim());
+                vowels = phonology.Vowels.Split(",", StringSplitOptions.TrimEntries).ToList();
+                vowels.ForEach(x => x = x.Trim());
+                if (phonology.UseVowelHarmony)
+                {
+                    hVowels = phonology.HarmonicVowels.Split(",").ToList();
+                    hVowels.ForEach(x => x = x.Trim());
+                }
+
+                return await Task.FromResult("");
+            }
+            return await Task.FromResult("");
         }
 
         public async Task AddConsonantAsync(Consonant consonant)
@@ -159,11 +230,73 @@ namespace EpochApp.Server.Services
 
         private async Task GenerateDictionaryWordsAsync(Phonology phonology, Spelling spelling, ConstructedLanguageResult langResult)
         {
+            var consonants = new List<string>();
+            var initConsts = new List<string>();
+            var medConsts = new List<string>();
+            var finalConsts = new List<string>();
+            var vowels = new List<string>();
+            var hVowels = new List<string>();// Harmonic vowels
+
+            if (!phonology.UseIntermediateWordStructure && !phonology.UseAdvancedWordStructure)
+            {
+                if (phonology.Consonants.IsNullOrEmpty())
+                {
+                    consonants = await GetRandomConsonantsAsync(random.Next(7, 15));
+                }
+                else
+                {
+                    consonants = phonology.Consonants.Split(",", StringSplitOptions.TrimEntries).ToList();
+                    consonants.ForEach(x => x = x.Trim());
+                }
+                if (phonology.Vowels.IsNullOrEmpty())
+                {
+                    vowels = await GetRandomVowelsAsync(random.Next(3, 8));
+                }
+                else
+                {
+                    vowels = phonology.Vowels.Split(",", StringSplitOptions.TrimEntries).ToList();
+                    vowels.ForEach(x => x = x.Trim());
+                }
+                var consonantsBuilder = new StringBuilder();
+                consonants.ForEach(x =>
+                {
+                    consonantsBuilder.Append(x);
+                    consonantsBuilder.Append(", ");
+                });
+                var vowelsBuilder = new StringBuilder();
+                vowels.ForEach(x =>
+                {
+                    vowelsBuilder.Append(x);
+                    vowelsBuilder.Append(", ");
+                });
+                phonology.Consonants = consonantsBuilder.ToString();
+                phonology.Vowels = vowelsBuilder.ToString();
+            }
+            else if (phonology.UseIntermediateWordStructure && !phonology.UseAdvancedWordStructure)
+            {
+                initConsts = phonology.InitialConsonants.Split(",", StringSplitOptions.TrimEntries).ToList();
+                initConsts.ForEach(x => x = x?.Trim());
+                medConsts = phonology.MedialConsonants.Split(",", StringSplitOptions.TrimEntries).ToList();
+                medConsts.ForEach(x => x = x?.Trim());
+                finalConsts = phonology.FinalConsonants.Split(",", StringSplitOptions.TrimEntries).ToList();
+                finalConsts.ForEach(x => x = x?.Trim());
+                vowels = phonology.Vowels.Split(",", StringSplitOptions.TrimEntries).ToList();
+                vowels.ForEach(x => x = x.Trim());
+                if (phonology.UseVowelHarmony)
+                {
+                    hVowels = phonology.HarmonicVowels.Split(",").ToList();
+                    hVowels.ForEach(x => x = x.Trim());
+                }
+            }
+
             var words = await GetDictionaryWords();
             foreach (var word in words)
             {
-                var ipa = await GenerateLangWordIPAAsync(phonology);
-                var conlangWord = await ApplySpellingRulesAsync(ipa, spelling);
+                _logger.LogInformation($"Generating Dictionary Word: {word.Translations}");
+                var ipa = "";
+                if (!phonology.UseIntermediateWordStructure && !phonology.UseAdvancedWordStructure)
+                    ipa = await GenerateWordAsync(consonants, vowels, phonology);
+                var conLangWord = await ApplySpellingRulesAsync(ipa, spelling);
                 var altWord = "";
                 if (spelling.UseSecondSpelling)
                     altWord = await ApplyAltSpellingRulesAsync(ipa, spelling);
@@ -172,9 +305,10 @@ namespace EpochApp.Server.Services
                                         Translations = word.Translations,
                                         PartOfSpeech = word.PartOfSpeech.Abbreviation,
                                         IPA = ipa,
-                                        ConLangWord = conlangWord,
+                                        ConLangWord = conLangWord,
                                         ConLangWordAlt = altWord
                                     };
+                _logger.LogInformation($"Generated word: {generatedWord.Translations} with IPA {generatedWord.IPA}");
                 langResult.Words.Add(generatedWord);
             }
         }
@@ -191,30 +325,98 @@ namespace EpochApp.Server.Services
                 return "conlang word here...";
             }
             return ipa;
-            return null;
         }
 
-        private async Task<string> GenerateLangWordIPAAsync(Phonology phonology)
+        private async Task<string> GenerateWordAsync(List<string> consonants, List<string> vowels, Phonology phonology)
         {
+            _logger.LogInformation("Generating simple word...");
             var sb = new StringBuilder();
-            var consts = new List<string>();
-            var initConsts = new List<string>();
-            var medConsts = new List<string>();
-            var finalConsts = new List<string>();
-            var vowels = new List<string>();
-            var hVowels = new List<string>();// Harmonic vowels
-
-            if (!phonology.UseIntermediateWordStructure && !phonology.UseAdvancedWordStructure)
+            var startWithVowel = await ShouldStartWithVowelAsync(phonology);
+            var endWithVowel = await ShouldEndWithVowelAsync(phonology);
+            var wordSyllables = random.Next(1, 3);
+            // Generate syllable
+            if (startWithVowel)
             {
-                if (phonology.Consonants.IsNullOrEmpty())
+                var vowel = vowels[random.Next(0, vowels.Count - 1)];
+                sb.Append(vowel);
+                for (var i = 0; i < wordSyllables; i++)
                 {
-
+                    sb.Append(consonants[random.Next(0, consonants.Count - 1)]);
+                    sb.Append(vowels[random.Next(0, vowels.Count - 1)]);
                 }
+                if (!endWithVowel)
+                    sb.Append(consonants[random.Next(0, consonants.Count - 1)]);
             }
-
-            sb.Append("random ipa string here...");
-
+            else
+            {
+                for (var i = 0; i < wordSyllables; i++)
+                {
+                    sb.Append(consonants[random.Next(0, consonants.Count - 1)]);
+                    sb.Append(vowels[random.Next(0, vowels.Count - 1)]);
+                }
+                if (!endWithVowel)
+                    sb.Append(consonants[random.Next(0, consonants.Count - 1)]);
+            }
+            _logger.LogInformation("Word generated!");
             return await Task.FromResult(sb.ToString());
+        }
+
+        private async Task<bool> ShouldEndWithVowelAsync(Phonology phonology)
+        {
+            if (phonology.UseVowelProbabilities)
+                return await IsProbable((int)phonology.VowelAtEndProbability);
+
+            return await IsProbable(15);
+        }
+
+        private async Task<bool> ShouldStartWithVowelAsync(Phonology phonology)
+        {
+            if (phonology.UseVowelProbabilities)
+                return await IsProbable((int)phonology.VowelAtStartProbability);
+
+            return await IsProbable(35);
+        }
+
+        private Task<bool> IsProbable(int probability)
+        {
+            if (probability > 100)
+                return Task.FromResult(true);
+
+            var result = random.Next(1, 100);
+            return Task.FromResult(result <= probability);
+        }
+
+        private async Task<TObject> GetRandomItem<TObject>(IEnumerable<TObject> objList) where TObject : class
+        {
+            var objArr = objList.ToArray();
+            var randIndex = random.Next(0, objList.Count() - 1);
+            return await Task.FromResult(objArr[randIndex]);
+        }
+
+        private async Task<List<string>> GetRandomVowelsAsync(int vowelCount)
+        {
+            var vowelsDb = await GetVowelsAsync();
+            var vowels = new List<string>();
+            for (var i = 0; i < vowelCount; i++)
+            {
+                var randConsonant = random.Next(0, vowelsDb.Count - 1);
+                var consonant = vowelsDb[randConsonant];
+                vowels.Add(consonant.PhonemeID);
+            }
+            return await Task.FromResult(vowels);
+        }
+
+        private async Task<List<string>> GetRandomConsonantsAsync(int consonantCount)
+        {
+            var consonantsDb = await GetConsonantsAsync();
+            var consonants = new List<string>();
+            for (var i = 0; i < consonantCount; i++)
+            {
+                var randConsonant = random.Next(0, consonantsDb.Count - 1);
+                var consonant = consonantsDb[randConsonant];
+                consonants.Add(consonant.PhonemeID);
+            }
+            return await Task.FromResult(consonants);
         }
 
         public async Task<List<Consonant>> GetConsonantsAsync()
@@ -237,7 +439,7 @@ namespace EpochApp.Server.Services
             var words = await _context.DictionaryWords
                                       .Include(x => x.PartOfSpeech)
                                       .ToListAsync();
-            return await Task.FromResult(words);
+            return words;
         }
 
         /// <inheritdoc />
@@ -271,6 +473,13 @@ namespace EpochApp.Server.Services
         }
 
         #endregion
+
+        /// <inheritdoc />
+        public async Task<List<PartOfSpeech>> GetPartsOfSpeech()
+        {
+            var pos = await _context.PartsOfSpeech.ToListAsync();
+            return await Task.FromResult(pos);
+        }
 
     }
 }

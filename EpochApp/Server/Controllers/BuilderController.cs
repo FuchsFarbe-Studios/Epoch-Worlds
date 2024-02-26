@@ -25,6 +25,7 @@ namespace EpochApp.Server.Controllers
         private readonly EpochDataDbContext _context;
         private readonly ILanguageService _language;
         private readonly ISerializationService _serializer;
+        private readonly ILogger<BuilderController> _logger;
 
         /// <summary>
         /// Constructor for the <see cref="BuilderController" />.
@@ -32,11 +33,13 @@ namespace EpochApp.Server.Controllers
         /// <param name="context"> The injected <see cref="EpochDataDbContext" /> to use for the controller. </param>
         /// <param name="serializer"> The injected <see cref="ISerializationService" /> to use for the controller. </param>
         /// <param name="language"> The injected <see cref="ILanguageService" /> to use for the controller. </param>
-        public BuilderController(EpochDataDbContext context, ISerializationService serializer, ILanguageService language)
+        /// <param name="logger"> The injected <see cref="ILogger{TCategoryName}"/> where TCategoryName is <see cref="BuilderController"/>. </param>
+        public BuilderController(EpochDataDbContext context, ISerializationService serializer, ILanguageService language, ILogger<BuilderController> logger)
         {
             _context = context;
             _serializer = serializer;
             _language = language;
+            _logger = logger;
         }
 
         /// <summary>
@@ -205,6 +208,7 @@ namespace EpochApp.Server.Controllers
             switch (content.ContentType)
             {
                 case ContentType.ConstructedLanguage:
+                    _logger.LogInformation("Generating language...");
                     await _language.GenerateLanguage(content);
                     break;
                 case ContentType.Character:

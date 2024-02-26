@@ -1,0 +1,22 @@
+@using Typo=MudBlazor.Typo
+@using MudBlazor
+@namespace EpochApp.Client.Pages.Dashboard.Builders
+
+<MudPaper Outlined="true" Class="pa-1 ma-1" Width="100%" Height="75px" MinHeight="75px" MaxHeight="150px">
+	@if (Word != null)
+	{
+		<MudText Typo="Typo.body2">
+			<MudText Typo="Typo.body1" Inline="true" Color="Color.Info">@Word?.ConLangWordAlt</MudText> @Word?.ConLangWord <MudText Typo="Typo.caption" Color="Color.Dark" Inline="true">@Word?.PartOfSpeech</MudText>
+		</MudText>
+		<MudText Typo="Typo.caption" Color="Color.Info">@($"/{Word?.IPA}/")</MudText>
+		<MudText Color="Color.Dark" Typo="Typo.body1">@Word?.Translations</MudText>
+	}
+	else
+	{
+		<MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+	}
+</MudPaper>
+
+@code {
+	[Parameter] public GeneratedWord Word { get; set; } = null!;
+}
