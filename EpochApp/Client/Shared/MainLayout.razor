@@ -3,14 +3,14 @@
 @using MudBlazor
 @inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="@_theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 <FlatThemeProvider />
 
 <MudLayout>
 	<MudAppBar Elevation="0" Color="Color.Dark" WrapContent="true">
-		<MudIconButton Icon="@Icons.Material.Filled.Menu" Variant="Variant.Outlined" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
+		<MudIconButton Icon="@(_drawerOpen ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)" Variant="@(_drawerOpen ? Variant.Outlined : Variant.Text)" Title="@($"{(_drawerOpen ? "Close" : "Open")} side menu.")" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
 		<AppBar />
 	</MudAppBar>
 	<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0">
@@ -26,7 +26,7 @@
 				@Body
 			</CascadingValue>
 		</MudContainer>
-		<footer class="site-footer menu-items-wrapper">
+		<footer class="site-footer menu-items-wrapper mud-theme-dark">
 			<Footer>
 				<MudLink Href="/">
 					<MudImage Elevation="0" Fluid="false" Height="64" Src="images/logos/PNG/words-1x-png.png" />

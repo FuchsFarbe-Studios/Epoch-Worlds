@@ -308,6 +308,20 @@ namespace EpochApp.Server.Controllers
                 ModelState.AddModelError(nameof(registration.UserName), "Username or Email already exists");
                 ModelState.AddModelError(nameof(registration.Email), "Username or Email already exists");
             }
+            if (registration.UserName.IsNullOrEmpty())
+                ModelState.AddModelError(nameof(registration.UserName), "Username cannot be blank!");
+            if (registration.Password.IsNullOrEmpty())
+                ModelState.AddModelError(nameof(registration.Password), "Password cannot be blank!");
+            if (registration.Password2.IsNullOrEmpty())
+                ModelState.AddModelError(nameof(registration.Password2), "Password verification required!");
+            if (registration.Email.IsNullOrEmpty())
+                ModelState.AddModelError(nameof(registration.Email), "Email is a required field!");
+            if (registration.WorldName.IsNullOrEmpty())
+                ModelState.AddModelError(nameof(registration.WorldName), "You must have a world to create an account!");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             // Other validations
             if (registration.DateOfBirth > DateTime.Now)
                 ModelState.AddModelError(nameof(registration.DateOfBirth), "Date of Birth cannot be in the future");

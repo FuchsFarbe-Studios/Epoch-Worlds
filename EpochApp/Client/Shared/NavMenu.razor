@@ -1,7 +1,7 @@
 ﻿@using MudBlazor
 @if (IsMudMenu)
 {
-	<MudNavMenu Color="Color.Dark" Rounded="true" Bordered="true" Dense="true" Margin="Margin.Dense">
+	<MudNavMenu Color="Color.Primary" Rounded="false" Bordered="true" Dense="true">
 		<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
 
 		<!-- User -->
@@ -46,8 +46,8 @@
 			</Authorized>
 			<NotAuthorized>
 				<!-- Auth -->
-				<MudNavLink Href="@NavRef.Auth.Registration" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AppRegistration" IconColor="Color.Success">Register</MudNavLink>
-				<MudNavLink Href="@NavRef.Auth.Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Login" IconColor="Color.Success">Log-In</MudNavLink>
+				<MudNavLink Href="@NavRef.Auth.Registration" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AppRegistration">Register</MudNavLink>
+				<MudNavLink Href="@NavRef.Auth.Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Login">Log-In</MudNavLink>
 			</NotAuthorized>
 
 		</AuthorizeView>
