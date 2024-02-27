@@ -11,8 +11,8 @@ namespace EpochApp.Shared.Config
     /// </summary>
     public class MetaTemplate
     {
-        public int TemplateID { get; set; }
-        public int CategoryID { get; set; }
+        public int TemplateId { get; set; }
+        public int CategoryId { get; set; }
         public string TemplateName { get; set; }
         public string Description { get; set; }
         public string Placeholder { get; set; }

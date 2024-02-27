@@ -88,7 +88,7 @@ namespace EpochApp.Server.Services.WorldService
                         };
             metaTemplates.ForEach(x => meta.Add(new WorldMeta
                                                 {
-                                                    MetaID = x.TemplateID,
+                                                    MetaID = x.TemplateId,
                                                     Template = x,
                                                     World = world
                                                 }));
@@ -117,7 +117,7 @@ namespace EpochApp.Server.Services.WorldService
         /// <inheritdoc />
         public async Task<List<UserWorldDTO>> GetUserWorldsAsync(Guid userId)
         {
-            var userWorlds = await _context.Worlds.Where(x => x.OwnerID == userId)
+            var userWorlds = await _context.Worlds.Where(x => x.OwnerId == userId)
                                            .Include(x => x.CurrentWorldDate)
                                            .Include(x => x.WorldGenres)
                                            .ThenInclude(x => x.Genre)
@@ -154,7 +154,7 @@ namespace EpochApp.Server.Services.WorldService
                                       .Include(x => x.WorldArticles)
                                       .ThenInclude(article => article.Sections)
                                       .AsSplitQuery()
-                                      .FirstOrDefaultAsync(x => x.WorldID == worldId);
+                                      .FirstOrDefaultAsync(x => x.WorldId == worldId);
             var UserWorldDTO = MapWorldToUserWorldDTO(world);
             return await Task.FromResult(UserWorldDTO);
         }
@@ -162,8 +162,30 @@ namespace EpochApp.Server.Services.WorldService
         /// <inheritdoc />
         public async Task<World> GetWorldViewAsync(Guid worldId)
         {
-            var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldID == worldId);
+            var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldId == worldId);
             return await Task.FromResult(world);
+        }
+
+        /// <inheritdoc />
+        public async Task<UserWorldDTO> UpdateWorldAsync(UserWorldDTO world)
+        {
+            var existingWorld = MapUserWorldDTOToExistingWorld(world);
+            try
+            {
+                _context.Entry(existingWorld).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("World updated!");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                var exists = await WorldExists(existingWorld.WorldId);
+                if (!exists)
+                    return null;
+
+                _logger.LogError("World does not exist!");
+            }
+            var updatedWorld = MapWorldToUserWorldDTO(existingWorld);
+            return await Task.FromResult(updatedWorld);
         }
 
         /// <inheritdoc />
@@ -182,7 +204,10 @@ namespace EpochApp.Server.Services.WorldService
                                 .Include(x => x.WorldArticles)
                                 .ThenInclude(article => article.Sections)
                                 .AsSplitQuery()
-                                .FirstOrDefault(x => x.WorldID == dto.WorldId);
+                                .FirstOrDefault(x => x.WorldId == dto.WorldId);
+            if (world == null)
+                world = new World();
+            world.OwnerId = dto.OwnerId;
             world.WorldName = dto.WorldName;
             world.Pronunciation = dto.Pronunciation;
             world.Excerpt = dto.Excerpt;
@@ -195,6 +220,9 @@ namespace EpochApp.Server.Services.WorldService
             world.FollowerNamingPlural = dto.FollowerNamingPlural;
             world.IsActiveWorld = dto.IsActiveWorld;
             world.DateModified = DateTime.UtcNow;
+
+            if (world.CurrentWorldDate == null)
+                world.CurrentWorldDate = new WorldDate();
             world.CurrentWorldDate.CurrentDay = dto.CurrentWorldDate.CurrentDay;
             world.CurrentWorldDate.CurrentMonth = dto.CurrentWorldDate.CurrentMonth;
             world.CurrentWorldDate.CurrentYear = dto.CurrentWorldDate.CurrentYear;
@@ -205,8 +233,8 @@ namespace EpochApp.Server.Services.WorldService
             world.CurrentWorldDate.AfterEraAbbreviation = dto.CurrentWorldDate.AfterEraAbbreviation;
             world.MetaData = dto.MetaData.Select(x => new WorldMeta
                                                       {
-                                                          MetaID = x.TemplateID,
-                                                          Template = _context.MetaTemplates.FirstOrDefault(y => y.TemplateID == x.TemplateID)
+                                                          Content = x.Content,
+                                                          Template = _context.MetaTemplates.FirstOrDefault(y => y.TemplateId == x.TemplateId && y.CategoryId == x.CategoryId)
                                                       })
                                 .ToList();
             world.WorldTags = dto.WorldTags.Select(x => new WorldTag
@@ -263,20 +291,12 @@ namespace EpochApp.Server.Services.WorldService
         /// <inheritdoc />
         public UserWorldDTO MapWorldToUserWorldDTO(World world)
         {
-            var metas = world.MetaData.Select(x => new MetaDTO
+            var metas = world.MetaData.Select(x => new WorldMetaDTO
                                                    {
-                                                       MetaCategoryID = x.Template.Category.CategoryID,
-                                                       TemplateID = x.Template.TemplateID,
-                                                       TemplateName = x?.Template?.TemplateName,
-                                                       Description = x?.Template?.Description,
-                                                       Placeholder = x?.Template?.Placeholder,
-                                                       HelpText = x?.Template?.HelpText,
-                                                       MetaCategory = new MetaCategoryDTO
-                                                                      {
-                                                                          CategoryID = x.Template.Category.CategoryID,
-                                                                          Description = x?.Template.Category.Description,
-                                                                          CategoryInfo = x?.Template.Category.CategoryInfo
-                                                                      }
+                                                       WorldId = x.WorldId,
+                                                       Content = x.Content,
+                                                       TemplateId = x.Template.TemplateId,
+                                                       CategoryId = x.Template.CategoryId
                                                    })
                              .ToList();
             var articles = world.WorldArticles.Select(x => new ArticleDTO
@@ -330,7 +350,7 @@ namespace EpochApp.Server.Services.WorldService
                               .ToList();
             var date = new WorldDateDTO
                        {
-                           WorldId = world.WorldID,
+                           WorldId = world.WorldId,
                            CurrentDay = world.CurrentWorldDate.CurrentDay,
                            CurrentMonth = world.CurrentWorldDate.CurrentMonth,
                            CurrentYear = world.CurrentWorldDate.CurrentYear,
@@ -343,8 +363,8 @@ namespace EpochApp.Server.Services.WorldService
                        };
             var UserWorldDTO = new UserWorldDTO
                                {
-                                   OwnerId = world.OwnerID,
-                                   WorldId = world.WorldID,
+                                   OwnerId = world.OwnerId,
+                                   WorldId = world.WorldId,
                                    WorldName = world?.WorldName,
                                    Pronunciation = world?.Pronunciation,
                                    Excerpt = world?.Excerpt,
@@ -367,6 +387,31 @@ namespace EpochApp.Server.Services.WorldService
                                    CurrentWorldDate = date
                                };
             return UserWorldDTO;
+        }
+
+        public async Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
+        {
+            var world = await _context.Worlds.Include(x => x.Owner)
+                                      .Include(x => x.WorldArticles)
+                                      .FirstOrDefaultAsync(x => x.WorldId == worldId);
+            if (world.OwnerId != userId)
+                return null;
+
+            if (world != null)
+            {
+                world.DateRemoved = DateTime.UtcNow;
+                foreach (var article in world.WorldArticles)
+                    article.DeletedOn = DateTime.UtcNow;
+                _context.Entry(world).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(MapWorldToUserWorldDTO(world));
+            }
+            return null;
+        }
+
+        private async Task<bool> WorldExists(Guid existingWorldWorldId)
+        {
+            return await _context.Worlds.AnyAsync(x => x.WorldId == existingWorldWorldId);
         }
     }
 }

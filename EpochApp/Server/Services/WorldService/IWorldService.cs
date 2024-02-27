@@ -59,6 +59,27 @@ namespace EpochApp.Server.Services.WorldService
         /// <returns> A <see cref="World" />. </returns>
         Task<World> GetWorldViewAsync(Guid worldId);
 
+        /// <summary> Update a world. </summary>
+        /// <param name="world"> The world to update. </param>
+        /// <returns>
+        ///     A <see cref="UserWorldDTO" />.
+        /// </returns>
+        Task<UserWorldDTO> UpdateWorldAsync(UserWorldDTO world);
+
+        /// <summary>
+        ///     Remove a world from a user's list of worlds.
+        /// </summary>
+        /// <param name="userId">
+        ///     The user's unique identifier.
+        /// </param>
+        /// <param name="worldId">
+        ///     The world's unique identifier.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="UserWorldDTO" />.
+        /// </returns>
+        Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId);
+
         /// <summary>
         ///     Map a <see cref="UserWorldDTO" /> to a <see cref="World" />.
         /// </summary>

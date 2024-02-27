@@ -70,5 +70,17 @@ namespace EpochApp.Server.Services
         {
             return await _context.SocialMedias.ToListAsync();
         }
+
+        /// <inheritdoc />
+        public async Task<List<MetaCategory>> GetMetaAsync()
+        {
+            return await _context.MetaCategories.Include(x => x.Templates).ToListAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task<List<MetaTemplate>> GetMetaTemplatesAsync()
+        {
+            return await _context.MetaTemplates.Include(x => x.Category).ToListAsync();
+        }
     }
 }

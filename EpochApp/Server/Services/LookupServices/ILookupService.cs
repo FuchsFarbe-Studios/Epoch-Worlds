@@ -67,5 +67,19 @@ namespace EpochApp.Server.Services
         ///     A list of <see cref="SocialMedia" />.
         /// </returns>
         Task<List<SocialMedia>> GetSocialMediasAsync();
+
+        /// <summary>
+        ///     Get all meta categories.
+        /// </summary>
+        /// <returns> </returns>
+        Task<List<MetaCategory>> GetMetaAsync();
+
+        /// <summary>
+        ///     Get all meta templates.
+        /// </summary>
+        /// <returns>
+        ///     A list of <see cref="MetaTemplate" />.
+        /// </returns>
+        Task<List<MetaTemplate>> GetMetaTemplatesAsync();
     }
 }

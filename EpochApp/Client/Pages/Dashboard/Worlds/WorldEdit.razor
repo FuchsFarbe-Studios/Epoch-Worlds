@@ -27,9 +27,12 @@
 	}
 	else
 	{
-		<MudContainer MaxWidth="MaxWidth.Medium">
-			<MudText Typo="Typo.h3" Class="mb-1">Edit World</MudText>
-			<NewWorldForm WorldId="@_selectedWorld.WorldID" />
+
+		<MudContainer MaxWidth="MaxWidth.Large">
+			<MudPaper MinHeight="400px" Outlined="true" Width="100%" Class="pa-2 mt-2">
+				<MudText Typo="Typo.h3" Align="Align.Center" Class="mb-1">Editing @_selectedWorld?.WorldName <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Dark" Title="Edit icon." /></MudText>
+				<NewWorldForm IsEditForm="true" WorldId="@_selectedWorld.WorldID" />
+			</MudPaper>
 		</MudContainer>
 	}
 </MudPaper>

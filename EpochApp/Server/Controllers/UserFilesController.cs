@@ -161,12 +161,12 @@ namespace EpochApp.Server.Controllers
         public async Task<IActionResult> UploadWorldFileAsync([FromQuery] Guid userId, [FromQuery] Guid worldId, [FromBody] FileUploadDto fileUploadDto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserID == userId);
-            var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldID == worldId);
+            var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldId == worldId);
             if (user == null || world == null)
                 return BadRequest("Not a valid user or world.");
-            if (userId != user.UserID || world.OwnerID != user.UserID)
+            if (userId != user.UserID || world.OwnerId != user.UserID)
                 return BadRequest("You are not authorized to upload files for this user.");
-            if (userId != world.OwnerID)
+            if (userId != world.OwnerId)
                 return BadRequest("You are not authorized to upload files for this world.");
             // if (fileUploadDto.File.Size == 0)
             //     return BadRequest("No file uploaded.");

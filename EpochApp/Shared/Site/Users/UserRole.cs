@@ -32,7 +32,7 @@ namespace EpochApp.Shared.Users
         public Guid UserID { get; set; }
         public int RoleID { get; set; }
         public DateTime DateAssigned { get; set; }
-        public DateTime DateRemoved { get; set; }
+        public DateTime? DateRemoved { get; set; }
 
         public virtual User User { get; set; }
         public virtual Role Role { get; set; }

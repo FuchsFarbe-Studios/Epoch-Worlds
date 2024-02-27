@@ -27,7 +27,7 @@ namespace EpochApp.Shared.Worlds
 {
     public class WorldMeta
     {
-        public Guid WorldID { get; set; }
+        public Guid WorldId { get; set; }
         public int MetaID { get; set; }
         public string Content { get; set; }
 

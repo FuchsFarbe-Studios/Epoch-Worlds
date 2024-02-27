@@ -63,22 +63,28 @@ namespace EpochApp.Server.Controllers
             return Ok(world);
         }
 
-        [HttpPost("{worldId:guid}")]
-        public async Task<IActionResult> CreateWorldAsync(Guid worldId, [FromBody] UserWorldDTO world)
+        [HttpPost]
+        public async Task<IActionResult> CreateWorldAsync([FromBody] UserWorldDTO world)
         {
-            return Ok();
+            var newWorld = await _worldService.CreateWorldAsync(world);
+            return Ok(newWorld);
         }
 
         [HttpPut("{worldId:guid}")]
         public async Task<IActionResult> UpdateWorldAsync(Guid worldId, [FromBody] UserWorldDTO world)
         {
-            return Ok();
+            var updatedWorld = await _worldService.UpdateWorldAsync(world);
+            return Ok(updatedWorld);
         }
 
         [HttpDelete]
         public async Task<IActionResult> RemoveWorldAsync([FromQuery] Guid userId, [FromQuery] Guid worldId)
         {
-            return Ok();
+            var world = await _worldService.DeleteWorldAsync(userId, worldId);
+            if (world == null)
+                return Unauthorized();
+
+            return Ok(world);
         }
     }
 }

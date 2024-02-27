@@ -40,7 +40,7 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The date the post is scheduled to be posted.
         /// </summary>
-        public DateTime ScheduledTime { get; set; }
+        public DateTime? ScheduledTime { get; set; }
 
         /// <summary>
         ///     The date the post was posted.

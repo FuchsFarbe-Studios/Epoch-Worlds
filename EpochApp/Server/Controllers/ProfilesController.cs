@@ -259,7 +259,7 @@ namespace EpochApp.Server.Controllers
                        UserWorlds = x.OwnedWorlds.Select(w => new WorldDTO
                                                               {
                                                                   AuthorID = x.UserID,
-                                                                  WorldID = w.WorldID,
+                                                                  WorldID = w.WorldId,
                                                                   WorldName = w.WorldName,
                                                                   Pronunciation = w.Pronunciation,
                                                                   Description = w.Description,
@@ -270,7 +270,7 @@ namespace EpochApp.Server.Controllers
                                                                   IsActiveWorld = w.IsActiveWorld,
                                                                   WorldDate = new WorldDateDTO
                                                                               {
-                                                                                  WorldId = w.WorldID,
+                                                                                  WorldId = w.WorldId,
                                                                                   CurrentDay = w.CurrentWorldDate.CurrentDay,
                                                                                   CurrentMonth = w.CurrentWorldDate.CurrentMonth,
                                                                                   CurrentYear = w.CurrentWorldDate.CurrentYear,

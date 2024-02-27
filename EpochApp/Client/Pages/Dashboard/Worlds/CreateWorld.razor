@@ -6,10 +6,10 @@
 
 <PageTitle>@StaticUtils.Constants.AppName - Create World</PageTitle>
 
-<MudPaper MinHeight="400px" Outlined="true" Width="100%">
-	<MudContainer MaxWidth="MaxWidth.Medium">
-		<MudText Typo="Typo.h3" Class="mb-1">Create World</MudText>
-		<NewWorldForm />
+<MudContainer MaxWidth="MaxWidth.Large">
+	<MudPaper MinHeight="400px" Outlined="true" Width="100%" Class="pa-2 mt-2">
+		<MudText Typo="Typo.h3" Align="Align.Center" Class="mb-1">Create a new World <MudIcon Icon="@(StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAfrica])" Color="Color.Tertiary" Title="Creating world icon." /></MudText>
+		<NewWorldForm IsEditForm="false" />
 		@* <WorldForm IsEditMode="false" /> *@
-	</MudContainer>
-</MudPaper>
+	</MudPaper>
+</MudContainer>

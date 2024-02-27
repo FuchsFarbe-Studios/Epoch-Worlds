@@ -8,7 +8,7 @@ namespace EpochApp.Shared
     public class MetaDTO
     {
         public int MetaCategoryID { get; set; }
-        public int TemplateID { get; set; }
+        public int TemplateId { get; set; }
         public string TemplateName { get; set; }
         public string Description { get; set; }
         public string Placeholder { get; set; }

@@ -39,13 +39,13 @@ namespace EpochApp.Server.Controllers
         public async Task<ActionResult<IEnumerable<WorldDTO>>> GetUserWorlds([FromQuery] Guid ownerId)
         {
             var worlds = await _context.Worlds
-                                       .Where(x => x.OwnerID == ownerId && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
+                                       .Where(x => x.OwnerId == ownerId && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
                                        .Include(x => x.CurrentWorldDate)
                                        .Include(x => x.MetaData)
                                        .Select(x => new WorldDTO
                                                     {
-                                                        AuthorID = x.OwnerID,
-                                                        WorldID = x.WorldID,
+                                                        AuthorID = x.OwnerId,
+                                                        WorldID = x.WorldId,
                                                         WorldName = x.WorldName,
                                                         Pronunciation = x.Pronunciation,
                                                         Description = x.Description,
@@ -79,14 +79,14 @@ namespace EpochApp.Server.Controllers
         public async Task<IActionResult> GetActiveUserWorld([FromQuery] Guid ownerId)
         {
             var activeWorld = await _context.Worlds
-                                            .Where(x => x.OwnerID == ownerId && x.IsActiveWorld.Value == true && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
+                                            .Where(x => x.OwnerId == ownerId && x.IsActiveWorld.Value == true && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
                                             .Include(x => x.CurrentWorldDate)
                                             .Include(x => x.MetaData)
                                             .Include(x => x.Owner)
                                             .Select(x => new WorldDTO
                                                          {
-                                                             AuthorID = x.OwnerID,
-                                                             WorldID = x.WorldID,
+                                                             AuthorID = x.OwnerId,
+                                                             WorldID = x.WorldId,
                                                              WorldName = x.WorldName,
                                                              Pronunciation = x.Pronunciation,
                                                              Description = x.Description,
@@ -120,10 +120,10 @@ namespace EpochApp.Server.Controllers
         public async Task<IActionResult> UpdateActiveUserWorlds([FromBody] WorldDTO active)
         {
             var userWorlds = await _context.Worlds
-                                           .Where(x => x.OwnerID == active.AuthorID)
+                                           .Where(x => x.OwnerId == active.AuthorID)
                                            .ToListAsync();
             var activeWorld = await _context.Worlds
-                                            .Where(x => x.OwnerID == active.AuthorID && x.WorldID == active.WorldID)
+                                            .Where(x => x.OwnerId == active.AuthorID && x.WorldId == active.WorldID)
                                             .FirstOrDefaultAsync();
             foreach (var world in userWorlds)
             {
@@ -147,13 +147,13 @@ namespace EpochApp.Server.Controllers
                 throw;
             }
             var updatedWorld = await _context.Worlds
-                                             .Where(x => x.OwnerID == active.AuthorID && x.IsActiveWorld.Value == true && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
+                                             .Where(x => x.OwnerId == active.AuthorID && x.IsActiveWorld.Value == true && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
                                              .Include(x => x.CurrentWorldDate)
                                              .Include(x => x.MetaData)
                                              .Select(x => new WorldDTO
                                                           {
-                                                              AuthorID = x.OwnerID,
-                                                              WorldID = x.WorldID,
+                                                              AuthorID = x.OwnerId,
+                                                              WorldID = x.WorldId,
                                                               WorldName = x.WorldName,
                                                               Pronunciation = x.Pronunciation,
                                                               Description = x.Description,
@@ -192,8 +192,8 @@ namespace EpochApp.Server.Controllers
                                       .Include(x => x.Owner)
                                       .Select(x => new WorldDTO
                                                    {
-                                                       AuthorID = x.OwnerID,
-                                                       WorldID = x.WorldID,
+                                                       AuthorID = x.OwnerId,
+                                                       WorldID = x.WorldId,
                                                        WorldName = x.WorldName,
                                                        Pronunciation = x.Pronunciation,
                                                        Description = x.Description,
@@ -236,10 +236,10 @@ namespace EpochApp.Server.Controllers
                 return BadRequest();
 
             var userWorlds = await _context.Worlds
-                                           .Where(x => x.OwnerID == updatedWorld.AuthorID && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
+                                           .Where(x => x.OwnerId == updatedWorld.AuthorID && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
                                            .ToListAsync();
             var world = await _context.Worlds
-                                      .Where(x => x.WorldID == worldId && x.OwnerID == updatedWorld.AuthorID)
+                                      .Where(x => x.WorldId == worldId && x.OwnerId == updatedWorld.AuthorID)
                                       .Include(x => x.Owner)
                                       .Include(x => x.CurrentWorldDate)
                                       .Include(x => x.MetaData)
@@ -305,7 +305,7 @@ namespace EpochApp.Server.Controllers
         {
             var newWorld = new World
                            {
-                               OwnerID = world.AuthorID,
+                               OwnerId = world.AuthorID,
                                WorldName = world.WorldName,
                                Pronunciation = world.Pronunciation,
                                Description = world.Description,
@@ -323,7 +323,7 @@ namespace EpochApp.Server.Controllers
             _context.Worlds.Add(newWorld);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorld", new { ownerId = newWorld.OwnerID, worldId = newWorld.WorldID }, newWorld);
+            return CreatedAtAction("GetWorld", new { ownerId = newWorld.OwnerId, worldId = newWorld.WorldId }, newWorld);
         }
 
         /// <summary> Deletes a world. </summary>
@@ -336,7 +336,7 @@ namespace EpochApp.Server.Controllers
         public async Task<IActionResult> DeleteWorld(Guid ownerId, Guid worldId)
         {
             var world = await _context.Worlds
-                                      .Where(x => x.OwnerID == ownerId && x.WorldID == worldId)
+                                      .Where(x => x.OwnerId == ownerId && x.WorldId == worldId)
                                       .Include(world => world.CurrentWorldDate)
                                       .Include(world => world.MetaData)
                                       .FirstOrDefaultAsync();
@@ -349,8 +349,8 @@ namespace EpochApp.Server.Controllers
             await _context.SaveChangesAsync();
             var dto = new WorldDTO
                       {
-                          AuthorID = world.OwnerID,
-                          WorldID = world.WorldID,
+                          AuthorID = world.OwnerId,
+                          WorldID = world.WorldId,
                           WorldName = world.WorldName,
                           Pronunciation = world.Pronunciation,
                           Description = world.Description,
@@ -369,13 +369,13 @@ namespace EpochApp.Server.Controllers
 
         private bool WorldExists(Guid id)
         {
-            return _context.Worlds.Any(e => e.WorldID == id);
+            return _context.Worlds.Any(e => e.WorldId == id);
         }
 
         [HttpGet("NewWorld")]
         public async Task<IActionResult> GetWorldAsync([FromQuery] Guid worldId)
         {
-            var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldID == worldId);
+            var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldId == worldId);
             if (world == null)
                 return NotFound();
 
@@ -405,7 +405,7 @@ namespace EpochApp.Server.Controllers
                                       .Include(x => x.MetaData)
                                       .ThenInclude(x => x.Template)
                                       .ThenInclude(x => x.Category)
-                                      .FirstOrDefaultAsync(x => x.WorldID == worldId);
+                                      .FirstOrDefaultAsync(x => x.WorldId == worldId);
             return Ok(world);
         }
     }

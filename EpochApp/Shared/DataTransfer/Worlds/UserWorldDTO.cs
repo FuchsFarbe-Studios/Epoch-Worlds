@@ -5,6 +5,15 @@
 // Modified: 27-2-2024
 namespace EpochApp.Shared
 {
+
+    public class WorldMetaDTO
+    {
+        public Guid WorldId { get; set; }
+        public int TemplateId { get; set; }
+        public int CategoryId { get; set; }
+        public string Content { get; set; }
+    }
+
     public class UserWorldDTO
     {
         public Guid OwnerId { get; set; }
@@ -81,31 +90,31 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The date this world was last viewed.
         /// </summary>
-        public WorldDateDTO CurrentWorldDate { get; set; }
+        public WorldDateDTO CurrentWorldDate { get; set; } = new WorldDateDTO();
 
         /// <summary>
         ///     MetaData associated with this world.
         /// </summary>
-        public virtual ICollection<MetaDTO> MetaData { get; set; } = new List<MetaDTO>();
+        public virtual ICollection<WorldMetaDTO> MetaData { get; set; } = new List<WorldMetaDTO>();
 
         /// <summary>
         ///     Articles associated with this world.
         /// </summary>
-        public virtual ICollection<ArticleDTO> WorldArticles { get; set; }
+        public virtual ICollection<ArticleDTO> WorldArticles { get; set; } = new List<ArticleDTO>();
 
         /// <summary>
         ///     Tags associated with this world.
         /// </summary>
-        public virtual ICollection<WorldTagDTO> WorldTags { get; set; }
+        public virtual ICollection<WorldTagDTO> WorldTags { get; set; } = new List<WorldTagDTO>();
 
         /// <summary>
         ///     Files associated with this world.
         /// </summary>
-        public virtual ICollection<UserFileDTO> WorldFiles { get; set; }
+        public virtual ICollection<UserFileDTO> WorldFiles { get; set; } = new List<UserFileDTO>();
 
         /// <summary>
         ///     Genres associated with this world.
         /// </summary>
-        public virtual ICollection<WorldGenreDTO> WorldGenres { get; set; }
+        public virtual ICollection<WorldGenreDTO> WorldGenres { get; set; } = new List<WorldGenreDTO>();
     }
 }

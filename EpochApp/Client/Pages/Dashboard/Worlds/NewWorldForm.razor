@@ -1,5 +1,7 @@
 @using ButtonType=MudBlazor.ButtonType
 @using Variant=MudBlazor.Variant
+@using Position=MudBlazor.Position
+@using Typo=MudBlazor.Typo
 @using MudBlazor
 @inherits RequestComponent<UserWorldDTO>
 
@@ -9,10 +11,10 @@
 		<DataAnnotationsValidator />
 		<ValidationSummary />
 
-		<MudTabs Border="true" Color="Color.Default" SliderColor="Color.Primary" Elevation="0" PanelClass="pa-4 mt-2" Outlined="true" Rounded="true" KeepPanelsAlive="true" ApplyEffectsToContainer="true" TabPanelClass="my-2 pa-2">
+		<MudTabs Border="true" Color="Color.Surface" SliderColor="Color.Primary" Elevation="0" Outlined="true" Rounded="true" KeepPanelsAlive="true" ApplyEffectsToContainer="true" TabPanelClass="ma-2 pa-2" PanelClass="pa-4">
 
 			<!-- General World Information -->
-			<MudTabPanel Text="General">
+			<MudTabPanel Text="General" ID="@("General")">
 				<MudGrid>
 					<MudItem xs="12" sm="6">
 						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.WorldName" For="@(() => WorldModel.WorldName)" Label="Name" Variant="Variant.Filled" Required="true" AutoFocus="true" FullWidth="true" MaxLength="255" />
@@ -21,24 +23,35 @@
 						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Pronunciation" For="@(() => WorldModel.Pronunciation)" Label="Pronunciation" FullWidth="true" MaxLength="255" />
 					</MudItem>
 					<MudItem xs="12">
-						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Description" For="@(() => WorldModel.Description)" Label="Description" Variant="Variant.Outlined" Lines="5" FullWidth="true" MaxLength="2000" />
-					</MudItem>
-					<MudItem xs="12" sm="6">
 						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Header" For="@(() => WorldModel.Header)" Label="Header" FullWidth="true" MaxLength="255" />
 					</MudItem>
-					<MudItem xs="12" sm="6">
-						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.SubHeader" For="@(() => WorldModel.SubHeader)" Label="Sub Header" FullWidth="true" MaxLength="255" />
-					</MudItem>
 					<MudItem xs="12">
-						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Excerpt" For="@(() => WorldModel.Excerpt)" Label="Excerpt" Variant="Variant.Outlined" Lines="2" FullWidth="true" MaxLength="500" />
+						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Description" For="@(() => WorldModel.Description)" Label="Description" Variant="Variant.Outlined" Lines="5" FullWidth="true" MaxLength="2000" />
 					</MudItem>
+
+					@if (WorldModel.WorldFiles.Any())
+					{
+						<MudItem xs="12" sm="6">
+							<MudSelect Margin="Margin.Dense" @bind-Value="@WorldModel.Image" For="@(() => WorldModel.Image)" Label="Select Cover Image" FullWidth="true">
+								@foreach (var file in WorldModel.WorldFiles)
+								{
+									<MudSelectItem Value="@file.FilePath">
+										<img src="@($"/{file.FilePath}")" height="16px" alt="@file.AltText" />
+										@(!string.IsNullOrEmpty(file.Alias)
+											  ? file.Alias
+											  : file.SafeName)
+									</MudSelectItem>
+								}
+							</MudSelect>
+						</MudItem>
+					}
 				</MudGrid>
 			</MudTabPanel>
 
-			<MudTabPanel Text="Details">
+			<MudTabPanel Text="Details" ID="@("Details")">
 				<MudGrid>
 					<MudItem xs="12">
-						<MudSelect Label="Language" @bind-Value="@WorldModel.LanguageCode" For="@(() => WorldModel.LanguageCode)" Margin="Margin.Dense" Variant="Variant.Outlined" Dense="true" FullWidth="true">
+						<MudSelect Label="Language" @bind-Value="@WorldModel.LanguageCode" For="@(() => WorldModel.LanguageCode)" Margin="Margin.Dense" Dense="true" FullWidth="true">
 							@foreach (var lang in _languages)
 							{
 								<MudSelectItem Value="@lang.LanguageCode">@lang.LanguageName</MudSelectItem>
@@ -51,11 +64,92 @@
 					<MudItem xs="12" sm="6">
 						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.FollowerNamingPlural" For="@(() => WorldModel.FollowerNamingPlural)" Label="Follower Name Plural" FullWidth="true" MaxLength="100" />
 					</MudItem>
+					<MudItem xs="12" sm="6">
+						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.SubHeader" For="@(() => WorldModel.SubHeader)" Label="Sub Header" FullWidth="true" MaxLength="255" />
+					</MudItem>
+					<MudItem xs="12" sm="6">
+						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Excerpt" For="@(() => WorldModel.Excerpt)" Label="Excerpt" Variant="Variant.Outlined" Lines="2" FullWidth="true" MaxLength="500" />
+					</MudItem>
 				</MudGrid>
+			</MudTabPanel>
+
+			<MudTabPanel Text="Calendar" ID="@("Calendar")">
+				<MudGrid>
+
+					<MudItem xs="12">
+						<MudTextField Label="Current Age" @bind-Value="@WorldModel.CurrentWorldDate.CurrentAge" For="@(() => WorldModel.CurrentWorldDate.CurrentAge)" FullWidth="true" MaxLength="100" />
+					</MudItem>
+
+					<MudItem xs="12" sm="8">
+						<MudStack>
+							<MudTextField Label="Before Era Name" @bind-Value="@WorldModel.CurrentWorldDate.BeforeEra" For="@(() => WorldModel.CurrentWorldDate.BeforeEra)" Margin="Margin.Dense" FullWidth="true" />
+							<MudTextField Label="After Era Name" @bind-Value="@WorldModel.CurrentWorldDate.AfterEra" For="@(() => WorldModel.CurrentWorldDate.AfterEra)" Margin="Margin.Dense" FullWidth="true" />
+						</MudStack>
+					</MudItem>
+
+					<MudItem xs="12" sm="4">
+						<MudStack>
+							<MudTextField Label="B.E. Abbr." HelperText="Abbreviation of the Before Era Name." @bind-Value="@WorldModel.CurrentWorldDate.BeforeEraAbbreviation" For="@(() => WorldModel.CurrentWorldDate.BeforeEraAbbreviation)" Margin="Margin.Dense" FullWidth="true" MaxLength="10" />
+							<MudTextField Label="A.E. Abbr." HelperText="Abbreviation of the After Era Name." @bind-Value="@WorldModel.CurrentWorldDate.AfterEraAbbreviation" For="@(() => WorldModel.CurrentWorldDate.AfterEraAbbreviation)" Margin="Margin.Dense" FullWidth="true" MaxLength="10" />
+						</MudStack>
+					</MudItem>
+
+					<MudItem xs="12" sm="6">
+						<MudStack>
+							<MudNumericField Margin="Margin.Dense" T="int" @bind-Value="@WorldModel.CurrentWorldDate.CurrentDay" For="@(() => WorldModel.CurrentWorldDate.CurrentDay)" Label="Current Day" FullWidth="true" />
+							<MudNumericField Margin="Margin.Dense" T="int" @bind-Value="@WorldModel.CurrentWorldDate.CurrentMonth" For="@(() => WorldModel.CurrentWorldDate.CurrentDay)" Label="Current Month" FullWidth="true" />
+						</MudStack>
+					</MudItem>
+
+					<MudItem xs="12" sm="6">
+						<MudStack>
+							<MudNumericField Margin="Margin.Dense" T="int" @bind-Value="@WorldModel.CurrentWorldDate.CurrentYear" For="@(() => WorldModel.CurrentWorldDate.CurrentYear)" Label="Current Year" FullWidth="true" />
+							<MudText Typo="Typo.caption" Align="Align.Center" Color="Color.Secondary">It is currently day @WorldModel.CurrentWorldDate.CurrentDay of month @WorldModel.CurrentWorldDate.CurrentMonth, year @WorldModel.CurrentWorldDate.CurrentYear in the world of @WorldModel.WorldName </MudText>
+						</MudStack>
+					</MudItem>
+
+				</MudGrid>
+			</MudTabPanel>
+
+			<MudTabPanel Text="World Meta" ID="@("Meta")">
+				<MudExpansionPanels Dense="true" Elevation="0" DisableGutters="false" Class="mud-border-primary">
+					@foreach (var cat in _categories)
+					{
+						<MudExpansionPanel Dense="true">
+							<TitleContent>
+								<MudText Typo="Typo.h6" Color="Color.Primary">@cat.Description</MudText>
+							</TitleContent>
+							<ChildContent>
+								<MudPaper Width="100%" Class="pa-1 ma-1" Outlined="true">
+									<MudTabs Position="Position.Left" Rounded="true" Border="true" Color="Color.Primary" Outlined="true" KeepPanelsAlive="true" PanelClass="pa-4" Class="ma-2">
+										@foreach (var meta in WorldModel.MetaData.Where(x => x.CategoryId == cat.CategoryId))
+										{
+											var template = _templates.FirstOrDefault(x => x.TemplateId == meta.TemplateId && x.CategoryId == meta.CategoryId);
+											var worldMeta = WorldModel.MetaData.FirstOrDefault(x => x.TemplateId == meta.TemplateId);
+											<MudTabPanel Text="@(template.TemplateName)" ID="@template.TemplateId">
+												<MudTextField @bind-Value="@worldMeta.Content" For="@(() => worldMeta.Content)" Label="@template.Description" HelperText="@template.HelpText" Placeholder="@template.Placeholder" Lines="8" FullWidth="true" Variant="Variant.Filled" />
+											</MudTabPanel>
+										}
+									</MudTabs>
+								</MudPaper>
+							</ChildContent>
+						</MudExpansionPanel>
+					}
+				</MudExpansionPanels>
 			</MudTabPanel>
 
 		</MudTabs>
 
-		<MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" FullWidth="true">Submit</MudButton>
+		<MudDivider DividerType="DividerType.FullWidth" Light="false" Class="mb-2 mt-2" />
+		<MudButton Size="Size.Large" Color="Color.Primary" Variant="Variant.Filled" DisableElevation="true" ButtonType="ButtonType.Submit" FullWidth="true" Disabled="@_submitting" EndIcon="@Icons.Material.Filled.Upload" IconColor="Color.Inherit" Class="">
+			@if (_submitting)
+			{
+				<MudProgressLinear Indeterminate="true" Color="Color.Primary" Size="Size.Small" />
+			}
+			else
+			{
+				<MudText>Submit</MudText>
+			}
+		</MudButton>
 	</EditForm>
 }

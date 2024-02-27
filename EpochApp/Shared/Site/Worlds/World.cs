@@ -29,12 +29,12 @@ namespace EpochApp.Shared.Worlds
         /// <summary>
         ///     The user that owns this world.
         /// </summary>
-        public Guid OwnerID { get; set; }
+        public Guid OwnerId { get; set; }
 
         /// <summary>
         ///     Unique identifier for this world.
         /// </summary>
-        public Guid WorldID { get; set; }
+        public Guid WorldId { get; set; }
 
         /// <summary> The name of the world. </summary>
         public string WorldName { get; set; }

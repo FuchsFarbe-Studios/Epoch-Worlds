@@ -42,7 +42,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
 
         private async Task HandleWorldDeletionAsync(UserWorldDTO world)
         {
-            if (_userWorlds.Count < 2)
+            if (_newUserWorlds.Count < 2)
             {
                 var messageResult = await DialogService.ShowMessageBox(
                                     "Warning - Cannot Delete Only World!",
@@ -58,14 +58,12 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
             if (result != true)
                 return;
 
-            var response = await Client.DeleteFromJsonAsync<WorldDTO>($"api/v1/Worlds/{Auth.CurrentUser.UserID}/{world.WorldId}");
+            var response = await Client.DeleteFromJsonAsync<UserWorldDTO>($"api/v2/Worlds?userId={Auth.CurrentUser.UserID}&worldId={world.WorldId}");
             if (response != null)
             {
-                if (_userWorlds.Any(x => x.WorldID == response.WorldID))
+                if (_newUserWorlds.Any(x => x.WorldId == response.WorldId))
                 {
-                    var worldToDelete = _newUserWorlds.FirstOrDefault(x => x.WorldId == response.WorldID);
-                    _userWorlds.Remove(response);
-                    _newUserWorlds.Remove(worldToDelete);
+                    _newUserWorlds.Remove(response);
                     StateHasChanged();
                 }
             }

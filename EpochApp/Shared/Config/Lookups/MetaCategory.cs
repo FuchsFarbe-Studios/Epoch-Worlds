@@ -8,10 +8,15 @@ namespace EpochApp.Shared.Config
 {
     public class MetaCategory
     {
-        public int CategoryID { get; set; }
-
+        public MetaCategory()
+        {
+            Templates = new HashSet<MetaTemplate>();
+        }
+        public int CategoryId { get; set; }
         public string Description { get; set; }
 
         public string CategoryInfo { get; set; }
+
+        public virtual ICollection<MetaTemplate> Templates { get; set; }
     }
 }

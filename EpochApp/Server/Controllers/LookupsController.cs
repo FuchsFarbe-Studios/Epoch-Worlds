@@ -1,4 +1,6 @@
+using EpochApp.Server.Data;
 using EpochApp.Server.Services;
+using EpochApp.Shared.Config;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EpochApp.Server.Controllers
@@ -10,11 +12,13 @@ namespace EpochApp.Server.Controllers
     [ApiController]
     public class LookupsController : ControllerBase
     {
+        private readonly EpochDataDbContext _context;
         private readonly ILookupService _lookupService;
 
-        public LookupsController(ILookupService lookupService)
+        public LookupsController(ILookupService lookupService, EpochDataDbContext context)
         {
             _lookupService = lookupService;
+            _context = context;
         }
 
         /// <summary>
@@ -75,6 +79,19 @@ namespace EpochApp.Server.Controllers
         {
             var dictionaryWords = await _lookupService.GetDictionaryWordsAsync();
             return Ok(dictionaryWords);
+        }
+
+        [HttpGet("lkMeta")]
+        public async Task<ActionResult<List<MetaCategory>>> GetMetaAsync()
+        {
+            var meta = await _lookupService.GetMetaAsync();
+            return Ok(meta);
+        }
+
+        [HttpGet("lkMetaTemplates")]
+        public async Task<IActionResult> GetMetaTemplatesAsync()
+        {
+            return Ok(await _lookupService.GetMetaTemplatesAsync());
         }
     }
 }
