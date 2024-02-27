@@ -1,41 +1,53 @@
 @page "/Worlds"
-@using FTypo=Flatify.Typo
 @using Typo=MudBlazor.Typo
-@using Justify=MudBlazor.Justify
 @using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Worlds
 
 <PageTitle>@StaticUtils.Constants.AppName - @(Auth.CurrentUser.UserName)'s Worlds</PageTitle>
 
-<FlatTypo Typo="FTypo.Heading3">My Worlds</FlatTypo>
-
-<MudGrid>
-	@foreach (var world in _userWorlds)
-	{
-		<MudItem @key=@world.WorldID xs="12" sm="6" md="4" lg="3">
-			<MudPaper Class="pa-1" Outlined="true" Width="100%" MinHeight="250px">
-				<MudStack Justify="Justify.SpaceBetween">
-					<MudText Typo="Typo.h5" Color="@(world.WorldID == ActiveWorld?.WorldID ? Color.Success : Color.Default)">@world.WorldName @($"{(world.WorldID == ActiveWorld?.WorldID ? "(Active)" : "")}")</MudText>
-					<AuthorizeView Roles="ADMIN,INTERNAL">
-						<MudText Typo="Typo.caption">@world.WorldID</MudText>
-					</AuthorizeView>
-					<MudDivider Class="my-1" DividerType="DividerType.Middle" />
-					<MudText Typo="Typo.body1">@world.Description</MudText>
-					<MudPaper Outlined="true" Width="100%" Square="true">
-						<MudToolBar>
-							<MudIconButton Icon="@Icons.Material.Filled.Edit" Href="@($"{NavRef.WorldNav.Edit}/{world.WorldID}")" Title="Edit this world." />
-							<MudIconButton Icon="@Icons.Material.Filled.Visibility" Href="@($"/W/{world.WorldID}")" Title="View world." />
-							<MudSpacer />
-							<MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await HandleWorldDeletionAsync(world))" Title="Delete world." />
-						</MudToolBar>
-					</MudPaper>
-				</MudStack>
-			</MudPaper>
-		</MudItem>
-	}
-	<MudItem xs="12" sm="6" md="4" lg="3">
-		<MudPaper Outlined="true" MinHeight="250px" Width="100%" Class="p-1">
-			<MudButton Class="m-auto" Style="height: 240px;" FullWidth="true" Color="Color.Primary" OnClick="@(() => Nav.NavigateTo(NavRef.WorldNav.Create))">Create World</MudButton>
-		</MudPaper>
-	</MudItem>
-</MudGrid>
+<MudContainer>
+	<MudPaper Outlined="true" Width="100%" MinHeight="300px" Class="mud-border-dark pa-4 mt-2">
+		<MudText Align="Align.Center" GutterBottom="true" Typo="Typo.h3">@($"{Auth.CurrentUser.UserName}'s Worlds")</MudText>
+		<MudDivider Class="my-1" Light="false" DividerType="DividerType.Middle" />
+		<MudGrid>
+			@foreach (var world in _newUserWorlds)
+			{
+				<MudItem @key=@world.WorldId xs="12" sm="6" md="4" lg="3">
+					<MudCard Outlined="true" Class="pa-2 mud-border-primary" Style="min-height: 200px;">
+						@if (!string.IsNullOrEmpty(world.Image))
+						{
+							<MudCardMedia Image="@($"/{world.Image}")" Title="World header image." />
+						}
+						<MudCardHeader>
+							<CardHeaderActions>
+								<MudIconButton Icon="@Icons.Material.Filled.Visibility" Href="@($"/W/{world.WorldId}")" Title="View world." />
+							</CardHeaderActions>
+							<CardHeaderContent>
+								<MudText Typo="Typo.h5" Color="@(world.WorldId == NewActiveWorld?.WorldId ? Color.Success : Color.Default)" GutterBottom="true">@world.WorldName @($"{(world.WorldId == NewActiveWorld?.WorldId ? "(Active)" : "")}")</MudText>
+							</CardHeaderContent>
+						</MudCardHeader>
+						<MudCardContent>
+							<MudStack>
+								<AuthorizeView Roles="ADMIN,INTERNAL">
+									<MudText Typo="Typo.caption">@world.WorldId</MudText>
+								</AuthorizeView>
+								<MudDivider Class="my-1" DividerType="DividerType.Middle" />
+								<MudText Typo="Typo.h6" GutterBottom="true">@world?.Header</MudText>
+								<MudText Typo="Typo.caption">@world?.Excerpt</MudText>
+							</MudStack>
+							<MudCardActions>
+								<MudIconButton Icon="@Icons.Material.Filled.Edit" Href="@($"{NavRef.WorldNav.Edit}/{world.WorldId}")" Title="Edit this world." />
+								<MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await HandleWorldDeletionAsync(world))" Title="Delete world." />
+							</MudCardActions>
+						</MudCardContent>
+					</MudCard>
+				</MudItem>
+			}
+			<MudItem xs="12" sm="6" md="4" lg="3">
+				<MudPaper Outlined="true" MinHeight="250px" Width="100%" Class="p-1">
+					<MudButton Class="m-auto" Style="height: 240px;" FullWidth="true" Color="Color.Primary" OnClick="@(() => Nav.NavigateTo(NavRef.WorldNav.Create))">Create World</MudButton>
+				</MudPaper>
+			</MudItem>
+		</MudGrid>
+	</MudPaper>
+</MudContainer>
