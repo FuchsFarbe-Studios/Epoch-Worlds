@@ -496,8 +496,64 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("ClientSettings", "Client");
                 entity.HasKey(e => e.SettingId);
-                entity.Property(e => e.SettingId).ValueGeneratedOnAdd();
+                entity.Property(e => e.SettingId)
+                      .ValueGeneratedOnAdd();
                 entity.Property(e => e.FieldName).HasMaxLength(50);
+                entity.Property(e => e.SettingField).HasMaxLength(100);
+                entity.Property(e => e.SettingValue).HasMaxLength(500);
+
+                var data = new List<ClientSetting>
+                           {
+                               new ClientSetting
+                               {
+                                   SettingId = 12,
+                                   FieldName = "Company",
+                                   SettingField = "Name",
+                                   SettingValue = "FuchsFarbe Studios LLC",
+                                   SettingFieldId = 0
+                               },
+                               new ClientSetting
+                               {
+                                   SettingId = 13,
+                                   FieldName = "Company",
+                                   SettingField = "Address",
+                                   SettingValue = "4078 Laurel Lane, Mount Joy PA, 17552",
+                                   SettingFieldId = 0
+                               },
+                               new ClientSetting
+                               {
+                                   SettingId = 14,
+                                   FieldName = "Company",
+                                   SettingField = "Phone",
+                                   SettingValue = "(717) 824-7924",
+                                   SettingFieldId = 0
+                               },
+                               new ClientSetting
+                               {
+                                   SettingId = 15,
+                                   FieldName = "Company",
+                                   SettingField = "SupportEmail",
+                                   SettingValue = "contact@epochgen.com",
+                                   SettingFieldId = 0
+                               },
+                               new ClientSetting
+                               {
+                                   SettingId = 16,
+                                   FieldName = "Company",
+                                   SettingField = "SiteName",
+                                   SettingValue = "The Epoch Exchange",
+                                   SettingFieldId = 0
+                               },
+                               new ClientSetting
+                               {
+                                   SettingId = 17,
+                                   FieldName = "Company",
+                                   SettingField = "ContactLink",
+                                   SettingValue = "https://epochgen.com/Contact",
+                                   SettingFieldId = 0
+                               }
+                           };
+                entity.HasData(data);
             });
 
             modelBuilder.Entity<UserFile>(entity =>

@@ -14,6 +14,8 @@ namespace EpochApp.Shared.Client
         ProductNotification,
         PromotionNotification,
         OrderNotification,
-        OrderConfirmation
+        OrderConfirmation,
+        Feedback
+
     }
 }

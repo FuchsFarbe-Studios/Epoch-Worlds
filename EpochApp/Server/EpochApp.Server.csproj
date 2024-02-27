@@ -39,10 +39,15 @@
         <ProjectReference Include="..\Shared\EpochApp.Shared.csproj"/>
         <ProjectReference Include="..\UserContent\*"/>
         <ProjectReference Include="..\WorldContent\*"/>
+        <ProjectReference Include="..\Templates\*"/>
     </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="Controllers\ArticleCategoriesController.cs"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Templates\"/>
     </ItemGroup>
 
 

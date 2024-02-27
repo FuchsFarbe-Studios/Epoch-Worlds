@@ -25,7 +25,9 @@ namespace EpochApp.Server.Controllers
         private const int iterations = 350000;
         private readonly IConfiguration _configuration;
         private readonly EpochDataDbContext _context;
+        private readonly ILogger<EpochUsersController> _logger;
         private readonly IMailService _mail;
+        private readonly Random _random = new Random();
         private readonly IWorldService _worldService;
         private HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
 
@@ -40,12 +42,13 @@ namespace EpochApp.Server.Controllers
         /// </param>
         /// <param name="mail"> The injected <see cref="IMailService" /> mail service. </param>
         /// <param name="worldService"> The injected <see cref="IWorldService" /> world service. </param>
-        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration, IMailService mail, IWorldService worldService)
+        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration, IMailService mail, IWorldService worldService, ILogger<EpochUsersController> logger)
         {
             _context = context;
             _configuration = configuration;
             _mail = mail;
             _worldService = worldService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -182,6 +185,20 @@ namespace EpochApp.Server.Controllers
                 ModelState.AddModelError(nameof(LoginDTO.UserName), "Unauthorized!");
                 return BadRequest(ModelState);
             }
+            var roles = user.UserRoles.Select(ur => ur.Role).ToList();
+            var verifiedRole = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 2);
+
+            if (user.IsVerified && !roles.Contains(verifiedRole))
+            {
+                _logger.LogInformation("User is verified but does not have the verified role. Adding verified role...");
+                user.UserRoles.Add(new UserRole
+                                   {
+                                       RoleID = 2,
+                                       DateAssigned = DateTime.UtcNow
+                                   });
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
 
             var data = new UserData
                        {
@@ -247,6 +264,11 @@ namespace EpochApp.Server.Controllers
             user.VerificationToken = null;
             user.VerificationTokenCreated = null;
             user.VerificationTokenExpires = null;
+            user.UserRoles.Add(new UserRole
+                               {
+                                   RoleID = 2,
+                                   DateAssigned = DateTime.UtcNow
+                               });
 
             _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -355,9 +377,10 @@ namespace EpochApp.Server.Controllers
             user.UserRoles.Add(new UserRole { DateAssigned = DateTime.Today, User = user, Role = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 1) });
             user.Profile = new Profile();
             user.DateCreated = DateTime.UtcNow;
-            user.VerificationToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+            user.VerificationToken = _random.NextInt64(1, 999999999999).ToString("D12");
             user.VerificationTokenCreated = DateTime.UtcNow;
             user.VerificationTokenExpires = DateTime.UtcNow.AddDays(7);
+            _logger.LogInformation($"Verification Token: {user.VerificationToken}");
             user.OwnedWorlds.Add(newWorld);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();

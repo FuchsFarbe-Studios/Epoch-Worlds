@@ -12,15 +12,37 @@ using System.Net.Mail;
 
 namespace EpochApp.Server.Services
 {
+    // {VERIFICATION-LINK}
+    // {VERIFICATION-URL}
+    // {PASSWORD-RESET-LINK}
+    // {PASSWORD-RESET-URL}
+    // {COMMUNITY-LINK}
+    // {COMMUNITY-UPDATE}
+    // {CONTACT-LINK}
+    // {EXPIRATION}
+    // {SUPPORT-EMAIL}
+    // {SITE-NAME}
+    // {PHONE-NUMBER}
+    // {SUPPORT-EMAIL}
+    // {WEBSITE}
+    // {ADDRESS}
+    // {SOCIALS}
+    // {USERNAME}
+    // {PROMO}
+    // {NOTIFICATION}
     public class MailService : IMailService
     {
-        private readonly MailSettings _mailConfig;
+        private readonly IHttpContextAccessor _accessor;
         private readonly EpochDataDbContext _context;
+        private readonly ILogger<MailService> _logger;
+        private readonly MailSettings _mailConfig;
 
-        public MailService(MailSettings mailConfig, EpochDataDbContext context)
+        public MailService(MailSettings mailConfig, EpochDataDbContext context, IHttpContextAccessor accessor, ILogger<MailService> logger)
         {
             _mailConfig = mailConfig;
             _context = context;
+            _accessor = accessor;
+            _logger = logger;
         }
 
         /// <inheritdoc />
@@ -48,15 +70,48 @@ namespace EpochApp.Server.Services
         /// <inheritdoc />
         public async Task SendVerificationEmailAsync(string email, string userName, string token)
         {
+            // Name
+            // Address
+            // Phone
+            // SupportEmail
+            // SiteName
+            // ContactLink
+
+            var companySettings = await _context.ClientSettings.Where(x => x.FieldName == "Company").ToListAsync();
+            var companyName = companySettings.FirstOrDefault(x => x.SettingField == "Name");
+            var companyEmail = companySettings.FirstOrDefault(x => x.SettingField == "SupportEmail");
+            var companyPhone = companySettings.FirstOrDefault(x => x.SettingField == "Phone");
+            var companyAddress = companySettings.FirstOrDefault(x => x.SettingField == "Address");
+            var companySite = companySettings.FirstOrDefault(x => x.SettingField == "SiteName");
+            var contactPage = companySettings.FirstOrDefault(x => x.SettingField == "ContactLink");
+            // var companySocials = companySettings.FirstOrDefault(x => x.FieldName == "Socials");
+
+
             var emailTemplate = await _context.EmailTemplates.Where(x => x.TemplateId == EmailTemplateType.AccountVerification).FirstOrDefaultAsync();
             if (emailTemplate == null)
                 return;
 
-            var subject = emailTemplate.Subject;
-            subject = subject.Replace("{USER}", userName);
+            var request = _accessor.HttpContext.Request;
+            var baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+            _logger.LogWarning("Base URI: " + baseUrl);
+            // /Verification/{Token?}
+            var verificationUrl = $"{baseUrl}/Verification/{token}";
+            var verificationLink = $"<a href=\"{verificationUrl}\">Verify!</a>";
             var body = emailTemplate.HtmlBody;
-            body = body.Replace("{TOKEN}", token);
-            body = body.Replace("{USER}", userName);
+            body = body.Replace("{VERIFICATION-LINK}", verificationLink);
+            body = body.Replace("{VERIFICATION-URL}", verificationUrl);
+            body = body.Replace("{USERNAME}", userName);
+            body = body.Replace("{SUPPORT-EMAIL}", companyEmail.SettingValue);
+            body = body.Replace("{SITE-NAME}", companySite.SettingValue);
+            body = body.Replace("{PHONE-NUMBER}", companyPhone.SettingValue);
+            body = body.Replace("{ADDRESS}", companyAddress.SettingValue);
+            body = body.Replace("{CONTACT-LINK}", baseUrl + contactPage.SettingValue);
+
+            var subject = emailTemplate.Subject;
+            subject = subject.Replace("{USERNAME}", userName);
+            subject = subject.Replace("{SITE-NAME}", companySite.SettingValue);
+
+            _logger.LogWarning("Sending Verification Email to: " + email);
             await SendEmail(email, subject, body);
         }
     }

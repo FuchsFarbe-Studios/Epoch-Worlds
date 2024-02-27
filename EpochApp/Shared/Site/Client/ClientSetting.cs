@@ -16,6 +16,9 @@ namespace EpochApp.Shared.Client
         /// <summary> The setting name. </summary>
         public string FieldName { get; set; }
 
+        /// <summary> The setting field. </summary>
+        public string SettingField { get; set; }
+
         /// <summary> The setting value. </summary>
         public string SettingValue { get; set; }
 

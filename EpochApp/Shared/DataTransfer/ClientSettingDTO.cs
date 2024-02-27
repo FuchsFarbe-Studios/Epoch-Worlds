@@ -7,8 +7,9 @@ namespace EpochApp.Shared
 {
     public class ClientSettingDTO
     {
-        public string FieldName { get; set; }
-        public string? Content { get; set; }
+        public string SettingGroup { get; set; }
+        public string? Setting { get; set; }
+        public string? SettingVal { get; set; }
         public int? FieldId { get; set; }
     }
 }

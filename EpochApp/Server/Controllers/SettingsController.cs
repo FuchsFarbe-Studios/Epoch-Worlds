@@ -26,8 +26,8 @@ namespace EpochApp.Server.Controllers
         {
             return await _context.ClientSettings.Select(c => new ClientSettingDTO
                                                              {
-                                                                 FieldName = c.FieldName,
-                                                                 Content = c.SettingValue,
+                                                                 SettingGroup = c.FieldName,
+                                                                 SettingVal = c.SettingValue,
                                                                  FieldId = c.SettingFieldId
                                                              })
                                  .ToListAsync();
@@ -36,14 +36,17 @@ namespace EpochApp.Server.Controllers
         [HttpGet("{settingName}")]
         public async Task<ActionResult<IEnumerable<ClientSettingDTO>>> GetSettingsByName(string settingName)
         {
-            return await _context.ClientSettings.Select(c => new ClientSettingDTO
-                                                             {
-                                                                 FieldName = c.FieldName,
-                                                                 Content = c.SettingValue,
-                                                                 FieldId = c.SettingFieldId
-                                                             })
-                                 .Where(x => x.FieldName.ToLower() == settingName.ToLower())
-                                 .ToListAsync();
+            var settings = await _context.ClientSettings.Where(x => x.FieldName.ToLower() == settingName.ToLower()).ToListAsync();
+            if (!settings.Any())
+                return NotFound();
+
+            var settingData = settings.Select(c => new ClientSettingDTO
+                                                   {
+                                                       SettingGroup = c.FieldName,
+                                                       SettingVal = c.SettingValue,
+                                                       FieldId = c.SettingFieldId
+                                                   });
+            return Ok(settingData);
         }
 
         private bool SettingExists(int id)

@@ -12,6 +12,7 @@ namespace EpochApp.Client.Pages.Auth
     /// </summary>
     public partial class Verification
     {
+        private bool _isSuccess;
         private VerificationDTO _verificationDTO = new VerificationDTO();
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace EpochApp.Client.Pages.Auth
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            if (Token is not null)
+            if (!string.IsNullOrEmpty(Token))
             {
                 _verificationDTO.Token = Token;
                 await Task.Delay(1000);
@@ -41,6 +42,8 @@ namespace EpochApp.Client.Pages.Auth
             var response = await Client.PostAsJsonAsync<VerificationDTO>("api/v1/EpochUsers/Verification", _verificationDTO);
             if (response.IsSuccessStatusCode)
             {
+                _isSuccess = true;
+                await Task.Delay(2000);
                 Nav.NavigateTo(NavRef.UserNav.Dashboard);
             }
             else

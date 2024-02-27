@@ -10,17 +10,29 @@ using System.Security.Claims;
 
 namespace EpochApp.Client.Services
 {
+    /// <summary>
+    ///     The authentication provider for the application.
+    /// </summary>
     public class EpochAuthProvider : AuthenticationStateProvider, IDisposable
     {
         private readonly ILogger<EpochAuthProvider> _logger;
         private readonly EpochUserService _userService;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="EpochAuthProvider" /> class.
+        /// </summary>
+        /// <param name="userService"> The user service. </param>
+        /// <param name="logger"> The logger. </param>
         public EpochAuthProvider(EpochUserService userService, ILogger<EpochAuthProvider> logger)
         {
             _userService = userService;
             _logger = logger;
             AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
         }
+
+        /// <summary>
+        ///     Currently signed in User principal.
+        /// </summary>
         public UserData CurrentUser { get; private set; } = new UserData();
 
         /// <inheritdoc />
@@ -38,7 +50,6 @@ namespace EpochApp.Client.Services
             if (user is not null)
             {
                 var authenticatedUser = await _userService.SendAuthenticateRequestAsync(user.UserName, user.Hash);
-
                 if (authenticatedUser is not null)
                 {
                     principal = authenticatedUser.ToClaimsPrincipal();

@@ -32,6 +32,20 @@ namespace EpochApp.Client.Services
             _authData = authData;
         }
 
+        public async Task<UserData> SendRefreshTokenRequestAsync()
+        {
+            var response = await _client.PostAsync("api/v1/EpochUsers/Refresh-Token", null);
+            if (response.IsSuccessStatusCode)
+            {
+                var token = await response.Content.ReadAsStringAsync();
+                var claimPrincipal = CreateClaimsPrincipalFromToken(token);
+                var user = UserData.FromClaimsPrincipal(claimPrincipal);
+                PersistUserToBrowser(token);
+                return user;
+            }
+            return null;
+        }
+
         /// <summary>
         ///     Sends a request to the server to authenticate the user.
         /// </summary>
@@ -44,12 +58,9 @@ namespace EpochApp.Client.Services
         {
             // Don't send a request if the username or password is empty.
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-            {
                 return null;
-            }
 
-            var response = await _client.PostAsJsonAsync("api/v1/EpochUsers/Authentication"
-                                                         , new LoginDTO { UserName = username, Password = password });
+            var response = await _client.PostAsJsonAsync("api/v1/EpochUsers/Authentication", new LoginDTO { UserName = username, Password = password });
 
             if (response.IsSuccessStatusCode)
             {
@@ -74,7 +85,6 @@ namespace EpochApp.Client.Services
         {
             var claimsPrincipal = CreateClaimsPrincipalFromToken(_authData.Token);
             var user = UserData.FromClaimsPrincipal(claimsPrincipal);
-
             return user;
         }
 

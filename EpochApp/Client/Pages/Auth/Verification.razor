@@ -5,4 +5,11 @@
 @using MudBlazor
 
 <MudText Typo="Typo.h3">Verification</MudText>
-<MudTextField @bind-Value="@_verificationDTO.Token" For="@(() => _verificationDTO.Token)" Label="Verification Token" ReadOnly="true" Variant="Variant.Filled" />
+@if (!_isSuccess)
+{
+	<MudTextField @bind-Value="@_verificationDTO.Token" For="@(() => _verificationDTO.Token)" Label="Verification Token" ReadOnly="true" Variant="Variant.Filled" />
+}
+else
+{
+	<MudText Color="Color.Success" Align="Align.Center" Typo="Typo.h4">Your account has been verified! You will be redirected shortly to your dashboard.</MudText>
+}
