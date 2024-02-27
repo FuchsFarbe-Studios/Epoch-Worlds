@@ -518,16 +518,16 @@
 
 	</MudTabPanel>
 
-	<!-- Grammar -->
-	<MudTabPanel Text="Grammar" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")" ToolTip="Rules of the language.">
+	<!-- Syntax -->
+	<MudTabPanel Text="Syntax" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]}")" ToolTip="Rules of the language.">
 
-		<MudText Typo="Typo.h4" Align="Align.Center">Grammar</MudText>
+		<MudText Typo="Typo.h4" Align="Align.Center">Syntax</MudText>
 		<MudDivider DividerType="DividerType.Middle" />
 		<MudGrid Spacing="2">
 
 			<MudItem xs="12">
 				<MudField FullWidth="true" Variant="Variant.Outlined" Label="Word Order">
-					<MudRadioGroup T="WordOrderType" @bind-Value="@ContentModel.Grammar.WordOrder" For="@(() => ContentModel.Grammar.WordOrder)">
+					<MudRadioGroup T="WordOrderType" @bind-Value="@ContentModel.Syntax.WordOrder" For="@(() => ContentModel.Syntax.WordOrder)">
 						@foreach (var orderType in Enum.GetValues(typeof(WordOrderType)).Cast<WordOrderType>())
 						{
 							<MudRadio T="WordOrderType" Value="@orderType">@orderType.ToDescriptionString()</MudRadio>
@@ -538,7 +538,7 @@
 
 			<MudItem xs="12">
 				<MudField FullWidth="true" Variant="Variant.Outlined" Label="Adjective Order">
-					<MudRadioGroup T="AdjectiveOrderType" @bind-Value="@ContentModel.Grammar.AdjectiveOrder" For="@(() => ContentModel.Grammar.AdjectiveOrder)">
+					<MudRadioGroup T="AdjectiveOrderType" @bind-Value="@ContentModel.Syntax.AdjectiveOrder" For="@(() => ContentModel.Syntax.AdjectiveOrder)">
 						@foreach (var adjectiveOrderType in Enum.GetValues(typeof(AdjectiveOrderType)).Cast<AdjectiveOrderType>())
 						{
 							<MudRadio T="AdjectiveOrderType" Value="@adjectiveOrderType">@adjectiveOrderType.ToDescriptionString()</MudRadio>
@@ -549,7 +549,7 @@
 
 			<MudItem xs="12">
 				<MudField FullWidth="true" Variant="Variant.Outlined" Label="Ad-Position">
-					<MudRadioGroup T="AdPositionType" @bind-Value="@ContentModel.Grammar.AdPosition" For="@(() => ContentModel.Grammar.AdPosition)">
+					<MudRadioGroup T="AdPositionType" @bind-Value="@ContentModel.Syntax.AdPosition" For="@(() => ContentModel.Syntax.AdPosition)">
 						@foreach (var positionType in Enum.GetValues(typeof(AdPositionType)).Cast<AdPositionType>())
 						{
 							<MudRadio T="AdPositionType" Value="@positionType">@positionType.ToDescriptionString()</MudRadio>
@@ -560,7 +560,7 @@
 
 			<MudItem xs="12">
 				<MudField FullWidth="true" Variant="Variant.Outlined" Label="Random Affix Type">
-					<MudRadioGroup T="RandomAffixType" @bind-Value="@ContentModel.Grammar.AffixType" For="@(() => ContentModel.Grammar.AffixType)">
+					<MudRadioGroup T="RandomAffixType" @bind-Value="@ContentModel.Syntax.AffixType" For="@(() => ContentModel.Syntax.AffixType)">
 						@foreach (var affixType in Enum.GetValues(typeof(RandomAffixType)).Cast<RandomAffixType>())
 						{
 							<MudRadio T="RandomAffixType" Value="@affixType">@affixType.ToDescriptionString()</MudRadio>
@@ -573,10 +573,10 @@
 				<MudText Typo="Typo.h5" Align="Align.Center">Noun Genders</MudText>
 			</MudItem>
 			<MudItem xs="12">
-				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@ContentModel.Grammar.UseNounGender" For="@(() => ContentModel.Grammar.UseNounGender)" Label="Use Noun Genders?" />
+				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@ContentModel.Syntax.UseNounGender" For="@(() => ContentModel.Syntax.UseNounGender)" Label="Use Noun Genders?" />
 			</MudItem>
-			@if (ContentModel.Grammar.UseNounGender)
-			{
+			@if (ContentModel.Syntax.UseNounGender)
+			{	
 				<MudItem xs="12" sm="4">
 					<EditForm Model="@_genderModel" OnSubmit="@HandleNounGenderSubmitted">
 						<ChildContent Context="genderModelCtx">
@@ -599,7 +599,7 @@
 				</MudItem>
 
 				<MudItem xs="12" sm="8">
-					<MudDataGrid Virtualize="true" Outlined="true" Height="250px" T="NounGender" Items="@ContentModel.Grammar.NounGenders" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+					<MudDataGrid Virtualize="true" Outlined="true" Height="250px" T="NounGender" Items="@ContentModel.Syntax.NounGenders" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
 						<Columns>
 							<PropertyColumn Property="x => x.Gender" Title="Gender" />
 							<PropertyColumn Property="x => x.Abbreviation" Title="Abbreviation" />
@@ -610,7 +610,7 @@
 							</TemplateColumn>
 							<TemplateColumn>
 								<CellTemplate Context="deleteCtx">
-									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(() => ContentModel.Grammar.NounGenders.Remove(deleteCtx.Item))" />
+									<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(() => ContentModel.Syntax.NounGenders.Remove(deleteCtx.Item))" />
 								</CellTemplate>
 							</TemplateColumn>
 						</Columns>

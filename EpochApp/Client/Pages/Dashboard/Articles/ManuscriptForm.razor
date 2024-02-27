@@ -1,0 +1,23 @@
+@using MudBlazor
+@using EpochApp.Shared.Articles
+@using ButtonType = MudBlazor.ButtonType
+
+<EditForm Model="@_model" OnSubmit="@OnManuscriptSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <MudTextField @bind-Value="@_model.Title" For="@(() => _model.Title)" Label="Title"/>
+    <MudTextField @bind-Value="@_model.Summary" For="@(() => _model.Summary)" Label="Summary" Lines="3"/>
+    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" FullWidth="true">Submit</MudButton>
+</EditForm>
+
+@code {
+    private ManuscriptDTO _model = new ManuscriptDTO();
+    [Inject] private ILogger<ManuscriptForm> Logger { get; set; }
+    
+    private Task OnManuscriptSubmit(EditContext arg)
+    {
+        Logger.LogInformation("Form Submitted 🥰");
+        return Task.CompletedTask;
+    }
+
+}

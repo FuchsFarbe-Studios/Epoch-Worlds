@@ -56,7 +56,7 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
         private Task HandleNounGenderSubmitted(EditContext arg)
         {
             var noun = arg.Model as NounGender;
-            Lang.Grammar.NounGenders.Add(noun);
+            Lang.Syntax.NounGenders.Add(noun);
             _genderModel = new NounGender();
             StateHasChanged();
             return Task.CompletedTask;

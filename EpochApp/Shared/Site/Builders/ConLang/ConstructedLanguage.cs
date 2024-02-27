@@ -52,7 +52,7 @@ namespace EpochApp.Shared
         ///     Grammar settings for this language.
         /// </summary>
         [XmlElement("GrammarSettings")]
-        public Grammar Grammar { get; set; } = new Grammar();
+        public Syntax Syntax { get; set; } = new Syntax();
 
         /// <summary>
         ///     Date this language was created.

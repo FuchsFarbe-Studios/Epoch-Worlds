@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Typo=MudBlazor.Typo
 @using MudBlazor
+@using EpochApp.Client.Pages.Dashboard.Articles
 @namespace EpochApp.Client.Pages
 
 <PageTitle>@StaticUtils.Constants.AppName</PageTitle>
@@ -15,5 +16,8 @@
 	<section class="mud-theme-secondary">
 		<MudText Typo="Typo.h4" Align="Align.Center">Latest Site News</MudText>
 		<BlogView BlogType="BlogType.NEWS" />
+	</section>
+	<section>
+		<ManuscriptForm />
 	</section>
 </MudContainer>

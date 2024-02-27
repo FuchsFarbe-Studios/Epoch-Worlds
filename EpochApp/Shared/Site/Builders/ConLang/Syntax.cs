@@ -9,7 +9,7 @@ namespace EpochApp.Shared
     ///     Language grammar settings.
     /// </summary>
     [Serializable]
-    public class Grammar
+    public class Syntax
     {
         /// <summary>
         ///     Word order of this language.

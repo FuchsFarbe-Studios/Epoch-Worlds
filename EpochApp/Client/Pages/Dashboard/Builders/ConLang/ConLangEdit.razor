@@ -15,7 +15,7 @@
 	<MudDivider DividerType="DividerType.Middle" />
 	@if (string.IsNullOrWhiteSpace(ContentId))
 	{
-		<MudPaper Width="100%" Elevation="0" Outlined="true" Class="pa-2">
+		<MudPaper Width="70%" Elevation="0" Outlined="true" Class="pa-2">
 			<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4">
 				<MudPaper Width="50%" Class="flex-center pa-2" Outlined="false" Elevation="0">
 					<ContentSelector Type="ContentType.ConstructedLanguage" OnContentChanged="@HandleContentChanged" />

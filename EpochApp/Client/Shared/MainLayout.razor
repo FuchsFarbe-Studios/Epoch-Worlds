@@ -10,16 +10,28 @@
 
 <MudLayout>
 	<MudAppBar Elevation="0" Color="Color.Dark" WrapContent="true">
-		<MudIconButton Icon="@(_drawerOpen ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)" Variant="@(_drawerOpen ? Variant.Outlined : Variant.Text)" Title="@($"{(_drawerOpen ? "Close" : "Open")} side menu.")" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
+		<MudIconButton Icon="@(_drawerOpen ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)" 
+		               Variant="@(_drawerOpen ? Variant.Outlined : Variant.Text)" 
+		               Title="@($"{(_drawerOpen ? "Close" : "Open")} side menu.")" 
+		               Color="Color.Inherit" 
+		               Edge="Edge.Start" 
+		               OnClick="@(e => DrawerToggle())" />
 		<AppBar />
 	</MudAppBar>
-	<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0">
+	
+	<MudDrawer @bind-Open="_drawerOpen" 
+	           ClipMode="DrawerClipMode.Always" 
+	           Elevation="0"
+	           Variant="DrawerVariant.Mini"
+	           OpenMiniOnHover="true"
+	           >
 		@*	NavMenu	*@
 		<AuthorizeView>
 			<WorldSelector OnWorldChanged="@HandleWorldChanged" />
 		</AuthorizeView>
 		<NavMenu IsMudMenu="true" />
 	</MudDrawer>
+	
 	<MudMainContent>
 		<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="min-height: 100vh;">
 			<CascadingValue Value="@_activeWorld">

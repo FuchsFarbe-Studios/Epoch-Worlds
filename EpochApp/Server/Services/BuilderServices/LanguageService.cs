@@ -68,7 +68,7 @@ namespace EpochApp.Server.Services
 
             var phonology = language.Phonology;
             var spelling = language.Spelling;
-            var grammar = language.Grammar;
+            var grammar = language.Syntax;
             var vocab = language.Vocabulary;
 
             if (!string.IsNullOrWhiteSpace(language.NativePronunciation))
