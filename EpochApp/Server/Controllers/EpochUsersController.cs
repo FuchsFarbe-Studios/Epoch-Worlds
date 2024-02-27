@@ -345,13 +345,27 @@ namespace EpochApp.Server.Controllers
                            OwnedWorlds = new List<World>()
                        };
 
+            var worldDate = new WorldDate
+                            {
+                                CurrentDay = 0,
+                                CurrentMonth = 0,
+                                CurrentYear = 0,
+                                CurrentAge = null,
+                                BeforeEraName = null,
+                                BeforeEraAbbreviation = null,
+                                AfterEraName = null,
+                                AfterEraAbbreviation = null
+                            };
+            var metas = new List<WorldMeta>();
             var newUserWorld = new World
                                {
                                    WorldName = registration.WorldName,
                                    DateCreated = DateTime.Now,
-                                   Owner = user
+                                   Owner = user,
+                                   CurrentWorldDate = worldDate,
+                                   MetaData = metas,
+                                   IsActiveWorld = true
                                };
-            user.OwnedWorlds.Add(newUserWorld);
 
             var hash = HashPassword(registration.Password, out var salt);
             user.PasswordHash = hash;
@@ -362,9 +376,9 @@ namespace EpochApp.Server.Controllers
             user.VerificationToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
             user.VerificationTokenCreated = DateTime.Now;
             user.VerificationTokenExpires = DateTime.Now.AddDays(7);
+            user.OwnedWorlds.Add(newUserWorld);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
             await _mail.SendVerificationEmailAsync(user.Email, user.UserName, user.VerificationToken);
 
             var data = new UserData
