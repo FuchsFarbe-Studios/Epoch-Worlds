@@ -1,5 +1,6 @@
 using EpochApp.Server.Data;
 using EpochApp.Server.Services;
+using EpochApp.Server.Services.WorldService;
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
@@ -22,9 +23,10 @@ namespace EpochApp.Server.Controllers
     {
         private const int keySize = 64;
         private const int iterations = 350000;
+        private readonly IConfiguration _configuration;
         private readonly EpochDataDbContext _context;
         private readonly IMailService _mail;
-        private IConfiguration _configuration;
+        private readonly IWorldService _worldService;
         private HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
 
         /// <summary>
@@ -37,11 +39,13 @@ namespace EpochApp.Server.Controllers
         ///     The injected <see cref="IConfiguration" /> configuration settings.
         /// </param>
         /// <param name="mail"> The injected <see cref="IMailService" /> mail service. </param>
-        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration, IMailService mail)
+        /// <param name="worldService"> The injected <see cref="IWorldService" /> world service. </param>
+        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration, IMailService mail, IWorldService worldService)
         {
             _context = context;
             _configuration = configuration;
             _mail = mail;
+            _worldService = worldService;
         }
 
         /// <summary>
@@ -341,42 +345,20 @@ namespace EpochApp.Server.Controllers
                            UserID = Guid.NewGuid(),
                            UserName = registration.UserName,
                            Email = registration.Email,
-                           DateOfBirth = registration.DateOfBirth.Value,
+                           DateOfBirth = registration.DateOfBirth ?? DateTime.UtcNow,
                            OwnedWorlds = new List<World>()
                        };
-
-            var worldDate = new WorldDate
-                            {
-                                CurrentDay = 0,
-                                CurrentMonth = 0,
-                                CurrentYear = 0,
-                                CurrentAge = null,
-                                BeforeEraName = null,
-                                BeforeEraAbbreviation = null,
-                                AfterEraName = null,
-                                AfterEraAbbreviation = null
-                            };
-            var metas = new List<WorldMeta>();
-            var newUserWorld = new World
-                               {
-                                   WorldName = registration.WorldName,
-                                   DateCreated = DateTime.Now,
-                                   Owner = user,
-                                   CurrentWorldDate = worldDate,
-                                   MetaData = metas,
-                                   IsActiveWorld = true
-                               };
-
+            var newWorld = await _worldService.CreateRegistrationWorldAsync(registration, user);
             var hash = HashPassword(registration.Password, out var salt);
             user.PasswordHash = hash;
             user.PasswordSalt = salt;
             user.UserRoles.Add(new UserRole { DateAssigned = DateTime.Today, User = user, Role = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 1) });
             user.Profile = new Profile();
-            user.DateCreated = DateTime.Now;
+            user.DateCreated = DateTime.UtcNow;
             user.VerificationToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-            user.VerificationTokenCreated = DateTime.Now;
-            user.VerificationTokenExpires = DateTime.Now.AddDays(7);
-            user.OwnedWorlds.Add(newUserWorld);
+            user.VerificationTokenCreated = DateTime.UtcNow;
+            user.VerificationTokenExpires = DateTime.UtcNow.AddDays(7);
+            user.OwnedWorlds.Add(newWorld);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             await _mail.SendVerificationEmailAsync(user.Email, user.UserName, user.VerificationToken);

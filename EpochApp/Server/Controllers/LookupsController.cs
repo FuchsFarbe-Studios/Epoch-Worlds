@@ -1,7 +1,5 @@
-using EpochApp.Server.Data;
-using EpochApp.Shared.Config;
+using EpochApp.Server.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
@@ -12,45 +10,71 @@ namespace EpochApp.Server.Controllers
     [ApiController]
     public class LookupsController : ControllerBase
     {
-        private readonly EpochDataDbContext _context;
+        private readonly ILookupService _lookupService;
 
-        public LookupsController(EpochDataDbContext context)
+        public LookupsController(ILookupService lookupService)
         {
-            _context = context;
+            _lookupService = lookupService;
         }
 
         /// <summary>
-        ///     A get request for a list of all social media lookups.
+        ///   A get request for a list of all social media types.
         /// </summary>
-        /// <returns>
-        ///     <see cref="Task{TResult}" /> where TResult is <see cref="ActionResult{TValue}" /> where TValue is
-        ///     <see cref="IEnumerable{T}" /> where T is <see cref="SocialMedia" />.
-        /// </returns>
+        /// <returns> <see cref="Task{TResult}"/> where TResult is <see cref="IActionResult"/>. </returns>
         [HttpGet("lkSocials")]
-        public async Task<ActionResult<IEnumerable<SocialMedia>>> GetSocialMedias()
+        public async Task<IActionResult> GetSocialMediasAsync()
         {
-            return await _context.SocialMedias.ToListAsync();
+            var socials = await _lookupService.GetSocialMediasAsync();
+            return Ok(socials);
         }
 
-        /// <summary>
-        ///     A get request for a specific social media lookup.
-        /// </summary>
-        /// <returns>
-        ///     <see cref="Task{TResult}" /> where TResult is <see cref="ActionResult{TValue}" /> where TValue is
-        ///     <see cref="SocialMedia" />.
-        /// </returns>
-        [HttpGet("lkSocials/{id:int}")]
-        public async Task<ActionResult<SocialMedia>> GetSocialMedia(int id)
+        [HttpGet("lkArticleCategories")]
+        public async Task<IActionResult> GetArticleCategoriesAsync()
         {
-            var socialMedia = await _context.SocialMedias.FindAsync(id);
+            var categories = await _lookupService.GetArticleCategoriesAsync();
+            return Ok(categories);
+        }
 
-            if (socialMedia == null)
-            {
-                return NotFound();
-            }
+        [HttpGet("lkLanguages")]
+        public async Task<IActionResult> GetLanguagesAsync()
+        {
+            var languages = await _lookupService.GetLanguagesAsync();
+            return Ok(languages);
+        }
 
-            return socialMedia;
+        [HttpGet("lkPhonemes")]
+        public async Task<IActionResult> GetPhonemesAsync()
+        {
+            var phonemes = await _lookupService.GetPhonemesAsync();
+            return Ok(phonemes);
+        }
+
+        [HttpGet("lkConsonants")]
+        public async Task<IActionResult> GetConsonantsAsync()
+        {
+            var consonants = await _lookupService.GetConsonantsAsync();
+            return Ok(consonants);
+        }
+
+        [HttpGet("lkPartsOfSpeech")]
+        public async Task<IActionResult> GetPartsOfSpeechAsync()
+        {
+            var partsOfSpeech = await _lookupService.GetPartsOfSpeechAsync();
+            return Ok(partsOfSpeech);
+        }
+
+        [HttpGet("lkVowels")]
+        public async Task<IActionResult> GetVowelsAsync()
+        {
+            var vowels = await _lookupService.GetVowelsAsync();
+            return Ok(vowels);
+        }
+
+        [HttpGet("lkDictionaryWords")]
+        public async Task<IActionResult> GetDictionaryWordsAsync()
+        {
+            var dictionaryWords = await _lookupService.GetDictionaryWordsAsync();
+            return Ok(dictionaryWords);
         }
     }
-
 }

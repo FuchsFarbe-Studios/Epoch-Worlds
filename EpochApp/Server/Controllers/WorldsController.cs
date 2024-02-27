@@ -75,13 +75,6 @@ namespace EpochApp.Server.Controllers
             return Ok(worlds);
         }
 
-        [HttpGet("MetaTemplates")]
-        public async Task<IActionResult> IndexMetaTemplatesAsync()
-        {
-            var metaTemplates = await _worldService.IndexMetaTemplatesAsync();
-            return Ok(metaTemplates);
-        }
-
         [HttpGet("ActiveWorld")]
         public async Task<IActionResult> GetActiveUserWorld([FromQuery] Guid ownerId)
         {
@@ -255,9 +248,9 @@ namespace EpochApp.Server.Controllers
             if (!userWorlds.Contains(world))
                 return BadRequest("Not your world!");
 
-            if (world == null)
+            if (world != null)
             {
-                world.DateModified = DateTime.Now;
+                world.DateModified = DateTime.UtcNow;
                 world.WorldName = updatedWorld.WorldName ?? "";
                 world.Pronunciation = updatedWorld.Pronunciation ?? "";
                 world.Description = updatedWorld.Description ?? "";
@@ -295,54 +288,16 @@ namespace EpochApp.Server.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!WorldExists(worldId))
                 {
-                    return NotFound();
+                    return NotFound(ex.Message);
                 }
                 throw;
             }
 
             return NoContent();
-        }
-
-        [HttpGet("WorldDate")]
-        public async Task<ActionResult<WorldDateDTO>> GetWorldDateAsync([FromQuery] Guid worldId)
-        {
-            var worldDate = await _worldService.GetWorldDate(worldId);
-            return Ok(worldDate);
-        }
-
-        [HttpPut("WorldDate")]
-        public async Task<IActionResult> UpdateWorldDateAsync([FromQuery] Guid userId, [FromQuery] Guid worldId, WorldDateDTO dateDto)
-        {
-            var dateObject = await _worldService.GetWorldDate(worldId);
-            var user = await _context.Users
-                                     .Include(x => x.OwnedWorlds)
-                                     .ThenInclude(x => x.CurrentWorldDate)
-                                     .FirstOrDefaultAsync(x => x.UserID == userId);
-            if (user == null)
-                return BadRequest();
-
-            var world = user.OwnedWorlds.FirstOrDefault(x => x.WorldID == worldId);
-            if (world == null)
-                return BadRequest();
-            if (world.CurrentWorldDate.WorldID != dateObject.WorldId)
-                return BadRequest();
-
-            dateObject.CurrentDay = dateDto.CurrentDay;
-            dateObject.CurrentMonth = dateDto.CurrentMonth;
-            dateObject.CurrentYear = dateDto.CurrentYear;
-            dateObject.CurrentAge = dateDto.CurrentAge;
-            dateObject.BeforeEra = dateDto.BeforeEra;
-            dateObject.AfterEra = dateDto.AfterEra;
-            dateObject.BeforeEraAbbreviation = dateDto.BeforeEraAbbreviation;
-            dateObject.AfterEraAbbreviation = dateDto.AfterEraAbbreviation;
-            dateObject.CurrentEra = dateDto.CurrentEra;
-            _context.Entry(dateObject).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return Ok();
         }
 
         [HttpPost("Create")]
@@ -416,5 +371,43 @@ namespace EpochApp.Server.Controllers
         {
             return _context.Worlds.Any(e => e.WorldID == id);
         }
+
+        [HttpGet("NewWorld")]
+        public async Task<IActionResult> GetWorldAsync([FromQuery] Guid worldId)
+        {
+            var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldID == worldId);
+            if (world == null)
+                return NotFound();
+
+            var worldDto = new NewWorldDTO
+                           {
+                               WorldName = world.WorldName,
+                               Pronunciation = world.Pronunciation,
+                               Description = world.Description,
+                               Excerpt = world.Excerpt,
+                               Header = world.Header,
+                               SubHeader = world.SubHeader,
+                               Image = world.Image
+                           };
+            return Ok(worldDto);
+        }
+
+        [HttpGet("WorldView/{worldId:guid}")]
+        public async Task<IActionResult> GetWorldViewAsync(Guid worldId)
+        {
+            var world = await _context.Worlds
+                                      .Include(x => x.CurrentWorldDate)
+                                      .Include(x => x.WorldTags)
+                                      .ThenInclude(x => x.Tag)
+                                      .Include(x => x.WorldArticles)
+                                      .ThenInclude(x => x.ArticleTags)
+                                      .ThenInclude(x => x.Tag)
+                                      .Include(x => x.MetaData)
+                                      .ThenInclude(x => x.Template)
+                                      .ThenInclude(x => x.Category)
+                                      .FirstOrDefaultAsync(x => x.WorldID == worldId);
+            return Ok(world);
+        }
     }
+
 }

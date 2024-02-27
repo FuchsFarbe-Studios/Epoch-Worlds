@@ -53,6 +53,7 @@ namespace EpochApp.Server.Data
 
         // Worlds
         public DbSet<World> Worlds { get; set; }
+        public DbSet<WorldGenre> WorldGenres { get; set; }
         public DbSet<WorldMeta> WorldMetas { get; set; }
         public DbSet<MetaCategory> MetaCategories { get; set; }
         public DbSet<MetaTemplate> MetaTemplates { get; set; }
@@ -64,6 +65,7 @@ namespace EpochApp.Server.Data
         public DbSet<Phoneme> Phonemes { get; set; }
         public DbSet<Vowel> Vowels { get; set; }
         public DbSet<Consonant> Consonants { get; set; }
+        public DbSet<Genre> Genres { get; set; }
 
         // Blogs
         public DbSet<Blog> Blogs { get; set; }
@@ -82,63 +84,7 @@ namespace EpochApp.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<EmailTemplate>(entity =>
-            {
-                entity.ToTable("EmailTemplates", "Client");
-                entity.HasKey(e => e.TemplateId);
-                entity.Property(e => e.TemplateId)
-                      .HasConversion<string>();
-                entity.Property(e => e.Subject)
-                      .HasMaxLength(255);
-                var templates = Enum.GetValues<EmailTemplateType>()
-                                    .Select(type => new EmailTemplate
-                                                    {
-                                                        TemplateId = type,
-                                                        Subject = "",
-                                                        HtmlBody = ""
-
-                                                    })
-                                    .ToList();
-                entity.HasData(templates);
-            });
-
-            modelBuilder.Entity<ContactPoint>(entity =>
-            {
-                entity.ToTable("ContactPoints", "Client");
-                entity.HasKey(e => e.ContactPointId);
-                entity.Property(e => e.ContactPointId)
-                      .ValueGeneratedOnAdd();
-                entity.Property(e => e.UserName)
-                      .HasMaxLength(64);
-                entity.Property(e => e.Email)
-                      .HasMaxLength(128);
-                entity.Property(e => e.ContactType)
-                      .HasConversion<string>();
-            });
-
-            modelBuilder.Entity<ClientSetting>(entity =>
-            {
-                entity.ToTable("ClientSettings", "Client");
-                entity.HasKey(e => e.SettingId);
-                entity.Property(e => e.SettingId).ValueGeneratedOnAdd();
-                entity.Property(e => e.FieldName).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<UserFile>(entity =>
-            {
-                entity.ToTable("Files", "Client");
-                entity.HasKey(e => e.FileId);
-                entity.Property(e => e.FileId)
-                      .ValueGeneratedOnAdd();
-                entity.HasOne<User>(u => u.User)
-                      .WithMany(uf => uf.UserFiles)
-                      .HasForeignKey(u => u.UserId)
-                      .HasConstraintName("FK_UserFiles_Users");
-                entity.HasOne<World>(w => w.World)
-                      .WithMany(uf => uf.WorldFiles)
-                      .HasForeignKey(w => w.WorldId)
-                      .HasConstraintName("FK_WorldFiles_Worlds");
-            });
+            ConfigureClient(modelBuilder);
 
             modelBuilder.HasDefaultSchema("Users");
 
@@ -252,7 +198,6 @@ namespace EpochApp.Server.Data
                 });
             });
 
-
             modelBuilder.Entity<UserSocial>(us =>
             {
                 us.HasKey(x => new
@@ -282,117 +227,7 @@ namespace EpochApp.Server.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Lookups
-
-            modelBuilder.Entity<ISOLanguage>(entity =>
-            {
-                entity.ToTable("lkLanguage", "Lookups");
-                entity.HasKey(x => x.LanguageCode);
-                entity.Property(x => x.LanguageCode).HasMaxLength(3);
-                entity.Property(x => x.LanguageName).HasMaxLength(100);
-                entity.Property(x => x.Set2T).HasMaxLength(5);
-                entity.Property(x => x.Set3).HasMaxLength(5);
-                entity.Property(x => x.Notes).HasMaxLength(500);
-            });
-
-            modelBuilder.Entity<PartOfSpeech>(entity =>
-            {
-                entity.ToTable("lkPartOfSpeech", "Lookups");
-                entity.HasKey(x => x.PartOfSpeechId);
-                entity.Property(x => x.PartOfSpeechId)
-                      .ValueGeneratedOnAdd();
-                entity.Property(x => x.Description)
-                      .HasMaxLength(50);
-                entity.Property(x => x.Abbreviation)
-                      .HasMaxLength(10);
-            });
-
-            modelBuilder.Entity<DictionaryWord>(entity =>
-            {
-                entity.ToTable("lkDictionaryWords", "Lookups");
-                entity.HasKey(x => x.WordId);
-                entity.Property(x => x.WordId)
-                      .ValueGeneratedOnAdd();
-                entity.Property(x => x.Translations)
-                      .HasMaxLength(1000);
-                entity.HasOne(x => x.PartOfSpeech)
-                      .WithMany()
-                      .HasForeignKey(x => x.PartOfSpeechId)
-                      .HasConstraintName("FK_DictionaryWords_PartsOfSpeech");
-                entity.Property(x => x.Category)
-                      .HasConversion<string>();
-            });
-
-            modelBuilder.Entity<MetaTemplate>(entity =>
-            {
-                entity.ToTable("lkMetaTemplates", "Lookups");
-                entity.HasKey(e => e.TemplateID);
-                entity.Property(e => e.TemplateID).ValueGeneratedOnAdd();
-                entity.Property(e => e.TemplateName).HasColumnName("Name");
-                entity.Property(e => e.TemplateName).HasMaxLength(50);
-                entity.Property(e => e.Description).HasMaxLength(255);
-                entity.Property(e => e.HelpText).HasMaxLength(150);
-                entity.Property(e => e.Placeholder).HasMaxLength(150);
-                entity.HasOne(e => e.Category)
-                      .WithMany()
-                      .HasForeignKey(e => e.CategoryID)
-                      .HasConstraintName("FK_MetaTemplates_MetaCategories")
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            modelBuilder.Entity<MetaCategory>(entity =>
-            {
-                entity.ToTable("lkMetaCategories", "Lookups");
-                entity.HasKey(m => m.CategoryID);
-                entity.Property(m => m.CategoryID).ValueGeneratedOnAdd();
-                entity.Property(m => m.Description).HasColumnName("Description");
-                entity.Property(m => m.Description).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<ArticleCategory>(entity =>
-            {
-                entity.ToTable("lkArticleCategories", "Lookups");
-                entity.HasKey(m => m.CategoryID);
-                entity.Property(m => m.CategoryID).UseIdentityColumn(3, 4);
-                entity.Property(m => m.Description).HasColumnName("Description");
-                entity.Property(m => m.Description).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<SocialMedia>(entity =>
-            {
-                entity.ToTable("lkSocialMediae", "Lookups");
-                entity.HasKey(m => m.SocialID);
-                entity.Property(m => m.SocialID).UseIdentityColumn(12, 12);
-                entity.Property(m => m.SocialMediaName).HasColumnName("Description");
-                entity.Property(m => m.SocialMediaName).HasMaxLength(100);
-                entity.Property(m => m.URLAffix).HasMaxLength(255);
-                entity.Property(m => m.Icon).HasMaxLength(100);
-            });
-
-            modelBuilder.Entity<Phoneme>(entity =>
-            {
-                entity.ToTable("lkPhonemes", "Lookups");
-                entity.HasKey(e => e.PhonemeID);
-                entity.Property(e => e.PhonemeID)
-                      .HasMaxLength(4)
-                      .ValueGeneratedNever();
-                entity.Property(e => e.AudioFile)
-                      .HasMaxLength(155);
-            });
-
-            modelBuilder.Entity<Consonant>(entity =>
-            {
-                entity.ToTable("lkConsonants", "Lookups");
-                entity.Property(e => e.Manner).HasConversion<string>();
-                entity.Property(e => e.Place).HasConversion<string>();
-            });
-
-            modelBuilder.Entity<Vowel>(entity =>
-            {
-                entity.ToTable("lkVowels", "Lookups");
-                entity.Property(e => e.Depth).HasConversion<string>();
-                entity.Property(e => e.Verticality).HasConversion<string>();
-            });
+            ConfigureLookups(modelBuilder);
 
             // Blogging
 
@@ -442,6 +277,25 @@ namespace EpochApp.Server.Data
                       .WithOne(d => d.World)
                       .HasForeignKey<WorldDate>(d => d.WorldID)
                       .HasConstraintName("FK_WorldDates_Worlds");
+                entity.Navigation(x => x.CurrentWorldDate)
+                      .AutoInclude();
+                entity.Navigation(x => x.WorldTags)
+                      .AutoInclude();
+            });
+
+            modelBuilder.Entity<WorldGenre>(entity =>
+            {
+                entity.ToTable("WorldGenres", "Worlds");
+                entity.HasKey(e => new { e.GenreID, e.WorldID });
+                entity.HasOne(d => d.World)
+                      .WithMany(w => w.WorldGenres)
+                      .HasForeignKey(x => x.WorldID)
+                      .HasConstraintName("FK_WorldGenres_Worlds")
+                      .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(d => d.Genre)
+                      .WithMany()
+                      .HasForeignKey(x => x.GenreID)
+                      .HasConstraintName("FK_WorldGenres_Genres");
             });
 
             modelBuilder.Entity<WorldDate>(entity =>
@@ -592,6 +446,192 @@ namespace EpochApp.Server.Data
                       .WithMany(t => t.ArticleTags)
                       .HasForeignKey(at => at.TagId)
                       .HasConstraintName("FK_ArticleTags_Tags");
+            });
+        }
+
+        private static void ConfigureClient(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EmailTemplate>(entity =>
+            {
+                entity.ToTable("EmailTemplates", "Client");
+                entity.HasKey(e => e.TemplateId);
+                entity.Property(e => e.TemplateId)
+                      .HasConversion<string>();
+                entity.Property(e => e.Subject)
+                      .HasMaxLength(255);
+                var templates = Enum.GetValues<EmailTemplateType>()
+                                    .Select(type => new EmailTemplate
+                                                    {
+                                                        TemplateId = type,
+                                                        Subject = "",
+                                                        HtmlBody = ""
+
+                                                    })
+                                    .ToList();
+                entity.HasData(templates);
+            });
+
+            modelBuilder.Entity<ContactPoint>(entity =>
+            {
+                entity.ToTable("ContactPoints", "Client");
+                entity.HasKey(e => e.ContactPointId);
+                entity.Property(e => e.ContactPointId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(e => e.UserName)
+                      .HasMaxLength(64);
+                entity.Property(e => e.Email)
+                      .HasMaxLength(128);
+                entity.Property(e => e.ContactType)
+                      .HasConversion<string>();
+            });
+
+            modelBuilder.Entity<ClientSetting>(entity =>
+            {
+                entity.ToTable("ClientSettings", "Client");
+                entity.HasKey(e => e.SettingId);
+                entity.Property(e => e.SettingId).ValueGeneratedOnAdd();
+                entity.Property(e => e.FieldName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<UserFile>(entity =>
+            {
+                entity.ToTable("Files", "Client");
+                entity.HasKey(e => e.FileId);
+                entity.Property(e => e.FileId)
+                      .ValueGeneratedOnAdd();
+                entity.HasOne<User>(u => u.User)
+                      .WithMany(uf => uf.UserFiles)
+                      .HasForeignKey(u => u.UserId)
+                      .HasConstraintName("FK_UserFiles_Users");
+                entity.HasOne<World>(w => w.World)
+                      .WithMany(uf => uf.WorldFiles)
+                      .HasForeignKey(w => w.WorldId)
+                      .HasConstraintName("FK_WorldFiles_Worlds");
+            });
+        }
+
+        private void ConfigureLookups(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Genre>(entity =>
+            {
+                entity.ToTable("lkGenres", "Lookups");
+                entity.HasKey(x => x.GenreId);
+                entity.Property(x => x.GenreId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.GenreName)
+                      .HasMaxLength(50);
+                entity.Property(x => x.Description)
+                      .HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<ISOLanguage>(entity =>
+            {
+                entity.ToTable("lkLanguage", "Lookups");
+                entity.HasKey(x => x.LanguageCode);
+                entity.Property(x => x.LanguageCode).HasMaxLength(3);
+                entity.Property(x => x.LanguageName).HasMaxLength(100);
+                entity.Property(x => x.Set2T).HasMaxLength(5);
+                entity.Property(x => x.Set3).HasMaxLength(5);
+                entity.Property(x => x.Notes).HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<PartOfSpeech>(entity =>
+            {
+                entity.ToTable("lkPartOfSpeech", "Lookups");
+                entity.HasKey(x => x.PartOfSpeechId);
+                entity.Property(x => x.PartOfSpeechId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.Description)
+                      .HasMaxLength(50);
+                entity.Property(x => x.Abbreviation)
+                      .HasMaxLength(10);
+            });
+
+            modelBuilder.Entity<DictionaryWord>(entity =>
+            {
+                entity.ToTable("lkDictionaryWords", "Lookups");
+                entity.HasKey(x => x.WordId);
+                entity.Property(x => x.WordId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.Translations)
+                      .HasMaxLength(1000);
+                entity.HasOne(x => x.PartOfSpeech)
+                      .WithMany()
+                      .HasForeignKey(x => x.PartOfSpeechId)
+                      .HasConstraintName("FK_DictionaryWords_PartsOfSpeech");
+                entity.Property(x => x.Category)
+                      .HasConversion<string>();
+            });
+
+            modelBuilder.Entity<MetaTemplate>(entity =>
+            {
+                entity.ToTable("lkMetaTemplates", "Lookups");
+                entity.HasKey(e => e.TemplateID);
+                entity.Property(e => e.TemplateID).ValueGeneratedOnAdd();
+                entity.Property(e => e.TemplateName).HasColumnName("Name");
+                entity.Property(e => e.TemplateName).HasMaxLength(50);
+                entity.Property(e => e.Description).HasMaxLength(255);
+                entity.Property(e => e.HelpText).HasMaxLength(150);
+                entity.Property(e => e.Placeholder).HasMaxLength(150);
+                entity.HasOne(e => e.Category)
+                      .WithMany()
+                      .HasForeignKey(e => e.CategoryID)
+                      .HasConstraintName("FK_MetaTemplates_MetaCategories")
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<MetaCategory>(entity =>
+            {
+                entity.ToTable("lkMetaCategories", "Lookups");
+                entity.HasKey(m => m.CategoryID);
+                entity.Property(m => m.CategoryID).ValueGeneratedOnAdd();
+                entity.Property(m => m.Description).HasColumnName("Description");
+                entity.Property(m => m.Description).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<ArticleCategory>(entity =>
+            {
+                entity.ToTable("lkArticleCategories", "Lookups");
+                entity.HasKey(m => m.CategoryID);
+                entity.Property(m => m.CategoryID).UseIdentityColumn(3, 4);
+                entity.Property(m => m.Description).HasColumnName("Description");
+                entity.Property(m => m.Description).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<SocialMedia>(entity =>
+            {
+                entity.ToTable("lkSocialMediae", "Lookups");
+                entity.HasKey(m => m.SocialID);
+                entity.Property(m => m.SocialID).UseIdentityColumn(12, 12);
+                entity.Property(m => m.SocialMediaName).HasColumnName("Description");
+                entity.Property(m => m.SocialMediaName).HasMaxLength(100);
+                entity.Property(m => m.URLAffix).HasMaxLength(255);
+                entity.Property(m => m.Icon).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Phoneme>(entity =>
+            {
+                entity.ToTable("lkPhonemes", "Lookups");
+                entity.HasKey(e => e.PhonemeID);
+                entity.Property(e => e.PhonemeID)
+                      .HasMaxLength(4)
+                      .ValueGeneratedNever();
+                entity.Property(e => e.AudioFile)
+                      .HasMaxLength(155);
+            });
+
+            modelBuilder.Entity<Consonant>(entity =>
+            {
+                entity.ToTable("lkConsonants", "Lookups");
+                entity.Property(e => e.Manner).HasConversion<string>();
+                entity.Property(e => e.Place).HasConversion<string>();
+            });
+
+            modelBuilder.Entity<Vowel>(entity =>
+            {
+                entity.ToTable("lkVowels", "Lookups");
+                entity.Property(e => e.Depth).HasConversion<string>();
+                entity.Property(e => e.Verticality).HasConversion<string>();
             });
         }
     }

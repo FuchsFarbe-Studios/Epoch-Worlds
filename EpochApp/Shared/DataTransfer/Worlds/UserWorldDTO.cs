@@ -1,40 +1,14 @@
 // EpochWorlds
-// World.cs
-// FuchsFarbe Studios 2023
-// Oliver MacDougall
-// Modified: 29-11-2023
-
-using EpochApp.Shared.Articles;
-using EpochApp.Shared.Client;
-using EpochApp.Shared.Social;
-using EpochApp.Shared.Users;
-
-namespace EpochApp.Shared.Worlds
+// UserWorldDTO.cs
+// FuchsFarbe Studios 2024
+// matsu
+// Modified: 27-2-2024
+namespace EpochApp.Shared
 {
-    /// <summary>
-    ///     A world is a collection of world-related data that is owned by a user. It is a container for all the data that is
-    ///     related to a specific world.
-    /// </summary>
-    public class World
+    public class UserWorldDTO
     {
-        public World()
-        {
-            MetaData = new HashSet<WorldMeta>();
-            WorldArticles = new HashSet<Article>();
-            WorldTags = new HashSet<WorldTag>();
-            WorldFiles = new HashSet<UserFile>();
-            WorldGenres = new HashSet<WorldGenre>();
-        }
-
-        /// <summary>
-        ///     The user that owns this world.
-        /// </summary>
-        public Guid OwnerID { get; set; }
-
-        /// <summary>
-        ///     Unique identifier for this world.
-        /// </summary>
-        public Guid WorldID { get; set; }
+        public Guid OwnerId { get; set; }
+        public Guid WorldId { get; set; }
 
         /// <summary> The name of the world. </summary>
         public string WorldName { get; set; }
@@ -105,39 +79,33 @@ namespace EpochApp.Shared.Worlds
         public DateTime? DateRemoved { get; set; }
 
         /// <summary>
-        ///     The user that owns this world.
+        ///     The date this world was last viewed.
         /// </summary>
-        public virtual User Owner { get; set; }
+        public WorldDateDTO CurrentWorldDate { get; set; }
 
         /// <summary>
-        ///     The current date information of the world.
+        ///     MetaData associated with this world.
         /// </summary>
-        public virtual WorldDate CurrentWorldDate { get; set; }
-
-        /// <summary>
-        ///     The meta information of the world.
-        /// </summary>
-        public virtual ICollection<WorldMeta> MetaData { get; set; }
+        public virtual ICollection<MetaDTO> MetaData { get; set; } = new List<MetaDTO>();
 
         /// <summary>
         ///     Articles associated with this world.
         /// </summary>
-        public virtual ICollection<Article> WorldArticles { get; set; }
+        public virtual ICollection<ArticleDTO> WorldArticles { get; set; }
 
         /// <summary>
         ///     Tags associated with this world.
         /// </summary>
-        public virtual ICollection<WorldTag> WorldTags { get; set; }
+        public virtual ICollection<WorldTagDTO> WorldTags { get; set; }
 
         /// <summary>
         ///     Files associated with this world.
         /// </summary>
-        public virtual ICollection<UserFile> WorldFiles { get; set; }
+        public virtual ICollection<UserFileDTO> WorldFiles { get; set; }
 
         /// <summary>
         ///     Genres associated with this world.
         /// </summary>
-        public virtual ICollection<WorldGenre> WorldGenres { get; set; }
+        public virtual ICollection<WorldGenreDTO> WorldGenres { get; set; }
     }
-
 }

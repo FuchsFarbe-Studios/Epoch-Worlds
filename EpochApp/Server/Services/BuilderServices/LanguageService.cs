@@ -108,6 +108,68 @@ namespace EpochApp.Server.Services
             await _context.SaveChangesAsync();
             _logger.LogInformation("Changes saved!");
         }
+
+        public async Task AddConsonantAsync(Consonant consonant)
+        {
+            await _context.Consonants.AddAsync(consonant);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddVowelAsync(Vowel vowel)
+        {
+            await _context.Vowels.AddAsync(vowel);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateConsonantAsync(Consonant consonant)
+        {
+            var cons = await _context.Consonants.ToListAsync();
+            if (cons.Contains(consonant))
+            {
+                _context.Consonants.Update(consonant);
+                _context.Entry(consonant).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                await AddConsonantAsync(consonant);
+            }
+        }
+
+        public async Task UpdateVowelAsync(Vowel vowel)
+        {
+            var vowels = await _context.Vowels.ToListAsync();
+            if (vowels.Contains(vowel))
+            {
+                _context.Vowels.Update(vowel);
+                _context.Entry(vowel).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                await AddVowelAsync(vowel);
+            }
+        }
+
+        public async Task RemoveConsonantAsync(Consonant consonant)
+        {
+            _context.Consonants.Remove(consonant);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveVowelAsync(Vowel vowel)
+        {
+            _context.Vowels.Remove(vowel);
+            await _context.SaveChangesAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task<List<PartOfSpeech>> GetPartsOfSpeech()
+        {
+            var pos = await _context.PartsOfSpeech.ToListAsync();
+            return await Task.FromResult(pos);
+        }
+
         private async Task<string> GenerateWordAsync(Phonology phonology)
         {
             var consonants = new List<string>();
@@ -172,60 +234,6 @@ namespace EpochApp.Server.Services
                 return await Task.FromResult("");
             }
             return await Task.FromResult("");
-        }
-
-        public async Task AddConsonantAsync(Consonant consonant)
-        {
-            await _context.Consonants.AddAsync(consonant);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task AddVowelAsync(Vowel vowel)
-        {
-            await _context.Vowels.AddAsync(vowel);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateConsonantAsync(Consonant consonant)
-        {
-            var cons = await _context.Consonants.ToListAsync();
-            if (cons.Contains(consonant))
-            {
-                _context.Consonants.Update(consonant);
-                _context.Entry(consonant).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                await AddConsonantAsync(consonant);
-            }
-        }
-
-        public async Task UpdateVowelAsync(Vowel vowel)
-        {
-            var vowels = await _context.Vowels.ToListAsync();
-            if (vowels.Contains(vowel))
-            {
-                _context.Vowels.Update(vowel);
-                _context.Entry(vowel).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                await AddVowelAsync(vowel);
-            }
-        }
-
-        public async Task RemoveConsonantAsync(Consonant consonant)
-        {
-            _context.Consonants.Remove(consonant);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task RemoveVowelAsync(Vowel vowel)
-        {
-            _context.Vowels.Remove(vowel);
-            await _context.SaveChangesAsync();
         }
 
         private async Task GenerateDictionaryWordsAsync(Phonology phonology, Spelling spelling, ConstructedLanguageResult langResult)
@@ -473,13 +481,6 @@ namespace EpochApp.Server.Services
         }
 
         #endregion
-
-        /// <inheritdoc />
-        public async Task<List<PartOfSpeech>> GetPartsOfSpeech()
-        {
-            var pos = await _context.PartsOfSpeech.ToListAsync();
-            return await Task.FromResult(pos);
-        }
 
     }
 }

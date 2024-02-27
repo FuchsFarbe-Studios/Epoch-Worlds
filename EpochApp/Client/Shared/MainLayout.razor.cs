@@ -14,6 +14,8 @@ namespace EpochApp.Client.Shared
 
         private bool _drawerOpen;
 
+        private UserWorldDTO _newWorld;
+
         private MudTheme _theme = new MudTheme();
         // private bool _isDarkMode;
 
@@ -213,6 +215,13 @@ namespace EpochApp.Client.Shared
             var activeWorld = await Client.GetFromJsonAsync<WorldDTO>($"api/v1/Worlds/ActiveWorld?ownerId={Auth.CurrentUser.UserID}");
             if (activeWorld.WorldID == arg.WorldID)
                 _activeWorld = arg;
+            await Task.CompletedTask;
+        }
+
+        private async Task HandleNewWorldChanged(UserWorldDTO arg)
+        {
+            Logger.LogInformation($"New World Changed: {arg.WorldName} {arg.WorldId}");
+            _newWorld = arg;
             await Task.CompletedTask;
         }
     }

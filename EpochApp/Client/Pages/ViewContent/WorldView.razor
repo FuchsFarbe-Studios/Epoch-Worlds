@@ -1,11 +1,19 @@
 @page "/W/{WorldId?}"
 @using MaxWidth=MudBlazor.MaxWidth
+@using Typo=MudBlazor.Typo
 @using MudBlazor
-@using Typo = MudBlazor.Typo
 
-<MudPaper Width="70%" Class="ma-4 pa-4 object-right">
-    <MudContainer MaxWidth="MaxWidth.Medium">
-        <MudText Typo="Typo.h5">Hello world, does this shit work??</MudText>
-        <MudText Typo="Typo.body1"> bleep blop bloop blap</MudText>
-    </MudContainer>
-</MudPaper>
+<MudContainer MaxWidth="MaxWidth.Large">
+	<MudPaper Outlined="true" Class="mud-border-secondary">
+		<MudStack Spacing="1">
+			<MudText Align="Align.Center" Typo="Typo.h1" Color="Color.Primary" GutterBottom="true">@_world.WorldName</MudText>
+			<MudText Align="Align.Center" Typo="Typo.body2" Color="Color.Tertiary">Created On: @_world.DateCreated</MudText>
+			<MudDivider Light="false" Class="my-1" DividerType="DividerType.Middle" />
+			<MudText Align="Align.Center" Typo="Typo.h3" GutterBottom="true">@_world.Header</MudText>
+			<MudText Align="Align.Center" Typo="Typo.caption">@_world.Excerpt</MudText>
+			<MudText Align="Align.Center" Typo="Typo.h4">@_world.SubHeader</MudText>
+			<MudText Align="Align.Center" Typo="Typo.body1">@_world.Description</MudText>
+			<MudDivider Light="false" Class="my-1" DividerType="DividerType.Middle" />
+		</MudStack>
+	</MudPaper>
+</MudContainer>

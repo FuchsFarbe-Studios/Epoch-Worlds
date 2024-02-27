@@ -50,6 +50,7 @@ namespace EpochApp.Server
                                                             };
                     });
             ConfigBuilder.ConfigureCommonServices(services);
+            services.AddScoped<ILookupService, LookupService>();
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<IWorldService, WorldService>();
             services.AddScoped<ITagService, TagService>();

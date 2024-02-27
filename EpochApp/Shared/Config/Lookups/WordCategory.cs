@@ -14,4 +14,5 @@ namespace EpochApp.Shared.Config
         Slang,
         Profanity
     }
+
 }

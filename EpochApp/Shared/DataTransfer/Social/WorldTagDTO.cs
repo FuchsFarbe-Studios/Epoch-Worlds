@@ -9,5 +9,6 @@ namespace EpochApp.Shared
     {
         public long TagId { get; set; }
         public Guid WorldId { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -1,7 +1,6 @@
-using System.Net.Http.Json;
-using EpochApp.Shared;
 using EpochApp.Shared.Worlds;
 using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.ViewContent
 {
@@ -10,19 +9,21 @@ namespace EpochApp.Client.Pages.ViewContent
     /// </summary>
     public partial class WorldView
     {
-        private World _world;
-        [Parameter] public string WorldId { get; set; }
-        [Inject] private HttpClient Client { get; set; }
-        
-        
+        private World _world = null!;
 
+        [Parameter] public string WorldId { get; set; }
+
+        [Inject] private HttpClient Client { get; set; }
+
+        /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            var world = await Client.GetFromJsonAsync<World>($"api/v1/Worlds/WorldView/{WorldId}");
-            if (world != null)
+            if (Guid.TryParse(WorldId, out var gWorldId))
             {
-                _world = world;
+                var world = await Client.GetFromJsonAsync<World>($"api/v2/Worlds/View/{gWorldId}");
+                if (world != null)
+                    _world = world;
             }
         }
     }

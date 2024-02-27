@@ -12,6 +12,11 @@ namespace EpochApp.Shared.Articles
     /// </summary>
     public class Manuscript
     {
+        public Manuscript()
+        {
+            Chapters = new HashSet<ManuscriptChapter>();
+        }
+
         public Guid UserID { get; set; }
         public long ManuscriptId { get; set; }
         public string Title { get; set; }
@@ -22,19 +27,7 @@ namespace EpochApp.Shared.Articles
         public DateTime? RemovedOn { get; set; }
 
         public virtual User User { get; set; }
+        public virtual ICollection<ManuscriptChapter> Chapters { get; set; }
     }
 
-    /// <summary>
-    ///     A chapter of a user's manuscript.
-    /// </summary>
-    public class ManuscriptChapter
-    {
-        public Guid UserID { get; set; }
-        public long ManuscriptId { get; set; }
-        public long ChapterId { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
-
-        public virtual User User { get; set; }
-    }
 }

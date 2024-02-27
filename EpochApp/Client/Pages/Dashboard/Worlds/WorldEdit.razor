@@ -2,11 +2,11 @@
 @page "/World/E"
 @page "/World/Edit/{WorldId?}"
 @page "/World/E/{WorldId?}"
+
 @using Justify=MudBlazor.Justify
 @using MaxWidth=MudBlazor.MaxWidth
 @using Typo=MudBlazor.Typo
 @using MudBlazor
-@using EpochApp.Client.Shared.Forms
 
 <PageTitle>@StaticUtils.Constants.AppName - Edit World</PageTitle>
 
@@ -21,7 +21,7 @@
 						<MudSelectItem Value="@(world.WorldID.ToString())">@world.WorldName</MudSelectItem>
 					}
 				</MudSelect>
-				<MudButton Disabled="@(string.IsNullOrWhiteSpace(WorldId))" OnClick="@(() => Nav.NavigateTo($"/World/Edit/{WorldId}"))">Edit Selected World</MudButton>
+				<MudButton Disabled="@(string.IsNullOrWhiteSpace(WorldId))" OnClick="@(() => Nav.NavigateTo($"/World/E/{WorldId}"))">Edit Selected World</MudButton>
 			</MudStack>
 		</MudPaper>
 	}
@@ -29,7 +29,7 @@
 	{
 		<MudContainer MaxWidth="MaxWidth.Medium">
 			<MudText Typo="Typo.h3" Class="mb-1">Edit World</MudText>
-			<WorldForm World="@_selectedWorld" IsEditMode="true" />
+			<NewWorldForm WorldId="@_selectedWorld.WorldID" />
 		</MudContainer>
 	}
 </MudPaper>
