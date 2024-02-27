@@ -1,0 +1,40 @@
+@using Justify=MudBlazor.Justify
+@using Variant=MudBlazor.Variant
+@using MudBlazor
+
+<MudFileUpload T="IBrowserFile" Accept=".png, .gif, .jpg, .jpeg" FilesChanged="@(async f => await UpdateUploadedFiles(f))" MaximumFileCount="5">
+	<ButtonTemplate>
+		<MudButton DisableElevation="true" HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.AttachFile" for="@context.Id" Disabled="@_uploading" FullWidth="true">
+			@if (_uploading)
+			{
+				<MudProgressCircular Size="Size.Small" Indeterminate="true" />
+				<MudText>Uploading...</MudText>
+			}
+			else
+			{
+				<MudText>Upload Images</MudText>
+			}
+		</MudButton>
+	</ButtonTemplate>
+</MudFileUpload>
+
+@if (_files != null)
+{
+	<MudStack>
+		@foreach (var file in _uploadedFiles)
+		{
+			<MudStack @key=@file Row="true" Justify="Justify.SpaceBetween">
+				<MudText>Name: @file.FileName</MudText>
+				<code>bytes: @file.FileSize</code>
+				<MudTextField @bind-Value="@file.Alias" For="@(() => file.Alias)" Label="Alias" AutoGrow="true" />
+				<MudTextField @bind-Value="@file.Alt" For="@(() => file.Alt)" Label="Alternate Text" AutoGrow="true" />
+				<MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Title="Delete file." OnClick="@(async () => await OnFileRemovedAsync(file))" />
+			</MudStack>
+		}
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.UploadFile" OnClick="@(async () => await OnUploadFiles())" Disabled="@(!_uploadedFiles.Any() || _uploading)">Upload Files</MudButton>
+		@if (_uploading)
+		{
+			<MudProgressLinear Value="@_percentDone" Size="Size.Large" Min="0" Max="100" Color="Color.Primary" Rounded="true" />
+		}
+	</MudStack>
+}

@@ -57,7 +57,6 @@ namespace EpochApp.Shared.Utils
                                                                                       { AwesomeIconType.EarthAsia, "fa-solid fa-earth-asia" },
                                                                                       { AwesomeIconType.EarthAmericas, "fa-solid fa-earth-americas" }
                                                                                   };
-
         }
 
         public static class Auth
@@ -71,8 +70,12 @@ namespace EpochApp.Shared.Utils
         {
             public const string CompanyName = "FuchsFarbe Studios";
             public const string ProjectName = "The Epoch World Exchange";
-            public static readonly string[] Authors = { "Oliver Conover", "Eloi Genier" };
             public const string AppName = "Epoch Worlds";
+            public const string AppVersion = "0.0.1";
+            public const string AppDescription = "A world exchange for the Epoch World Engine";
+            public const string WorldFilesDirectory = "WorldContent";
+            public const string UserFilesDirectory = "UserContent";
+            public static readonly string[] Authors = { "Oliver Conover", "Eloi Genier" };
         }
     }
 }

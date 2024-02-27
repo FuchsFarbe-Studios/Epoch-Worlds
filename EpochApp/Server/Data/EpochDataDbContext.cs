@@ -43,8 +43,10 @@ namespace EpochApp.Server.Data
         public DbSet<UserSocial> UserSocials { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<UserFile> UserFiles { get; set; }
 
         // Lookups
+        public DbSet<ISOLanguage> Languages { get; set; }
         public DbSet<SocialMedia> SocialMediae { get; set; }
         public DbSet<PartOfSpeech> PartsOfSpeech { get; set; }
         public DbSet<DictionaryWord> DictionaryWords { get; set; }
@@ -120,6 +122,22 @@ namespace EpochApp.Server.Data
                 entity.HasKey(e => e.SettingId);
                 entity.Property(e => e.SettingId).ValueGeneratedOnAdd();
                 entity.Property(e => e.FieldName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<UserFile>(entity =>
+            {
+                entity.ToTable("Files", "Client");
+                entity.HasKey(e => e.FileId);
+                entity.Property(e => e.FileId)
+                      .ValueGeneratedOnAdd();
+                entity.HasOne<User>(u => u.User)
+                      .WithMany(uf => uf.UserFiles)
+                      .HasForeignKey(u => u.UserId)
+                      .HasConstraintName("FK_UserFiles_Users");
+                entity.HasOne<World>(w => w.World)
+                      .WithMany(uf => uf.WorldFiles)
+                      .HasForeignKey(w => w.WorldId)
+                      .HasConstraintName("FK_WorldFiles_Worlds");
             });
 
             modelBuilder.HasDefaultSchema("Users");
@@ -265,6 +283,17 @@ namespace EpochApp.Server.Data
             });
 
             // Lookups
+
+            modelBuilder.Entity<ISOLanguage>(entity =>
+            {
+                entity.ToTable("lkLanguage", "Lookups");
+                entity.HasKey(x => x.LanguageCode);
+                entity.Property(x => x.LanguageCode).HasMaxLength(3);
+                entity.Property(x => x.LanguageName).HasMaxLength(100);
+                entity.Property(x => x.Set2T).HasMaxLength(5);
+                entity.Property(x => x.Set3).HasMaxLength(5);
+                entity.Property(x => x.Notes).HasMaxLength(500);
+            });
 
             modelBuilder.Entity<PartOfSpeech>(entity =>
             {

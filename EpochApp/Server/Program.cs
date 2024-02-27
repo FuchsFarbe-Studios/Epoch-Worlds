@@ -2,11 +2,11 @@ using EpochApp.Server.Data;
 using EpochApp.Server.Services;
 using EpochApp.Server.Services.WorldService;
 using EpochApp.Shared;
-using EpochApp.Shared.Services;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -83,16 +83,24 @@ namespace EpochApp.Server
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
-            var userContentDirectory = Path.Combine(env.ContentRootPath, "UserContent");
+            var userContentDirectory = Path.Combine(env.ContentRootPath, StaticUtils.Constants.UserFilesDirectory);
+            var worldContentDirectory = Path.Combine(env.ContentRootPath, StaticUtils.Constants.WorldFilesDirectory);
             if (!Directory.Exists(userContentDirectory))
-            {
                 Directory.CreateDirectory(userContentDirectory);
-            }
+            if (!Directory.Exists(worldContentDirectory))
+                Directory.CreateDirectory(worldContentDirectory);
             app.UseStaticFiles(
             new StaticFileOptions
             {
-                FileProvider = null,
-                RequestPath = "/UserContent"
+                FileProvider = new PhysicalFileProvider(userContentDirectory),
+                RequestPath = $"/{StaticUtils.Constants.UserFilesDirectory}"
+            }
+            );
+            app.UseStaticFiles(
+            new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(worldContentDirectory),
+                RequestPath = $"/{StaticUtils.Constants.WorldFilesDirectory}"
             }
             );
 

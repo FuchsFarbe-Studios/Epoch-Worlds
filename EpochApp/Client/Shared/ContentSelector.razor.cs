@@ -9,8 +9,8 @@ namespace EpochApp.Client.Shared
     /// </summary>
     public partial class ContentSelector
     {
-        private List<BuilderContent> _userContent = new List<BuilderContent>();
         private BuilderContent _selectedContent;
+        private List<BuilderContent> _userContent = new List<BuilderContent>();
 
         /// <summary>
         ///     The type of user content to filter for.
@@ -35,6 +35,7 @@ namespace EpochApp.Client.Shared
             _selectedContent = _userContent.FirstOrDefault();
             await ContentChanged(_selectedContent);
         }
+
         private async Task ContentChanged(BuilderContent e)
         {
             _selectedContent = e;

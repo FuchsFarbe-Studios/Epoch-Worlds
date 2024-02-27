@@ -1,42 +1,87 @@
 @page "/User/Files"
-@using Variant=MudBlazor.Variant
 @using Typo=MudBlazor.Typo
 @using EpochApp.Client.Services
 @using MudBlazor
 
 <PageTitle>@StaticUtils.Constants.AppName - @Auth.CurrentUser.UserName - Files</PageTitle>
 
-<MudText Typo="Typo.h3">User Files</MudText>
+<MudText Typo="Typo.h3" Align="Align.Center">User Files</MudText>
 
-<MudFileUpload T="IBrowserFile" Accept=".png, .gif, .jpg, .jpeg" FilesChanged="@UpdateUploadedFiles" MaximumFileCount="100">
-	<ButtonTemplate>
-		<MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" for="@context.Id">
-			Only .pdf files
-		</MudButton>
-	</ButtonTemplate>
-</MudFileUpload>
+<MudTabs Outlined="true" Border="true" Color="Color.Tertiary" Rounded="true" TabPanelClass="pa-2" Class="mt-1">
+	<MudTabPanel Text="User Files" ID="@("UserFiles")" OnClick="@OnUserTabSelected">
+		<MudGrid Spacing="2">
 
-@if (_files != null)
-{
-	<MudList>
-		@foreach (var file in _files)
-		{
-			<MudListItem Icon="@Icons.Material.Filled.AttachFile">
-				@file.Name
-				<code>@file.Size bytes</code>
-			</MudListItem>
-		}
-	</MudList>
-}
+			<MudItem xs="12" md="4">
+				<MudPaper Width="100%" Outlined="true">
+					<UserFileUpload />
+				</MudPaper>
+			</MudItem>
 
-@code {
-	private IList<IBrowserFile> _files = new List<IBrowserFile>();
+			<MudItem xs="12" md="8">
+				<MudPaper Width="100%" Outlined="true">
+					<MudGrid>
+						@foreach (var file in _files)
+						{
+							<MudItem xs="12" sm="6" md="4">
+								<FileCard UserFile="@file" />
+							</MudItem>
+						}
+					</MudGrid>
+				</MudPaper>
+			</MudItem>
 
+		</MudGrid>
+	</MudTabPanel>
+
+	<MudTabPanel Text="Active World Files" ID="@("WorldFiles")" OnClick="@OnWorldTabSelected">
+		<MudGrid Spacing="4">
+
+			<MudItem xs="12" md="4">
+				<MudPaper Width="100%" Outlined="true">
+					<UserFileUpload IsWorldFile="true" />
+				</MudPaper>
+			</MudItem>
+
+			<MudItem xs="12" md="8">
+				<MudPaper Width="100%" Outlined="true">
+					<MudGrid>
+						@foreach (var file in _files)
+						{
+							<MudItem xs="12" sm="6" md="4">
+								<FileCard UserFile="@file" />
+							</MudItem>
+						}
+					</MudGrid>
+				</MudPaper>
+			</MudItem>
+
+		</MudGrid>
+	</MudTabPanel>
+</MudTabs>
+
+@code{
+	private bool _editMode { get; set; } = false;
+	private List<UserFileDTO> _files { get; set; } = new List<UserFileDTO>();
+
+	[CascadingParameter] private WorldDTO ActiveWorld { get; set; }
+	[Inject] private HttpClient Client { get; set; }
 	[Inject] private EpochAuthProvider Auth { get; set; }
 
-	private Task UpdateUploadedFiles(IBrowserFile file)
+	/// <inheritdoc />
+	protected override async Task OnInitializedAsync()
 	{
-		_files.Add(file);
-		return Task.CompletedTask;
+		await base.OnInitializedAsync();
+		if (Auth != null && Auth.CurrentUser != null)
+			_files = await Client.GetFromJsonAsync<List<UserFileDTO>>($"api/v1/UserFiles/UserFiles/{Auth.CurrentUser.UserID}");
+	}
+
+	private async Task OnUserTabSelected(MouseEventArgs arg)
+	{
+		_files = await Client.GetFromJsonAsync<List<UserFileDTO>>($"api/v1/UserFiles/UserFiles/{Auth.CurrentUser.UserID}");
+	}
+
+	private async Task OnWorldTabSelected(MouseEventArgs arg)
+	{
+		_files = await Client.GetFromJsonAsync<List<UserFileDTO>>($"api/v1/UserFiles/WorldFiles/{Auth.CurrentUser.UserID}/{ActiveWorld.WorldID}");
 	}
 }

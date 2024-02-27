@@ -5,6 +5,7 @@
 // Modified: 29-11-2023
 
 using EpochApp.Shared.Articles;
+using EpochApp.Shared.Client;
 using EpochApp.Shared.Social;
 using EpochApp.Shared.Users;
 
@@ -110,6 +111,11 @@ namespace EpochApp.Shared.Worlds
         ///     Tags associated with this world.
         /// </summary>
         public virtual ICollection<WorldTag> WorldTags { get; set; }
+
+        /// <summary>
+        ///     Files associated with this world.
+        /// </summary>
+        public virtual ICollection<UserFile> WorldFiles { get; set; }
     }
 
 }

@@ -32,23 +32,7 @@ namespace EpochApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProfileDTO>>> GetProfiles()
         {
-            return await _context.Profiles.Select(x => new ProfileDTO
-                                                       {
-                                                           UserID = x.UserID,
-                                                           FirstName = x.FirstName,
-                                                           LastName = x.LastName,
-                                                           Bio = x.Bio,
-                                                           Signature = x.Signature,
-                                                           AvatarImg = x.AvatarImg,
-                                                           CoverImg = x.CoverImg,
-                                                           WebAddress = x.WebAddress,
-                                                           Socials = x.Socials.Select(s => new SocialDTO
-                                                                                           {
-                                                                                               Social = s.Social,
-                                                                                               Handle = s.SocialHandle
-                                                                                           })
-                                                                      .ToList()
-                                                       })
+            return await _context.Profiles.Select(x => MapToProfileDTO(x))
                                  .ToListAsync();
         }
 
@@ -95,25 +79,10 @@ namespace EpochApp.Server.Controllers
             var userProfile = await _context.Users
                                             .Include(x => x.Profile)
                                             .Include(x => x.OwnedArticles)
+                                            .ThenInclude(a => a.Sections)
                                             .Include(x => x.OwnedWorlds)
-                                            .Select(x => new UserProfileDTO
-                                                         {
-                                                             UserId = x.UserID,
-                                                             UserName = x.UserName,
-                                                             ProfileImage = x.Profile.AvatarImg,
-                                                             CoverImage = x.Profile.CoverImg,
-                                                             Bio = x.Profile.Bio,
-                                                             Website = x.Profile.WebAddress,
-                                                             WorldCount = x.OwnedWorlds.Count,
-                                                             ArticleCount = x.OwnedArticles.Count,
-                                                             Socials = x.Profile.Socials.Select(s => new UserSocialDTO
-                                                                                                     {
-                                                                                                         Icon = s.Social.Icon,
-                                                                                                         SocialName = s.Social.SocialMediaName,
-                                                                                                         Handle = s.SocialHandle
-                                                                                                     })
-                                                                        .ToList()
-                                                         })
+                                            .ThenInclude(w => w.CurrentWorldDate)
+                                            .Select(x => MapToUserProfileDTO(x))
                                             .FirstOrDefaultAsync(x => x.UserId == userId);
             return Ok(userProfile);
         }
@@ -240,9 +209,7 @@ namespace EpochApp.Server.Controllers
         {
             var profile = await _context.Profiles.FindAsync(id);
             if (profile == null)
-            {
                 return NotFound();
-            }
 
             _context.Profiles.Remove(profile);
             await _context.SaveChangesAsync();
@@ -253,6 +220,102 @@ namespace EpochApp.Server.Controllers
         private bool ProfileExists(Guid id)
         {
             return _context.Profiles.Any(e => e.UserID == id);
+        }
+
+        private static ProfileDTO MapToProfileDTO(Profile x)
+        {
+            return new ProfileDTO
+                   {
+                       UserID = x.UserID,
+                       FirstName = x.FirstName,
+                       LastName = x.LastName,
+                       Bio = x.Bio,
+                       Signature = x.Signature,
+                       AvatarImg = x.AvatarImg,
+                       CoverImg = x.CoverImg,
+                       WebAddress = x.WebAddress,
+                       Socials = x.Socials.Select(s => new SocialDTO
+                                                       {
+                                                           Social = s.Social,
+                                                           Handle = s.SocialHandle
+                                                       })
+                                  .ToList()
+                   };
+        }
+
+        private static UserProfileDTO MapToUserProfileDTO(User x)
+        {
+            return new UserProfileDTO
+                   {
+                       UserId = x.UserID,
+                       UserName = x.UserName,
+                       ProfileImage = x.Profile.AvatarImg,
+                       CoverImage = x.Profile.CoverImg,
+                       Bio = x.Profile.Bio,
+                       Website = x.Profile.WebAddress,
+                       WorldCount = x.OwnedWorlds.Count,
+                       ArticleCount = x.OwnedArticles.Count,
+                       MemberDate = x.DateCreated,
+                       UserWorlds = x.OwnedWorlds.Select(w => new WorldDTO
+                                                              {
+                                                                  AuthorID = x.UserID,
+                                                                  WorldID = w.WorldID,
+                                                                  WorldName = w.WorldName,
+                                                                  Pronunciation = w.Pronunciation,
+                                                                  Description = w.Description,
+                                                                  DateCreated = w.DateCreated,
+                                                                  DateModified = w.DateModified,
+                                                                  DateRemoved = w.DateRemoved,
+                                                                  MetaData = null,
+                                                                  IsActiveWorld = w.IsActiveWorld,
+                                                                  WorldDate = new WorldDateDTO
+                                                                              {
+                                                                                  WorldId = w.WorldID,
+                                                                                  CurrentDay = w.CurrentWorldDate.CurrentDay,
+                                                                                  CurrentMonth = w.CurrentWorldDate.CurrentMonth,
+                                                                                  CurrentYear = w.CurrentWorldDate.CurrentYear,
+                                                                                  CurrentAge = w.CurrentWorldDate.CurrentAge,
+                                                                                  BeforeEra = w.CurrentWorldDate.BeforeEraName,
+                                                                                  AfterEra = w.CurrentWorldDate.AfterEraName,
+                                                                                  BeforeEraAbbreviation = w.CurrentWorldDate.BeforeEraAbbreviation,
+                                                                                  AfterEraAbbreviation = w.CurrentWorldDate.AfterEraAbbreviation,
+                                                                                  CurrentEra = w.CurrentWorldDate.CurrentAge
+                                                                              }
+                                                              })
+                                     .ToList(),
+                       UserArticles = x.OwnedArticles.Select(a => new ArticleDTO
+                                                                  {
+                                                                      ArticleId = a.ArticleId,
+                                                                      AuthorId = x.UserID,
+                                                                      WorldId = a.WorldId,
+                                                                      CategoryId = a.CategoryId,
+                                                                      Title = a.Title,
+                                                                      Content = a.Content,
+                                                                      IsPublished = a.IsPublished,
+                                                                      IsNSFW = a.IsNSFW,
+                                                                      DisplayAuthor = a.DisplayAuthor,
+                                                                      ShowInTableOfContents = a.ShowInTableOfContents,
+                                                                      ShowTableOfContents = a.ShowTableOfContents,
+                                                                      CreatedOn = a.CreatedOn,
+                                                                      ModifiedOn = a.ModifiedOn,
+                                                                      Sections = a.Sections.Select(sec => new SectionDTO
+                                                                                                          {
+                                                                                                              SectionID = sec.SectionID,
+                                                                                                              Title = sec.Title,
+                                                                                                              Content = sec.Content,
+                                                                                                              CreatedOn = sec.CreatedOn
+                                                                                                          })
+                                                                                  .ToList()
+                                                                  })
+                                       .ToList(),
+                       Socials = x.Profile.Socials.Select(s => new UserSocialDTO
+                                                               {
+                                                                   Icon = s.Social.Icon,
+                                                                   SocialName = s.Social.SocialMediaName,
+                                                                   Handle = s.SocialHandle
+                                                               })
+                                  .ToList()
+                   };
         }
     }
 }

@@ -37,6 +37,8 @@
     <ItemGroup>
         <ProjectReference Include="..\Client\EpochApp.Client.csproj"/>
         <ProjectReference Include="..\Shared\EpochApp.Shared.csproj"/>
+        <ProjectReference Include="..\UserContent\*"/>
+        <ProjectReference Include="..\WorldContent\*"/>
     </ItemGroup>
 
     <ItemGroup>

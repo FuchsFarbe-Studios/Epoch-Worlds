@@ -44,6 +44,6 @@ namespace EpochApp.Shared.Users
         public string WebAddress { get; set; }
         public virtual User User { get; set; }
 
-        public ICollection<UserSocial> Socials { get; set; }
+        public virtual ICollection<UserSocial> Socials { get; set; }
     }
 }

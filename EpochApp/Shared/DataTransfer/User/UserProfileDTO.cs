@@ -19,6 +19,9 @@ namespace EpochApp.Shared
         public int FollowerCount { get; set; }
         public int FollowingCount { get; set; }
         public int ArticleCount { get; set; }
+        public DateTime? MemberDate { get; set; }
         public List<UserSocialDTO> Socials { get; set; } = new List<UserSocialDTO>();
+        public List<ArticleDTO> UserArticles { get; set; } = new List<ArticleDTO>();
+        public List<WorldDTO> UserWorlds { get; set; } = new List<WorldDTO>();
     }
 }

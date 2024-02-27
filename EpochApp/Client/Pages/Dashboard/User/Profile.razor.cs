@@ -14,10 +14,10 @@ namespace EpochApp.Client.Pages.User
     [Authorize]
     public partial class Profile
     {
-        private bool _showProfileEdit;
-        private bool _updatingProfile;
         private ProfileDTO _profileData = null!;
+        private bool _showProfileEdit;
         private List<SocialMedia> _socials = new List<SocialMedia>();
+        private bool _updatingProfile;
         [Inject] private EpochAuthProvider Auth { get; set; }
         [Inject] private HttpClient Client { get; set; }
         [Inject] private ILogger<Profile> Logger { get; set; }
@@ -73,6 +73,18 @@ namespace EpochApp.Client.Pages.User
                 Logger.LogError("Failed to update profile...");
             }
             _updatingProfile = false;
+        }
+
+        private Task AvatarImageChanged(UserFileDTO arg)
+        {
+            _profileData.AvatarImg = arg.FilePath;
+            return Task.CompletedTask;
+        }
+
+        private Task CoverImageChanged(UserFileDTO arg)
+        {
+            _profileData.CoverImg = arg.FilePath;
+            return Task.CompletedTask;
         }
     }
 }

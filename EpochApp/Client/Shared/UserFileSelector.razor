@@ -1,0 +1,20 @@
+@using Variant=MudBlazor.Variant
+@using MudBlazor
+@inherits RequestComponent<UserFileDTO>
+
+@if (_userFiles.Any())
+{
+	<MudSelect Variant="Variant.Filled" T="UserFileDTO" Value="@_selectedFile" ValueChanged="@(async c => await ContentChanged(c))" Label="File Selection" FullWidth="true">
+		@foreach (var content in _userFiles)
+		{
+			<MudSelectItem Value="@content">
+				<img src="@content.FilePath" alt="@content.AltText" height="16" class="mr-1" />
+				@(content.Alias ?? content.SafeName)
+			</MudSelectItem>
+		}
+	</MudSelect>
+}
+else
+{
+	<MudProgressCircular Indeterminate="true" Size="Size.Small" Color="Color.Primary" />
+}

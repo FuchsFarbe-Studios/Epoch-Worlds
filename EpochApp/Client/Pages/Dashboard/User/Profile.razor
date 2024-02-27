@@ -20,6 +20,18 @@
 					</MudCardHeader>
 					<MudCardContent>
 						<MudGrid>
+							<MudItem xs="6">
+								<MudTextField Label="Avatar" @bind-Value="@_profileData.AvatarImg" For="@(() => _profileData.AvatarImg)" Disabled="@_updatingProfile" />
+							</MudItem>
+							<MudItem xs="6">
+								<MudTextField Label="Cover Image" @bind-Value="@_profileData.CoverImg" For="@(() => _profileData.CoverImg)" Disabled="@_updatingProfile" />
+							</MudItem>
+							<MudItem xs="6">
+								<UserFileSelector OnFileSelectionChanged="@AvatarImageChanged" />
+							</MudItem>
+							<MudItem xs="6">
+								<UserFileSelector OnFileSelectionChanged="@CoverImageChanged" />
+							</MudItem>
 							<MudItem xs="12" sm="6">
 								<MudTextField Label="First Name" @bind-Value="@_profileData.FirstName" For="@(() => _profileData.FirstName)" Disabled="@_updatingProfile" />
 							</MudItem>

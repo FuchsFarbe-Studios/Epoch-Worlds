@@ -5,6 +5,7 @@
 // Modified: 29-11-2023
 
 using EpochApp.Shared.Articles;
+using EpochApp.Shared.Client;
 using EpochApp.Shared.Social;
 using EpochApp.Shared.Worlds;
 
@@ -63,5 +64,10 @@ namespace EpochApp.Shared.Users
         ///     The tags this user has created.
         /// </summary>
         public virtual ICollection<UserTag> UserTags { get; set; }
+
+        /// <summary>
+        ///     The files associated with this user.
+        /// </summary>
+        public virtual ICollection<UserFile> UserFiles { get; set; }
     }
 }
