@@ -57,7 +57,7 @@ namespace EpochApp.Server.Controllers
                                                         CurrentYear = x.CurrentWorldDate.CurrentYear,
                                                         CurrentAge = x.CurrentWorldDate.CurrentAge,
                                                         MetaData = x.MetaData,
-                                                        IsActiveWorld = x.IsActiveWorld.Value,
+                                                        IsActiveWorld = x.IsActiveWorld,
                                                         WorldDate = new WorldDateDTO
                                                                     {
                                                                         CurrentDay = x.CurrentWorldDate.CurrentDay,

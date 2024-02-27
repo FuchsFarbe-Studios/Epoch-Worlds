@@ -1,13 +1,23 @@
+@using AlignItems=MudBlazor.AlignItems
+@using Justify=MudBlazor.Justify
+@using Variant=MudBlazor.Variant
 @using MudBlazor
 <div class="flex-center">
 	<MudContainer>
-		@ChildContent
-	</MudContainer>
-	<MudContainer Class="flex-center">
-		<MudLink Href="@NavRef.Site.About" Underline="Underline.None">About</MudLink>
-		<MudLink Href="@NavRef.Site.Policy" Underline="Underline.None">Policy</MudLink>
-		<MudLink Href="@NavRef.Site.Contact" Underline="Underline.None">Contact</MudLink>
-		<MudLink Href="@NavRef.Site.Faq" Underline="Underline.None">FAQ</MudLink>
-		<MudLink Href="@NavRef.Site.Support" Underline="Underline.None">Support</MudLink>
+		<MudStack Justify="Justify.Center">
+			<MudStack Row="true" AlignItems="AlignItems.Center">
+				<MudLink Href="/">
+					<MudImage Elevation="0" Fluid="false" Height="64" Src="images/logos/SVG/words-svg.svg" Alt="Site footer logo." ObjectFit="ObjectFit.Contain" />
+				</MudLink>
+				@ChildContent
+				<MudToolBar Dense="true">
+					<MudButton Variant="Variant.Text" Href="@NavRef.Site.About">About</MudButton>
+					<MudButton Variant="Variant.Text" Href="@NavRef.Site.Policy">Policy</MudButton>
+					<MudButton Variant="Variant.Text" Href="@NavRef.Site.Contact">Contact</MudButton>
+					<MudButton Variant="Variant.Text" Href="@NavRef.Site.Faq">FAQ</MudButton>
+					<MudButton Variant="Variant.Text" Href="@NavRef.Site.Support">Support</MudButton>
+				</MudToolBar>
+			</MudStack>
+		</MudStack>
 	</MudContainer>
 </div>
