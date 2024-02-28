@@ -4,6 +4,7 @@ using EpochApp.Server.Services.WorldService;
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -247,44 +248,45 @@ namespace EpochApp.Server.Controllers
             return Ok(jwt);
         }
 
+        [AllowAnonymous]
         [HttpPost("Verification")]
         public async Task<IActionResult> PostUserVerification(VerificationDTO verification)
         {
-            var user = await _context.Users
-                                     .Where(x => x.VerificationToken == verification.Token)
-                                     .Include(user => user.UserRoles)
-                                     .ThenInclude(userRole => userRole.Role)
-                                     .FirstOrDefaultAsync();
-            if (user == null)
+            var verifyUser = await _context.Users
+                                           .Where(x => x.VerificationToken == verification.Token)
+                                           .Include(user => user.UserRoles)
+                                           .ThenInclude(userRole => userRole.Role)
+                                           .FirstOrDefaultAsync();
+            if (verifyUser == null)
                 return BadRequest("Invalid token");
-            if (user.VerificationTokenExpires < DateTime.Now)
+            if (verifyUser.VerificationTokenExpires < DateTime.Now)
                 return BadRequest("Token has expired");
 
-            user.IsVerified = true;
-            user.VerificationToken = null;
-            user.VerificationTokenCreated = null;
-            user.VerificationTokenExpires = null;
-            if (user.UserRoles.All(x => x.RoleID != 2))
-                user.UserRoles.Add(new UserRole
-                                   {
-                                       RoleID = 2,
-                                       DateAssigned = DateTime.UtcNow
-                                   });
-            _context.Entry(user).State = EntityState.Modified;
+            verifyUser.IsVerified = true;
+            verifyUser.VerificationToken = null;
+            verifyUser.VerificationTokenCreated = null;
+            verifyUser.VerificationTokenExpires = null;
+            if (verifyUser.UserRoles.All(x => x.RoleID != 2))
+                verifyUser.UserRoles.Add(new UserRole
+                                         {
+                                             RoleID = 2,
+                                             DateAssigned = DateTime.UtcNow
+                                         });
+            _context.Entry(verifyUser).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             var data = new UserData
                        {
-                           UserID = user.UserID,
-                           UserName = user.UserName,
-                           Hash = user.PasswordHash,
-                           Email = user.Email,
-                           DateOfBirth = user.DateOfBirth,
-                           Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
+                           UserID = verifyUser.UserID,
+                           UserName = verifyUser.UserName,
+                           Hash = verifyUser.PasswordHash,
+                           Email = verifyUser.Email,
+                           DateOfBirth = verifyUser.DateOfBirth,
+                           Roles = verifyUser.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
                        };
             var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
             var refreshToken = GenerateRefreshToken();
-            await SetRefreshTokenAsync(user, refreshToken);
+            await SetRefreshTokenAsync(verifyUser, refreshToken);
             return Ok(jwt);
         }
 

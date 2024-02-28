@@ -13,7 +13,11 @@ namespace EpochApp.Client.Pages.Auth
     public partial class Verification
     {
         private bool _isSuccess;
-        private VerificationDTO _verificationDTO = new VerificationDTO();
+
+        private VerificationDTO _verificationDTO = new VerificationDTO
+                                                   {
+                                                       Token = ""
+                                                   };
 
         /// <summary>
         ///     The token to verify the user's email.
@@ -31,24 +35,19 @@ namespace EpochApp.Client.Pages.Auth
             await base.OnInitializedAsync();
             if (!string.IsNullOrEmpty(Token))
             {
-                _verificationDTO.Token = Token;
-                await VerifyEmail();
-            }
-        }
-
-        private async Task VerifyEmail()
-        {
-            var response = await Client.PostAsJsonAsync<VerificationDTO>("api/v1/EpochUsers/Verification", _verificationDTO);
-            if (response.IsSuccessStatusCode)
-            {
-                _isSuccess = true;
-                await Task.Delay(2000);
-                Nav.NavigateTo(NavRef.UserNav.Dashboard);
-            }
-            else
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                Logger.LogError(content);
+                _verificationDTO = new VerificationDTO { Token = Token };
+                var response = await Client.PostAsJsonAsync<VerificationDTO>("api/v1/EpochUsers/Verification", _verificationDTO);
+                if (response.IsSuccessStatusCode)
+                {
+                    _isSuccess = true;
+                    await Task.Delay(2000);
+                    Nav.NavigateTo(NavRef.UserNav.Dashboard);
+                }
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Logger.LogError(content);
+                }
             }
         }
     }
