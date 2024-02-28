@@ -32,7 +32,6 @@ namespace EpochApp.Client.Pages.Auth
             if (!string.IsNullOrEmpty(Token))
             {
                 _verificationDTO.Token = Token;
-                await Task.Delay(1000);
                 await VerifyEmail();
             }
         }

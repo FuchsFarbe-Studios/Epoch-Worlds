@@ -255,7 +255,7 @@ namespace EpochApp.Server.Controllers
                                      .Include(user => user.UserRoles)
                                      .ThenInclude(userRole => userRole.Role)
                                      .FirstOrDefaultAsync();
-            if (user is null)
+            if (user == null)
                 return BadRequest("Invalid token");
             if (user.VerificationTokenExpires < DateTime.Now)
                 return BadRequest("Token has expired");
@@ -264,12 +264,12 @@ namespace EpochApp.Server.Controllers
             user.VerificationToken = null;
             user.VerificationTokenCreated = null;
             user.VerificationTokenExpires = null;
-            user.UserRoles.Add(new UserRole
-                               {
-                                   RoleID = 2,
-                                   DateAssigned = DateTime.UtcNow
-                               });
-
+            if (user.UserRoles.All(x => x.RoleID != 2))
+                user.UserRoles.Add(new UserRole
+                                   {
+                                       RoleID = 2,
+                                       DateAssigned = DateTime.UtcNow
+                                   });
             _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
