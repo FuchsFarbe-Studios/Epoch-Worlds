@@ -21,6 +21,8 @@ namespace EpochApp.Shared.Utils
             public const string Logout = "/Auth/Logout";
             public const string Registration = "/Auth/Register";
             public const string Reset = "/Auth/Reset";
+            public const string Verification = "/Auth/Verification";
+            public const string AccountRecovery = "/Auth/Forgot-Password";
         }
 
         public static class UserNav

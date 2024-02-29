@@ -9,6 +9,7 @@ namespace EpochApp.Server.Services
     {
         Task SendEmail(string toEmail, string subject, string content);
         Task SendVerificationEmailAsync(string email, string userName, string token);
+        Task SendResetPasswordEmailAsync(string userEmail, string userName, string token);
     }
 
 }

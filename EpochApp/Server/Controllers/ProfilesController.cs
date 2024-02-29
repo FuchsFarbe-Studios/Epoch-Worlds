@@ -51,6 +51,8 @@ namespace EpochApp.Server.Controllers
                                         .Select(x => new ProfileDTO
                                                      {
                                                          UserID = x.UserID,
+                                                         UserName = x.User.UserName ?? "",
+                                                         CreateDate = x.User.DateCreated,
                                                          FirstName = x.FirstName,
                                                          LastName = x.LastName,
                                                          Bio = x.Bio,

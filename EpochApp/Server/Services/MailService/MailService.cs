@@ -95,7 +95,7 @@ namespace EpochApp.Server.Services
             var baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
             _logger.LogWarning("Base URI: " + baseUrl);
             // /Verification/{Token?}
-            var verificationUrl = $"{baseUrl}/Verification/{token}";
+            var verificationUrl = $"{baseUrl}{NavRef.Auth.Verification}/{token}";
             var verificationLink = $"<a href=\"{verificationUrl}\">Verify!</a>";
             var body = emailTemplate.HtmlBody;
             body = body.Replace("{VERIFICATION-LINK}", verificationLink);
@@ -103,6 +103,7 @@ namespace EpochApp.Server.Services
             body = body.Replace("{USERNAME}", userName);
             body = body.Replace("{SUPPORT-EMAIL}", companyEmail.SettingValue);
             body = body.Replace("{SITE-NAME}", companySite.SettingValue);
+            body = body.Replace("{WEBSITE}", companySite.SettingValue);
             body = body.Replace("{PHONE-NUMBER}", companyPhone.SettingValue);
             body = body.Replace("{ADDRESS}", companyAddress.SettingValue);
             body = body.Replace("{CONTACT-LINK}", baseUrl + contactPage.SettingValue);
@@ -113,6 +114,47 @@ namespace EpochApp.Server.Services
 
             _logger.LogWarning("Sending Verification Email to: " + email);
             await SendEmail(email, subject, body);
+        }
+
+        /// <inheritdoc />
+        public async Task SendResetPasswordEmailAsync(string userEmail, string userName, string token)
+        {
+            var companySettings = await _context.ClientSettings.Where(x => x.FieldName == "Company").ToListAsync();
+            var companyName = companySettings.FirstOrDefault(x => x.SettingField == "Name");
+            var companyEmail = companySettings.FirstOrDefault(x => x.SettingField == "SupportEmail");
+            var companyPhone = companySettings.FirstOrDefault(x => x.SettingField == "Phone");
+            var companyAddress = companySettings.FirstOrDefault(x => x.SettingField == "Address");
+            var companySite = companySettings.FirstOrDefault(x => x.SettingField == "SiteName");
+            var contactPage = companySettings.FirstOrDefault(x => x.SettingField == "ContactLink");
+            // var companySocials = companySettings.FirstOrDefault(x => x.FieldName == "Socials");
+
+            // {PASSWORD-RESET-LINK}
+            // {PASSWORD-RESET-URL}
+            var emailTemplate = await _context.EmailTemplates.Where(x => x.TemplateId == EmailTemplateType.PasswordRecovery).FirstOrDefaultAsync();
+            if (emailTemplate == null)
+                return;
+
+            var request = _accessor.HttpContext.Request;
+            var baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
+
+            var resetUrl = $"{baseUrl}{NavRef.Auth.Reset}/{token}";
+            var resetLink = $"<a href=\"{resetUrl}\">Verify!</a>";
+
+            var body = emailTemplate.HtmlBody;
+            body = body.Replace("{PASSWORD-RESET-LINK}", resetLink);
+            body = body.Replace("{PASSWORD-RESET-URL}", resetUrl);
+            body = body.Replace("{EXPIRATION}", "15 minutes");
+            body = body.Replace("{USERNAME}", userName);
+            body = body.Replace("{SUPPORT-EMAIL}", companyEmail.SettingValue);
+            body = body.Replace("{SITE-NAME}", companySite.SettingValue);
+            body = body.Replace("{WEBSITE}", companySite.SettingValue);
+            body = body.Replace("{PHONE-NUMBER}", companyPhone.SettingValue);
+            body = body.Replace("{ADDRESS}", companyAddress.SettingValue);
+            body = body.Replace("{CONTACT-LINK}", baseUrl + contactPage.SettingValue);
+
+            var subject = emailTemplate.Subject;
+            _logger.LogWarning("Sending password reset Email to: " + userEmail);
+            await SendEmail(userEmail, subject, body);
         }
     }
 }

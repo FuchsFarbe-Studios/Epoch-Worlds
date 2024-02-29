@@ -46,7 +46,7 @@ namespace EpochApp.Client.Pages.Auth
                 if (response.IsSuccessStatusCode)
                 {
                     _isSuccess = true;
-                    //await Task.Delay(2000);
+                    await Task.Delay(2000);
                     Nav.NavigateTo(NavRef.Auth.Login);
                 }
                 else

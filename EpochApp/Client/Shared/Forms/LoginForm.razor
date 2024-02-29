@@ -20,6 +20,7 @@
 		<MudTextField Variant="Variant.Outlined" Label="Password" Placeholder="Password" Required="true" @bind-Value="@_loginDto.Password" For="@(() => _loginDto.Password)" InputType="InputType.Password" FullWidth="true" />
 		<MudDivider Class="my-1" DividerType="DividerType.Middle" />
 		<MudButton Class="rounded-pill" DisableElevation="true" Disabled="@_loggingIn" Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit" FullWidth="true">Login</MudButton>
-		<MudText Typo="Typo.body2">Don't have an account yet? <MudLink Disabled="@_loggingIn" Color="Color.Primary" Target="_self" Href="@($"{StaticUtils.Auth.RegistrationNav}")">Register!</MudLink></MudText>
+		<MudText Typo="Typo.body2">Don't have an account yet? <MudLink Disabled="@_loggingIn" Color="Color.Primary" Target="_self" Href="@($"{NavRef.Auth.Registration}")">Register!</MudLink></MudText>
+		<MudText Typo="Typo.caption">Forgot your password? <MudLink Disabled="@_loggingIn" Color="Color.Secondary" Target="_self" Href="@($"{NavRef.Auth.AccountRecovery}")">Recover Account</MudLink></MudText>
 	</MudStack>
 </EditForm>

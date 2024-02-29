@@ -29,6 +29,7 @@ namespace EpochApp.Client.Pages.User
             var profileData = await Client.GetFromJsonAsync<ProfileDTO>($"api/v1/Profiles/{userId}");
             _profileData = profileData;
         }
+
         private async Task ToggleEditAsync()
         {
             _showProfileEdit = !_showProfileEdit;
@@ -37,6 +38,7 @@ namespace EpochApp.Client.Pages.User
                 _socials = socials;
             await Task.CompletedTask;
         }
+
         private async Task RemoveSocialAsync(SocialDTO social)
         {
             if (_profileData.Socials.Contains(social))
@@ -44,6 +46,7 @@ namespace EpochApp.Client.Pages.User
             //StateHasChanged();
             await Task.CompletedTask;
         }
+
         private async Task AddSocialMediaAsync()
         {
             _profileData.Socials.Add(new SocialDTO
@@ -54,6 +57,7 @@ namespace EpochApp.Client.Pages.User
             //StateHasChanged();
             await Task.CompletedTask;
         }
+
         private async Task UpdateProfileAsync(EditContext ctx)
         {
             _updatingProfile = true;

@@ -1,9 +1,9 @@
-@page "/Verification"
-@page "/Verification/{Token?}"
+@page "/Auth/Verification"
+@page "/Auth/Verification/{Token?}"
 @using Typo=MudBlazor.Typo
 @using Variant=MudBlazor.Variant
 @using MudBlazor
-
+<PageTitle>Account Verification - @StaticUtils.Constants.AppName</PageTitle>
 <MudText Typo="Typo.h3">Verification</MudText>
 @if (!_isSuccess)
 {

@@ -6,7 +6,7 @@
 @namespace EpochApp.Client.Pages.User
 
 <PageTitle>@StaticUtils.Constants.AppName - @Auth.CurrentUser.UserName - Profile</PageTitle>
-<MudText Typo="Typo.h3">Profile</MudText>
+<MudText Typo="Typo.h3" Align="Align.Center">Profile</MudText>
 
 @if (_showProfileEdit)
 {
@@ -90,31 +90,28 @@
 
 @if (_profileData != null && !_showProfileEdit)
 {
-	@*		Display Profile Data	*@
 	<MudGrid Spacing="2">
 		<MudItem xs="12" sm="7">
-			<MudCard Outlined="true">
-				<MudCardHeader>
-					<MudText>@_profileData.FirstName @_profileData.LastName</MudText>
-				</MudCardHeader>
-				<MudCardContent>
-					<MudStack>
-						<MudText>@_profileData.FirstName @_profileData.LastName</MudText>
-						<MudText>@_profileData.Bio</MudText>
-						<MudText>@_profileData.Signature</MudText>
-					</MudStack>
-				</MudCardContent>
-				<MudCardActions>
+
+			<MudPaper Class="mud-border-secondary pa-4 mt-2" Elevation="0" Width="100%" Outlined="true">
+				<MudStack>
+					<MudText Typo="Typo.h4">@Auth.CurrentUser.UserName</MudText>
+					<MudText Typo="Typo.h5">@_profileData.FirstName @_profileData.LastName</MudText>
+					<MudText Typo="Typo.h6">Member Since: @(_profileData?.CreateDate?.ToString("MMMM dd yyyy"))</MudText>
+					<MudDivider DividerType="DividerType.Inset" Light="false" />
+					<MudText Typo="Typo.body1" Align="Align.Start" GutterBottom="true">@_profileData.Bio</MudText>
+					<MudDivider DividerType="DividerType.Inset" Light="false" />
+					<MudText Typo="Typo.body2" Color="Color.Primary">@_profileData.Signature</MudText>
+					<MudDivider DividerType="DividerType.Inset" Light="false" />
 					<MudIconButton Icon="@Icons.Material.Filled.Edit" Title="Edit your profile" OnClick="@(async e => await ToggleEditAsync())" />
-				</MudCardActions>
-			</MudCard>
+				</MudStack>
+			</MudPaper>
 		</MudItem>
+
 		<MudItem xs="12" sm="5">
-			<MudCard Outlined="true">
-				<MudCardHeader>
-					<MudText>User Socials</MudText>
-				</MudCardHeader>
-				<MudCardContent>
+			<MudPaper Class="mud-border-secondary pa-4 mt-2" Elevation="0" Width="100%" Outlined="true">
+				<MudStack>
+					<MudText Typo="Typo.h6" Align="Align.Center" GutterBottom="true">User Socials</MudText>
 					<MudTable Bordered="true" Dense="true" Outlined="true" Striped="true" Items="@_profileData.Socials">
 						<HeaderContent>
 							<MudTh>Social</MudTh>
@@ -127,8 +124,8 @@
 							</MudTd>
 						</RowTemplate>
 					</MudTable>
-				</MudCardContent>
-			</MudCard>
+				</MudStack>
+			</MudPaper>
 		</MudItem>
 	</MudGrid>
 }

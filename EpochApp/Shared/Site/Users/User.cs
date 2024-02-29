@@ -13,6 +13,7 @@ namespace EpochApp.Shared.Users
 {
     public class User
     {
+        private string _resetToken;
         public User()
         {
             UserRoles = new HashSet<UserRole>();
@@ -37,7 +38,24 @@ namespace EpochApp.Shared.Users
         public string VerificationToken { get; set; }
         public DateTime? VerificationTokenCreated { get; set; }
         public DateTime? VerificationTokenExpires { get; set; }
+
+        /// <summary>
+        ///     The reset token for this user.
+        /// </summary>
+        public string ResetToken { get => _resetToken; set => _resetToken = value; }
+
+        /// <summary>
+        ///     The date the reset token was created.
+        /// </summary>
+        public DateTime? ResetTokenCreated { get; set; }
+
+        /// <summary>
+        ///     The date the reset token expires.
+        /// </summary>
+        public DateTime? ResetTokenExpires { get; set; }
+
         public string NormalizedUserName => UserName.ToUpper();
+
         public string NormalizedEmail => Email.ToUpper();
 
         /// <summary>

@@ -1,6 +1,5 @@
 using EpochApp.Server.Data;
 using EpochApp.Server.Services;
-using EpochApp.Server.Services.WorldService;
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
@@ -62,6 +61,7 @@ namespace EpochApp.Server.Controllers
         ///     It returns a list of all User objects present in the users table.
         /// </returns>
         [HttpGet]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<ActionResult<IEnumerable<UserData>>> GetUsersAsync()
         {
             return await _context.Users.Select(x => new UserData
@@ -120,9 +120,7 @@ namespace EpochApp.Server.Controllers
         public async Task<IActionResult> PutUserAsync(Guid id, User user)
         {
             if (id != user.UserID)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(user).State = EntityState.Modified;
 
@@ -152,203 +150,13 @@ namespace EpochApp.Server.Controllers
         ///     <see cref="Task{T}" /> where TResult is <see cref="ActionResult{T}" /> where TValue is <see cref="User" />.
         /// </returns>
         [HttpPost]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<ActionResult<User>> PostUserAsync(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.UserID }, user);
-        }
-
-        /// <summary>
-        ///     AuthenticateAsync() is a POST method used for user login.
-        /// </summary>
-        /// <param name="login">
-        ///     LoginDTO Entity that carries user login information
-        /// </param>
-        /// <returns>
-        ///     Returns JWT if authentication success else error message.
-        /// </returns>
-        [HttpPost("Authentication")]
-        public async Task<IActionResult> AuthenticateAsync(LoginDTO login)
-        {
-            var user = await _context.Users
-                                     .Include(x => x.UserRoles)
-                                     .ThenInclude(x => x.Role)
-                                     .Include(x => x.Profile)
-                                     .FirstOrDefaultAsync(x => x.UserName == login.UserName);
-            if (user is null)
-            {
-                ModelState.AddModelError(nameof(LoginDTO.UserName), "Username or Password is incorrect");
-                ModelState.AddModelError(nameof(LoginDTO.Password), "Username or Password is incorrect");
-                return BadRequest(ModelState);
-            }
-
-            if (!VerifyPassword(login.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                ModelState.AddModelError(nameof(LoginDTO.UserName), "Unauthorized!");
-                return BadRequest(ModelState);
-            }
-            var roles = user.UserRoles.Select(ur => ur.Role).ToList();
-            var verifiedRole = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 2);
-
-            if (user.IsVerified && !roles.Contains(verifiedRole))
-            {
-                _logger.LogInformation("User is verified but does not have the verified role. Adding verified role...");
-                user.UserRoles.Add(new UserRole
-                                   {
-                                       RoleID = 2,
-                                       DateAssigned = DateTime.UtcNow
-                                   });
-                _context.Entry(user).State = EntityState.Modified;
-                _context.Update(user);
-                await _context.SaveChangesAsync();
-            }
-
-            var data = new UserData
-                       {
-                           UserID = user.UserID,
-                           UserName = user.UserName,
-                           Hash = user.PasswordHash,
-                           Email = user.Email,
-                           DateOfBirth = user.DateOfBirth,
-                           Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
-                       };
-
-            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
-            var refreshToken = GenerateRefreshToken();
-            await SetRefreshTokenAsync(user, refreshToken);
-            return Ok(jwt);
-        }
-
-        [HttpPost("Refresh-Token")]
-        public async Task<ActionResult<string>> GetRefreshToken()
-        {
-            var token = Request.Cookies["refreshToken"];
-            if (string.IsNullOrEmpty(token))
-                return BadRequest("No refresh token found");
-
-            var user = await _context.Users
-                                     .Include(user => user.UserRoles)
-                                     .ThenInclude(userRole => userRole.Role)
-                                     .FirstOrDefaultAsync(x => x.RefreshToken == token);
-            if (user is null)
-                return BadRequest("No user found with this refresh token");
-            if (user.TokenExpires < DateTime.Now)
-                return BadRequest("Refresh token has expired");
-
-            var data = new UserData
-                       {
-                           UserID = user.UserID,
-                           UserName = user.UserName,
-                           Hash = user.PasswordHash,
-                           Email = user.Email,
-                           DateOfBirth = user.DateOfBirth,
-                           Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
-                       };
-            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
-            var refreshToken = GenerateRefreshToken();
-            await SetRefreshTokenAsync(user, refreshToken);
-            return Ok(jwt);
-        }
-
-        [AllowAnonymous]
-        [HttpPost("Verification")]
-        public async Task<IActionResult> PostUserVerification([FromBody] VerificationDTO verification)
-        {
-            if (verification != null)
-                _logger.LogInformation("Verification Token: " + verification.Token);
-            if (verification == null || verification.Token.IsNullOrEmpty())
-                return BadRequest("Invalid token");
-
-            var verifyUser = await _context.Users
-                                           .Where(x => x.VerificationToken == verification.Token)
-                                           .Include(user => user.UserRoles)
-                                           .ThenInclude(userRole => userRole.Role)
-                                           .FirstOrDefaultAsync();
-            if (verifyUser == null)
-                return BadRequest("Invalid token");
-            if (verifyUser.VerificationTokenExpires < DateTime.Now)
-                return BadRequest("Token has expired");
-
-            var userId = verifyUser.UserID;
-            var user = await _context.Users.Include(user => user.UserRoles)
-                                     .ThenInclude(userRole => userRole.Role)
-                                     .FirstOrDefaultAsync(x => x.UserID == userId);
-            _logger.LogInformation($"Verifying User\n\tUser ID: {userId} \n\tUserName: {user.UserName}\n\tVerification Token: {verification.Token}");
-            verifyUser.IsVerified = true;
-            verifyUser.VerificationToken = null;
-            verifyUser.VerificationTokenCreated = null;
-            verifyUser.VerificationTokenExpires = null;
-            var verifiedRole = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 2);
-            if (verifyUser.UserRoles.All(x => x.RoleID != 2))
-                verifyUser.UserRoles.Add(new UserRole
-                                         {
-                                             Role = verifiedRole,
-                                             DateAssigned = DateTime.UtcNow
-                                         });
-            foreach (var role in verifyUser.UserRoles)
-                _logger.LogInformation($"User Role: {role?.Role?.Description}");
-            var data = new UserData
-                       {
-                           UserID = verifyUser.UserID,
-                           UserName = verifyUser.UserName,
-                           Hash = verifyUser.PasswordHash,
-                           Email = verifyUser.Email,
-                           DateOfBirth = verifyUser.DateOfBirth,
-                           Roles = new List<string>()
-                       };
-            data.Roles.AddRange(verifyUser.UserRoles.Select(ur => ur?.Role?.Description?.ToUpper()));
-            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
-            var refreshToken = GenerateRefreshToken();
-            await SetRefreshTokenAsync(verifyUser, refreshToken);
-
-            _context.Entry(verifyUser).State = EntityState.Modified;
-
-            try
-            {
-                _context.Update(verifyUser);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                if (!UserExists(verifyUser.UserID))
-                {
-                    _logger.LogError(ex, "User does not exist! Verification failed!"
-                                         + "\n"
-                                         + "\tVerification Token: "
-                                         + verification.Token);
-                    return NotFound("User does not exist! Verification failed.");
-                }
-                throw;
-            }
-            return Ok(jwt);
-        }
-
-        private async Task SetRefreshTokenAsync(User user, RefreshToken refreshToken)
-        {
-            var cookieOpts = new CookieOptions
-                             {
-                                 Expires = refreshToken.TokenExpires,
-                                 Secure = false,
-                                 HttpOnly = true
-                             };
-            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOpts);
-            user.RefreshToken = refreshToken.Token;
-            user.TokenCreated = refreshToken.TokenCreated;
-            user.TokenExpires = refreshToken.TokenExpires;
-            _context.Entry(user).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        private RefreshToken GenerateRefreshToken()
-        {
-            return new RefreshToken
-                   {
-                       Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                       TokenCreated = DateTime.Now,
-                       TokenExpires = DateTime.Now.AddDays(7)
-                   };
         }
 
         /// <summary>
@@ -437,6 +245,241 @@ namespace EpochApp.Server.Controllers
         }
 
         /// <summary>
+        ///     AuthenticateAsync() is a POST method used for user login.
+        /// </summary>
+        /// <param name="login">
+        ///     LoginDTO Entity that carries user login information
+        /// </param>
+        /// <returns>
+        ///     Returns JWT if authentication success else error message.
+        /// </returns>
+        [HttpPost("Authentication")]
+        public async Task<IActionResult> AuthenticateAsync(LoginDTO login)
+        {
+            var user = await _context.Users
+                                     .Include(x => x.UserRoles)
+                                     .ThenInclude(x => x.Role)
+                                     .Include(x => x.Profile)
+                                     .FirstOrDefaultAsync(x => x.UserName == login.UserName);
+            if (user is null)
+            {
+                ModelState.AddModelError(nameof(LoginDTO.UserName), "Username or Password is incorrect");
+                ModelState.AddModelError(nameof(LoginDTO.Password), "Username or Password is incorrect");
+                return BadRequest(ModelState);
+            }
+
+            if (!VerifyPassword(login.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                ModelState.AddModelError(nameof(LoginDTO.UserName), "Unauthorized!");
+                return BadRequest(ModelState);
+            }
+            var roles = user.UserRoles.Select(ur => ur.Role).ToList();
+            var verifiedRole = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 2);
+
+            if (user.IsVerified && !roles.Contains(verifiedRole))
+            {
+                _logger.LogInformation("User is verified but does not have the verified role. Adding verified role...");
+                user.UserRoles.Add(new UserRole
+                                   {
+                                       RoleID = 2,
+                                       DateAssigned = DateTime.UtcNow
+                                   });
+                _context.Entry(user).State = EntityState.Modified;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+
+            var data = new UserData
+                       {
+                           UserID = user.UserID,
+                           UserName = user.UserName,
+                           Hash = user.PasswordHash,
+                           Email = user.Email,
+                           DateOfBirth = user.DateOfBirth,
+                           Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
+                       };
+
+            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
+            var refreshToken = GenerateRefreshToken();
+            await SetRefreshTokenAsync(user, refreshToken);
+            return Ok(jwt);
+        }
+
+        [HttpPost("Refresh-Token")]
+        public async Task<ActionResult<string>> GetRefreshTokenAsync()
+        {
+            var token = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(token))
+                return BadRequest("No refresh token found");
+
+            var user = await _context.Users
+                                     .Include(user => user.UserRoles)
+                                     .ThenInclude(userRole => userRole.Role)
+                                     .FirstOrDefaultAsync(x => x.RefreshToken == token);
+            if (user is null)
+                return BadRequest("No user found with this refresh token");
+            if (user.TokenExpires < DateTime.Now)
+                return BadRequest("Refresh token has expired");
+
+            var data = new UserData
+                       {
+                           UserID = user.UserID,
+                           UserName = user.UserName,
+                           Hash = user.PasswordHash,
+                           Email = user.Email,
+                           DateOfBirth = user.DateOfBirth,
+                           Roles = user.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
+                       };
+            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
+            var refreshToken = GenerateRefreshToken();
+            await SetRefreshTokenAsync(user, refreshToken);
+            return Ok(jwt);
+        }
+
+        /// <summary>
+        ///     Verifies a user using a token.
+        /// </summary>
+        /// <param name="verification">
+        ///     The verification token.
+        /// </param>
+        /// <returns>
+        ///     The JWT if the verification is successful.
+        /// </returns>
+        [AllowAnonymous]
+        [HttpPost("Verification")]
+        public async Task<IActionResult> PostUserVerificationAsync([FromBody] VerificationDTO verification)
+        {
+            if (verification == null || verification.Token.IsNullOrEmpty())
+                return BadRequest("Invalid token");
+
+            var verifyUser = await _context.Users
+                                           .Where(x => x.VerificationToken == verification.Token)
+                                           .Include(user => user.UserRoles)
+                                           .ThenInclude(userRole => userRole.Role)
+                                           .FirstOrDefaultAsync();
+            if (verifyUser == null)
+                return BadRequest("Invalid token");
+            if (verifyUser.VerificationTokenExpires < DateTime.Now)
+                return BadRequest("Token has expired");
+
+            var userId = verifyUser.UserID;
+            var user = await _context.Users.Include(user => user.UserRoles)
+                                     .ThenInclude(userRole => userRole.Role)
+                                     .FirstOrDefaultAsync(x => x.UserID == userId);
+            _logger.LogInformation($"Verifying User\n\tUser ID: {userId} \n\tUserName: {user.UserName}\n\tVerification Token: {verification.Token}");
+            verifyUser.IsVerified = true;
+            verifyUser.VerificationToken = null;
+            verifyUser.VerificationTokenCreated = null;
+            verifyUser.VerificationTokenExpires = null;
+            var verifiedRole = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 2);
+            if (verifyUser.UserRoles.All(x => x.RoleID != 2))
+                verifyUser.UserRoles.Add(new UserRole
+                                         {
+                                             Role = verifiedRole,
+                                             DateAssigned = DateTime.UtcNow
+                                         });
+            foreach (var role in verifyUser.UserRoles)
+                _logger.LogInformation($"User Role: {role?.Role?.Description}");
+            var data = new UserData
+                       {
+                           UserID = verifyUser.UserID,
+                           UserName = verifyUser.UserName,
+                           Hash = verifyUser.PasswordHash,
+                           Email = verifyUser.Email,
+                           DateOfBirth = verifyUser.DateOfBirth,
+                           Roles = new List<string>()
+                       };
+            data.Roles.AddRange(verifyUser.UserRoles.Select(ur => ur?.Role?.Description?.ToUpper()));
+            var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
+            var refreshToken = GenerateRefreshToken();
+            await SetRefreshTokenAsync(verifyUser, refreshToken);
+
+            _context.Entry(verifyUser).State = EntityState.Modified;
+
+            try
+            {
+                _context.Update(verifyUser);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (!UserExists(verifyUser.UserID))
+                {
+                    _logger.LogError(ex, "User does not exist! Verification failed!"
+                                         + "\n"
+                                         + "\tVerification Token: "
+                                         + verification.Token);
+                    return NotFound("User does not exist! Verification failed.");
+                }
+                throw;
+            }
+            return Ok(jwt);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Forgot-Password")]
+        public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordDTO forgotPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == forgotPassword.User.ToLower() || x.UserName.ToLower() == forgotPassword.User.ToLower());
+            if (user == null)
+            {
+                ModelState.AddModelError(nameof(forgotPassword.User), "User not found");
+                return BadRequest(ModelState);
+            }
+            var token = _random.NextInt64(1, 999999999999).ToString("D12");
+            user.ResetToken = token;
+            user.ResetTokenCreated = DateTime.UtcNow;
+            user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(15);
+            await _context.SaveChangesAsync();
+            await _mail.SendResetPasswordEmailAsync(user.Email, user.UserName, token);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Reset-Password")]
+        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordDTO forgotPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.ResetToken == forgotPassword.ResetToken);
+            if (user == null)
+            {
+                ModelState.AddModelError(nameof(forgotPassword.ResetToken), "Invalid token");
+                return BadRequest(ModelState);
+            }
+            if (user.ResetTokenExpires < DateTime.UtcNow)
+            {
+                ModelState.AddModelError(nameof(forgotPassword.ResetToken), "Token has expired");
+                return BadRequest(ModelState);
+            }
+            var hash = HashPassword(forgotPassword.Password, out var salt);
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+            user.DateModified = DateTime.UtcNow;
+            user.ResetToken = null;
+            user.ResetTokenCreated = null;
+            user.ResetTokenExpires = null;
+            _context.Entry(user).State = EntityState.Modified;
+            try
+            {
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (!UserExists(user.UserID))
+                {
+                    _logger.LogError(ex, "Password reset failed!"
+                                         + "\n\tReset Token: "
+                                         + forgotPassword.ResetToken);
+                    ModelState.AddModelError(nameof(forgotPassword.ResetToken), "Password reset failed");
+                    return BadRequest(ModelState);
+                }
+                throw;
+            }
+
+            return Ok();
+        }
+
+        /// <summary>
         ///     Deletes a user from the database.
         /// </summary>
         /// <param name="id">
@@ -458,6 +501,32 @@ namespace EpochApp.Server.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task SetRefreshTokenAsync(User user, RefreshToken refreshToken)
+        {
+            var cookieOpts = new CookieOptions
+                             {
+                                 Expires = refreshToken.TokenExpires,
+                                 Secure = false,
+                                 HttpOnly = true
+                             };
+            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOpts);
+            user.RefreshToken = refreshToken.Token;
+            user.TokenCreated = refreshToken.TokenCreated;
+            user.TokenExpires = refreshToken.TokenExpires;
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        private RefreshToken GenerateRefreshToken()
+        {
+            return new RefreshToken
+                   {
+                       Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                       TokenCreated = DateTime.Now,
+                       TokenExpires = DateTime.Now.AddDays(7)
+                   };
         }
 
         private bool UserExists(Guid id)
