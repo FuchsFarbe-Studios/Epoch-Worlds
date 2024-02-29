@@ -33,6 +33,12 @@ namespace EpochApp.Client.Pages.Auth
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+        }
+
+        /// <inheritdoc />
+        protected override async Task OnParametersSetAsync()
+        {
+            await base.OnParametersSetAsync();
             if (!string.IsNullOrEmpty(Token))
             {
                 _verificationDTO = new VerificationDTO { Token = Token };
@@ -40,8 +46,8 @@ namespace EpochApp.Client.Pages.Auth
                 if (response.IsSuccessStatusCode)
                 {
                     _isSuccess = true;
-                    await Task.Delay(2000);
-                    Nav.NavigateTo(NavRef.UserNav.Dashboard);
+                    //await Task.Delay(2000);
+                    Nav.NavigateTo(NavRef.Auth.Login);
                 }
                 else
                 {

@@ -198,6 +198,7 @@ namespace EpochApp.Server.Controllers
                                        DateAssigned = DateTime.UtcNow
                                    });
                 _context.Entry(user).State = EntityState.Modified;
+                _context.Update(user);
                 await _context.SaveChangesAsync();
             }
 
@@ -250,8 +251,13 @@ namespace EpochApp.Server.Controllers
 
         [AllowAnonymous]
         [HttpPost("Verification")]
-        public async Task<IActionResult> PostUserVerification(VerificationDTO verification)
+        public async Task<IActionResult> PostUserVerification([FromBody] VerificationDTO verification)
         {
+            if (verification != null)
+                _logger.LogInformation("Verification Token: " + verification.Token);
+            if (verification == null || verification.Token.IsNullOrEmpty())
+                return BadRequest("Invalid token");
+
             var verifyUser = await _context.Users
                                            .Where(x => x.VerificationToken == verification.Token)
                                            .Include(user => user.UserRoles)
@@ -262,19 +268,24 @@ namespace EpochApp.Server.Controllers
             if (verifyUser.VerificationTokenExpires < DateTime.Now)
                 return BadRequest("Token has expired");
 
+            var userId = verifyUser.UserID;
+            var user = await _context.Users.Include(user => user.UserRoles)
+                                     .ThenInclude(userRole => userRole.Role)
+                                     .FirstOrDefaultAsync(x => x.UserID == userId);
+            _logger.LogInformation($"Verifying User\n\tUser ID: {userId} \n\tUserName: {user.UserName}\n\tVerification Token: {verification.Token}");
             verifyUser.IsVerified = true;
             verifyUser.VerificationToken = null;
             verifyUser.VerificationTokenCreated = null;
             verifyUser.VerificationTokenExpires = null;
+            var verifiedRole = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == 2);
             if (verifyUser.UserRoles.All(x => x.RoleID != 2))
                 verifyUser.UserRoles.Add(new UserRole
                                          {
-                                             RoleID = 2,
+                                             Role = verifiedRole,
                                              DateAssigned = DateTime.UtcNow
                                          });
-            _context.Entry(verifyUser).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
+            foreach (var role in verifyUser.UserRoles)
+                _logger.LogInformation($"User Role: {role?.Role?.Description}");
             var data = new UserData
                        {
                            UserID = verifyUser.UserID,
@@ -282,11 +293,32 @@ namespace EpochApp.Server.Controllers
                            Hash = verifyUser.PasswordHash,
                            Email = verifyUser.Email,
                            DateOfBirth = verifyUser.DateOfBirth,
-                           Roles = verifyUser.UserRoles.Select(ur => ur.Role.Description.ToUpper()).ToList()
+                           Roles = new List<string>()
                        };
+            data.Roles.AddRange(verifyUser.UserRoles.Select(ur => ur?.Role?.Description?.ToUpper()));
             var jwt = CreateJWT(data.ToClaimsPrincipal().Claims);
             var refreshToken = GenerateRefreshToken();
             await SetRefreshTokenAsync(verifyUser, refreshToken);
+
+            _context.Entry(verifyUser).State = EntityState.Modified;
+
+            try
+            {
+                _context.Update(verifyUser);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (!UserExists(verifyUser.UserID))
+                {
+                    _logger.LogError(ex, "User does not exist! Verification failed!"
+                                         + "\n"
+                                         + "\tVerification Token: "
+                                         + verification.Token);
+                    return NotFound("User does not exist! Verification failed.");
+                }
+                throw;
+            }
             return Ok(jwt);
         }
 
