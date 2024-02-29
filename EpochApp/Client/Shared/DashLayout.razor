@@ -1,12 +1,17 @@
+@using MudBlazor
 @inherits LayoutComponentBase
 @layout MainLayout
 
 <AuthorizeView>
 	<Authorized>
 		<SubNav />
-		@Body
+		<MudContainer>
+			<MudPaper Outlined="true" Width="100%" MinHeight="300px" Class="mud-border-dark pa-4 mt-2">
+				@Body
+			</MudPaper>
+		</MudContainer>
 	</Authorized>
 	<NotAuthorized>
-		<RedirectToLogin LoginUrl="@NavRef.Auth.Login" />
+		<RedirectToLogin />
 	</NotAuthorized>
 </AuthorizeView>

@@ -1,5 +1,4 @@
 using EpochApp.Server.Data;
-using EpochApp.Server.Services.WorldService;
 using EpochApp.Shared;
 using EpochApp.Shared.Worlds;
 using Microsoft.AspNetCore.Mvc;
@@ -138,12 +137,11 @@ namespace EpochApp.Server.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!WorldExists(active.WorldID))
-                {
                     return NotFound();
-                }
+
                 throw;
             }
             var updatedWorld = await _context.Worlds
@@ -391,6 +389,7 @@ namespace EpochApp.Server.Controllers
                            };
             return Ok(worldDto);
         }
+
 
         [HttpGet("WorldView/{worldId:guid}")]
         public async Task<IActionResult> GetWorldViewAsync(Guid worldId)

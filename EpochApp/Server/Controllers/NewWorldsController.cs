@@ -4,7 +4,6 @@
 // matsu
 // Modified: 27-2-2024
 using EpochApp.Server.Data;
-using EpochApp.Server.Services.WorldService;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Mvc;
 
@@ -72,6 +71,13 @@ namespace EpochApp.Server.Controllers
             return Ok(newWorld);
         }
 
+        [HttpPut("ActiveWorld")]
+        public async Task<IActionResult> UpdateActiveUserWorlds([FromBody] UserWorldDTO active)
+        {
+            var updatedWorld = await _worldService.UpdateActiveUserWorldsAsync(active);
+            return Ok(updatedWorld);
+        }
+
         [HttpPut("{worldId:guid}")]
         public async Task<IActionResult> UpdateWorldAsync(Guid worldId, [FromBody] UserWorldDTO world)
         {
@@ -84,9 +90,14 @@ namespace EpochApp.Server.Controllers
         {
             var world = await _worldService.DeleteWorldAsync(userId, worldId);
             if (world == null)
-                return Unauthorized();
+                return BadRequest("World not found.");
 
             return Ok(world);
+        }
+
+        private bool WorldExists(Guid id)
+        {
+            return _context.Worlds.Any(e => e.WorldId == id);
         }
     }
 }

@@ -20,6 +20,8 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
         private bool _submitting = false;
         private List<MetaTemplate> _templates = new List<MetaTemplate>();
 
+        [Inject] private IWorldService WorldService { get; set; }
+
         /// <summary>
         ///     Determines if the form is in edit mode or create mode.
         /// </summary>
@@ -68,7 +70,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
 
         private async Task LoadWorldAsync()
         {
-            var world = await Client.GetFromJsonAsync<UserWorldDTO>($"api/v2/Worlds/{WorldId}");
+            var world = await WorldService.GetWorldAsync(WorldId!.Value);
             if (world.MetaData.Count < _templates.Count)
                 foreach (var template in _templates)
                     world.MetaData.Add(new WorldMetaDTO
@@ -97,8 +99,8 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
             await Task.Delay(500);
             if (IsEditForm)
             {
-                var response = await Client.PutAsJsonAsync($"api/v2/Worlds/{WorldId}", world);
-                if (response.IsSuccessStatusCode)
+                var updatedWorld = await WorldService.UpdateWorldAsync(world);
+                if (updatedWorld != null)
                 {
                     Logger.LogInformation("World updated successfully");
                     Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{WorldId}");
@@ -106,23 +108,21 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
                 else
                 {
                     _error = "World update failed.";
-                    _error = await response.Content.ReadAsStringAsync();
                     Logger.LogError("World update failed");
                 }
                 _submitting = false;
             }
             else
             {
-                var response = await Client.PostAsJsonAsync("api/v2/Worlds", world);
-                if (response.IsSuccessStatusCode)
+                var newWorld = await WorldService.CreateWorldAsync(world);
+                if (newWorld != null)
                 {
-                    var newWorld = await response.Content.ReadFromJsonAsync<UserWorldDTO>();
+                    Logger.LogInformation("World created successfully");
                     Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{newWorld.WorldId}");
                 }
                 else
                 {
                     _error = "World creation failed.";
-                    _error = await response.Content.ReadAsStringAsync();
                     Logger.LogError("World creation failed");
                 }
             }

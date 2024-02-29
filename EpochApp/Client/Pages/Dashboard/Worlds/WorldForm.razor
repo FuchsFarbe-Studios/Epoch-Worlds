@@ -4,7 +4,7 @@
 
 @if (World != null)
 {
-	<EditForm Model="@World" OnSubmit="@HandleWorldSubmit">
+	<EditForm Model="@World" OnValidSubmit="@HandleWorldSubmit">
 		<MudCard Outlined="true">
 			<MudCardContent>
 				<MudGrid>
@@ -18,16 +18,16 @@
 						<MudTextField Label="Description" @bind-Value="@World.Description" For="@(() => World.Description)" Lines="3" />
 					</MudItem>
 					<MudItem xs="12" sm="6" md="4">
-						<MudNumericField Label="Current Day" T="int?" @bind-Value="@World.CurrentDay" For="@(() => World.CurrentDay)" />
+						<MudNumericField Label="Current Day" T="int" @bind-Value="@World.CurrentWorldDate.CurrentDay" For="@(() => World.CurrentWorldDate.CurrentDay)" />
 					</MudItem>
 					<MudItem xs="12" sm="6" md="4">
-						<MudNumericField Label="Current Month" T="int?" @bind-Value="@World.CurrentMonth" For="@(() => World.CurrentMonth)" />
+						<MudNumericField Label="Current Month" T="int" @bind-Value="@World.CurrentWorldDate.CurrentMonth" For="@(() => World.CurrentWorldDate.CurrentMonth)" />
 					</MudItem>
 					<MudItem xs="12" sm="6" md="4">
-						<MudNumericField Label="Current Year" T="int?" @bind-Value="@World.CurrentYear" For="@(() => World.CurrentYear)" />
+						<MudNumericField Label="Current Year" T="int" @bind-Value="@World.CurrentWorldDate.CurrentYear" For="@(() => World.CurrentWorldDate.CurrentYear)" />
 					</MudItem>
 					<MudItem xs="12">
-						<MudTextField Label="Current World Age" @bind-Value="@World.CurrentAge" For="@(() => World.CurrentAge)" />
+						<MudTextField Label="Current World Age" @bind-Value="@World.CurrentWorldDate.CurrentAge" For="@(() => World.CurrentWorldDate.CurrentAge)" />
 					</MudItem>
 				</MudGrid>
 			</MudCardContent>

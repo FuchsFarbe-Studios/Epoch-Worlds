@@ -128,6 +128,7 @@ namespace EpochApp.Server.Services.WorldService
                                            .Include(x => x.WorldFiles)
                                            .Include(x => x.WorldArticles)
                                            .ThenInclude(article => article.Sections)
+                                           .Where(x => x.DateRemoved == null || x.DateRemoved > DateTime.UtcNow)
                                            .AsSplitQuery()
                                            .ToListAsync();
             var worldData = new List<UserWorldDTO>();
@@ -394,19 +395,94 @@ namespace EpochApp.Server.Services.WorldService
             var world = await _context.Worlds.Include(x => x.Owner)
                                       .Include(x => x.WorldArticles)
                                       .FirstOrDefaultAsync(x => x.WorldId == worldId);
-            if (world.OwnerId != userId)
+            if (world == null)
+                return null;
+            if (world?.OwnerId != userId)
                 return null;
 
-            if (world != null)
+            world.DateRemoved = DateTime.UtcNow;
+            foreach (var article in world.WorldArticles)
+                article.DeletedOn = DateTime.UtcNow;
+            _context.Entry(world).State = EntityState.Modified;
+
+            try
             {
-                world.DateRemoved = DateTime.UtcNow;
-                foreach (var article in world.WorldArticles)
-                    article.DeletedOn = DateTime.UtcNow;
-                _context.Entry(world).State = EntityState.Modified;
+                _context.Update(world);
                 await _context.SaveChangesAsync();
-                return await Task.FromResult(MapWorldToUserWorldDTO(world));
             }
-            return null;
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogWarning($"Error updating world!\n\t{ex.Message}");
+                throw;
+            }
+            return await Task.FromResult(MapWorldToUserWorldDTO(world));
+        }
+
+        /// <inheritdoc />
+        public async Task<UserWorldDTO> UpdateActiveUserWorldsAsync(UserWorldDTO world)
+        {
+            var userWorlds = await _context.Worlds
+                                           .Where(x => x.OwnerId == world.OwnerId)
+                                           .ToListAsync();
+            var activeWorld = await _context.Worlds
+                                            .Where(x => x.OwnerId == world.OwnerId && x.WorldId == world.WorldId)
+                                            .FirstOrDefaultAsync();
+            foreach (var w in userWorlds)
+            {
+                if (w == activeWorld)
+                    w.IsActiveWorld = true;
+                else
+                    w.IsActiveWorld = false;
+                _context.Entry(w).State = EntityState.Modified;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var exists = await WorldExists(world.WorldId);
+                if (!exists)
+                    _logger.LogError("World does not exist!");
+                throw;
+            }
+            var updatedWorld = await _context.Worlds
+                                             .Where(x => x.OwnerId == world.OwnerId && x.IsActiveWorld.Value == true)
+                                             .Include(x => x.CurrentWorldDate)
+                                             .Include(x => x.MetaData)
+                                             .Select(x => new UserWorldDTO
+                                                          {
+                                                              OwnerId = x.OwnerId,
+                                                              WorldId = x.WorldId,
+                                                              WorldName = x.WorldName,
+                                                              Pronunciation = x.Pronunciation,
+                                                              Description = x.Description,
+                                                              DateCreated = x.DateCreated,
+                                                              DateModified = x.DateModified,
+                                                              DateRemoved = x.DateRemoved,
+                                                              MetaData = x.MetaData.Select(y => new WorldMetaDTO
+                                                                                                {
+                                                                                                    TemplateId = y.MetaID,
+                                                                                                    Content = y.Content
+                                                                                                })
+                                                                          .ToList(),
+                                                              IsActiveWorld = x.IsActiveWorld,
+                                                              CurrentWorldDate = new WorldDateDTO
+                                                                                 {
+                                                                                     CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                                                     CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                                                     CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                                                     CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                                                     BeforeEra = x.CurrentWorldDate.BeforeEraName,
+                                                                                     AfterEra = x.CurrentWorldDate.AfterEraName,
+                                                                                     BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
+                                                                                     AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
+                                                                                     CurrentEra = x.CurrentWorldDate.CurrentAge
+                                                                                 }
+                                                          })
+                                             .FirstOrDefaultAsync();
+            return await Task.FromResult(updatedWorld);
         }
 
         private async Task<bool> WorldExists(Guid existingWorldWorldId)

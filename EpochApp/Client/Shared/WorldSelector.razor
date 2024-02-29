@@ -1,11 +1,11 @@
 @using Variant=MudBlazor.Variant
 @using MouseEvent=MudBlazor.MouseEvent
 @using MudBlazor
-@if (!Condensed)
+@if (_selectedWorld != null && _userWorlds.Any())
 {
 	<MudMenu Dense="true" Variant="Variant.Filled" AnchorOrigin="Origin.TopRight">
 		<ActivatorContent>
-			<MudIcon Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success" Title="@($"{_selectedWorld.WorldName}")" />
+			<MudIcon Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success" Title="@($"{_selectedWorld?.WorldName}")" />
 		</ActivatorContent>
 		<ChildContent>
 			@foreach (var w in _userWorlds)
@@ -19,7 +19,7 @@ else
 {
 	<MudMenu Dense="true" Variant="Variant.Filled" ActivationEvent="MouseEvent.RightClick">
 		<ActivatorContent>
-			<MudChip Size="Size.Large" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success">@($"{_selectedWorld.WorldName}")</MudChip>
+			<MudChip Size="Size.Large" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success">@($"{_selectedWorld?.WorldName}")</MudChip>
 		</ActivatorContent>
 		<ChildContent>
 			@foreach (var w in _userWorlds)

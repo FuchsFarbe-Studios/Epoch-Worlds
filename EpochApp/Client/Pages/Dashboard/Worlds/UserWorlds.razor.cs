@@ -2,7 +2,6 @@ using EpochApp.Client.Services;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.Worlds
 {
@@ -18,7 +17,8 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
 
         /// <summary> The new active world. </summary>
         [CascadingParameter] protected UserWorldDTO NewActiveWorld { get; set; }
-        [Inject] private HttpClient Client { get; set; }
+
+        [Inject] private IWorldService Client { get; set; }
 
         [Inject] private EpochAuthProvider Auth { get; set; }
 
@@ -29,7 +29,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            var newWorlds = await Client.GetFromJsonAsync<List<UserWorldDTO>>($"api/v2/Worlds/UserWorlds?userId={Auth.CurrentUser.UserID}");
+            var newWorlds = await Client.GetUserWorldsAsync(Auth.CurrentUser.UserID);
             if (newWorlds.Any())
                 _newUserWorlds.AddRange(newWorlds);
             await base.OnInitializedAsync();
@@ -53,14 +53,11 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
             if (result != true)
                 return;
 
-            var response = await Client.DeleteFromJsonAsync<UserWorldDTO>($"api/v2/Worlds?userId={Auth.CurrentUser.UserID}&worldId={world.WorldId}");
-            if (response != null)
+            var deletedWorld = await Client.DeleteWorldAsync(Auth.CurrentUser.UserID, world.WorldId);
+            if (_newUserWorlds.Any(x => x.WorldId == deletedWorld.WorldId))
             {
-                if (_newUserWorlds.Any(x => x.WorldId == response.WorldId))
-                {
-                    _newUserWorlds.Remove(response);
-                    StateHasChanged();
-                }
+                _newUserWorlds.Remove(deletedWorld);
+                StateHasChanged();
             }
         }
     }

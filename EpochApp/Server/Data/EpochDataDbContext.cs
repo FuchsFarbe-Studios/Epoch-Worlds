@@ -283,7 +283,7 @@ namespace EpochApp.Server.Data
                       .AutoInclude();
                 entity.Navigation(x => x.WorldTags)
                       .AutoInclude();
-                entity.HasQueryFilter(x => x.DateRemoved == null || x.DateRemoved > DateTime.Now);
+                entity.HasQueryFilter(x => x.DateRemoved == null || x.DateRemoved > DateTime.UtcNow);
             });
 
             modelBuilder.Entity<WorldGenre>(entity =>

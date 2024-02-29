@@ -1,7 +1,6 @@
 using EpochApp.Client.Services;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Shared
 {
@@ -10,16 +9,17 @@ namespace EpochApp.Client.Shared
     {
         private bool _condensed;
         private bool _isDirty = true;
-        private UserWorldDTO _newSelectedWorld;
-        private List<UserWorldDTO> _newUserWorlds = new List<UserWorldDTO>();
-        private WorldDTO _selectedWorld;
-        private List<WorldDTO> _userWorlds = new List<WorldDTO>();
+        private UserWorldDTO _selectedWorld;
+        private List<UserWorldDTO> _userWorlds = new List<UserWorldDTO>();
 
         /// <summary>
         ///     The event that is called when the selected world is changed.
         /// </summary>
         [Parameter] public EventCallback<WorldDTO> OnWorldChanged { get; set; }
 
+        /// <summary>
+        ///     The event that is called when the selected world is changed.
+        /// </summary>
         [Parameter] public EventCallback<UserWorldDTO> OnNewWorldChanged { get; set; }
 
         /// <summary>
@@ -38,7 +38,8 @@ namespace EpochApp.Client.Shared
             }
         }
 
-        [Inject] private HttpClient Client { get; set; }
+        [Inject] private IWorldService Client { get; set; }
+
         [Inject] private EpochAuthProvider Auth { get; set; }
 
         /// <inheritdoc />
@@ -46,36 +47,20 @@ namespace EpochApp.Client.Shared
         {
             if (Auth?.CurrentUser?.UserID != Guid.Empty)
             {
-                var worlds = await Client.GetFromJsonAsync<List<WorldDTO>>($"api/v1/Worlds/User?ownerId={Auth.CurrentUser.UserID}");
-                var newWorlds = await Client.GetFromJsonAsync<List<UserWorldDTO>>($"api/v2/Worlds/UserWorlds?userId={Auth.CurrentUser.UserID}");
-                if (worlds.Count != 0)
-                    _userWorlds.AddRange(worlds);
+                var newWorlds = await Client.GetUserWorldsAsync(Auth.CurrentUser.UserID);
                 if (newWorlds.Count != 0)
-                    _newUserWorlds.AddRange(newWorlds);
+                    _userWorlds.AddRange(newWorlds);
             }
             _selectedWorld = _userWorlds.FirstOrDefault(x => x?.IsActiveWorld == true) ?? _userWorlds.FirstOrDefault();
             await WorldChanged(_selectedWorld);
             await base.OnInitializedAsync();
         }
 
-        /// <inheritdoc />
-        protected override bool ShouldRender()
+        private async Task WorldChanged(UserWorldDTO e)
         {
-            return _isDirty;
-        }
-
-        private async Task WorldChanged(WorldDTO e)
-        {
-            var oldResponse = await Client.PutAsJsonAsync<WorldDTO>("api/v1/Worlds/ActiveWorld", e);
-            // var newResponse = await Client.PutAsJsonAsync<NewWorldDTO>();
-            if (oldResponse.IsSuccessStatusCode)
-            {
-                var updatedWorld = await oldResponse.Content.ReadFromJsonAsync<WorldDTO>();
-                _selectedWorld = _userWorlds.FirstOrDefault(x => x.WorldID == updatedWorld.WorldID);
-            }
-            _newSelectedWorld = _newUserWorlds.FirstOrDefault(x => x.WorldId == _selectedWorld.WorldID);
-            await OnNewWorldChanged.InvokeAsync(_newSelectedWorld);
-            await OnWorldChanged.InvokeAsync(_selectedWorld);
+            var oldResponse = await Client.UpdateActiveUserWorldsAsync(e);
+            _selectedWorld = _userWorlds.FirstOrDefault(x => x.WorldId == oldResponse.WorldId);
+            await OnNewWorldChanged.InvokeAsync(_selectedWorld);
         }
     }
 }

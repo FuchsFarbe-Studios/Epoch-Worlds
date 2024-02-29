@@ -3,11 +3,10 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 22-2-2024
-using EpochApp.Shared;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
 
-namespace EpochApp.Server.Services.WorldService
+namespace EpochApp.Shared
 {
     /// <summary>
     ///     Service for handling and modifying World Data.
@@ -65,6 +64,17 @@ namespace EpochApp.Server.Services.WorldService
         ///     A <see cref="UserWorldDTO" />.
         /// </returns>
         Task<UserWorldDTO> UpdateWorldAsync(UserWorldDTO world);
+
+        /// <summary>
+        ///     Update the active world for a user.
+        /// </summary>
+        /// <param name="world">
+        ///     The world to make active.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="UserWorldDTO" />.
+        /// </returns>
+        Task<UserWorldDTO> UpdateActiveUserWorldsAsync(UserWorldDTO world);
 
         /// <summary>
         ///     Remove a world from a user's list of worlds.
