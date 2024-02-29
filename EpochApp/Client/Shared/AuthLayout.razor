@@ -1,0 +1,10 @@
+@inherits LayoutComponentBase
+@layout MainLayout
+@using MaxWidth=MudBlazor.MaxWidth
+@using MudBlazor
+
+<MudContainer MaxWidth="MaxWidth.Small">
+	<MudPaper Class="mt-4 pa-4 mud-border-primary" Outlined="true" Width="100%">
+		@Body
+	</MudPaper>
+</MudContainer>

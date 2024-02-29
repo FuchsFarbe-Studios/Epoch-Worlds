@@ -36,6 +36,7 @@ namespace EpochApp.Server.Services
         {
             var userTag = new UserTag { TagId = tagId, UserId = userId };
             _context.UserTags.Add(userTag);
+            _context.Entry(userTag).State = EntityState.Added;
             await _context.SaveChangesAsync();
         }
 

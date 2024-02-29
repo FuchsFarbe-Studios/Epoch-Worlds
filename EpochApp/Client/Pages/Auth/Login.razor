@@ -1,11 +1,7 @@
 @page "/Auth/Login"
-@using MaxWidth=MudBlazor.MaxWidth
-@using MudBlazor
 @namespace EpochApp.Client.Pages.Auth
 @attribute [AllowAnonymous]
 
 <PageTitle>@StaticUtils.Constants.AppName - Log In</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Small">
-	<LoginForm />
-</MudContainer>
+<LoginForm />

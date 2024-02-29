@@ -11,28 +11,26 @@
 	<DataAnnotationsValidator />
 	<EpochValidator @ref="@_validator" />
 
-	<MudPaper Class="mt-4 pa-4" Outlined="true" Width="100%">
-		<MudStack>
-			<MudText Typo="Typo.h3" Color="Color.Primary" Align="Align.Center">Register</MudText>
-			<MudText Typo="Typo.body1" Color="Color.Default" Align="Align.Center">Create a new account for the Epoch World Exchange.</MudText>
-			<MudDivider Class="my-1" DividerType="DividerType.Middle" />
-			<MudStack Row="true">
-				<MudTextField Label="Username" Placeholder="UserName" Required="true" @bind-Value="@_registration.UserName" For="@(() => _registration.UserName)" />
-				<MudTextField Label="Email" Placeholder="user@email.com" Required="true" @bind-Value="@_registration.Email" For="@(() => _registration.Email)" InputType="InputType.Email" />
-			</MudStack>
-			<MudStack Row="true">
-				<MudTextField Label="Password" Placeholder="Password" Required="true" @bind-Value="@_registration.Password" For="@(() => _registration.Password)" InputType="InputType.Password" />
-				<MudTextField Label="Confirm Password" Placeholder="Password" Required="true" @bind-Value="@_registration.Password2" For="@(() => _registration.Password2)" InputType="InputType.Password" />
-			</MudStack>
-			<MudStack Row="true">
-				<MudDatePicker Label="Date of Birth" @bind-Date="@_registration.DateOfBirth" For="@(() => _registration.DateOfBirth)" Required="true" />
-				<MudTextField Label="World Name" @bind-Value="@_registration.WorldName" For="@(() => _registration.WorldName)" Required="true" HelperText="This can be changed later." />
-			</MudStack>
-			<MudSwitch Label="Agree to the terms?" Color="Color.Primary" Required="true" @bind-Value="@_registration.TermAgreement" For="@(() => _registration.TermAgreement)" />
-			<MudDivider Class="my-1" DividerType="DividerType.Middle" />
-			<MudButton Class="rounded-pill" DisableElevation="true" Disabled="@_loading" Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit" FullWidth="true">Register</MudButton>
-			<MudText Typo="Typo.body2" Align="Align.Center">Already have an account? <MudLink Disabled="@_loading" Color="Color.Primary" Target="_self" Href="@($"{StaticUtils.Auth.LoginNav}")">Log-In!</MudLink></MudText>
+	<MudStack>
+		<MudText Typo="Typo.h3" Color="Color.Primary" Align="Align.Center">Register</MudText>
+		<MudText Typo="Typo.body1" Color="Color.Default" Align="Align.Center">Create a new account for the Epoch World Exchange.</MudText>
+		<MudDivider Class="my-1" DividerType="DividerType.Middle" />
+		<MudStack Row="true">
+			<MudTextField Label="Username" Placeholder="UserName" Required="true" @bind-Value="@_registration.UserName" For="@(() => _registration.UserName)" />
+			<MudTextField Label="Email" Placeholder="user@email.com" Required="true" @bind-Value="@_registration.Email" For="@(() => _registration.Email)" InputType="InputType.Email" />
 		</MudStack>
-	</MudPaper>
+		<MudStack Row="true">
+			<MudTextField Label="Password" Placeholder="Password" Required="true" @bind-Value="@_registration.Password" For="@(() => _registration.Password)" InputType="InputType.Password" />
+			<MudTextField Label="Confirm Password" Placeholder="Password" Required="true" @bind-Value="@_registration.Password2" For="@(() => _registration.Password2)" InputType="InputType.Password" />
+		</MudStack>
+		<MudStack Row="true">
+			<MudDatePicker Label="Date of Birth" @bind-Date="@_registration.DateOfBirth" For="@(() => _registration.DateOfBirth)" Required="true" />
+			<MudTextField Label="World Name" @bind-Value="@_registration.WorldName" For="@(() => _registration.WorldName)" Required="true" HelperText="This can be changed later." />
+		</MudStack>
+		<MudSwitch Label="Agree to the terms?" Color="Color.Primary" Required="true" @bind-Value="@_registration.TermAgreement" For="@(() => _registration.TermAgreement)" />
+		<MudDivider Class="my-1" DividerType="DividerType.Middle" />
+		<MudButton Class="rounded-pill" DisableElevation="true" Disabled="@_loading" Color="Color.Primary" Variant="Variant.Filled" ButtonType="ButtonType.Submit" FullWidth="true">Register</MudButton>
+		<MudText Typo="Typo.body2" Align="Align.Center">Already have an account? <MudLink Disabled="@_loading" Color="Color.Primary" Target="_self" Href="@($"{StaticUtils.Auth.LoginNav}")">Log-In!</MudLink></MudText>
+	</MudStack>
 
 </EditForm>

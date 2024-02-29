@@ -5,21 +5,13 @@
 
 <PageTitle>@StaticUtils.Constants.AppName</PageTitle>
 
-<MudContainer>
-	<section class="mud-theme-primary">
-		<MudPaper Class="my-2" Outlined="true">
-			<MudText Typo="Typo.h1" Align="Align.Center">Welcome to the Epoch World Exchange!</MudText>
-			<MudText Typo="Typo.h2" Align="Align.Center">A World first in Collaborative and Generative Content Generation</MudText>
-		</MudPaper>
-	</section>
-	<section class="mud-theme-secondary">
-		<MudText Typo="Typo.h4" Align="Align.Center">Latest Site News</MudText>
+<section class="my-2">
+	<MudText Typo="Typo.h1" Color="Color.Dark" Align="Align.Left" GutterBottom="true">Welcome to the Epoch World Exchange!</MudText>
+	<MudText Typo="Typo.h2" Color="Color.Dark" Align="Align.Left" GutterBottom="true">A World first in Collaborative and Generative Content Generation</MudText>
+</section>
+<section class="my-2">
+	<MudText Typo="Typo.h3" Align="Align.Center">Latest Site News</MudText>
+	<MudContainer>
 		<BlogView BlogType="BlogType.NEWS" />
-	</section>
-	<section>
-		<ManuscriptForm />
-	</section>
-	<section>
-		<ManuscriptForm />
-	</section>
-</MudContainer>
+	</MudContainer>
+</section>

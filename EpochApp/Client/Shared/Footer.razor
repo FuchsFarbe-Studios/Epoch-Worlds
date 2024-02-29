@@ -5,17 +5,17 @@
 <div class="flex-center">
 	<MudContainer>
 		<MudStack Justify="Justify.Center">
-			<MudStack Row="true" AlignItems="AlignItems.Center">
+			<MudStack Row="true" AlignItems="AlignItems.Baseline" Justify="Justify.SpaceBetween">
 				<MudLink Href="/">
-					<MudImage Elevation="0" Fluid="false" Height="64" Src="images/logos/SVG/words-svg.svg" Alt="Site footer logo." ObjectFit="ObjectFit.Contain" />
+					<MudImage Height="72" Elevation="0" Src="images/logos/SVG/words-svg.svg" Alt="Site footer logo." ObjectFit="ObjectFit.Contain" />
 				</MudLink>
 				@ChildContent
 				<MudToolBar Dense="true">
-					<MudButton Variant="Variant.Text" Href="@NavRef.Site.About">About</MudButton>
-					<MudButton Variant="Variant.Text" Href="@NavRef.Site.Policy">Policy</MudButton>
-					<MudButton Variant="Variant.Text" Href="@NavRef.Site.Contact">Contact</MudButton>
-					<MudButton Variant="Variant.Text" Href="@NavRef.Site.Faq">FAQ</MudButton>
-					<MudButton Variant="Variant.Text" Href="@NavRef.Site.Support">Support</MudButton>
+					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.About">About</MudButton>
+					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.Policy">Policy</MudButton>
+					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.Contact">Contact</MudButton>
+					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.Faq">FAQ</MudButton>
+					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.Support">Support</MudButton>
 				</MudToolBar>
 			</MudStack>
 		</MudStack>

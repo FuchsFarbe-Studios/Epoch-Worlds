@@ -1,11 +1,7 @@
 @page "/Auth/Register"
-@using MaxWidth=MudBlazor.MaxWidth
-@using MudBlazor
 @namespace EpochApp.Client.Pages.Auth
 @attribute [AllowAnonymous]
 
 <PageTitle>@StaticUtils.Constants.AppName - Registration</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Small">
-	<RegistrationForm />
-</MudContainer>
+<RegistrationForm />

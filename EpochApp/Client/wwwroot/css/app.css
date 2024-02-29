@@ -26,6 +26,13 @@ html, body {
     height: var(--footer-Offset);
 }
 
+.site-background {
+    background-image: url('images/worldbuilding.jpg') !important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
 .box-section-top {
     background: radial-gradient(105.19px at 50% calc(100% - 141.60px), var(--flatify__color-accent-primary) 99%, var(--flatify__color-accent-light) 101%) calc(50% - 96px) 0/192px 100%;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 50px), 50% 100%, 0 calc(100% - 50px));
