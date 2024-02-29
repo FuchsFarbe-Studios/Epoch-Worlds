@@ -1,11 +1,28 @@
 @using Variant=MudBlazor.Variant
 @using MudBlazor
-<MudPaper Class="pa-3 flex-center" Width="100%" Outlined="false" Elevation="0">
-	<MudSelect Adornment="Adornment.Start" AdornmentIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" AdornmentColor="Color.Success" T="WorldDTO" Value="@_selectedWorld" ValueChanged="@(async w => await WorldChanged(w))" Label="Active World" Margin="Margin.Dense" Dense="true" HelperText="Change your active world." Variant="Variant.Filled" FullWidth="true">
-		@* <MudSelectItem Value="null" Href="@NavRef.WorldNav.Create">Create New World</MudSelectItem	> *@
-	@foreach (var world in _userWorlds)
-	{
-		<MudSelectItem Value="@world">@world.WorldName</MudSelectItem>
-	}
-</MudSelect>
-</MudPaper>
+@if (!Condensed)
+{
+	<MudMenu Dense="true" Variant="Variant.Filled" AnchorOrigin="Origin.TopRight">
+		<ActivatorContent>
+			<MudIcon Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success" Title="@($"Selected user world: {_selectedWorld.WorldName}")" />
+		</ActivatorContent>
+		<ChildContent>
+			@foreach (var w in _userWorlds)
+			{
+				<MudMenuItem OnClick="@(async () => await WorldChanged(w))">@w.WorldName</MudMenuItem>
+			}
+		</ChildContent>
+	</MudMenu>
+}
+else
+{
+	<MudPaper Class="pa-3 flex-center" Width="100%" Outlined="false" Elevation="0">
+		<MudSelect Adornment="Adornment.Start" AdornmentIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" AdornmentColor="Color.Success" T="WorldDTO" Value="@_selectedWorld" ValueChanged="@(async w => await WorldChanged(w))" Label="Active World" Margin="Margin.Dense" Dense="true" HelperText="Change your active world." Variant="Variant.Filled" FullWidth="true">
+			@* <MudSelectItem Value="null" Href="@NavRef.WorldNav.Create">Create New World</MudSelectItem	> *@
+			@foreach (var world in _userWorlds)
+			{
+				<MudSelectItem Value="@world">@world.WorldName</MudSelectItem>
+			}
+		</MudSelect>
+	</MudPaper>
+}

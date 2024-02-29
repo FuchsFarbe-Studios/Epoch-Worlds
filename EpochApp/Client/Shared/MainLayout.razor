@@ -17,7 +17,9 @@
 	<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0" Variant="DrawerVariant.Mini" OpenMiniOnHover="true">
 		@*	NavMenu	*@
 		<AuthorizeView>
-			<WorldSelector OnWorldChanged="@HandleWorldChanged" OnNewWorldChanged="@HandleNewWorldChanged" />
+			<CascadingValue Value="@_drawerOpen" Name="IsNavCollapsed">
+				<WorldSelector OnWorldChanged="@HandleWorldChanged" OnNewWorldChanged="@HandleNewWorldChanged" />
+			</CascadingValue>
 		</AuthorizeView>
 		<NavMenu IsMudMenu="true" />
 	</MudDrawer>

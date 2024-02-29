@@ -7,23 +7,38 @@ namespace EpochApp.Client.Shared
 {
     public partial class WorldSelector
     {
+        private bool _condensed;
+        private bool _isDirty = true;
         private UserWorldDTO _newSelectedWorld;
         private List<UserWorldDTO> _newUserWorlds = new List<UserWorldDTO>();
         private WorldDTO _selectedWorld;
         private List<WorldDTO> _userWorlds = new List<WorldDTO>();
+
         /// <summary>
         ///     The event that is called when the selected world is changed.
         /// </summary>
         [Parameter] public EventCallback<WorldDTO> OnWorldChanged { get; set; }
         [Parameter] public EventCallback<UserWorldDTO> OnNewWorldChanged { get; set; }
+
+        [CascadingParameter(Name = "IsNavCollapsed")] public bool Condensed
+        {
+            get => _condensed;
+            set
+            {
+                if (_condensed == value)
+                    _isDirty = false;
+                else
+                    _isDirty = true;
+                _condensed = value;
+            }
+        }
+
         [Inject] private HttpClient Client { get; set; }
         [Inject] private EpochAuthProvider Auth { get; set; }
-
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             if (Auth?.CurrentUser?.UserID != Guid.Empty)
             {
                 var worlds = await Client.GetFromJsonAsync<List<WorldDTO>>($"api/v1/Worlds/User?ownerId={Auth.CurrentUser.UserID}");
@@ -35,6 +50,13 @@ namespace EpochApp.Client.Shared
             }
             _selectedWorld = _userWorlds.FirstOrDefault(x => x?.IsActiveWorld == true) ?? _userWorlds.FirstOrDefault();
             await WorldChanged(_selectedWorld);
+            await base.OnInitializedAsync();
+        }
+
+        /// <inheritdoc />
+        protected override bool ShouldRender()
+        {
+            return _isDirty;
         }
 
         private async Task WorldChanged(WorldDTO e)

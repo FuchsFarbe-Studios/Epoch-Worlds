@@ -10,29 +10,31 @@
 
 <PageTitle>@StaticUtils.Constants.AppName - Edit World</PageTitle>
 
-<MudPaper MinHeight="400px" Outlined="true" Width="100%">
-	@if (string.IsNullOrEmpty(WorldId) || _selectedWorld == null)
-	{
-		<MudPaper Outlined="true" Class="pa-2 m-auto mud-theme-dark">
-			<MudStack Justify="Justify.Center" Spacing="2">
-				<MudSelect @bind-Value="@WorldId" Label="Select World">
-					@foreach (var world in _userWorlds)
-					{
-						<MudSelectItem Value="@(world.WorldID.ToString())">@world.WorldName</MudSelectItem>
-					}
-				</MudSelect>
-				<MudButton Disabled="@(string.IsNullOrWhiteSpace(WorldId))" OnClick="@(() => Nav.NavigateTo($"/World/E/{WorldId}"))">Edit Selected World</MudButton>
-			</MudStack>
-		</MudPaper>
-	}
-	else
-	{
-
-		<MudContainer MaxWidth="MaxWidth.Large">
-			<MudPaper MinHeight="400px" Outlined="true" Width="100%" Class="pa-2 mt-2">
-				<MudText Typo="Typo.h3" Align="Align.Center" Class="mb-1">Editing @_selectedWorld?.WorldName <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Dark" Title="Edit icon." /></MudText>
-				<NewWorldForm IsEditForm="true" WorldId="@_selectedWorld.WorldID" />
+<MudContainer>
+	<MudPaper MinHeight="400px" Outlined="true" Width="100%" Class="pa-4">
+		@if (string.IsNullOrEmpty(WorldId) || _selectedWorld == null)
+		{
+			<MudPaper Outlined="true" Class="pa-2 ma-auto">
+				<MudStack Justify="Justify.Center" Spacing="2">
+					<MudSelect @bind-Value="@WorldId" Label="Select World">
+						@foreach (var world in _userWorlds)
+						{
+							<MudSelectItem Value="@(world.WorldID.ToString())">@world.WorldName</MudSelectItem>
+						}
+					</MudSelect>
+					<MudButton FullWidth="true" Color="Color.Secondary" Disabled="@(string.IsNullOrWhiteSpace(WorldId))" OnClick="@(() => Nav.NavigateTo($"/World/E/{WorldId}"))">Edit Selected World</MudButton>
+				</MudStack>
 			</MudPaper>
-		</MudContainer>
-	}
-</MudPaper>
+		}
+		else
+		{
+
+			<MudContainer MaxWidth="MaxWidth.Large">
+				<MudPaper MinHeight="400px" Outlined="true" Width="100%" Class="pa-2 mt-2">
+					<MudText Typo="Typo.h3" Align="Align.Center" Class="mb-1">Editing @_selectedWorld?.WorldName <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Dark" Title="Edit icon." /></MudText>
+					<NewWorldForm IsEditForm="true" WorldId="@_selectedWorld.WorldID" />
+				</MudPaper>
+			</MudContainer>
+		}
+	</MudPaper>
+</MudContainer>
