@@ -22,7 +22,7 @@ namespace EpochApp.Client.Pages.Auth
         /// <summary>
         ///     The token to verify the user's email.
         /// </summary>
-        [Parameter] public string? Token { get; set; }
+        [Parameter] public string Token { get; set; }
 
         [Inject] private EpochAuthProvider Auth { get; set; }
         [Inject] private HttpClient Client { get; set; }

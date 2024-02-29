@@ -20,10 +20,17 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
         private bool _submitting = false;
         private List<MetaTemplate> _templates = new List<MetaTemplate>();
 
+        /// <summary>
+        ///     Determines if the form is in edit mode or create mode.
+        /// </summary>
         [Parameter] public bool IsEditForm { get; set; } = false;
 
+        /// <summary> The world id to edit. </summary>
         [Parameter] public Guid? WorldId { get; set; } = null!;
 
+        /// <summary>
+        ///     The world model to edit or create.
+        /// </summary>
         [Parameter] public UserWorldDTO WorldModel { get; set; } = new UserWorldDTO
                                                                    {
                                                                        CurrentWorldDate = new WorldDateDTO(),
@@ -79,11 +86,11 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
             world.OwnerId = Auth.CurrentUser.UserID;
 
             if (arg.Validate())
-                Logger.LogInformation("Form validation passed.");
+                Logger.LogInformation("Form validation passed");
             else
             {
                 _submitting = false;
-                Logger.LogInformation("Form validation failed.");
+                Logger.LogInformation("Form validation failed");
                 return;
             }
 
@@ -93,14 +100,14 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
                 var response = await Client.PutAsJsonAsync($"api/v2/Worlds/{WorldId}", world);
                 if (response.IsSuccessStatusCode)
                 {
-                    Logger.LogInformation("World updated successfully.");
+                    Logger.LogInformation("World updated successfully");
                     Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{WorldId}");
                 }
                 else
                 {
                     _error = "World update failed.";
                     _error = await response.Content.ReadAsStringAsync();
-                    Logger.LogError("World update failed.");
+                    Logger.LogError("World update failed");
                 }
                 _submitting = false;
             }
@@ -116,7 +123,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
                 {
                     _error = "World creation failed.";
                     _error = await response.Content.ReadAsStringAsync();
-                    Logger.LogError("World creation failed.");
+                    Logger.LogError("World creation failed");
                 }
             }
             _submitting = false;

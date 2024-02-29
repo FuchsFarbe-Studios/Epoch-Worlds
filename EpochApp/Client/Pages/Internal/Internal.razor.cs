@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages.Internal
 {
+    /// <summary> Internal page. </summary>
     [Authorize(Roles = "ADMIN,INTERNAL")]
     public partial class Internal
     {
-        [Inject] public EpochAuthProvider Auth { get; set; }
+        [Inject] private EpochAuthProvider Auth { get; set; }
     }
 }

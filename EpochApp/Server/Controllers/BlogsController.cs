@@ -264,6 +264,7 @@ namespace EpochApp.Server.Controllers
                                  .Where(x => x.PostID == id)
                                  .Select(x => new PostDTO
                                               {
+                                                  // ReSharper disable once VariableHidesOuterVariable
                                                   BlogId = x.BlogPosts.Select(x => x.BlogID).FirstOrDefault(),
                                                   PostID = x.PostID,
                                                   PostType = x.PostType,

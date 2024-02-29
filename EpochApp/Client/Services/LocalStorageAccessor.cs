@@ -8,11 +8,16 @@ using Microsoft.JSInterop;
 
 namespace EpochApp.Client.Services
 {
+    /// <summary>
+    ///     Local storage service for saving and loading data from the browser's local storage.
+    /// </summary>
     public class LocalStorageAccessor : ILocalStorage
     {
         private readonly IJSRuntime _jsRuntime;
         private Lazy<IJSObjectReference> _accessorJsRef = new Lazy<IJSObjectReference>();
 
+        /// <summary> Constructor. </summary>
+        /// <param name="jsRuntime"> The JavaScript runtime. </param>
         public LocalStorageAccessor(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
@@ -56,6 +61,9 @@ namespace EpochApp.Client.Services
             }
         }
 
+        /// <summary>
+        ///     Disposes of the local storage accessor.
+        /// </summary>
         public async ValueTask DisposeAsync()
         {
             if (_accessorJsRef.IsValueCreated)

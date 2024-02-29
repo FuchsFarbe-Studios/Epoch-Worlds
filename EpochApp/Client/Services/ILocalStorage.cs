@@ -6,6 +6,9 @@
 
 namespace EpochApp.Client.Services
 {
+    /// <summary>
+    ///     Interface for local storage.
+    /// </summary>
     public interface ILocalStorage
     {
         /// <summary>

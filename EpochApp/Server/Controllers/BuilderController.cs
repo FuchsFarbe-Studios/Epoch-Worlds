@@ -24,8 +24,10 @@ namespace EpochApp.Server.Controllers
     {
         private readonly EpochDataDbContext _context;
         private readonly ILanguageService _language;
-        private readonly ISerializationService _serializer;
         private readonly ILogger<BuilderController> _logger;
+
+        // ReSharper disable once NotAccessedField.Local
+        private readonly ISerializationService _serializer;
 
         /// <summary>
         /// Constructor for the <see cref="BuilderController" />.

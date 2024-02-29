@@ -6,6 +6,9 @@ using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.User
 {
+    /// <summary>
+    ///     User file upload component.
+    /// </summary>
     public partial class UserFileUpload
     {
         private IList<IBrowserFile> _files = new List<IBrowserFile>();
@@ -14,6 +17,9 @@ namespace EpochApp.Client.Pages.Dashboard.User
         private List<FileUploadDto> _uploadedFiles = new List<FileUploadDto>();
         private bool _uploading = false;
 
+        /// <summary>
+        ///     Whether the file is a world file.
+        /// </summary>
         [Parameter] public bool IsWorldFile { get; set; }
 
         [CascadingParameter] private WorldDTO ActiveWorld { get; set; }
@@ -28,7 +34,7 @@ namespace EpochApp.Client.Pages.Dashboard.User
         {
             _uploading = true;
             var buffer = new byte[file.Size];
-            await file.OpenReadStream().ReadAsync(buffer);
+            var readData = await file.OpenReadStream().ReadAsync(buffer);
             var data = Convert.ToBase64String(buffer);
             var newFile = new FileUploadDto
                           {

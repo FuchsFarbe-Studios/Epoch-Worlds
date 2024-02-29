@@ -85,6 +85,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
                 }
             }
         }
+
         private Task AddArticleSectionAsync(MouseEventArgs arg)
         {
             Model.Sections.Add(new SectionEditDTO
@@ -102,6 +103,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
                 Model.Sections.Remove(section);
                 StateHasChanged();
             }
+            await Task.CompletedTask;
         }
     }
 }

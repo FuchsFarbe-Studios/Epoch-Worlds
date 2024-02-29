@@ -5,12 +5,29 @@ using System.Net.Http.Json;
 
 namespace EpochApp.Client.Shared.Forms
 {
+    /// <summary>
+    ///     A keyboard for the International Phonetic Alphabet. To be used in certain areas where IPA is needed.
+    /// </summary>
     public partial class IPAKeyboard
     {
+        /// <summary>
+        ///     The type of keyboard to display.
+        /// </summary>
         public enum KeyboardType
         {
+            /// <summary>
+            ///     The phoneme keyboard. Displays both consonants and vowels.
+            /// </summary>
             Phoneme,
+
+            /// <summary>
+            ///     The consonant keyboard. Displays only consonants.
+            /// </summary>
             Consonant,
+
+            /// <summary>
+            ///     The vowel keyboard. Displays only vowels.
+            /// </summary>
             Vowel
         }
 
@@ -18,7 +35,12 @@ namespace EpochApp.Client.Shared.Forms
 
         private string _ipa;
         private List<Vowel> _vowels = new List<Vowel>();
+
+        /// <summary>
+        ///     The type of keyboard to display.
+        /// </summary>
         [Parameter] public KeyboardType Keyboard { get; set; } = KeyboardType.Phoneme;
+
         [Inject] private HttpClient Client { get; set; }
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()

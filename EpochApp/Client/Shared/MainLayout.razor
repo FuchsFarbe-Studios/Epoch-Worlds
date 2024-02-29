@@ -10,6 +10,7 @@
 
 <MudLayout>
 	<MudAppBar Elevation="0" Color="Color.Dark" WrapContent="true">
+		@* ReSharper disable once UnusedParameter.Local *@
 		<MudIconButton Icon="@(_drawerOpen ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)" Variant="@(_drawerOpen ? Variant.Outlined : Variant.Text)" Title="@($"{(_drawerOpen ? "Close" : "Open")} side menu.")" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
 		<AppBar />
 	</MudAppBar>

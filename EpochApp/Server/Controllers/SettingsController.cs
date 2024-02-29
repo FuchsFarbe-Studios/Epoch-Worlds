@@ -8,6 +8,8 @@ using EpochApp.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+// ReSharper disable UnusedMember.Local
+
 namespace EpochApp.Server.Controllers
 {
     [Route("api/v1/[controller]")]

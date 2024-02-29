@@ -6,6 +6,7 @@
 
 namespace EpochApp.Client.Pages
 {
+    /// <summary> Features page. </summary>
     public partial class Features
     {
     }

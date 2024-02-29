@@ -6,6 +6,9 @@ using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.User
 {
+    /// <summary>
+    ///     A card to display a user file.
+    /// </summary>
     public partial class FileCard
     {
         private bool _isEditMode = false;

@@ -9,7 +9,7 @@ namespace EpochApp.Client.Shared
     /// </summary>
     public partial class UserFileSelector
     {
-        private UserFileDTO? _selectedFile;
+        private UserFileDTO _selectedFile;
         private List<UserFileDTO> _userFiles = new List<UserFileDTO>();
         /// <summary>
         ///     The event that is called when the selected content is changed.

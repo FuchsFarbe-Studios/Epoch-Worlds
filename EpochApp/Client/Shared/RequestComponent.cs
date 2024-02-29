@@ -38,6 +38,9 @@ namespace EpochApp.Client.Shared
         /// </summary>
         [Inject] protected EpochUserService UserService { get; set; }
 
+        /// <summary>
+        ///     The model for this component.
+        /// </summary>
         protected virtual TModel Model { get; set; } = new TModel();
 
         /// <inheritdoc />

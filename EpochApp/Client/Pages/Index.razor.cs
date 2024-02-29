@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages
 {
+    /// <summary> Index page. </summary>
     public partial class Index
     {
         [Inject] private ILogger<Index> Logger { get; set; }

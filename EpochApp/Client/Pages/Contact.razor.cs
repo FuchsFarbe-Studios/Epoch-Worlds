@@ -6,12 +6,13 @@ using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages
 {
+    /// <summary> Contact page. </summary>
     public partial class Contact
     {
+        private Dictionary<string, List<string>> _errorDict = new Dictionary<string, List<string>>();
         private ContactDTO _model = new ContactDTO();
         private bool _submitting;
         private bool _success;
-        private Dictionary<string, List<string>> _errorDict = new Dictionary<string, List<string>>();
         /// <summary> Injected HttpClient </summary>
         [Inject] public HttpClient Client { get; set; }
         /// <summary>

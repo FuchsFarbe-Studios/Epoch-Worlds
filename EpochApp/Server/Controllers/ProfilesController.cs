@@ -127,6 +127,7 @@ namespace EpochApp.Server.Controllers
                 {
                     profile.Socials.Add(new UserSocial
                                         {
+                                            // ReSharper disable once EntityFramework.NPlusOne.IncompleteDataUsage
                                             Social = social.Social,
                                             SocialHandle = socialData.Handle
                                         });

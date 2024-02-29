@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Pages.Auth
 {
+    /// <summary> Logout page. </summary>
     public partial class Logout
     {
-        [Inject] public NavigationManager Nav { get; set; }
-        [Inject] public EpochAuthProvider Auth { get; set; }
-        [Inject] public ILogger<Logout> Logger { get; set; }
+        [Inject] private NavigationManager Nav { get; set; }
+        [Inject] private EpochAuthProvider Auth { get; set; }
+        [Inject] private ILogger<Logout> Logger { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()

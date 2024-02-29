@@ -8,6 +8,8 @@ using EpochApp.Server.Services.WorldService;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Mvc;
 
+// ReSharper disable NotAccessedField.Local
+
 namespace EpochApp.Server.Controllers
 {
     /// <summary>

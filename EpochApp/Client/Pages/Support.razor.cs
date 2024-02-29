@@ -6,6 +6,7 @@
 
 namespace EpochApp.Client.Pages
 {
+    /// <summary> Support page. </summary>
     public partial class Support
     {
     }

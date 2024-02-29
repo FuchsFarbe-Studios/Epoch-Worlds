@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 
 namespace EpochApp.Client.Shared
 {
+    /// <summary> A selector for worlds. </summary>
     public partial class WorldSelector
     {
         private bool _condensed;
@@ -18,8 +19,12 @@ namespace EpochApp.Client.Shared
         ///     The event that is called when the selected world is changed.
         /// </summary>
         [Parameter] public EventCallback<WorldDTO> OnWorldChanged { get; set; }
+
         [Parameter] public EventCallback<UserWorldDTO> OnNewWorldChanged { get; set; }
 
+        /// <summary>
+        ///     The event that is called when the selected world is changed.
+        /// </summary>
         [CascadingParameter(Name = "IsNavCollapsed")] public bool Condensed
         {
             get => _condensed;

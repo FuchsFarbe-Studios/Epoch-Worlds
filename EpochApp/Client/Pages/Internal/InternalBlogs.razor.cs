@@ -14,14 +14,14 @@ namespace EpochApp.Client.Pages.Internal
     [Authorize(Roles = "ADMIN,INTERNAL")]
     public partial class InternalBlogs
     {
-        private bool _loading;
-        private bool _readOnly;
-        private bool _isCellEditMode = true;
-        private bool _editTriggerRowClick;
-        private bool _showCreateBlog;
         private IEnumerable<BlogDTO> _blogs = new List<BlogDTO>();
         private BlogDTO _currentEditingBlog;
+        private bool _editTriggerRowClick = false;
+        private bool _isCellEditMode = true;
+        private bool _loading;
         private BlogDTO _modelBlog = new BlogDTO();
+        private bool _readOnly = false;
+        private bool _showCreateBlog;
         /// <summary> Injected Auth Provider </summary>
         [Inject] public EpochAuthProvider Auth { get; set; }
         /// <summary> </summary>

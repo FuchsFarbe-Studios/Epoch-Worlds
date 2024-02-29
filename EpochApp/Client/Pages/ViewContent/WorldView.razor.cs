@@ -11,6 +11,9 @@ namespace EpochApp.Client.Pages.ViewContent
     {
         private World _world = null!;
 
+        /// <summary>
+        ///     The world id to display.
+        /// </summary>
         [Parameter] public string WorldId { get; set; }
 
         [Inject] private HttpClient Client { get; set; }
@@ -18,13 +21,13 @@ namespace EpochApp.Client.Pages.ViewContent
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             if (Guid.TryParse(WorldId, out var gWorldId))
             {
                 var world = await Client.GetFromJsonAsync<World>($"api/v2/Worlds/View/{gWorldId}");
                 if (world != null)
                     _world = world;
             }
+            await base.OnInitializedAsync();
         }
     }
 }

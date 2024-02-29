@@ -10,6 +10,9 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
     public partial class ArticleEdit
     {
         private ArticleEditDTO _editArticle;
+        /// <summary>
+        ///     The article id to edit.
+        /// </summary>
         [Parameter] public string ArticleId { get; set; }
 
         [Inject] private HttpClient Client { get; set; }

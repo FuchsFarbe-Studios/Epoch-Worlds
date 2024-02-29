@@ -32,6 +32,12 @@ namespace EpochApp.Client.Services
             _authData = authData;
         }
 
+        /// <summary>
+        ///     Sends a request to the server to refresh the users token.
+        /// </summary>
+        /// <returns>
+        ///     <see cref="Task{TResult}" /> where TResult is <see cref="UserData" />.
+        /// </returns>
         public async Task<UserData> SendRefreshTokenRequestAsync()
         {
             var response = await _client.PostAsync("api/v1/EpochUsers/Refresh-Token", null);

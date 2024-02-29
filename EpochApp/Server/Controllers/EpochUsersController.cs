@@ -13,6 +13,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
+// ReSharper disable EntityFramework.NPlusOne.IncompleteDataUsage
+
 namespace EpochApp.Server.Controllers
 {
     /// <summary>
@@ -43,6 +45,7 @@ namespace EpochApp.Server.Controllers
         /// </param>
         /// <param name="mail"> The injected <see cref="IMailService" /> mail service. </param>
         /// <param name="worldService"> The injected <see cref="IWorldService" /> world service. </param>
+        /// <param name="logger"> The injected <see cref="ILogger{TCategoryName}" /> logger. </param>
         public EpochUsersController(EpochDataDbContext context, IConfiguration configuration, IMailService mail, IWorldService worldService, ILogger<EpochUsersController> logger)
         {
             _context = context;
@@ -98,7 +101,7 @@ namespace EpochApp.Server.Controllers
                            Hash = user.PasswordHash,
                            Email = user.Email,
                            DateOfBirth = user.DateOfBirth,
-                           Roles = user.UserRoles.Select(ur => ur.Role.Description).ToList()
+                           Roles = user?.UserRoles?.Select(ur => ur?.Role?.Description).ToList()
                        };
 
             return data;

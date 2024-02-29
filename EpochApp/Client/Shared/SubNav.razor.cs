@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace EpochApp.Client.Shared
 {
+    /// <summary>
+    ///     Sub navigation for logged-in users.
+    /// </summary>
     public partial class SubNav
     {
         /// <summary>

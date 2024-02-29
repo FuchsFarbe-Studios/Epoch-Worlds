@@ -8,9 +8,18 @@ namespace EpochApp.Client.Pages.ViewContent
     /// </summary>
     public partial class ArticleView
     {
-        private ArticleDTO _article;
+ #pragma warning disable CS0414// Field is assigned but its value is never used
+        private ArticleDTO _article = null!;
+ #pragma warning restore CS0414// Field is assigned but its value is never used
 
+        /// <summary>
+        ///     The world id related to the article.
+        /// </summary>
         [Parameter] public string WorldId { get; set; }
+
+        /// <summary>
+        ///     The article id to display.
+        /// </summary>
         [Parameter] public string ArticleId { get; set; }
     }
 }

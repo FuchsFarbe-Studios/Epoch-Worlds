@@ -6,6 +6,7 @@
 
 namespace EpochApp.Client.Pages
 {
+    /// <summary> FAQ page. </summary>
     public partial class FAQ
     {
     }

@@ -23,7 +23,7 @@ namespace EpochApp.Client.Shared
 
         private async Task AttemptLoginAsync(EditContext ctx)
         {
-            Logger.LogInformation("Logging in: {0}", _loginDto.UserName);
+            Logger.LogInformation($"Logging in: {_loginDto.UserName}");
             _loggingIn = true;
             _errors.Clear();
             if (!ctx.Validate())
@@ -52,6 +52,7 @@ namespace EpochApp.Client.Shared
                 await Task.Delay(500);
                 if (result.IsSuccessStatusCode)
                 {
+                    // ReSharper disable once UnusedVariable
                     var token = await result.Content.ReadAsStringAsync();
                     await Auth.LoginAsync(_loginDto.UserName, _loginDto.Password);
                     _loggingIn = false;
