@@ -9,7 +9,7 @@
 	<EditForm Model="@Model" OnSubmit="@OnArticleSubmit">
 		<EpochValidator @ref=@_validator />
 
-		<MudTabs Border="true" Color="Color.Info" Outlined="true" Rounded="true" PanelClass="pa-2" KeepPanelsAlive="true" Position="Position.Left">
+		<MudTabs Border="true" Color="Color.Info" Outlined="true" Rounded="true" PanelClass="pa-2" KeepPanelsAlive="false" Position="Position.Left">
 
 			<MudTabPanel ID="@("ArticleContent")" Icon="@Icons.Material.Filled.Article" Text="Article">
 

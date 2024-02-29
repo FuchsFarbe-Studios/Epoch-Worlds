@@ -36,12 +36,11 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             var cats = await Client.GetFromJsonAsync<List<ArticleCategory>>("api/v1/Articles/Categories");
             if (cats != null || cats.Any())
                 _categories = cats;
 
-            if (ArticleEdit == null)
+            if (ArticleEdit == null || !IsEditMode)
             {
                 Model = new ArticleEditDTO
                         {
@@ -54,6 +53,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
             {
                 Model = ArticleEdit;
             }
+            await base.OnInitializedAsync();
         }
 
         private async Task OnArticleSubmit(EditContext ctx)

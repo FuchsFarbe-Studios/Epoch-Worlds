@@ -11,7 +11,7 @@
 <MudButton StartIcon="@Icons.Material.Filled.ContactPage" Color="Color.Inherit" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.Site.About">About</MudButton>
 <AuthorizeView Roles="ADMIN,INTERNAL">
 	<Authorized>
-		<MudButton Color="Color.Warning" Size="Size.Small" Variant="Variant.Text" Href="@NavRef.AdminNav.Index">Internal</MudButton>
+		<MudChip Color="Color.Warning" Icon="@Icons.Material.Filled.Warning" Size="Size.Small" Variant="Variant.Filled" Href="@NavRef.AdminNav.Index">Internal</MudChip>
 	</Authorized>
 </AuthorizeView>
 <MudSpacer />
@@ -19,7 +19,7 @@
 	<Authorized>
 		<MudMenu Dense="true" Variant="Variant.Filled" DisableElevation="true" Color="Color.Surface">
 			<ActivatorContent>
-				<MudChip Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.D20]}")" IconColor="Color.Inherit" Color="Color.Inherit">@($"{Auth.CurrentUser.UserName}")</MudChip>
+				<MudChip Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.D20]}")" IconColor="Color.Default" Color="Color.Default">@($"{Auth.CurrentUser.UserName}")</MudChip>
 			</ActivatorContent>
 			<ChildContent>
 				<MudMenuItem Icon="@Icons.Material.Filled.PermIdentity" Href="@NavRef.UserNav.Profile">@($"{Auth.CurrentUser.UserName.ToUpperInvariant()}'s Profile")</MudMenuItem>
