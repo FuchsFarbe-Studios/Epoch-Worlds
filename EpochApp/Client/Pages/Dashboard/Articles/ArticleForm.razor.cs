@@ -31,7 +31,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         [Parameter] public bool IsEditMode { get; set; }
 
         /// <summary> The active world. </summary>
-        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
@@ -44,7 +44,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
             {
                 Model = new ArticleEditDTO
                         {
-                            WorldId = ActiveWorld?.WorldID,
+                            WorldId = ActiveWorld?.WorldId,
                             AuthorId = Auth?.CurrentUser?.UserID,
                             Sections = new List<SectionEditDTO>()
                         };
@@ -59,7 +59,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         private async Task OnArticleSubmit(EditContext ctx)
         {
             var article = ctx.Model as ArticleEditDTO;
-            article.WorldId = ActiveWorld?.WorldID;
+            article.WorldId = ActiveWorld?.WorldId;
             article.AuthorId = Auth?.CurrentUser?.UserID;
 
             if (IsEditMode)

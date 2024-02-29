@@ -19,7 +19,7 @@
 		@*	NavMenu	*@
 		<AuthorizeView>
 			<CascadingValue Value="@_drawerOpen" Name="IsNavCollapsed">
-				<WorldSelector OnWorldChanged="@HandleWorldChanged" OnNewWorldChanged="@HandleNewWorldChanged" />
+				<WorldSelector OnNewWorldChanged="@HandleNewWorldChanged" />
 			</CascadingValue>
 		</AuthorizeView>
 		<NavMenu IsMudMenu="true" />
@@ -27,10 +27,8 @@
 
 	<MudMainContent Style="background-image: url('images/worldbuilding.jpg') !important; background-repeat: no-repeat; background-attachment: fixed; background-position: center;">
 		<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="min-height: 90vh;">
-			<CascadingValue Value="@_activeWorld">
-				<CascadingValue Value="@_newWorld">
-					@Body
-				</CascadingValue>
+			<CascadingValue Value="@_newWorld">
+				@Body
 			</CascadingValue>
 		</MudContainer>
 		<footer class="site-footer menu-items-wrapper mud-theme-dark">

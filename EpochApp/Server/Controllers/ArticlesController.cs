@@ -124,6 +124,60 @@ namespace EpochApp.Server.Controllers
             return Ok(article);
         }
 
+        /// <summary>
+        ///     Get an article by its unique identifier.
+        /// </summary>
+        /// <param name="worldId">
+        ///     Unique identifier for the world.
+        /// </param>
+        /// <param name="articleId">
+        ///     Unique identifier for the article.
+        /// </param>
+        /// <returns>
+        ///     <see cref="Task{T}" /> where TResult is <see cref="ActionResult{TValue}" /> where TValue is
+        ///     <see cref="ArticleDTO" />.
+        /// </returns>
+        [HttpGet("Article/{worldId:guid}/{articleId:guid}")]
+        public async Task<ActionResult<ArticleDTO>> GetWorldArticleAsync(Guid worldId, Guid articleId)
+        {
+            var article = await _context.Articles
+                                        .Where(x => x.WorldId == worldId && x.ArticleId == articleId && (x.DeletedOn == null || x.DeletedOn > DateTime.UtcNow))
+                                        .Include(a => a.Sections)
+                                        .Include(a => a.Category)
+                                        .Include(a => a.World)
+                                        .Include(a => a.Author)
+                                        .Select(x => new ArticleDTO
+                                                     {
+                                                         WorldId = x.WorldId,
+                                                         ArticleId = x.ArticleId,
+                                                         Title = x.Title,
+                                                         CategoryId = x.CategoryId,
+                                                         Content = x.Content,
+                                                         CreatedOn = x.CreatedOn,
+                                                         ModifiedOn = x.ModifiedOn,
+                                                         IsPublished = x.IsPublished,
+                                                         IsNSFW = x.IsNSFW,
+                                                         DisplayAuthor = x.DisplayAuthor,
+                                                         ShowTableOfContents = x.ShowInTableOfContents,
+                                                         ShowInTableOfContents = x.ShowInTableOfContents,
+                                                         Sections = x.Sections.Select(s => new SectionDTO
+                                                                                           {
+                                                                                               SectionID = s.SectionID,
+                                                                                               Title = s.Title,
+                                                                                               Content = s.Content,
+                                                                                               CreatedOn = s.CreatedOn
+                                                                                           })
+                                                     })
+                                        .FirstOrDefaultAsync();
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(article);
+        }
+
         [HttpGet("Article/Edited/{articleId:guid}")]
         public async Task<ActionResult<ArticleEditDTO>> GetEditArticleAsync(Guid articleId)
         {
@@ -269,7 +323,7 @@ namespace EpochApp.Server.Controllers
                       {
                           Title = article.Title,
                           Content = article.Content,
-                          CreatedOn = DateTime.Now,
+                          CreatedOn = DateTime.UtcNow,
                           AuthorId = article.AuthorId,
                           WorldId = article.WorldId,
                           IsPublished = article.IsPublished,
@@ -281,7 +335,7 @@ namespace EpochApp.Server.Controllers
                                                                   {
                                                                       Title = x.Title,
                                                                       Content = x.Content,
-                                                                      CreatedOn = DateTime.Now
+                                                                      CreatedOn = DateTime.UtcNow
                                                                   })
                                             .ToList()
 

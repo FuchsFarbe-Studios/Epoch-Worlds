@@ -64,6 +64,13 @@ namespace EpochApp.Server.Controllers
             return Ok(world);
         }
 
+        [HttpGet("ActiveWorld")]
+        public async Task<IActionResult> GetActiveUserWorld([FromQuery] Guid ownerId)
+        {
+            var activeWorld = await _worldService.GetActiveWorldAsync(ownerId);
+            return Ok(activeWorld);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateWorldAsync([FromBody] UserWorldDTO world)
         {

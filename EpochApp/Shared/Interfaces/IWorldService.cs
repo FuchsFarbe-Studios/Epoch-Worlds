@@ -107,5 +107,16 @@ namespace EpochApp.Shared
         ///     A <see cref="UserWorldDTO" />.
         /// </returns>
         UserWorldDTO MapWorldToUserWorldDTO(World world);
+
+        /// <summary>
+        ///     Get the active world for a user.
+        /// </summary>
+        /// <param name="userId">
+        ///     The user's unique identifier.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="UserWorldDTO" />.
+        /// </returns>
+        Task<UserWorldDTO> GetActiveWorldAsync(Guid userId);
     }
 }

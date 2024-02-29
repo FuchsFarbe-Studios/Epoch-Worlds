@@ -15,11 +15,6 @@ namespace EpochApp.Client.Shared
         /// <summary>
         ///     The event that is called when the selected world is changed.
         /// </summary>
-        [Parameter] public EventCallback<WorldDTO> OnWorldChanged { get; set; }
-
-        /// <summary>
-        ///     The event that is called when the selected world is changed.
-        /// </summary>
         [Parameter] public EventCallback<UserWorldDTO> OnNewWorldChanged { get; set; }
 
         /// <summary>

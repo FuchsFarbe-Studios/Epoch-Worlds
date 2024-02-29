@@ -121,7 +121,7 @@ namespace EpochApp.Server.Data
                       .WithMany(w => w.WorldArticles)
                       .HasForeignKey(x => x.WorldId)
                       .HasConstraintName("FK_Articles_Worlds");
-                entity.HasQueryFilter(x => x.DeletedOn == null || x.DeletedOn > DateTime.Now);
+                //entity.HasQueryFilter(x => x.DeletedOn == null || x.DeletedOn > DateTime.UtcNow);
                 entity.Navigation(x => x.Sections)
                       .AutoInclude();
             });

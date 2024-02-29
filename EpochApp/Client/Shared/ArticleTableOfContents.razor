@@ -1,0 +1,27 @@
+@using Typo=MudBlazor.Typo
+@using MudBlazor
+@if (Article != null && Article.ShowTableOfContents)
+{
+	<MudPaper Width="100%" Elevation="0" Outlined="true" Class="mud-border-primary">
+		<MudText Typo="Typo.h6" Class="mb-4" Align="Align.Center">Table of Contents</MudText>
+		<MudList>
+			@foreach (var s in Sections)
+			{
+				<MudListItem @key=@s.SectionID Dense="true">
+					<MudLink Color="Color.Primary" Href="@($"/W/{Article.WorldId}/A/{Article.ArticleId}#{s.SectionID.ToString()}")" Class="text-decoration-none">@(Sections?.IndexOf(s) + 1) - @s.Title</MudLink>
+				</MudListItem>
+			}
+		</MudList>
+	</MudPaper>
+}
+
+@* ReSharper disable once CSharpWarnings::CS1591 *@
+
+@code {
+	/// <summary>
+	///     The article to display the table of contents for.
+	/// </summary>
+	[Parameter] public ArticleDTO Article { get; set; }
+
+	public List<SectionDTO> Sections => Article?.Sections.ToList();
+}

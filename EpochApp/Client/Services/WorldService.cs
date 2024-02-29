@@ -130,5 +130,12 @@ namespace EpochApp.Client.Services
         {
             return null;
         }
+
+        /// <inheritdoc />
+        public async Task<UserWorldDTO> GetActiveWorldAsync(Guid userId)
+        {
+            var activeWorld = await _client.GetFromJsonAsync<UserWorldDTO>($"api/v2/Worlds/ActiveWorld?ownerId={userId}");
+            return await Task.FromResult(activeWorld);
+        }
     }
 }

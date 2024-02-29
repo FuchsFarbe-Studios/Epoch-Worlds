@@ -1,1 +1,54 @@
 @page "/W/{WorldId?}/A/{ArticleId?}"
+@using MaxWidth=MudBlazor.MaxWidth
+@using Typo=MudBlazor.Typo
+@using MudBlazor
+<MudContainer MaxWidth="MaxWidth.Medium">
+	@if (_article != null)
+	{
+		<article>
+			<MudGrid Spacing="1">
+
+				<MudItem xs="12">
+
+					<MudText Typo="Typo.h3" id="@_article?.ArticleId" Color="Color.Primary" GutterBottom="true">@_article?.Title</MudText>
+					<MudDivider DividerType="DividerType.FullWidth" Light="false" Class="mb-1" />
+
+					<MudGrid Spacing="0">
+						<MudItem xs="12" sm="7" md="8">
+							@((MarkupString)_article?.Content)
+						</MudItem>
+						<MudItem xs="12" sm="5" md="4">
+							<ArticleTableOfContents Article="@_article" />
+						</MudItem>
+					</MudGrid>
+
+					<MudDivider DividerType="DividerType.FullWidth" Light="false" Class="mt-1" />
+
+				</MudItem>
+
+				<MudItem xs="12" sm="7" md="8">
+
+					@if (_article.Sections.Any())
+					{
+						@foreach (var s in _article?.Sections)
+						{
+							<section id="@(s?.SectionID)" class="my-2">
+								<MudText Typo="Typo.h5" GutterBottom="true" Color="Color.Tertiary">@s?.Title</MudText>
+								@((MarkupString)s?.Content)
+							</section>
+							<MudDivider DividerType="DividerType.FullWidth" Class="mud-border-dark" />
+						}
+					}
+				</MudItem>
+
+				<MudItem xs="12" sm="5" md="4">
+
+					<MudStack>
+						<!-- Other Article Information to Add to Panel -->
+					</MudStack>
+
+				</MudItem>
+			</MudGrid>
+		</article>
+	}
+</MudContainer>

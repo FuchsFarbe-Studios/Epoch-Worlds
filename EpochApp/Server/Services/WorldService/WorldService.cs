@@ -390,6 +390,58 @@ namespace EpochApp.Server.Services.WorldService
             return UserWorldDTO;
         }
 
+        /// <inheritdoc />
+        public async Task<UserWorldDTO> GetActiveWorldAsync(Guid userId)
+        {
+            var activeWorld = await _context.Worlds
+                                            .Where(x => x.OwnerId == userId && x.IsActiveWorld.Value == true && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
+                                            .Include(x => x.CurrentWorldDate)
+                                            .Include(x => x.MetaData)
+                                            .Include(x => x.Owner)
+                                            .Select(x => new UserWorldDTO
+                                                         {
+                                                             OwnerId = x.OwnerId,
+                                                             WorldId = x.WorldId,
+                                                             WorldName = x.WorldName,
+                                                             Pronunciation = x.Pronunciation,
+                                                             Description = x.Description,
+                                                             DateCreated = x.DateCreated,
+                                                             DateModified = x.DateModified.Value,
+                                                             DateRemoved = x.DateRemoved.Value,
+                                                             WorldFiles = x.WorldFiles.Select(f => new UserFileDTO
+                                                                                                   {
+                                                                                                       FileId = f.FileId,
+                                                                                                       FilePath = f.FilePath,
+                                                                                                       SafeName = f.SafeName,
+                                                                                                       Alias = f.Alias,
+                                                                                                       AltText = f.ImageAlt,
+                                                                                                       UploadedOn = f.UploadedOn
+                                                                                                   })
+                                                                           .ToList(),
+                                                             MetaData = x.MetaData.Select(m => new WorldMetaDTO
+                                                                                               {
+                                                                                                   TemplateId = m.MetaID,
+                                                                                                   Content = m.Content
+                                                                                               })
+                                                                         .ToList(),
+                                                             IsActiveWorld = x.IsActiveWorld.Value,
+                                                             CurrentWorldDate = new WorldDateDTO
+                                                                                {
+                                                                                    CurrentDay = x.CurrentWorldDate.CurrentDay,
+                                                                                    CurrentMonth = x.CurrentWorldDate.CurrentMonth,
+                                                                                    CurrentYear = x.CurrentWorldDate.CurrentYear,
+                                                                                    CurrentAge = x.CurrentWorldDate.CurrentAge,
+                                                                                    BeforeEra = x.CurrentWorldDate.BeforeEraName,
+                                                                                    AfterEra = x.CurrentWorldDate.AfterEraName,
+                                                                                    BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
+                                                                                    AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
+                                                                                    CurrentEra = x.CurrentWorldDate.CurrentAge
+                                                                                }
+                                                         })
+                                            .FirstOrDefaultAsync();
+            return activeWorld;
+        }
+
         public async Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
         {
             var world = await _context.Worlds.Include(x => x.Owner)

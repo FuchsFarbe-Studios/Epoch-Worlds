@@ -1,0 +1,10 @@
+@using MaxWidth=MudBlazor.MaxWidth
+@using MudBlazor
+@inherits LayoutComponentBase
+@layout MainLayout
+
+<MudContainer MaxWidth="MaxWidth.Medium" Style="min-height: 100vh;">
+	<MudPaper Square="true" Outlined="true" Elevation="0" Width="100%" Class="px-2 py-4" MinHeight="100vh">
+		@Body
+	</MudPaper>
+</MudContainer>

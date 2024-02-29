@@ -3,7 +3,6 @@ using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using MudBlazor.Utilities;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Shared
 {
@@ -19,7 +18,7 @@ namespace EpochApp.Client.Shared
         private MudTheme _theme = new MudTheme();
         // private bool _isDarkMode;
 
-        [Inject] private HttpClient Client { get; set; }
+        [Inject] private IWorldService WorldService { get; set; }
 
         [Inject] private EpochAuthProvider Auth { get; set; }
 
@@ -28,7 +27,6 @@ namespace EpochApp.Client.Shared
         /// <inheritdoc />
         protected override void OnInitialized()
         {
-            base.OnInitialized();
             _theme = new MudTheme
                      {
                          Palette = new PaletteLight
@@ -202,6 +200,7 @@ namespace EpochApp.Client.Shared
                                                      }
                                       }
                      };
+            base.OnInitialized();
         }
 
         private void DrawerToggle()
@@ -209,19 +208,12 @@ namespace EpochApp.Client.Shared
             _drawerOpen = !_drawerOpen;
         }
 
-        private async Task HandleWorldChanged(WorldDTO arg)
-        {
-            Logger.LogInformation("World Changed: {WorldID}", arg.WorldID);
-            var activeWorld = await Client.GetFromJsonAsync<WorldDTO>($"api/v1/Worlds/ActiveWorld?ownerId={Auth.CurrentUser.UserID}");
-            if (activeWorld.WorldID == arg.WorldID)
-                _activeWorld = arg;
-            await Task.CompletedTask;
-        }
-
         private async Task HandleNewWorldChanged(UserWorldDTO arg)
         {
             Logger.LogInformation($"New World Changed: {arg.WorldName} {arg.WorldId}");
-            _newWorld = arg;
+            var activeWorld = await WorldService.GetActiveWorldAsync(Auth.CurrentUser.UserID);
+            if (activeWorld.WorldId == arg.WorldId)
+                _newWorld = arg;
             await Task.CompletedTask;
         }
     }

@@ -14,18 +14,18 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         [Inject] private HttpClient Client { get; set; }
 
         /// <summary> The active world. </summary>
-        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             if (ActiveWorld != null)
             {
-                var articles = await Client.GetFromJsonAsync<List<ArticleDTO>>($"api/v1/Articles/WorldArticles?worldId={ActiveWorld.WorldID}");
+                var articles = await Client.GetFromJsonAsync<List<ArticleDTO>>($"api/v1/Articles/WorldArticles?worldId={ActiveWorld.WorldId}");
                 if (articles.Any())
                     _worldArticles = articles;
             }
+            await base.OnInitializedAsync();
         }
     }
 }
