@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Net.Mail;
 
-namespace EpochApp.Server.Services
+namespace EpochApp.Server.Services.MailService
 {
     // {VERIFICATION-LINK}
     // {VERIFICATION-URL}

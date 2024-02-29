@@ -1,6 +1,6 @@
 using EpochApp.Server.Data;
 using EpochApp.Server.Services;
-using EpochApp.Server.Services.WorldService;
+using EpochApp.Server.Services.MailService;
 using EpochApp.Shared;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -116,4 +116,5 @@ namespace EpochApp.Server
             app.Run();
         }
     }
+
 }

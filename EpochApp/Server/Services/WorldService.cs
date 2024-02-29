@@ -12,7 +12,7 @@ using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
 using Microsoft.EntityFrameworkCore;
 
-namespace EpochApp.Server.Services.WorldService
+namespace EpochApp.Server.Services
 {
     /// <inheritdoc />
     public class WorldService : IWorldService

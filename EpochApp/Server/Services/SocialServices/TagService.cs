@@ -1,52 +1,108 @@
 // EpochWorlds
 // TagService.cs
 // FuchsFarbe Studios 2024
-// matsu
-// Modified: 23-2-2024
+// Modified: 29-2-2024
+
 using EpochApp.Server.Data;
+using EpochApp.Shared;
 using EpochApp.Shared.Social;
 using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Services
 {
-    /// <inheritdoc />
     public class TagService : ITagService
     {
         private readonly EpochDataDbContext _context;
+        private readonly ILogger<ITagService> _logger;
 
-        /// <summary>
-        ///     Constructor for the TagService.
-        /// </summary>
-        /// <param name="context"> The database context. </param>
-        public TagService(EpochDataDbContext context)
+        public TagService(EpochDataDbContext context, ILogger<TagService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        /// <inheritdoc />
-        public async Task<Tag> CreateTag(Tag tag)
+        public async Task<IEnumerable<TagDTO>> GetTagsAsync()
         {
-            _context.Tags.Add(tag);
+            var tags = await _context.Tags.ToListAsync();
+            return tags.Select(tag => new TagDTO
+                                      {
+                                          Id = tag.TagId,
+                                          Text = tag.Text
+                                      });
+        }
+
+        public async Task<TagDTO> GetTagAsync(long id)
+        {
+            var tag = await _context.Tags.FirstOrDefaultAsync(x => x.TagId == id);
+            var dto = new TagDTO
+                      {
+                          Id = tag.TagId,
+                          Text = tag.Text
+                      };
+            return await Task.FromResult(dto);
+        }
+
+        public async Task<TagDTO> CreateTagAsync(TagDTO tag)
+        {
+            var newTag = new Tag { Text = tag.Text };
+
+            _context.Tags.Add(newTag);
             await _context.SaveChangesAsync();
-            return tag;
+
+            var dto = new TagDTO { Id = newTag.TagId, Text = newTag.Text };
+            return await Task.FromResult(dto);
         }
 
-        /// <inheritdoc />
-        public async Task AddTagToUser(long tagId, Guid userId)
+        public async Task<IEnumerable<UserTagDTO>> GetUserTagsAsync(Guid userId)
         {
-            var userTag = new UserTag { TagId = tagId, UserId = userId };
-            _context.UserTags.Add(userTag);
-            _context.Entry(userTag).State = EntityState.Added;
+            var userTags = await _context.UserTags
+                                         .Where(x => x.UserId == userId)
+                                         .Include(userTag => userTag.Tag)
+                                         .ToListAsync();
+            return userTags.Select(tag => new UserTagDTO
+                                          {
+                                              UserId = tag.UserId,
+                                              TagId = tag.TagId,
+                                              Text = tag.Tag.Text
+                                          });
+        }
+
+        public async Task<UserTagDTO> CreateUserTagAsync(UserTagDTO tag)
+        {
+            var existingTag = await _context.Tags.FirstOrDefaultAsync(x => x.Text.ToLower() == tag.Text.ToLower());
+            if (existingTag == null)
+            {
+                var newTag = new Tag { Text = tag.Text };
+                _context.Tags.Add(newTag);
+                await _context.SaveChangesAsync();
+                tag.TagId = newTag.TagId;
+            }
+            else
+            {
+                tag.TagId = existingTag.TagId;
+            }
+
+            var newUserTag = new UserTag { TagId = tag.TagId, UserId = tag.UserId };
+
+            _context.UserTags.Add(newUserTag);
             await _context.SaveChangesAsync();
+
+            var dto = new UserTagDTO { UserId = newUserTag.UserId, TagId = newUserTag.TagId, Text = tag.Text };
+            return await Task.FromResult(dto);
         }
 
-        /// <inheritdoc />
-        public async Task<IEnumerable<Tag>> GetUserTags(Guid userId)
+        // Remove user tag
+        public async Task RemoveUserTagAsync(UserTagDTO tag)
         {
-            return await _context.UserTags
-                                 .Where(ut => ut.UserId == userId)
-                                 .Select(ut => ut.Tag)
-                                 .ToListAsync();
+            var userTag = await _context.UserTags.FirstOrDefaultAsync(x => x.UserId == tag.UserId && x.Tag.Text.ToLower() == tag.Text.ToLower());
+            if (userTag != null)
+            {
+                _context.UserTags.Remove(userTag);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation($"User tag removed for user {tag.UserId} and tag {tag.Text}");
+                return;
+            }
+            _logger.LogWarning($"User tag not found for user {tag.UserId} and tag {tag.Text}");
         }
     }
 }

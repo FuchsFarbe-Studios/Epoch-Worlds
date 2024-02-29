@@ -7,7 +7,8 @@ namespace EpochApp.Shared
 {
     public class UserTagDTO
     {
-        public long TagId { get; set; }
         public Guid UserId { get; set; }
+        public long TagId { get; set; }
+        public string Text { get; set; }
     }
 }

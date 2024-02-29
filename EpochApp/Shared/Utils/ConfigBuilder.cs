@@ -6,7 +6,7 @@
 using EpochApp.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EpochApp.Shared
+namespace EpochApp.Shared.Utils
 {
     public static class ConfigBuilder
     {

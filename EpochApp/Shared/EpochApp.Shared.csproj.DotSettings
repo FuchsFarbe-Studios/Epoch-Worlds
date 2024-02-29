@@ -1,42 +1,22 @@
-﻿<wpf:ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                        xmlns:s="clr-namespace:System;assembly=mscorlib"
-                        xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve">
-	<s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=config/@EntryIndexedValue">False</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=config_005Cblog/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=config_005Clookups/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Carticles/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Cblogging/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Csocial/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Cuser/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Cworlds/@EntryIndexedValue">True</s:Boolean>
+﻿<wpf:ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xml:space="preserve">
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=config/@EntryIndexedValue">False</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=config_005Cblog/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=config_005Clookups/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=config_005Ctemplates/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Carticles/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Cblogging/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Csocial/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Cuser/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=datatransfer_005Cworlds/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=interfaces/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmanuals/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmanuals_005Clanguage/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmodels/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmodels_005Clanguage/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cmailservice/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cserialization/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cblog/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cbuilders/@EntryIndexedValue">True</s:Boolean>
-    <s:Boolean
-            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cbuilders_005Cconlang/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmanuals/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmanuals_005Clanguage/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmodels/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmodels_005Clanguage/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cmailservice/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cserialization/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cblog/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cbuilders/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site_005Cbuilders_005Cconlang/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

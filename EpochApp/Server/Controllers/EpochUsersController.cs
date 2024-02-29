@@ -1,5 +1,5 @@
 using EpochApp.Server.Data;
-using EpochApp.Server.Services;
+using EpochApp.Server.Services.MailService;
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;

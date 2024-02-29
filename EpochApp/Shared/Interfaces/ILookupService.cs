@@ -5,7 +5,7 @@
 // Modified: 27-2-2024
 using EpochApp.Shared.Config;
 
-namespace EpochApp.Server.Services
+namespace EpochApp.Shared
 {
     /// <summary>
     ///     Service for fetching lookup table data.

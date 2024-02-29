@@ -4,6 +4,7 @@
 // matsu
 // Modified: 27-2-2024
 using EpochApp.Server.Data;
+using EpochApp.Shared;
 using EpochApp.Shared.Config;
 using Microsoft.EntityFrameworkCore;
 
