@@ -51,10 +51,11 @@ namespace EpochApp.Server
                     });
             ConfigBuilder.ConfigureCommonServices(services);
             services.AddHttpContextAccessor();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<ILookupService, LookupService>();
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<IWorldService, WorldService>();
-            services.AddScoped<ITagService, TagService>();
             services.AddRazorPages();
             services.AddSwaggerGen();
 

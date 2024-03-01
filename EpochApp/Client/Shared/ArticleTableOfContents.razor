@@ -16,12 +16,3 @@
 }
 
 @* ReSharper disable once CSharpWarnings::CS1591 *@
-
-@code {
-	/// <summary>
-	///     The article to display the table of contents for.
-	/// </summary>
-	[Parameter] public ArticleDTO Article { get; set; }
-
-	public List<SectionDTO> Sections => Article?.Sections.ToList();
-}

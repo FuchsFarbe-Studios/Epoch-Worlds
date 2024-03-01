@@ -243,7 +243,7 @@ namespace EpochApp.Server.Services
                                                             World = world,
                                                             Tag = new Tag
                                                                   {
-                                                                      Text = x.Description
+                                                                      Text = x.Text
                                                                   }
                                                         })
                                  .ToList();
@@ -339,7 +339,7 @@ namespace EpochApp.Server.Services
                                                    {
                                                        TagId = x.TagId,
                                                        WorldId = x.WorldId,
-                                                       Description = x?.Tag?.Text
+                                                       Text = x?.Tag?.Text
                                                    })
                             .ToList();
             var genres = world.WorldGenres.Select(x => new WorldGenreDTO

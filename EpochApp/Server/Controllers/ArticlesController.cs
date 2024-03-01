@@ -13,15 +13,20 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace EpochApp.Server.Controllers
 {
+    /// <summary>
+    ///     Controller for managing articles and manuscripts.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ArticlesController : ControllerBase
     {
-        public readonly EpochDataDbContext _context;
+        private readonly IArticleService _articleService;
+        private readonly EpochDataDbContext _context;
 
-        public ArticlesController(EpochDataDbContext context)
+        public ArticlesController(EpochDataDbContext context, IArticleService articleService)
         {
             _context = context;
+            _articleService = articleService;
         }
 
         /// <summary>
@@ -34,28 +39,7 @@ namespace EpochApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ArticleDTO>>> IndexArticlesAsync()
         {
-            var articles = await _context.Articles
-                                         .Include(a => a.Sections)
-                                         .Include(a => a.Category)
-                                         .Include(a => a.World)
-                                         .Include(a => a.Author)
-                                         .Select(x => new ArticleDTO
-                                                      {
-                                                          ArticleId = x.ArticleId,
-                                                          Title = x.Title,
-                                                          Content = x.Content,
-                                                          CreatedOn = x.CreatedOn,
-                                                          ModifiedOn = x.ModifiedOn,
-                                                          Sections = x.Sections.Select(s => new SectionDTO
-                                                                                            {
-                                                                                                SectionID = s.SectionID,
-                                                                                                Title = s.Title,
-                                                                                                Content = s.Content,
-                                                                                                CreatedOn = s.CreatedOn
-                                                                                            })
-                                                      })
-                                         .ToListAsync();
-
+            var articles = await _articleService.GetArticlesAsync();
             return Ok(articles);
         }
 
@@ -71,7 +55,6 @@ namespace EpochApp.Server.Controllers
         {
             var categories = await _context.ArticleCategories
                                            .ToListAsync();
-
             return Ok(categories);
         }
 
@@ -88,38 +71,9 @@ namespace EpochApp.Server.Controllers
         [HttpGet("Article/{articleId:guid}")]
         public async Task<ActionResult<ArticleDTO>> GetArticleAsync(Guid articleId)
         {
-            var article = await _context.Articles
-                                        .Include(a => a.Sections)
-                                        .Include(a => a.Category)
-                                        .Include(a => a.World)
-                                        .Include(a => a.Author)
-                                        .Select(x => new ArticleDTO
-                                                     {
-                                                         ArticleId = x.ArticleId,
-                                                         Title = x.Title,
-                                                         CategoryId = x.CategoryId,
-                                                         Content = x.Content,
-                                                         CreatedOn = x.CreatedOn,
-                                                         ModifiedOn = x.ModifiedOn,
-                                                         IsPublished = x.IsPublished,
-                                                         IsNSFW = x.IsNSFW,
-                                                         DisplayAuthor = x.DisplayAuthor,
-                                                         ShowTableOfContents = x.ShowInTableOfContents,
-                                                         ShowInTableOfContents = x.ShowInTableOfContents,
-                                                         Sections = x.Sections.Select(s => new SectionDTO
-                                                                                           {
-                                                                                               SectionID = s.SectionID,
-                                                                                               Title = s.Title,
-                                                                                               Content = s.Content,
-                                                                                               CreatedOn = s.CreatedOn
-                                                                                           })
-                                                     })
-                                        .FirstOrDefaultAsync(x => x.ArticleId == articleId);
-
+            var article = await _articleService.GetArticleByIdAsync(articleId);
             if (article == null)
-            {
                 return NotFound();
-            }
 
             return Ok(article);
         }
@@ -140,40 +94,9 @@ namespace EpochApp.Server.Controllers
         [HttpGet("Article/{worldId:guid}/{articleId:guid}")]
         public async Task<ActionResult<ArticleDTO>> GetWorldArticleAsync(Guid worldId, Guid articleId)
         {
-            var article = await _context.Articles
-                                        .Where(x => x.WorldId == worldId && x.ArticleId == articleId && (x.DeletedOn == null || x.DeletedOn > DateTime.UtcNow))
-                                        .Include(a => a.Sections)
-                                        .Include(a => a.Category)
-                                        .Include(a => a.World)
-                                        .Include(a => a.Author)
-                                        .Select(x => new ArticleDTO
-                                                     {
-                                                         WorldId = x.WorldId,
-                                                         ArticleId = x.ArticleId,
-                                                         Title = x.Title,
-                                                         CategoryId = x.CategoryId,
-                                                         Content = x.Content,
-                                                         CreatedOn = x.CreatedOn,
-                                                         ModifiedOn = x.ModifiedOn,
-                                                         IsPublished = x.IsPublished,
-                                                         IsNSFW = x.IsNSFW,
-                                                         DisplayAuthor = x.DisplayAuthor,
-                                                         ShowTableOfContents = x.ShowInTableOfContents,
-                                                         ShowInTableOfContents = x.ShowInTableOfContents,
-                                                         Sections = x.Sections.Select(s => new SectionDTO
-                                                                                           {
-                                                                                               SectionID = s.SectionID,
-                                                                                               Title = s.Title,
-                                                                                               Content = s.Content,
-                                                                                               CreatedOn = s.CreatedOn
-                                                                                           })
-                                                     })
-                                        .FirstOrDefaultAsync();
-
+            var article = await _articleService.GetWorldArticleAsync(worldId, articleId);
             if (article == null)
-            {
                 return NotFound();
-            }
 
             return Ok(article);
         }
@@ -231,35 +154,7 @@ namespace EpochApp.Server.Controllers
         [HttpGet("UserArticles")]
         public async Task<ActionResult<IEnumerable<ArticleDTO>>> GetUserArticlesAsync([FromQuery] Guid userId)
         {
-            // Get articles by user id
-            var articles = await _context.Articles
-                                         .Include(a => a.Sections)
-                                         .Include(a => a.Category)
-                                         .Include(a => a.World)
-                                         .Include(a => a.Author)
-                                         .Select(x => new ArticleDTO
-                                                      {
-                                                          ArticleId = x.ArticleId,
-                                                          AuthorId = x.AuthorId,
-                                                          Title = x.Title,
-                                                          Content = x.Content,
-                                                          CreatedOn = x.CreatedOn,
-                                                          ModifiedOn = x.ModifiedOn,
-                                                          IsPublished = x.IsPublished,
-                                                          IsNSFW = x.IsNSFW,
-                                                          DisplayAuthor = x.DisplayAuthor,
-                                                          ShowTableOfContents = x.ShowInTableOfContents,
-                                                          ShowInTableOfContents = x.ShowInTableOfContents,
-                                                          Sections = x.Sections.Select(s => new SectionDTO
-                                                                                            {
-                                                                                                SectionID = s.SectionID,
-                                                                                                Title = s.Title,
-                                                                                                Content = s.Content,
-                                                                                                CreatedOn = s.CreatedOn
-                                                                                            })
-                                                      })
-                                         .Where(x => x.AuthorId == userId)
-                                         .ToListAsync();
+            var articles = await _articleService.GetUserArticlesAsync(userId);
             return Ok(articles);
         }
 
@@ -276,36 +171,7 @@ namespace EpochApp.Server.Controllers
         [HttpGet("WorldArticles")]
         public async Task<ActionResult<IEnumerable<ArticleDTO>>> GetWorldArticlesAsync([FromQuery] Guid worldId)
         {
-            // Get articles by world id
-            var articles = await _context.Articles
-                                         .Include(a => a.Sections)
-                                         .Include(a => a.Category)
-                                         .Include(a => a.World)
-                                         .Include(a => a.Author)
-                                         .Select(x => new ArticleDTO
-                                                      {
-                                                          ArticleId = x.ArticleId,
-                                                          WorldId = x.WorldId,
-                                                          AuthorId = x.AuthorId,
-                                                          Title = x.Title,
-                                                          Content = x.Content,
-                                                          CreatedOn = x.CreatedOn,
-                                                          ModifiedOn = x.ModifiedOn,
-                                                          IsPublished = x.IsPublished,
-                                                          IsNSFW = x.IsNSFW,
-                                                          DisplayAuthor = x.DisplayAuthor,
-                                                          ShowTableOfContents = x.ShowInTableOfContents,
-                                                          ShowInTableOfContents = x.ShowInTableOfContents,
-                                                          Sections = x.Sections.Select(s => new SectionDTO
-                                                                                            {
-                                                                                                SectionID = s.SectionID,
-                                                                                                Title = s.Title,
-                                                                                                Content = s.Content,
-                                                                                                CreatedOn = s.CreatedOn
-                                                                                            })
-                                                      })
-                                         .Where(x => x.WorldId == worldId)
-                                         .ToListAsync();
+            var articles = await _articleService.GetWorldArticlesAsync(worldId);
             return Ok(articles);
         }
 

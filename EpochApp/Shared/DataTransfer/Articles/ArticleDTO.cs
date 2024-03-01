@@ -10,11 +10,39 @@ namespace EpochApp.Shared
     /// </summary>
     public class ArticleDTO
     {
+        /// <summary>
+        ///     The unique identifier for this article.
+        /// </summary>
         public Guid ArticleId { get; set; }
-        public Guid? AuthorId { get; set; }
+
+        /// <summary>
+        ///     The unique identifier for the world this article belongs to.
+        /// </summary>
         public Guid? WorldId { get; set; }
+
+        /// <summary>
+        ///     The unique identifier for the author of this article.
+        /// </summary>
+        public Guid? AuthorId { get; set; }
+
+        /// <summary>
+        ///     The name of the author of this article.
+        /// </summary>
+        public string Author { get; set; }
+
+        /// <summary>
+        ///     The id of the article's category.
+        /// </summary>
         public int? CategoryId { get; set; }
+
+        /// <summary>
+        ///     The title of this article.
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        ///     The content of this article.
+        /// </summary>
         public string Content { get; set; }
 
         /// <summary>
@@ -43,7 +71,16 @@ namespace EpochApp.Shared
         public bool ShowTableOfContents { get; set; } = false;
         public DateTime? CreatedOn { get; set; }
         public DateTime? ModifiedOn { get; set; }
-        public IEnumerable<SectionDTO> Sections { get; set; } = new List<SectionDTO>();
+
+        /// <summary>
+        ///     The sections of this article.
+        /// </summary>
+        public List<SectionDTO> Sections { get; set; } = new List<SectionDTO>();
+
+        /// <summary>
+        ///     The tags associated with this article.
+        /// </summary>
+        public List<ArticleTagDTO> ArticleTags { get; set; } = new List<ArticleTagDTO>();
     }
 
 }
