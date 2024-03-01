@@ -13,13 +13,14 @@ namespace EpochApp.Shared.Users
 {
     public class User
     {
-        private string _resetToken;
         public User()
         {
             UserRoles = new HashSet<UserRole>();
             OwnedWorlds = new HashSet<World>();
             OwnedArticles = new HashSet<Article>();
             UserTags = new HashSet<UserTag>();
+            UserFiles = new HashSet<UserFile>();
+            Manuscripts = new HashSet<Manuscript>();
         }
 
         public Guid UserID { get; set; }
@@ -42,7 +43,7 @@ namespace EpochApp.Shared.Users
         /// <summary>
         ///     The reset token for this user.
         /// </summary>
-        public string ResetToken { get => _resetToken; set => _resetToken = value; }
+        public string ResetToken { get; set; }
 
         /// <summary>
         ///     The date the reset token was created.
@@ -87,5 +88,10 @@ namespace EpochApp.Shared.Users
         ///     The files associated with this user.
         /// </summary>
         public virtual ICollection<UserFile> UserFiles { get; set; }
+
+        /// <summary>
+        ///     The manuscripts this user has written.
+        /// </summary>
+        public virtual ICollection<Manuscript> Manuscripts { get; set; }
     }
 }
