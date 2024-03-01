@@ -1,91 +1,87 @@
 @page "/Internal/Configuration/Dictionary"
 @inherits RequestComponent<DictionaryWord>
 @using ButtonType=MudBlazor.ButtonType
-@using MaxWidth=MudBlazor.MaxWidth
 @using Variant=MudBlazor.Variant
-@using MudBlazor
 
 <MudText Align="Align.Center">Configure Dictionary</MudText>
 
-<MudContainer MaxWidth="MaxWidth.Large">
-	<MudGrid Spacing="2">
+<MudGrid Spacing="2">
 
-		<!-- Available Dictionary Words -->
-		<MudItem xs="12" sm="6" md="9">
-			<MudDataGrid Virtualize="true" Outlined="true" Height="1000px" T="DictionaryWord" Items="@_dictionaryWords" EditMode="DataGridEditMode.Form" CommittedItemChanges="@CommitChangesAsync" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
-				<Columns>
-					<PropertyColumn Hidden="true" Property="x => x.WordId" Title="Id" IsEditable="false" />
-					<PropertyColumn Property="x => x.Translations" Resizable="true" Title="Trans." />
-					<PropertyColumn Hidden="true" Property="x => x.PartOfSpeechId" Title="PoS">
-						<EditTemplate Context="posCtx">
-							<MudSelect T="int" @bind-Value="@posCtx.Item.PartOfSpeechId" For="@(() => posCtx.Item.PartOfSpeechId)" Label="Part of Speech">
-								@foreach (var pos in _partsOfSpeech)
-								{
-									<MudSelectItem Value="@pos.PartOfSpeechId">@pos.Description</MudSelectItem>
-								}
-							</MudSelect>
-						</EditTemplate>
-					</PropertyColumn>
-					<TemplateColumn Title="PoS" Resizable="true">
-						<CellTemplate Context="ctx">
-							@ctx.Item.PartOfSpeech.Description
-						</CellTemplate>
-					</TemplateColumn>
-					<PropertyColumn Property="x => x.Category" Title="Category" Resizable="true">
-						<EditTemplate Context="catCtx">
-							<MudSelect T="WordCategory" For="@(() => catCtx.Item.Category)" @bind-Value="@catCtx.Item.Category" Label="Category">
-								@foreach (var pos in Enum.GetValues<WordCategory>())
-								{
-									<MudSelectItem Value="@pos">@pos.ToString()</MudSelectItem>
-								}
-							</MudSelect>
-						</EditTemplate>
-					</PropertyColumn>
-					<TemplateColumn Title="Edit">
-						<CellTemplate Context="editCtx">
-							<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@editCtx.Actions.StartEditingItemAsync" />
-						</CellTemplate>
-					</TemplateColumn>
-					<TemplateColumn Title="Delete">
-						<CellTemplate Context="deleteCtx">
-							<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async () => await RemoveDictionaryWordAsync(deleteCtx.Item))" />
-						</CellTemplate>
-					</TemplateColumn>
-				</Columns>
-			</MudDataGrid>
-		</MudItem>
+	<!-- Available Dictionary Words -->
+	<MudItem xs="12" sm="6" md="9">
+		<MudDataGrid Virtualize="true" Outlined="true" Height="1000px" T="DictionaryWord" Items="@_dictionaryWords" EditMode="DataGridEditMode.Form" CommittedItemChanges="@CommitChangesAsync" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+			<Columns>
+				<PropertyColumn Hidden="true" Property="x => x.WordId" Title="Id" IsEditable="false" />
+				<PropertyColumn Property="x => x.Translations" Resizable="true" Title="Trans." />
+				<PropertyColumn Hidden="true" Property="x => x.PartOfSpeechId" Title="PoS">
+					<EditTemplate Context="posCtx">
+						<MudSelect T="int" @bind-Value="@posCtx.Item.PartOfSpeechId" For="@(() => posCtx.Item.PartOfSpeechId)" Label="Part of Speech">
+							@foreach (var pos in _partsOfSpeech)
+							{
+								<MudSelectItem Value="@pos.PartOfSpeechId">@pos.Description</MudSelectItem>
+							}
+						</MudSelect>
+					</EditTemplate>
+				</PropertyColumn>
+				<TemplateColumn Title="PoS" Resizable="true">
+					<CellTemplate Context="ctx">
+						@ctx.Item.PartOfSpeech.Description
+					</CellTemplate>
+				</TemplateColumn>
+				<PropertyColumn Property="x => x.Category" Title="Category" Resizable="true">
+					<EditTemplate Context="catCtx">
+						<MudSelect T="WordCategory" For="@(() => catCtx.Item.Category)" @bind-Value="@catCtx.Item.Category" Label="Category">
+							@foreach (var pos in Enum.GetValues<WordCategory>())
+							{
+								<MudSelectItem Value="@pos">@pos.ToString()</MudSelectItem>
+							}
+						</MudSelect>
+					</EditTemplate>
+				</PropertyColumn>
+				<TemplateColumn Title="Edit">
+					<CellTemplate Context="editCtx">
+						<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@editCtx.Actions.StartEditingItemAsync" />
+					</CellTemplate>
+				</TemplateColumn>
+				<TemplateColumn Title="Delete">
+					<CellTemplate Context="deleteCtx">
+						<MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(async () => await RemoveDictionaryWordAsync(deleteCtx.Item))" />
+					</CellTemplate>
+				</TemplateColumn>
+			</Columns>
+		</MudDataGrid>
+	</MudItem>
 
-		<!-- Add or Edit Word -->
+	<!-- Add or Edit Word -->
 
-		<MudItem xs="12" sm="6" md="3">
-			<MudPaper Width="100%" Class="pa-2">
-				<EditForm Model="@Model" OnSubmit="@AddDictionaryWordAsync">
-					<MudGrid Spacing="2">
-						<MudItem xs="12">
-							<MudTextField FullWidth="true" Variant="Variant.Outlined" @bind-Value="@Model.Translations" For="@(() => Model.Translations)" Label="Translations" />
-						</MudItem>
-						<MudItem xs="12" sm="6">
-							<MudSelect T="int" @bind-Value="@Model.PartOfSpeechId" Label="Part of Speech" Variant="Variant.Filled" FullWidth="true">
-								@foreach (var s in _partsOfSpeech)
-								{
-									<MudSelectItem Value="@s.PartOfSpeechId">@s.Description</MudSelectItem>
-								}
-							</MudSelect>
-						</MudItem>
-						<MudItem xs="12" sm="6">
-							<MudSelect T="WordCategory" @bind-Value="@Model.Category" For="@(() => Model.Category)" Variant="Variant.Filled" FullWidth="true">
-								@foreach (var item in Enum.GetValues<WordCategory>())
-								{
-									<MudSelectItem Value="@item">@item.ToString()</MudSelectItem>
-								}
-							</MudSelect>
-						</MudItem>
-					</MudGrid>
-					<MudDivider DividerType="DividerType.Middle" />
-					<MudIconButton DisableElevation="true" ButtonType="ButtonType.Submit" Icon="@Icons.Material.Filled.AddCircle" Color="Color.Primary" />
-				</EditForm>
-			</MudPaper>
-		</MudItem>
+	<MudItem xs="12" sm="6" md="3">
+		<MudPaper Width="100%" Class="pa-2">
+			<EditForm Model="@Model" OnSubmit="@AddDictionaryWordAsync">
+				<MudGrid Spacing="2">
+					<MudItem xs="12">
+						<MudTextField FullWidth="true" Variant="Variant.Outlined" @bind-Value="@Model.Translations" For="@(() => Model.Translations)" Label="Translations" />
+					</MudItem>
+					<MudItem xs="12" sm="6">
+						<MudSelect T="int" @bind-Value="@Model.PartOfSpeechId" Label="Part of Speech" Variant="Variant.Filled" FullWidth="true">
+							@foreach (var s in _partsOfSpeech)
+							{
+								<MudSelectItem Value="@s.PartOfSpeechId">@s.Description</MudSelectItem>
+							}
+						</MudSelect>
+					</MudItem>
+					<MudItem xs="12" sm="6">
+						<MudSelect T="WordCategory" @bind-Value="@Model.Category" For="@(() => Model.Category)" Variant="Variant.Filled" FullWidth="true">
+							@foreach (var item in Enum.GetValues<WordCategory>())
+							{
+								<MudSelectItem Value="@item">@item.ToString()</MudSelectItem>
+							}
+						</MudSelect>
+					</MudItem>
+				</MudGrid>
+				<MudDivider DividerType="DividerType.Middle" />
+				<MudIconButton DisableElevation="true" ButtonType="ButtonType.Submit" Icon="@Icons.Material.Filled.AddCircle" Color="Color.Primary" />
+			</EditForm>
+		</MudPaper>
+	</MudItem>
 
-	</MudGrid>
-</MudContainer>
+</MudGrid>

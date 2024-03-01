@@ -1,13 +1,13 @@
 @page "/InternalBlogs"
 @page "/Internal/Blogs"
-@using FTypo=Flatify.Typo
 @using ButtonType=MudBlazor.ButtonType
-@using MudBlazor
+@using Typo=MudBlazor.Typo
+@using Variant=MudBlazor.Variant
 @attribute [Authorize(Roles = "ADMIN,INTERNAL")]
 
-<FlatTypo Typo="FTypo.Heading3" Text="Internal Blogs" />
+<MudText Typo="Typo.h3" Align="Align.Center">Internal Blogs</MudText>
 
-<FlatButton OnClick="AddBlogAsync">Add Blog</FlatButton>
+<MudButton Color="Color.Secondary" DisableElevation="true" Size="Size.Large" Variant="Variant.Filled" OnClick="@AddBlogAsync">Add Blog</MudButton>
 @if (_showCreateBlog)
 {
 	<EditForm Model="@_modelBlog" OnSubmit="@CreateNewBlogAsync">

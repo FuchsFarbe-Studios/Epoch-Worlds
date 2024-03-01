@@ -11,7 +11,6 @@ namespace EpochApp.Client.Shared.Forms
     /// </summary>
     public class BuilderFormBase<TContent, UResult> : ComponentBase where TContent : class where UResult : class
     {
-
         /// <summary>
         ///     Errors returned from the server's ModelState.
         /// </summary>

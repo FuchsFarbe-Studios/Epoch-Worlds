@@ -15,8 +15,6 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
         private SpellingRule _spellingRuleModel = new SpellingRule();
         private LangWord _wordModel = new LangWord();
 
-
-
         /// <summary>
         ///     The constructed language model for editing.
         /// </summary>

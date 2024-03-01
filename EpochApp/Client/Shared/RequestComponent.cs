@@ -64,7 +64,6 @@ namespace EpochApp.Client.Shared
         {
             var token = UserService.GetTokenFromBrowser();
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            Logger.LogInformation($"Header has been changed: {token}");
         }
     }
 }

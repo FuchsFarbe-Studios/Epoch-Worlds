@@ -11,7 +11,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
         /// <summary>
         ///     The currently active world.
         /// </summary>
-        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()

@@ -1,10 +1,11 @@
 @using ButtonType=MudBlazor.ButtonType
 @using MudBlazor
+@inherits RequestComponent<ManuscriptDTO>
 
-<EditForm Model="@_model" OnSubmit="@OnManuscriptSubmit">
+<EditForm Model="@Model" OnSubmit="@OnManuscriptSubmit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
-	<MudTextField @bind-Value="@_model.Title" For="@(() => _model.Title)" Label="Title" MaxLength="100" />
-	<MudTextField @bind-Value="@_model.Summary" For="@(() => _model.Summary)" Label="Summary" Lines="3" />
+	<MudTextField @bind-Value="@Model.Title" For="@(() => Model.Title)" Label="Title" MaxLength="100" />
+	<MudTextField @bind-Value="@Model.Summary" For="@(() => Model.Summary)" Label="Summary" Lines="5" />
 	<MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" FullWidth="true">Submit</MudButton>
 </EditForm>

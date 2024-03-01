@@ -1,17 +1,2 @@
 @page "/Internal"
-@using Justify=MudBlazor.Justify
-@using Typo=MudBlazor.Typo
-@using MudBlazor
 @attribute [Authorize(Roles = "ADMIN,INTERNAL")]
-
-<MudText Typo="Typo.h3" Align="Align.Center">Internal</MudText>
-<MudPaper Width="100%" Class="pa-4" Outlined="true">
-	<MudStack Row="true" Spacing="2" Justify="Justify.Center">
-		<MudLink Href="@NavRef.AdminNav.Blogs">Manage Blogs</MudLink>
-		<MudLink Href="@NavRef.AdminNav.BlogPosts">Blog Posts</MudLink>
-		<MudLink Href="@NavRef.AdminNav.Contacts">Contacts</MudLink>
-		<MudLink Href="@NavRef.AdminNav.Logs">View Logs</MudLink>
-		<MudLink Href="/Internal/Configuration">Configuration</MudLink>
-		<MudLink Href="/Internal/Users">Users</MudLink>
-	</MudStack>
-</MudPaper>
