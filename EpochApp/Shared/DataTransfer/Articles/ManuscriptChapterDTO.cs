@@ -10,5 +10,9 @@ namespace EpochApp.Shared
         public long ChapterId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public int? Order { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public DateTime? RemovedOn { get; set; }
     }
 }

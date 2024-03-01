@@ -1,4 +1,5 @@
 using EpochApp.Server.Data;
+using EpochApp.Server.Maps;
 using EpochApp.Server.Services;
 using EpochApp.Server.Services.MailService;
 using EpochApp.Shared;
@@ -51,6 +52,8 @@ namespace EpochApp.Server
                     });
             ConfigBuilder.ConfigureCommonServices(services);
             services.AddHttpContextAccessor();
+            services.AddAutoMapper(typeof(ArticleProfile));
+            services.AddAutoMapper(typeof(ManuscriptProfile));
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<ILookupService, LookupService>();

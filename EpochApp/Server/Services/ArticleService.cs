@@ -3,6 +3,7 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 29-2-2024
+using AutoMapper;
 using EpochApp.Server.Data;
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
@@ -18,13 +19,15 @@ namespace EpochApp.Server.Services
     {
         private readonly EpochDataDbContext _context;
         private readonly ILogger<ArticleService> _logger;
+        private readonly IMapper _mapper;
         private readonly ITagService _tagService;
 
-        public ArticleService(EpochDataDbContext context, ILogger<ArticleService> logger, ITagService tagService)
+        public ArticleService(EpochDataDbContext context, ILogger<ArticleService> logger, ITagService tagService, IMapper mapper)
         {
             _context = context;
             _logger = logger;
             _tagService = tagService;
+            _mapper = mapper;
         }
 
         public async Task<List<ArticleDTO>> GetArticlesAsync()
@@ -34,7 +37,7 @@ namespace EpochApp.Server.Services
                                          .Include(a => a.Category)
                                          .Include(a => a.World)
                                          .Include(a => a.Author)
-                                         .Select(x => GetArticleDtoFromArticle(x))
+                                         .Select(x => _mapper.Map(x, new ArticleDTO()))
                                          .ToListAsync();
             return articles;
         }
@@ -47,7 +50,7 @@ namespace EpochApp.Server.Services
                                              .Include(a => a.Category)
                                              .Include(a => a.World)
                                              .Include(a => a.Author)
-                                             .Select(x => GetArticleDtoFromArticle(x))
+                                             .Select(x => _mapper.Map(x, new ArticleDTO()))
                                              .ToListAsync();
             return await Task.FromResult(userArticles);
         }
@@ -59,7 +62,7 @@ namespace EpochApp.Server.Services
                                          .Include(a => a.Sections)
                                          .Include(a => a.Category)
                                          .Where(a => a.WorldId == worldId && a.ArticleId == articleId)
-                                         .Select(a => GetArticleDtoFromArticle(a))
+                                         .Select(a => _mapper.Map(a, new ArticleDTO()))
                                          .FirstOrDefaultAsync();
             return articles;
         }
@@ -71,7 +74,7 @@ namespace EpochApp.Server.Services
                                          .Include(a => a.Sections)
                                          .Include(a => a.Category)
                                          .Where(a => a.WorldId == worldId)
-                                         .Select(a => GetArticleDtoFromArticle(a))
+                                         .Select(a => _mapper.Map(a, new ArticleDTO()))
                                          .ToListAsync();
             return articles;
         }
@@ -85,7 +88,7 @@ namespace EpochApp.Server.Services
                                         .Include(a => a.World)
                                         .Include(a => a.Author)
                                         .FirstOrDefaultAsync(a => a.ArticleId == articleId);
-            return GetArticleDtoFromArticle(article);
+            return _mapper.Map(article, new ArticleDTO());
         }
 
         /// <inheritdoc />

@@ -35,6 +35,8 @@ namespace EpochApp.Shared
         /// </summary>
         public int? CategoryId { get; set; }
 
+        public ContentType? ContentType { get; set; }
+
         /// <summary>
         ///     The title of this article.
         /// </summary>
