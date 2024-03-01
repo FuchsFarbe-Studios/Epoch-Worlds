@@ -63,7 +63,8 @@
 	private bool _editMode { get; set; } = false;
 	private List<UserFileDTO> _files { get; set; } = new List<UserFileDTO>();
 
-	[CascadingParameter] private WorldDTO ActiveWorld { get; set; }
+	[CascadingParameter] private UserWorldDTO ActiveWorld { get; set; }
+	[Inject] private IWorldService WorldService { get; set; }
 	[Inject] private HttpClient Client { get; set; }
 	[Inject] private EpochAuthProvider Auth { get; set; }
 
@@ -82,6 +83,6 @@
 
 	private async Task OnWorldTabSelected(MouseEventArgs arg)
 	{
-		_files = await Client.GetFromJsonAsync<List<UserFileDTO>>($"api/v1/UserFiles/WorldFiles/{Auth.CurrentUser.UserID}/{ActiveWorld.WorldID}");
+		_files = await Client.GetFromJsonAsync<List<UserFileDTO>>($"api/v1/UserFiles/WorldFiles/{Auth.CurrentUser.UserID}/{ActiveWorld.WorldId}");
 	}
 }

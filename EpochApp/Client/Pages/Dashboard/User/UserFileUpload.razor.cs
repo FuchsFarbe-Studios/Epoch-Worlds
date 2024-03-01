@@ -22,7 +22,7 @@ namespace EpochApp.Client.Pages.Dashboard.User
         /// </summary>
         [Parameter] public bool IsWorldFile { get; set; }
 
-        [CascadingParameter] private WorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] private UserWorldDTO ActiveWorld { get; set; }
 
         [Inject] private EpochAuthProvider Auth { get; set; }
 
@@ -46,7 +46,7 @@ namespace EpochApp.Client.Pages.Dashboard.User
                               WorldId = null
                           };
             if (IsWorldFile)
-                newFile.WorldId = ActiveWorld?.WorldID;
+                newFile.WorldId = ActiveWorld?.WorldId;
             _uploadedFiles.Add(newFile);
             _uploading = false;
             StateHasChanged();
@@ -71,41 +71,56 @@ namespace EpochApp.Client.Pages.Dashboard.User
             }
 
             var processedFiles = 0;
-            foreach (var file in _uploadedFiles)
+            try
             {
-                Logger.LogInformation($"Uploading file {file.FileName}");
-                if (IsWorldFile)
+                foreach (var file in _uploadedFiles)
                 {
-                    var response = await Client.PostAsJsonAsync($"api/v1/UserFiles/WorldFile?userId={Auth.CurrentUser.UserID}&worldId={ActiveWorld.WorldID}", file);
-                    if (!response.IsSuccessStatusCode)
+                    Logger.LogInformation($"Uploading file {file.FileName}");
+                    if (IsWorldFile)
                     {
-                        var msg = await response.Content.ReadAsStringAsync();
-                        _messages.Add(msg);
+                        var response = await Client.PostAsJsonAsync($"api/v1/UserFiles/WorldFile?userId={Auth.CurrentUser.UserID}&worldId={ActiveWorld.WorldId}", file);
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var msg = await response.Content.ReadAsStringAsync();
+                            Logger.LogError($"Error uploading file {file.FileName}: {msg}");
+                            _messages.Add(msg);
+                        }
+                        else
+                        {
+                            _messages.Add($"File {file.FileName} uploaded successfully");
+                            Logger.LogInformation($"File {file.FileName} uploaded successfully");
+                        }
                     }
                     else
                     {
-                        _messages.Add($"File {file.FileName} uploaded successfully");
+                        var response = await Client.PostAsJsonAsync($"api/v1/UserFiles/UserFile?userId={Auth.CurrentUser.UserID}", file);
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var msg = await response.Content.ReadAsStringAsync();
+                            Logger.LogError($"Error uploading file {file.FileName}: {msg}");
+                            _messages.Add(msg);
+                        }
+                        else
+                        {
+                            _messages.Add($"File {file.FileName} uploaded successfully");
+                            Logger.LogInformation($"File {file.FileName} uploaded successfully");
+                        }
                     }
+                    processedFiles += 1;
+                    _percentDone = processedFiles / _uploadedFiles.Count;
+                    StateHasChanged();
+                    await Task.Delay(200);
                 }
-                else
-                {
-                    var response = await Client.PostAsJsonAsync($"api/v1/UserFiles/UserFile?userId={Auth.CurrentUser.UserID}", file);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        var msg = await response.Content.ReadAsStringAsync();
-                        _messages.Add(msg);
-                    }
-                    else
-                    {
-                        _messages.Add($"File {file.FileName} uploaded successfully");
-                    }
-                }
-                processedFiles += 1;
-                _percentDone = processedFiles / _uploadedFiles.Count;
-                StateHasChanged();
-                await Task.Delay(200);
             }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error uploading files");
+                _uploading = false;
+                return;
+            }
+
             _uploading = false;
+            await Task.CompletedTask;
         }
     }
 }

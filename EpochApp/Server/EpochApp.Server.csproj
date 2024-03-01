@@ -51,6 +51,8 @@
 
     <ItemGroup>
         <Folder Include="Templates\"/>
+        <Folder Include="UserContent\"/>
+        <Folder Include="WorldContent\"/>
     </ItemGroup>
 
 

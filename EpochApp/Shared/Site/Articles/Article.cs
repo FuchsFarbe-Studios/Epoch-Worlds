@@ -19,6 +19,7 @@ namespace EpochApp.Shared.Articles
         {
             Sections = new HashSet<ArticleSection>();
             ArticleTags = new HashSet<ArticleTag>();
+            Meta = new HashSet<ArticleMeta>();
         }
 
         /// <summary>
@@ -88,6 +89,11 @@ namespace EpochApp.Shared.Articles
         public bool ShowTableOfContents { get; set; } = false;
 
         /// <summary>
+        ///     ID of the template used to generate this article.
+        /// </summary>
+        public int? TemplateId { get; set; }
+
+        /// <summary>
         ///     Date this article was created.
         /// </summary>
         public DateTime? CreatedOn { get; set; }
@@ -122,6 +128,11 @@ namespace EpochApp.Shared.Articles
         /// </summary>
         public virtual BuilderContent Builder { get; set; }
 
+        // /// <summary>
+        // ///   Template navigation property.
+        // /// </summary>
+        //public virtual ArticleTemplate Template { get; set; }
+
         /// <summary>
         ///     Sections navigation property.
         /// </summary>
@@ -134,6 +145,38 @@ namespace EpochApp.Shared.Articles
         /// Tags navigation property.
         /// </summary>
         public virtual ICollection<ArticleTag> ArticleTags { get; set; }
+
+        /// <summary>
+        ///     Meta navigation property.
+        /// </summary>
+        public virtual ICollection<ArticleMeta> Meta { get; set; }
+    }
+
+    /// <summary>
+    ///     Represents meta-data of an article.
+    /// </summary>
+    public class ArticleMeta
+    {
+        /// <summary> Article ID. </summary>
+        public Guid ArticleId { get; set; }
+
+        /// <summary> Meta ID. </summary>
+        public int MetaId { get; set; }
+
+        /// <summary> Meta field. </summary>
+        public string MetaField { get; set; }
+
+        /// <summary> Meta field type. </summary>
+
+        public FieldType Type { get; set; }
+
+        /// <summary> Meta value. </summary>
+        public string MetaValue { get; set; }
+
+        /// <summary>
+        ///     Article navigation property.
+        /// </summary>
+        public virtual Article Article { get; set; }
     }
 
 }

@@ -479,6 +479,54 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        [HttpGet("Get-Roles")]
+        public async Task<ActionResult<IEnumerable<Role>>> GetRolesAsync()
+        {
+            return await _context.Roles.ToListAsync();
+        }
+
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        [HttpPost("Add-Role")]
+        public async Task<IActionResult> AddUserRoleAsync([FromQuery] Guid userId, [FromQuery] int roleId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserID == userId);
+            var role = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == roleId);
+            if (user == null || role == null)
+                return BadRequest("User or Role not found");
+
+            user.UserRoles.Add(new UserRole
+                               {
+                                   Role = role,
+                                   DateAssigned = DateTime.UtcNow
+                               });
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        [HttpPost("Remove-Role")]
+        public async Task<IActionResult> RemoveUserRoleAsync([FromQuery] Guid userId, [FromQuery] int roleId)
+        {
+            var user = await _context.Users
+                                     .Include(x => x.UserRoles)
+                                     .ThenInclude(x => x.Role)
+                                     .FirstOrDefaultAsync(x => x.UserID == userId);
+            var role = await _context.Roles.FirstOrDefaultAsync(x => x.RoleID == roleId);
+            if (user == null || role == null)
+                return BadRequest("User or Role not found");
+
+            var userRole = user.UserRoles.FirstOrDefault(x => x.RoleID == roleId);
+            if (userRole == null)
+                return BadRequest("User does not have this role");
+
+            user.UserRoles.Remove(userRole);
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
         /// <summary>
         ///     Deletes a user from the database.
         /// </summary>

@@ -45,13 +45,13 @@ namespace EpochApp.Shared.Config
         public string Placeholder { get; set; }
 
         public string HelpText { get; set; }
+
+        public virtual ArticleTemplate Template { get; set; }
     }
 
     public class ArticleTemplateSection
     {
         public int TemplateId { get; set; }
-
-        public int SectionId { get; set; }
 
         public string SectionName { get; set; }
 

@@ -11,6 +11,12 @@ namespace EpochApp.Client.Shared.Forms
     /// </summary>
     public class BuilderFormBase<TContent, UResult> : ComponentBase where TContent : class where UResult : class
     {
+
+        /// <summary>
+        ///     Errors returned from the server's ModelState.
+        /// </summary>
+        protected Dictionary<string, List<string>> errorDict = new Dictionary<string, List<string>>();
+
         /// <summary>
         ///     Whether the form is currently loading or generating.
         /// </summary>
@@ -25,11 +31,6 @@ namespace EpochApp.Client.Shared.Forms
         ///     Used to toggle results panels.
         /// </summary>
         protected bool showResults = false;
-
-        /// <summary>
-        ///     Errors returned from the server's ModelState.
-        /// </summary>
-        protected Dictionary<string, List<string>> errorDict = new Dictionary<string, List<string>>();
 
         /// <summary>
         ///     Whether the form is in edit mode or create mode.
@@ -54,7 +55,7 @@ namespace EpochApp.Client.Shared.Forms
         /// <summary>
         ///     The active world relating to the builder form.
         /// </summary>
-        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
 
         /// <summary>
         ///     Injected <see cref="HttpClient" />.
@@ -160,7 +161,7 @@ namespace EpochApp.Client.Shared.Forms
             BuilderContent = new BuilderContent
                              {
                                  AuthorID = Auth.CurrentUser.UserID,
-                                 WorldID = ActiveWorld.WorldID,
+                                 WorldID = ActiveWorld.WorldId,
                                  ContentName = contentName,
                                  ContentType = type,
                                  DateCreated = DateTime.Now
