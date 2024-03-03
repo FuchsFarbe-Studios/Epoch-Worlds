@@ -15,9 +15,11 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
     public partial class ArticleForm
     {
         private int _activePanelIndex;
+        private List<SectionDTO> _articleSections = new List<SectionDTO>();
         private List<ArticleCategory> _categories = new List<ArticleCategory>();
         private MudDynamicTabs _sectionTabs;
         private ArticleTemplateDTO _template = null!;
+        private List<SectionDTO> _templateSections = new List<SectionDTO>();
         private EpochValidator _validator;
 
         /// <summary>
@@ -49,8 +51,11 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
                         {
                             WorldId = ActiveWorld?.WorldId,
                             AuthorId = Auth?.CurrentUser?.UserID,
+                            DisplayAuthor = true,
+                            ShowInTableOfContents = true,
+                            ShowTableOfContents = true,
                             Sections = new List<SectionEditDTO>(),
-                            CategoryId = _categories.FirstOrDefault().CategoryID
+                            CategoryId = _categories.FirstOrDefault().CategoryID,
                         };
             }
             else

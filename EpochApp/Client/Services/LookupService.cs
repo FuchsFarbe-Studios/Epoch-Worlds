@@ -78,7 +78,7 @@ namespace EpochApp.Client.Services
         /// <inheritdoc />
         public async Task<List<ArticleCategory>> GetArticleCategoriesAsync()
         {
-            var cats = await _client.GetFromJsonAsync<List<ArticleCategory>>("api/v1/Lookups/lkArticleCategories");
+            var cats = await _client.GetFromJsonAsync<List<ArticleCategory>>("api/v1/Articles/Categories");
             return await Task.FromResult(cats);
         }
 

@@ -11,7 +11,7 @@ namespace EpochApp.Shared
     {
         public int TemplateId { get; set; }
 
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         public string TemplateName { get; set; }
 
@@ -21,9 +21,9 @@ namespace EpochApp.Shared
 
         public string HelpText { get; set; }
 
-        public ICollection<SectionTemplateDTO> Sections { get; set; }
+        public ICollection<SectionTemplateDTO> Sections { get; set; } = new List<SectionTemplateDTO>();
 
-        public ICollection<ArticleMetaDTO> Meta { get; set; }
+        public ICollection<ArticleMetaDTO> Meta { get; set; } = new List<ArticleMetaDTO>();
     }
 
 }

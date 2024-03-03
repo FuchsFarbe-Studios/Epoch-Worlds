@@ -1,28 +1,199 @@
-@using Typo=MudBlazor.Typo
 @page "/Configure/Templates/Article"
+@using Typo=MudBlazor.Typo
+@using Variant=MudBlazor.Variant
+@using ButtonType=MudBlazor.ButtonType
+@using FieldType=EpochApp.Shared.Config.FieldType
 
 <MudText Typo="Typo.h3" Align="Align.Center">Configure Article Templates</MudText>
 
-<MudDataGrid Virtualize="true" Outlined="true" Height="1000px" T="ArticleTemplateDTO" Items="@_articleTemplates" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
-	<Columns>
-		<PropertyColumn Property="x => x.TemplateId" Resizable="true" Title="Id" />
-		<PropertyColumn Property="x => x.CategoryId" Resizable="true" />
-		<PropertyColumn Property="x => x.TemplateName" Resizable="true" />
-		<PropertyColumn Property="x => x.Description" Resizable="true" />
-		<PropertyColumn Property="x => x.HelpText" Resizable="true" />
-		<PropertyColumn Property="x => x.Placeholder" Resizable="true" />
-	</Columns>
-</MudDataGrid>
+<MudTabs Border="true" Color="Color.Primary" Outlined="true" Rounded="true" TabPanelClass="pa-4" KeepPanelsAlive="false">
 
-@code {
-	private List<ArticleTemplateDTO> _articleTemplates = new List<ArticleTemplateDTO>();
-	[Inject] private IArticleService ArticleService { get; set; }
+	<MudTabPanel Text="Edit Templates">
+		<MudStack>
+			<MudDataGrid Virtualize="true" Outlined="true" Height="400px" T="ArticleTemplateDTO" Items="@_articleTemplates" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+				<Columns>
+					<PropertyColumn Property="x => x.TemplateId" Resizable="true" Title="Id" />
+					<PropertyColumn Property="x => x.CategoryId" Resizable="true" />
+					<PropertyColumn Property="x => x.TemplateName" Resizable="true" Title="Name" />
+					<PropertyColumn Property="x => x.Description" Resizable="true" />
+					<TemplateColumn CellClass="d-flex justify-end" Title="Edit">
+						<CellTemplate>
+							<MudButton OnClick="@(async () => await OnEditClicked(context.Item))" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Edit</MudButton>
+						</CellTemplate>
+					</TemplateColumn>
+				</Columns>
+			</MudDataGrid>
 
-	/// <inheritdoc />
-	protected override async Task OnInitializedAsync()
-	{
-		var templates = await ArticleService.GetArticleTemplatesAsync();
-		_articleTemplates = templates.ToList();
-		await base.OnInitializedAsync();
-	}
-}
+			<EditForm Model="@_templateModel" OnValidSubmit="@UpdateTemplateAsync">
+
+				<MudStack>
+					<MudStack Row="true">
+						<MudTextField ReadOnly="true" @bind-Value="@_templateModel.TemplateId" For="@(() => _templateModel.TemplateId)" Label="Id" />
+						<MudSelect T="int" @bind-Value="@_templateModel.CategoryId" For="@(() => _templateModel.CategoryId)" Label="Category">
+							@if (_categories.Any())
+							{
+								@foreach (var cat in _categories)
+								{
+									<MudSelectItem Value="@cat.CategoryID">@cat.Description</MudSelectItem>
+								}
+							}
+						</MudSelect>
+					</MudStack>
+					<MudTextField @bind-Value="@_templateModel.TemplateName" For="@(() => _templateModel.TemplateName)" Label="Template Name" MaxLength="100" Required="true" />
+					<MudTextField @bind-Value="@_templateModel.Description" For="@(() => _templateModel.Description)" Label="Description" MaxLength="500" />
+					<MudStack Row="true">
+						<MudTextField @bind-Value="@_templateModel.HelpText" For="@(() => _templateModel.HelpText)" Label="Help Text" MaxLength="255" />
+						<MudTextField @bind-Value="@_templateModel.Placeholder" For="@(() => _templateModel.Placeholder)" Label="Placeholder" MaxLength="255" />
+					</MudStack>
+					<MudDivider DividerType="DividerType.Middle" Light="false" />
+					<MudGrid>
+						<MudItem xs="6">
+							<MudText Align="Align.Center" Color="Color.Secondary" GutterBottom="true">Sections</MudText>
+							<MudExpansionPanels Dense="true" Elevation="0" MultiExpansion="true">
+								@foreach (var sec in _templateModel.Sections)
+								{
+									<MudExpansionPanel @key=@sec Class="mud-border-secondary">
+										<TitleContent>
+											@sec.SectionName
+										</TitleContent>
+										<ChildContent>
+											<MudTextField @bind-Value="@sec.SectionName" For="@(() => sec.SectionName)" Label="Section Name" MaxLength="100" Required="true" />
+											<MudTextField @bind-Value="@sec.Description" For="@(() => sec.Description)" Label="Description" MaxLength="500" />
+											<MudStack Row="true">
+												<MudTextField @bind-Value="@sec.HelpText" For="@(() => sec.HelpText)" Label="Help Text" MaxLength="255" />
+												<MudTextField @bind-Value="@sec.Placeholder" For="@(() => sec.Placeholder)" Label="Placeholder" MaxLength="255" />
+											</MudStack>
+											<MudButton FullWidth="true" OnClick="@(async () => await DeleteSectionAsync(sec))" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Error">Delete Section</MudButton>
+										</ChildContent>
+									</MudExpansionPanel>
+								}
+							</MudExpansionPanels>
+							<MudButton OnClick="@AddSection" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Add Section</MudButton>
+						</MudItem>
+
+						<MudItem xs="6">
+							<MudText Align="Align.Center" Color="Color.Tertiary" GutterBottom="true">Meta</MudText>
+							<MudExpansionPanels Dense="true" Elevation="0" MultiExpansion="true">
+								@foreach (var meta in _templateModel.Meta)
+								{
+									<MudExpansionPanel @key=@meta Class="mud-border-tertiary">
+										<TitleContent>@meta.MetaName</TitleContent>
+										<ChildContent>
+											<MudStack Row="true">
+												<MudTextField @bind-Value="@meta.MetaName" For="@(() => meta.MetaName)" Label="Section Name" MaxLength="100" Required="true" />
+												<MudSelect T="FieldType" @bind-Value="@meta.Type" For="@(() => meta.Type)" Label="Type" Required="true">
+													@foreach (FieldType type in Enum.GetValues(typeof(FieldType)))
+													{
+														<MudSelectItem Value="@type">@type.ToDescriptionString()</MudSelectItem>
+													}
+												</MudSelect>
+											</MudStack>
+											<MudTextField @bind-Value="@meta.Description" For="@(() => meta.Description)" Label="Section Content" MaxLength="500" />
+											<MudStack Row="true">
+												<MudTextField @bind-Value="@meta.HelpText" For="@(() => meta.HelpText)" Label="Help Text" MaxLength="255" />
+												<MudTextField @bind-Value="@meta.Placeholder" For="@(() => meta.Placeholder)" Label="Placeholder" MaxLength="255" />
+											</MudStack>
+											<MudButton FullWidth="true" OnClick="@(async () => await DeleteMetaAsync(meta))" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Error">Delete</MudButton>
+										</ChildContent>
+									</MudExpansionPanel>
+								}
+								<MudButton OnClick="@AddMeta" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Add Meta</MudButton>
+							</MudExpansionPanels>
+						</MudItem>
+					</MudGrid>
+					<MudButton ButtonType="ButtonType.Submit" Disabled="@(!context.Validate())" FullWidth="true" Variant="@Variant.Filled" Color="@Color.Primary" Type="submit">Add Template</MudButton>
+				</MudStack>
+
+			</EditForm>
+
+		</MudStack>
+
+	</MudTabPanel>
+
+	<MudTabPanel Text="Add Template" OnClick="@(async () => await ResetModelAsync())">
+
+		<EditForm Model="@_templateModel" OnValidSubmit="@AddNewTemplateAsync">
+
+			<MudStack>
+				<MudStack Row="true">
+					<MudTextField ReadOnly="true" @bind-Value="@_templateModel.TemplateId" For="@(() => _templateModel.TemplateId)" Label="Id" />
+					<MudSelect T="int" @bind-Value="@_templateModel.CategoryId" For="@(() => _templateModel.CategoryId)" Label="Category">
+						@if (_categories.Any())
+						{
+							@foreach (var cat in _categories)
+							{
+								<MudSelectItem Value="@cat.CategoryID">@cat.Description</MudSelectItem>
+							}
+						}
+					</MudSelect>
+				</MudStack>
+				<MudTextField @bind-Value="@_templateModel.TemplateName" For="@(() => _templateModel.TemplateName)" Label="Template Name" MaxLength="100" Required="true" />
+				<MudTextField @bind-Value="@_templateModel.Description" For="@(() => _templateModel.Description)" Label="Description" MaxLength="500" />
+				<MudStack Row="true">
+					<MudTextField @bind-Value="@_templateModel.HelpText" For="@(() => _templateModel.HelpText)" Label="Help Text" MaxLength="255" />
+					<MudTextField @bind-Value="@_templateModel.Placeholder" For="@(() => _templateModel.Placeholder)" Label="Placeholder" MaxLength="255" />
+				</MudStack>
+				<MudDivider DividerType="DividerType.Middle" Light="false" />
+				<MudGrid>
+					<MudItem xs="6">
+						<MudText Align="Align.Center" Color="Color.Secondary" GutterBottom="true">Sections</MudText>
+						<MudExpansionPanels Dense="true" Elevation="0" MultiExpansion="true">
+							@foreach (var sec in _templateModel.Sections)
+							{
+								<MudExpansionPanel @key=@sec Class="mud-border-secondary" Dense="true">
+									<TitleContent>
+										@sec.SectionName
+									</TitleContent>
+									<ChildContent>
+										<MudTextField @bind-Value="@sec.SectionName" For="@(() => sec.SectionName)" Label="Section Name" MaxLength="100" Required="true" />
+										<MudTextField @bind-Value="@sec.Description" For="@(() => sec.Description)" Label="Description" MaxLength="500" />
+										<MudStack Row="true">
+											<MudTextField @bind-Value="@sec.HelpText" For="@(() => sec.HelpText)" Label="Help Text" MaxLength="255" />
+											<MudTextField @bind-Value="@sec.Placeholder" For="@(() => sec.Placeholder)" Label="Placeholder" MaxLength="255" />
+										</MudStack>
+										<MudButton FullWidth="true" OnClick="@(async () => await DeleteSectionAsync(sec))" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Error">Delete Section</MudButton>
+									</ChildContent>
+								</MudExpansionPanel>
+							}
+						</MudExpansionPanels>
+						<MudButton OnClick="@AddSection" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Add Section</MudButton>
+					</MudItem>
+
+					<MudItem xs="6">
+						<MudText Align="Align.Center" Color="Color.Tertiary" GutterBottom="true">Meta</MudText>
+						<MudExpansionPanels Dense="true" Elevation="0" MultiExpansion="true">
+							@foreach (var meta in _templateModel.Meta)
+							{
+								<MudExpansionPanel @key=@meta Class="mud-border-tertiary">
+									<TitleContent>@meta.MetaName</TitleContent>
+									<ChildContent>
+										<MudStack Row="true">
+											<MudTextField @bind-Value="@meta.MetaName" For="@(() => meta.MetaName)" Label="Section Name" MaxLength="100" Required="true" />
+											<MudSelect T="FieldType" @bind-Value="@meta.Type" For="@(() => meta.Type)" Label="Type" Required="true">
+												@foreach (FieldType type in Enum.GetValues(typeof(FieldType)))
+												{
+													<MudSelectItem Value="@type">@type.ToDescriptionString()</MudSelectItem>
+												}
+											</MudSelect>
+										</MudStack>
+										<MudTextField @bind-Value="@meta.Description" For="@(() => meta.Description)" Label="Section Content" MaxLength="500" />
+										<MudStack Row="true">
+											<MudTextField @bind-Value="@meta.HelpText" For="@(() => meta.HelpText)" Label="Help Text" MaxLength="255" />
+											<MudTextField @bind-Value="@meta.Placeholder" For="@(() => meta.Placeholder)" Label="Placeholder" MaxLength="255" />
+										</MudStack>
+										<MudButton FullWidth="true" OnClick="@(async () => await DeleteMetaAsync(meta))" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Error">Delete</MudButton>
+									</ChildContent>
+								</MudExpansionPanel>
+							}
+							<MudButton OnClick="@AddMeta" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Add Meta</MudButton>
+						</MudExpansionPanels>
+					</MudItem>
+				</MudGrid>
+				<MudButton ButtonType="ButtonType.Submit" Disabled="@(!context.Validate())" FullWidth="true" Variant="@Variant.Filled" Color="@Color.Primary" Type="submit">Add Template</MudButton>
+			</MudStack>
+
+		</EditForm>
+
+	</MudTabPanel>
+
+</MudTabs>
