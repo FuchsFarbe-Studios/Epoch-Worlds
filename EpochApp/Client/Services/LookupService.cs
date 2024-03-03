@@ -24,11 +24,12 @@ namespace EpochApp.Client.Services
         /// </summary>
         /// <param name="host"> The web assembly host environment. </param>
         /// <param name="logger"> The logger. </param>
-        public LookupService(IWebAssemblyHostEnvironment host, ILogger<LookupService> logger)
+        /// <param name="client"> The http client. </param>
+        public LookupService(IWebAssemblyHostEnvironment host, ILogger<LookupService> logger, HttpClient client)
         {
             _host = host;
             _logger = logger;
-            _client = new HttpClient { BaseAddress = new Uri($"{_host.BaseAddress}") };
+            _client = client;
             _logger.LogInformation($"LookupService created, base address: {_client.BaseAddress}");
         }
 

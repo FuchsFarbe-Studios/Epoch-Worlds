@@ -8,6 +8,8 @@ using EpochApp.Shared;
 using EpochApp.Shared.Social;
 using EpochApp.Shared.Worlds;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Server.Maps
 {
     public class WorldProfile : Profile

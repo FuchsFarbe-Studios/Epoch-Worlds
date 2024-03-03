@@ -49,7 +49,8 @@ namespace EpochApp.Client.Services
 
             if (user is not null)
             {
-                var authenticatedUser = await _userService.SendAuthenticateRequestAsync(user.UserName, user.Hash);
+                var tokenUser = await _userService.SendRefreshTokenRequestAsync();
+                var authenticatedUser = tokenUser ?? await _userService.SendAuthenticateRequestAsync(user.UserName, user.Hash);
                 if (authenticatedUser is not null)
                 {
                     principal = authenticatedUser.ToClaimsPrincipal();
@@ -96,10 +97,10 @@ namespace EpochApp.Client.Services
         /// <summary>
         ///     Logs out the user and updates the authentication state.
         /// </summary>
-        public void Logout()
+        public async void Logout()
         {
             _logger.LogInformation($"User: {CurrentUser.UserName} logged out.");
-            _userService.ClearBrowserUserData();
+            await _userService.ClearBrowserUserData();
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
         }
     }

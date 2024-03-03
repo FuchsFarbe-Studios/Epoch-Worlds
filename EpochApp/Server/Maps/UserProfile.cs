@@ -5,11 +5,13 @@
 // Modified: 3-3-2024
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
-using Profile=AutoMapper.Profile;
+using MapProfile=AutoMapper.Profile;
+
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 
 namespace EpochApp.Server.Maps
 {
-    public class UserProfile : Profile
+    public class UserProfile : MapProfile
     {
         public UserProfile()
         {

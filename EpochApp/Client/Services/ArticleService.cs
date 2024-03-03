@@ -25,11 +25,13 @@ namespace EpochApp.Client.Services
         /// </summary>
         /// <param name="logger"> The logger. </param>
         /// <param name="host"> The web assembly host environment. </param>
-        public ArticleService(ILogger<ArticleService> logger, IWebAssemblyHostEnvironment host)
+        /// <param name="client"> The http client. </param>
+        public ArticleService(ILogger<ArticleService> logger, IWebAssemblyHostEnvironment host, HttpClient client)
         {
             _logger = logger;
             _host = host;
-            _client = new HttpClient { BaseAddress = new Uri($"{_host.BaseAddress}") };
+            _client = client;
+            // _client = new HttpClient { BaseAddress = new Uri($"{_host.BaseAddress}") };
             _logger.LogInformation($"ArticleService created, base address: {_client.BaseAddress}");
         }
 

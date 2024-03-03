@@ -27,11 +27,13 @@ namespace EpochApp.Client.Services
         /// <param name="host">
         ///     The web assembly host environment.
         /// </param>
-        public WorldService(ILogger<WorldService> logger, IWebAssemblyHostEnvironment host)
+        /// <param name="client"> The http client. </param>
+        public WorldService(ILogger<WorldService> logger, IWebAssemblyHostEnvironment host, HttpClient client)
         {
             _host = host;
+            _client = client;
             _logger = logger;
-            _client = new HttpClient { BaseAddress = new Uri($"{_host.BaseAddress}") };
+            // _client = new HttpClient { BaseAddress = new Uri($"{_host.BaseAddress}") };
             _logger.LogInformation($"WorldService created, base address: {_client.BaseAddress}");
         }
 

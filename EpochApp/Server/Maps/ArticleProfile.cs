@@ -8,6 +8,8 @@ using EpochApp.Shared.Articles;
 using EpochApp.Shared.Social;
 using Profile=AutoMapper.Profile;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Server.Maps
 {
     public class ArticleProfile : Profile

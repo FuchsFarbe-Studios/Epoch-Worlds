@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.Articles
 {
@@ -33,10 +32,14 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         /// <summary> The active world. </summary>
         [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
 
+        [Inject] private ILookupService LookupService { get; set; }
+
+        [Inject] private IArticleService ArticleService { get; set; }
+
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            var cats = await Client.GetFromJsonAsync<List<ArticleCategory>>("api/v1/Articles/Categories");
+            var cats = await LookupService.GetArticleCategoriesAsync();
             if (cats != null || cats.Any())
                 _categories = cats;
             if (ArticleEdit == null || !IsEditMode)
@@ -64,20 +67,19 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
 
             if (IsEditMode)
             {
-                var response = await Client.PutAsJsonAsync($"api/v1/Articles?userId={Auth?.CurrentUser?.UserID}&articleId={Model.ArticleId}", Model);
-                if (!response.IsSuccessStatusCode)
+                var updatedArticle = await ArticleService.UpdateArticleAsync(article, Model.ArticleId ?? Guid.Empty, Auth?.CurrentUser?.UserID ?? Guid.Empty);
+                if (updatedArticle == null)
                     Logger.LogError("Failed to update article!");
-                var content = await response.Content.ReadFromJsonAsync<ArticleDTO>();
-                Nav.NavigateTo($"{NavRef.ArticleNav.Edit}/{content.ArticleId}");
+                else
+                    Nav.NavigateTo($"{NavRef.ArticleNav.Edit}/{updatedArticle?.ArticleId}");
             }
             else
             {
-                var response = await Client.PostAsJsonAsync<ArticleEditDTO>("api/v1/Articles", Model);
-                if (response.IsSuccessStatusCode)
+                var newArticle = await ArticleService.CreateArticleAsync(article);
+                if (newArticle != null)
                 {
-                    var content = await response.Content.ReadFromJsonAsync<ArticleDTO>();
                     Logger.LogInformation("Article created successfully!");
-                    Nav.NavigateTo($"{NavRef.ArticleNav.Edit}/{content.ArticleId}");
+                    Nav.NavigateTo($"{NavRef.ArticleNav.Edit}/{newArticle.ArticleId}");
                 }
                 else
                 {

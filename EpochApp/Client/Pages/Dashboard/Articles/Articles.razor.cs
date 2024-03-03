@@ -1,6 +1,5 @@
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.Articles
 {
@@ -11,7 +10,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
     {
         private List<ArticleDTO> _worldArticles { get; set; } = new List<ArticleDTO>();
 
-        [Inject] private HttpClient Client { get; set; }
+        [Inject] private IArticleService ArticleService { get; set; }
 
         /// <summary> The active world. </summary>
         [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
@@ -21,7 +20,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         {
             if (ActiveWorld != null)
             {
-                var articles = await Client.GetFromJsonAsync<List<ArticleDTO>>($"api/v1/Articles/WorldArticles?worldId={ActiveWorld.WorldId}");
+                var articles = await ArticleService.GetWorldArticlesAsync(ActiveWorld.WorldId);
                 if (articles.Any())
                     _worldArticles = articles;
             }

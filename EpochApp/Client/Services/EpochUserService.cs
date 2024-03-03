@@ -44,10 +44,14 @@ namespace EpochApp.Client.Services
             if (response.IsSuccessStatusCode)
             {
                 var token = await response.Content.ReadAsStringAsync();
-                var claimPrincipal = CreateClaimsPrincipalFromToken(token);
-                var user = UserData.FromClaimsPrincipal(claimPrincipal);
-                PersistUserToBrowser(token);
-                return user;
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var claimPrincipal = CreateClaimsPrincipalFromToken(token);
+                    var user = UserData.FromClaimsPrincipal(claimPrincipal);
+                    PersistUserToBrowser(token);
+                    return user;
+                }
+                return null;
             }
             return null;
         }
@@ -127,9 +131,11 @@ namespace EpochApp.Client.Services
         /// <summary>
         ///     Clears the client side user data, effectively logging out the user.
         /// </summary>
-        public void ClearBrowserUserData()
+        public async Task ClearBrowserUserData()
         {
             _authData.Token = "";
+            await _client.PostAsJsonAsync("api/v1/EpochUsers/Logout", "");
+            await Task.CompletedTask;
         }
     }
 }

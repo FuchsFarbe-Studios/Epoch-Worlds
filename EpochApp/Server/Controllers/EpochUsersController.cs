@@ -310,7 +310,7 @@ namespace EpochApp.Server.Controllers
         {
             var token = Request.Cookies["refreshToken"];
             if (string.IsNullOrEmpty(token))
-                return BadRequest("No refresh token found");
+                return NoContent();
 
             var user = await _context.Users
                                      .Include(user => user.UserRoles)
@@ -334,6 +334,20 @@ namespace EpochApp.Server.Controllers
             var refreshToken = GenerateRefreshToken();
             await SetRefreshTokenAsync(user, refreshToken);
             return Ok(jwt);
+        }
+
+        /// <summary>
+        ///    Logs out the user.
+        /// </summary>
+        /// <param name="logout"> Empty string. </param>
+        /// <returns> Ok if successful. </returns>
+        [HttpPost("Logout")]
+        public async Task<ActionResult<string>> LogoutUserAsync([FromBody] string logout)
+        {
+            var token = Request.Cookies["refreshToken"];
+            token = null;
+            Response.Cookies.Delete("refreshToken");
+            return Ok();
         }
 
         /// <summary>

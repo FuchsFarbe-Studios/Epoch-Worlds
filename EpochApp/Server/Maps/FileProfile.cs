@@ -7,6 +7,8 @@ using AutoMapper;
 using EpochApp.Shared;
 using EpochApp.Shared.Client;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Server.Maps
 {
     public class FileProfile : Profile
