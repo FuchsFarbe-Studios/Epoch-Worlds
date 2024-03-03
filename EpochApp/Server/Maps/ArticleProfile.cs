@@ -5,7 +5,7 @@
 // Modified: 1-3-2024
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
-using EpochApp.Shared.Social;
+using EpochApp.Shared.Config;
 using Profile=AutoMapper.Profile;
 
 #pragma warning disable CS1591// Missing XML comment for publicly visible type or member
@@ -26,6 +26,12 @@ namespace EpochApp.Server.Maps
             CreateMap<SectionEditDTO, ArticleSection>();
             CreateMap<ArticleTag, ArticleTagDTO>();
             CreateMap<ArticleTagDTO, ArticleTag>();
+            CreateMap<ArticleTemplateMeta, ArticleMetaDTO>();
+            CreateMap<ArticleMetaDTO, ArticleTemplateMeta>();
+            CreateMap<ArticleTemplateSection, SectionTemplateDTO>();
+            CreateMap<SectionTemplateDTO, ArticleTemplateSection>();
+            CreateMap<ArticleTemplate, ArticleTemplateDTO>();
+            CreateMap<ArticleTemplateDTO, ArticleTemplate>();
         }
     }
 

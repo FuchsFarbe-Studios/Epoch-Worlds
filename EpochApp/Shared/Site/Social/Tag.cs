@@ -3,6 +3,10 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 23-2-2024
+using EpochApp.Shared.Articles;
+using EpochApp.Shared.Users;
+using EpochApp.Shared.Worlds;
+
 #pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Shared.Social
 {

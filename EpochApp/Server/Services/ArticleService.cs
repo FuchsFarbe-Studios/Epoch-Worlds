@@ -7,6 +7,7 @@ using AutoMapper;
 using EpochApp.Server.Data;
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
+using EpochApp.Shared.Config;
 using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Services
@@ -29,6 +30,7 @@ namespace EpochApp.Server.Services
             _mapper = mapper;
         }
 
+        /// <inheritdoc />
         public async Task<List<ArticleDTO>> GetArticlesAsync()
         {
             var articles = await _context.Articles
@@ -101,6 +103,7 @@ namespace EpochApp.Server.Services
             return await Task.FromResult(articleToAdd);
         }
 
+        /// <inheritdoc />
         public async Task<ArticleEditDTO> GetEditArticleAsync(Guid articleId)
         {
             var article = await _context.Articles
@@ -110,6 +113,61 @@ namespace EpochApp.Server.Services
                                         .Include(a => a.Author)
                                         .FirstOrDefaultAsync(a => a.ArticleId == articleId);
             return _mapper.Map(article, new ArticleEditDTO());
+        }
+
+        public async Task<IEnumerable<ArticleTemplateDTO>> GetArticleTemplatesAsync()
+        {
+            var templates = await _context.ArticleTemplates
+                                          .Include(x => x.Meta)
+                                          .Include(x => x.Sections)
+                                          .Select(x => _mapper.Map<ArticleTemplate, ArticleTemplateDTO>(x))
+                                          .ToListAsync();
+            return templates;
+        }
+
+        /// <inheritdoc />
+        public async Task<ArticleTemplateDTO> GetArticleTemplateAsync(int categoryId)
+        {
+            var articleTemplate = await _context.ArticleTemplates
+                                                .Include(x => x.Meta)
+                                                .Include(x => x.Sections)
+                                                .FirstOrDefaultAsync(x => x.CategoryId == categoryId);
+            return _mapper.Map<ArticleTemplate, ArticleTemplateDTO>(articleTemplate);
+        }
+
+        /// <inheritdoc />
+        public async Task<ArticleTemplateDTO> CreateArticleTemplateAsync(ArticleTemplateDTO template)
+        {
+            var newTemplate = _mapper.Map<ArticleTemplateDTO, ArticleTemplate>(template);
+            _context.ArticleTemplates.Add(newTemplate);
+            await _context.SaveChangesAsync();
+            var templateDto = _mapper.Map(newTemplate, new ArticleTemplateDTO());
+            return templateDto;
+        }
+
+        /// <inheritdoc />
+        public async Task<ArticleTemplateDTO> UpdateArticleTemplateAsync(ArticleTemplateDTO template)
+        {
+            var templateToUpdate = await _context.ArticleTemplates
+                                                 .Include(x => x.Meta)
+                                                 .Include(x => x.Sections)
+                                                 .FirstOrDefaultAsync(x => x.TemplateId == template.TemplateId);
+            _mapper.Map(template, templateToUpdate);
+            _context.Entry(templateToUpdate).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return template;
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> DeleteArticleTemplateAsync(int templateId)
+        {
+            var template = await _context.ArticleTemplates.FirstOrDefaultAsync(x => x.TemplateId == templateId);
+            if (template == null)
+                return false;
+
+            _context.ArticleTemplates.Remove(template);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         /// <inheritdoc />
@@ -146,41 +204,6 @@ namespace EpochApp.Server.Services
             }
 
             return await Task.FromResult(_mapper.Map<Article, ArticleEditDTO>(articleToUpdate));
-        }
-        public static ArticleDTO GetArticleDtoFromArticle(Article article)
-        {
-            return new ArticleDTO
-                   {
-                       ArticleId = article.ArticleId,
-                       AuthorId = article?.Author?.UserID,
-                       Author = article?.Author?.UserName,
-                       WorldId = article?.WorldId,
-                       CategoryId = article?.CategoryId,
-                       Title = article?.Title,
-                       Content = article?.Content,
-                       IsPublished = article.IsPublished,
-                       IsNSFW = article.IsNSFW,
-                       DisplayAuthor = article.DisplayAuthor,
-                       ShowInTableOfContents = article.ShowInTableOfContents,
-                       ShowTableOfContents = article.ShowTableOfContents,
-                       CreatedOn = article?.CreatedOn,
-                       ModifiedOn = article?.ModifiedOn,
-                       Sections = article?.Sections?.Select(s => new SectionDTO
-                                                                 {
-                                                                     SectionID = s.SectionID,
-                                                                     Title = s?.Title,
-                                                                     Content = s?.Content,
-                                                                     CreatedOn = s?.CreatedOn
-                                                                 })
-                                         .ToList(),
-                       ArticleTags = article.ArticleTags.Select(t => new ArticleTagDTO
-                                                                     {
-                                                                         ArticleId = t.ArticleId,
-                                                                         TagId = t.TagId,
-                                                                         Text = t?.Tag?.Text
-                                                                     })
-                                            .ToList()
-                   };
         }
     }
 }

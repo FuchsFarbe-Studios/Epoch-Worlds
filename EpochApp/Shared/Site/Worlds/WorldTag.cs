@@ -3,9 +3,9 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 29-2-2024
-using EpochApp.Shared.Worlds;
+using EpochApp.Shared.Social;
 
-namespace EpochApp.Shared.Social
+namespace EpochApp.Shared.Worlds
 {
     public class WorldTag
     {

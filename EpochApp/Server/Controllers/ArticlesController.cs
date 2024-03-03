@@ -5,6 +5,7 @@
 // Modified: 22-2-2024
 using EpochApp.Shared;
 using EpochApp.Shared.Config;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EpochApp.Server.Controllers
@@ -19,6 +20,11 @@ namespace EpochApp.Server.Controllers
         private readonly IArticleService _articleService;
         private readonly ILookupService _lookupService;
 
+        /// <summary>
+        ///   Constructor for the <see cref="ArticlesController" />.
+        /// </summary>
+        /// <param name="articleService"> The <see cref="IArticleService" />. </param>
+        /// <param name="lookupService"> The <see cref="ILookupService" />. </param>
         public ArticlesController(IArticleService articleService, ILookupService lookupService)
         {
             _articleService = articleService;
@@ -33,6 +39,7 @@ namespace EpochApp.Server.Controllers
         ///     <see cref="IEnumerable{T}" /> where T is <see cref="ArticleDTO" />.
         /// </returns>
         [HttpGet]
+        [Authorize("ADMIN,INTERNAL")]
         public async Task<ActionResult<IEnumerable<ArticleDTO>>> IndexArticlesAsync()
         {
             var articles = await _articleService.GetArticlesAsync();
@@ -102,6 +109,7 @@ namespace EpochApp.Server.Controllers
         /// <param name="articleId"> The unique identifier for the article. </param>
         /// <returns> A <see cref="ArticleEditDTO"/>. </returns>
         [HttpGet("Article/Edited/{articleId:guid}")]
+        [Authorize]
         public async Task<ActionResult<ArticleEditDTO>> GetEditArticleAsync(Guid articleId)
         {
             var article = await _articleService.GetEditArticleAsync(articleId);
@@ -122,6 +130,7 @@ namespace EpochApp.Server.Controllers
         ///     <see cref="IEnumerable{T}" /> where T is <see cref="ArticleDTO" />.
         /// </returns>
         [HttpGet("UserArticles")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ArticleDTO>>> GetUserArticlesAsync([FromQuery] Guid userId)
         {
             var articles = await _articleService.GetUserArticlesAsync(userId);
@@ -139,6 +148,7 @@ namespace EpochApp.Server.Controllers
         ///     <see cref="IEnumerable{T}" /> where T is <see cref="ArticleDTO" />.
         /// </returns>
         [HttpGet("WorldArticles")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ArticleDTO>>> GetWorldArticlesAsync([FromQuery] Guid worldId)
         {
             var articles = await _articleService.GetWorldArticlesAsync(worldId);
@@ -153,6 +163,7 @@ namespace EpochApp.Server.Controllers
         ///     <see cref="IActionResult" />
         /// </returns>
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateArticleAsync(ArticleEditDTO article)
         {
             var newArt = await _articleService.CreateArticleAsync(article);
@@ -173,6 +184,7 @@ namespace EpochApp.Server.Controllers
         ///     <see cref="IActionResult" />
         /// </returns>
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateArticleAsync([FromQuery] Guid userId, [FromQuery] Guid articleId, ArticleEditDTO article)
         {
             var updatedArticle = await _articleService.UpdateArticleAsync(article, articleId, userId);
@@ -181,5 +193,85 @@ namespace EpochApp.Server.Controllers
 
             return Ok(updatedArticle);
         }
+
+        /// <summary>
+        ///    Get all article templates.
+        /// </summary>
+        /// <returns> A <see cref="IEnumerable{T}" /> of <see cref="ArticleTemplateDTO"/>. </returns>
+        [HttpGet("Templates")]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        public async Task<ActionResult<IEnumerable<ArticleTemplateDTO>>> GetArticleTemplatesAsync()
+        {
+            var template = await _articleService.GetArticleTemplatesAsync();
+            return Ok(template);
+        }
+
+        /// <summary>
+        ///    Get the article template for a category.
+        /// </summary>
+        /// <param name="categoryId"> The category's unique identifier. </param>
+        /// <returns> A <see cref="ArticleTemplate"/>. </returns>
+        [HttpGet("Template/{categoryId:int}")]
+        public async Task<ActionResult<ArticleTemplateDTO>> GetArticleTemplateAsync(int categoryId)
+        {
+            var template = await _articleService.GetArticleTemplateAsync(categoryId);
+            return Ok(template);
+        }
+
+        /// <summary>
+        ///   Create a new article template.
+        /// </summary>
+        /// <param name="template"> The <see cref="ArticleTemplateDTO"/>. </param>
+        /// <returns> A <see cref="ArticleTemplate"/>. </returns>
+        [HttpPost("Template")]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        public async Task<IActionResult> PostArticleTemplateAsync([FromBody] ArticleTemplateDTO template)
+        {
+            var newTemplate = await _articleService.CreateArticleTemplateAsync(template);
+            return CreatedAtAction("GetArticleTemplate", new { categoryId = newTemplate.CategoryId }, newTemplate);
+        }
+
+        /// <summary>
+        ///  Update an article template.
+        /// </summary>
+        /// <param name="template"> The <see cref="ArticleTemplateDTO"/>. </param>
+        /// <returns> A <see cref="ArticleTemplate"/>. </returns>
+        [HttpPut("Template")]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        public async Task<IActionResult> PutArticleTemplateAsync([FromBody] ArticleTemplateDTO template)
+        {
+            var updatedTemplate = await _articleService.UpdateArticleTemplateAsync(template);
+            if (updatedTemplate == null)
+                return NotFound();
+
+            return Ok(updatedTemplate);
+        }
+
+        /// <summary>
+        ///  Delete an article template.
+        /// </summary>
+        /// <param name="templateId"> The template's unique identifier. </param>
+        /// <returns> A <see cref="IActionResult"/>. </returns>
+        [HttpDelete("Template")]
+        [Authorize(Roles = "ADMIN,INTERNAL")]
+        public async Task<IActionResult> DeleteArticleTemplateAsync([FromQuery] int templateId)
+        {
+            var deleted = await _articleService.DeleteArticleTemplateAsync(templateId);
+            if (!deleted)
+                return NotFound();
+
+            return Ok();
+        }
+
+        ///// <summary> Deletes an article. </summary>
+        // [HttpDelete]
+        // public async Task<IActionResult> DeleteArticleAsync([FromQuery] Guid userId, [FromQuery] Guid articleId)
+        // {
+        //     var deleted = await _articleService.DeleteArticleAsync(articleId, userId);
+        //     if (!deleted)
+        //         return NotFound();
+        //
+        //     return Ok();
+        // }
     }
 }

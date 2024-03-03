@@ -103,5 +103,59 @@ namespace EpochApp.Client.Services
             var article = await _client.GetFromJsonAsync<ArticleEditDTO>($"api/v1/Articles/Article/Edited/{articleId}");
             return await Task.FromResult(article);
         }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<ArticleTemplateDTO>> GetArticleTemplatesAsync()
+        {
+            var templates = await _client.GetFromJsonAsync<IEnumerable<ArticleTemplateDTO>>("api/v1/Articles/Templates");
+            return await Task.FromResult(templates);
+        }
+
+        /// <inheritdoc />
+        public async Task<ArticleTemplateDTO> GetArticleTemplateAsync(int categoryId)
+        {
+            var template = await _client.GetFromJsonAsync<ArticleTemplateDTO>($"api/v1/Articles/Template/{categoryId}");
+            return await Task.FromResult(template);
+        }
+
+        /// <inheritdoc />
+        public async Task<ArticleTemplateDTO> CreateArticleTemplateAsync(ArticleTemplateDTO template)
+        {
+            var response = await _client.PostAsJsonAsync("api/v1/Articles/Template", template);
+            if (response.IsSuccessStatusCode)
+            {
+                var newTemplate = await response.Content.ReadFromJsonAsync<ArticleTemplateDTO>();
+                _logger.LogInformation($"Created template {newTemplate.CategoryId} - {newTemplate.TemplateName}");
+                return await Task.FromResult(newTemplate);
+            }
+            _logger.LogWarning("Failed to create template!");
+            return null;
+        }
+
+        /// <inheritdoc />
+        public async Task<ArticleTemplateDTO> UpdateArticleTemplateAsync(ArticleTemplateDTO template)
+        {
+            var response = await _client.PutAsJsonAsync("api/v1/Articles/Template", template);
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation($"Updated template {template.CategoryId} - {template.TemplateName}");
+                return await Task.FromResult(template);
+            }
+            _logger.LogWarning("Failed to update template!");
+            return null;
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> DeleteArticleTemplateAsync(int templateId)
+        {
+            var response = await _client.DeleteAsync($"api/v1/Articles/Template/{templateId}");
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation($"Deleted template {templateId}");
+                return await Task.FromResult(true);
+            }
+            _logger.LogWarning("Failed to delete template!");
+            return await Task.FromResult(false);
+        }
     }
 }

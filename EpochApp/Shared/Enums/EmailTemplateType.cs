@@ -3,7 +3,7 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 23-2-2024
-namespace EpochApp.Shared.Client
+namespace EpochApp.Shared
 {
     public enum EmailTemplateType
     {

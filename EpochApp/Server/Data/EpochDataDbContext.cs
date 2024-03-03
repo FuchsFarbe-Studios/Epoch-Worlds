@@ -13,6 +13,8 @@ using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
 using Microsoft.EntityFrameworkCore;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Server.Data
 {
     /// <summary>
@@ -65,6 +67,9 @@ namespace EpochApp.Server.Data
         public DbSet<ArticleSection> ArticleSections { get; set; }
         public DbSet<Manuscript> Manuscripts { get; set; }
         public DbSet<ManuscriptChapter> Chapters { get; set; }
+        public DbSet<ArticleTemplate> ArticleTemplates { get; set; }
+        public DbSet<ArticleTemplateMeta> ArticleTemplateMetas { get; set; }
+        public DbSet<ArticleTemplateSection> ArticleTemplateSections { get; set; }
         // public DbSet<ArticleTemplate> ArticleTemplates { get; set; }
         // public DbSet<ArticleTemplateMeta> ArticleTemplateMetas { get; set; }
         // public DbSet<ArticleTemplateSection> ArticleTemplateSections { get; set; }
@@ -102,6 +107,52 @@ namespace EpochApp.Server.Data
                       .ValueGeneratedOnAdd();
                 entity.Property(a => a.Description)
                       .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<ArticleTemplate>(entity =>
+            {
+                entity.ToTable("ArticleTemplates", "Templates");
+                entity.HasKey(a => a.TemplateId);
+                entity.Property(a => a.TemplateId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(a => a.TemplateName).HasMaxLength(100);
+                entity.Property(a => a.Description).HasMaxLength(500);
+                entity.HasOne(a => a.Category)
+                      .WithMany()
+                      .HasForeignKey(a => a.CategoryId)
+                      .HasConstraintName("FK_ArticleTemplates_ArticleCategories");
+            });
+
+            modelBuilder.Entity<ArticleTemplateMeta>(entity =>
+            {
+                entity.ToTable("ArticleTemplateMetaData", "Templates");
+                entity.HasKey(a => new { a.TemplateId, a.MetaName });
+                entity.Property(a => a.MetaName).HasMaxLength(100);
+                entity.Property(a => a.Description).HasMaxLength(500);
+                entity.Property(a => a.Placeholder).HasMaxLength(255);
+                entity.Property(a => a.HelpText).HasMaxLength(255);
+                entity.Property(e => e.Type).HasConversion<string>();
+                entity.HasOne(a => a.Template)
+                      .WithMany(t => t.Meta)
+                      .HasForeignKey(a => a.TemplateId)
+                      .HasConstraintName("FK_ArticleTemplateMetas_ArticleTemplates")
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ArticleTemplateSection>(entity =>
+            {
+                entity.ToTable("ArticleTemplateSections", "Templates");
+                entity.HasKey(a => new { a.TemplateId, a.SectionName });
+                entity.Property(a => a.SectionName).HasMaxLength(100);
+                entity.Property(a => a.Description).HasMaxLength(500);
+                entity.Property(a => a.Placeholder).HasMaxLength(255);
+                entity.Property(a => a.HelpText).HasMaxLength(255);
+                entity.HasOne(a => a.Template)
+                      .WithMany(t => t.Sections)
+                      .HasForeignKey(a => a.TemplateId)
+                      .HasConstraintName("FK_ArticleTemplateSections_ArticleTemplates")
+                      .OnDelete(DeleteBehavior.Cascade);
+
             });
 
             modelBuilder.Entity<Manuscript>(entity =>

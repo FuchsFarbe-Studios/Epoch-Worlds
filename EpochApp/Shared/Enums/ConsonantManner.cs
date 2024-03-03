@@ -5,7 +5,7 @@
 // Modified: 22-2-2024
 using EpochApp.Shared.Utils;
 
-namespace EpochApp.Shared.Config
+namespace EpochApp.Shared
 {
     public enum ConsonantManner
     {

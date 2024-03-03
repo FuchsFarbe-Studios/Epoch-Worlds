@@ -87,5 +87,39 @@ namespace EpochApp.Shared
         /// <param name="articleId"> The article's unique identifier. </param>
         /// <returns> <see cref="Task{TResult}" /> of <see cref="ArticleEditDTO" />. </returns>
         Task<ArticleEditDTO> GetEditArticleAsync(Guid articleId);
+
+        /// <summary>
+        ///   Get all article categories.
+        /// </summary>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="IEnumerable{T}" /> of <see cref="ArticleTemplateDTO" />. </returns>
+        Task<IEnumerable<ArticleTemplateDTO>> GetArticleTemplatesAsync();
+
+        /// <summary>
+        ///    Get an article template.
+        /// </summary>
+        /// <param name="categoryId"> The category's unique identifier. </param>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="ArticleTemplateDTO" />. </returns>
+        Task<ArticleTemplateDTO> GetArticleTemplateAsync(int categoryId);
+
+        /// <summary>
+        ///    Create an article template.
+        /// </summary>
+        /// <param name="template"> The template to create. </param>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="ArticleTemplateDTO" />. </returns>
+        Task<ArticleTemplateDTO> CreateArticleTemplateAsync(ArticleTemplateDTO template);
+
+        /// <summary>
+        ///   Update an article template.
+        /// </summary>
+        /// <param name="template"> The template to update. </param>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="ArticleTemplateDTO" />. </returns>
+        Task<ArticleTemplateDTO> UpdateArticleTemplateAsync(ArticleTemplateDTO template);
+
+        /// <summary>
+        ///   Delete an article template.
+        /// </summary>
+        /// <param name="templateId"> The template's unique identifier. </param>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="bool" />. </returns>
+        Task<bool> DeleteArticleTemplateAsync(int templateId);
     }
 }

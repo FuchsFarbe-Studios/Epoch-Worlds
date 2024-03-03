@@ -4,7 +4,6 @@
 // matsu
 // Modified: 26-12-2023
 using EpochApp.Shared.Config;
-using EpochApp.Shared.Social;
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
 
@@ -150,33 +149,6 @@ namespace EpochApp.Shared.Articles
         ///     Meta navigation property.
         /// </summary>
         public virtual ICollection<ArticleMeta> Meta { get; set; }
-    }
-
-    /// <summary>
-    ///     Represents meta-data of an article.
-    /// </summary>
-    public class ArticleMeta
-    {
-        /// <summary> Article ID. </summary>
-        public Guid ArticleId { get; set; }
-
-        /// <summary> Meta ID. </summary>
-        public int MetaId { get; set; }
-
-        /// <summary> Meta field. </summary>
-        public string MetaField { get; set; }
-
-        /// <summary> Meta field type. </summary>
-
-        public FieldType Type { get; set; }
-
-        /// <summary> Meta value. </summary>
-        public string MetaValue { get; set; }
-
-        /// <summary>
-        ///     Article navigation property.
-        /// </summary>
-        public virtual Article Article { get; set; }
     }
 
 }

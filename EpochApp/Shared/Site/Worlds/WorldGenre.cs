@@ -1,7 +1,6 @@
 // EpochWorlds
 // WorldGenre.cs
 // FuchsFarbe Studios 2024
-// matsu
 // Modified: 27-2-2024
 using EpochApp.Shared.Config;
 

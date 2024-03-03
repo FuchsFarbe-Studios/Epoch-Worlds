@@ -3,10 +3,9 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 22-2-2024
-using EpochApp.Shared;
 using EpochApp.Shared.Config;
 
-namespace EpochApp.Server.Services
+namespace EpochApp.Shared
 {
     /// <summary>
     ///     Service contract for generating language content.

@@ -5,7 +5,7 @@
 // Modified: 17-2-2024
 using EpochApp.Shared.Utils;
 
-namespace EpochApp.Shared.Client
+namespace EpochApp.Shared
 {
     public enum ContactType
     {

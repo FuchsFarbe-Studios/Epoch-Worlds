@@ -1,0 +1,28 @@
+@using Typo=MudBlazor.Typo
+@page "/Configure/Templates/Article"
+
+<MudText Typo="Typo.h3" Align="Align.Center">Configure Article Templates</MudText>
+
+<MudDataGrid Virtualize="true" Outlined="true" Height="1000px" T="ArticleTemplateDTO" Items="@_articleTemplates" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
+	<Columns>
+		<PropertyColumn Property="x => x.TemplateId" Resizable="true" Title="Id" />
+		<PropertyColumn Property="x => x.CategoryId" Resizable="true" />
+		<PropertyColumn Property="x => x.TemplateName" Resizable="true" />
+		<PropertyColumn Property="x => x.Description" Resizable="true" />
+		<PropertyColumn Property="x => x.HelpText" Resizable="true" />
+		<PropertyColumn Property="x => x.Placeholder" Resizable="true" />
+	</Columns>
+</MudDataGrid>
+
+@code {
+	private List<ArticleTemplateDTO> _articleTemplates = new List<ArticleTemplateDTO>();
+	[Inject] private IArticleService ArticleService { get; set; }
+
+	/// <inheritdoc />
+	protected override async Task OnInitializedAsync()
+	{
+		var templates = await ArticleService.GetArticleTemplatesAsync();
+		_articleTemplates = templates.ToList();
+		await base.OnInitializedAsync();
+	}
+}
