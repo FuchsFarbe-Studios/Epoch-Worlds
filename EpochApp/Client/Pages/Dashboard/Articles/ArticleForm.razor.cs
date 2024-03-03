@@ -19,7 +19,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         private List<ArticleCategory> _categories = new List<ArticleCategory>();
         private MudDynamicTabs _sectionTabs;
         private ArticleTemplateDTO _template = null!;
-        private List<SectionDTO> _templateSections = new List<SectionDTO>();
+        private List<SectionTemplateDTO> _templateSections = new List<SectionTemplateDTO>();
         private EpochValidator _validator;
 
         /// <summary>
@@ -45,6 +45,9 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
             var cats = await LookupService.GetArticleCategoriesAsync();
             if (cats != null || cats.Any())
                 _categories = cats;
+            _template = await ArticleService.GetArticleTemplateAsync(Model.CategoryId);
+            if (_template != null)
+                _templateSections = _template.Sections.ToList();
             if (ArticleEdit == null || !IsEditMode)
             {
                 Model = new ArticleEditDTO
@@ -122,7 +125,16 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
             else
             {
                 _template = template;
-                _activePanelIndex = 1;
+                _templateSections = template.Sections.ToList();
+                Model.Sections = new List<SectionEditDTO>();
+                foreach (var section in _templateSections)
+                {
+                    Model.Sections.Add(new SectionEditDTO
+                                       {
+                                           Title = section.SectionName,
+                                           Content = section.Placeholder
+                                       });
+                }
                 StateHasChanged();
             }
         }

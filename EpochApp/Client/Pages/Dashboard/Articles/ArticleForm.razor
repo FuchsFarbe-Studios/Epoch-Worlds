@@ -70,6 +70,7 @@
 							{
 								@foreach (var sec in Model.Sections)
 								{
+									var secTemplate = _templateSections.FirstOrDefault(x => x.SectionName == sec.Title);
 									<MudExpansionPanel @key=@sec Dense="true">
 										<TitleContent>@sec.Title</TitleContent>
 										<ChildContent>
@@ -83,10 +84,24 @@
 												</AuthorizeView>
 
 												<MudItem xs="12" sm="6">
-													<MudTextField @bind-Value="@sec.Title" For="@(() => sec.Title)" Label="Section Header" />
+													@if (secTemplate != null)
+													{
+														<MudTextField @bind-Value="@sec.Title" For="@(() => sec.Title)" Label="@secTemplate.SectionName" />
+													}
+													else
+													{
+														<MudTextField @bind-Value="@sec.Title" For="@(() => sec.Title)" Label="Section Header" />
+													}
 												</MudItem>
 												<MudItem xs="12">
-													<MudTextField @bind-Value="@sec.Content" For="@(() => sec.Content)" Label="Section Content" Lines="3" />
+													@if (secTemplate != null)
+													{
+														<EpochMarkup @bind-MarkupString="@sec.Content" For="@(() => sec.Content)" Label="@secTemplate.SectionName" HelpText="@secTemplate.Description" />
+													}
+													else
+													{
+														<EpochMarkup @bind-MarkupString="@sec.Content" For="@(() => sec.Content)" Label="Section Content" />
+													}
 												</MudItem>
 												<MudItem xs="12">
 													<MudPaper Class="mt-2" Outlined="true" Width="100%">

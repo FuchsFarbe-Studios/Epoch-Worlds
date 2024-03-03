@@ -9,14 +9,29 @@ namespace EpochApp.Components.Forms
         private bool _previewMarkup = false;
         private MarkupString _previewString = new MarkupString("");
 
+        /// <summary>
+        ///   The label for the input.
+        /// </summary>
         [Parameter] public string Label { get; set; }
 
+        /// <summary>
+        /// The placeholder for the input.
+        /// </summary>
         [Parameter] public string Placeholder { get; set; }
 
+        /// <summary>
+        /// The help text for the input.
+        /// </summary>
         [Parameter] public string HelpText { get; set; }
 
+        /// <summary>
+        /// The value of the input, to be represented in markup.
+        /// </summary>
         [Parameter] public string MarkupString { get; set; } = "";
 
+        /// <summary>
+        /// The event callback for when the value of the input changes.
+        /// </summary>
         [Parameter] public EventCallback<string> MarkupStringChanged { get; set; }
 
         [Parameter] public Expression<Func<string>>? For { get; set; }
