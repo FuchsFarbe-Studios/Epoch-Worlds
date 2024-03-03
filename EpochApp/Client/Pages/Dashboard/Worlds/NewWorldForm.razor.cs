@@ -4,7 +4,6 @@ using EpochApp.Shared.Config;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.Worlds
 {
@@ -20,6 +19,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
         private bool _submitting = false;
         private List<MetaTemplate> _templates = new List<MetaTemplate>();
 
+        [Inject] private ILookupService LookupService { get; set; }
         [Inject] private IWorldService WorldService { get; set; }
 
         /// <summary>
@@ -48,9 +48,9 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _languages = await Client.GetFromJsonAsync<List<ISOLanguage>>("api/v1/Lookups/lkLanguages");
-            _categories = await Client.GetFromJsonAsync<List<MetaCategory>>("api/v1/Lookups/lkMeta");
-            _templates = await Client.GetFromJsonAsync<List<MetaTemplate>>("api/v1/Lookups/lkMetaTemplates");
+            _languages = await LookupService.GetLanguagesAsync();
+            _categories = await LookupService.GetMetaAsync();
+            _templates = await LookupService.GetMetaTemplatesAsync();
             if (WorldModel.MetaData.Count < _templates.Count)
                 foreach (var template in _templates)
                     WorldModel.MetaData.Add(new WorldMetaDTO

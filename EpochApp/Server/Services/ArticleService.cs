@@ -7,7 +7,6 @@ using AutoMapper;
 using EpochApp.Server.Data;
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
-using EpochApp.Shared.Social;
 using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Services
@@ -92,47 +91,62 @@ namespace EpochApp.Server.Services
         }
 
         /// <inheritdoc />
-        public async Task<ArticleDTO> CreateArticleAsync(ArticleDTO article)
+        public async Task<Article> CreateArticleAsync(ArticleEditDTO article)
         {
             _logger.LogInformation("Creating new article...");
-            var newArticle = new Article
-                             {
-                                 Title = article.Title,
-                                 Content = article.Content,
-                                 IsPublished = article.IsPublished,
-                                 IsNSFW = article.IsNSFW,
-                                 DisplayAuthor = article.DisplayAuthor,
-                                 ShowInTableOfContents = article.ShowInTableOfContents,
-                                 ShowTableOfContents = article.ShowTableOfContents,
-                                 CreatedOn = DateTime.UtcNow,
-                                 ModifiedOn = null,
-                                 DeletedOn = null,
-                                 AuthorId = article.AuthorId,
-                                 WorldId = article.WorldId,
-                                 CategoryId = article.CategoryId,
-                                 ArticleTags = article.ArticleTags.Select(t => new ArticleTag
-                                                                               {
-                                                                                   Tag = new Tag
-                                                                                         {
-                                                                                             Text = t.Text
-                                                                                         }
-                                                                               })
-                                                      .ToList(),
-                                 Sections = article.Sections.Select(s => new ArticleSection
-                                                                         {
-                                                                             Title = s.Title,
-                                                                             Content = s.Content,
-                                                                             CreatedOn = DateTime.UtcNow
-                                                                         })
-                                                   .ToList()
-                             };
-
-            _context.Articles.Add(newArticle);
+            var articleToAdd = _mapper.Map<ArticleEditDTO, Article>(article);
+            _context.Articles.Add(articleToAdd);
             await _context.SaveChangesAsync();
-            _logger.LogInformation($"Article {newArticle.Title} created!");
-            return await Task.FromResult(GetArticleDtoFromArticle(newArticle));
+            _logger.LogInformation($"Article {articleToAdd.Title} created!");
+            return await Task.FromResult(articleToAdd);
         }
 
+        public async Task<ArticleEditDTO> GetEditArticleAsync(Guid articleId)
+        {
+            var article = await _context.Articles
+                                        .Include(a => a.Sections)
+                                        .Include(a => a.Category)
+                                        .Include(a => a.World)
+                                        .Include(a => a.Author)
+                                        .FirstOrDefaultAsync(a => a.ArticleId == articleId);
+            return _mapper.Map(article, new ArticleEditDTO());
+        }
+
+        /// <inheritdoc />
+        public async Task<ArticleEditDTO> UpdateArticleAsync(ArticleEditDTO article, Guid articleId, Guid userId)
+        {
+            _logger.LogInformation("Updating article...");
+            var articleToUpdate = await _context.Articles.Where(x => x.ArticleId == articleId)
+                                                .Include(x => x.World)
+                                                .Include(x => x.Category)
+                                                .Include(x => x.Author)
+                                                .Include(x => x.Sections)
+                                                .FirstOrDefaultAsync();
+            var articleSections = articleToUpdate?.Sections.ToList() ?? new List<ArticleSection>();
+            _logger.LogInformation($"Article sections: {articleSections.Count}");
+            if (articleToUpdate == null)
+                return null;
+            if (articleToUpdate.AuthorId != userId)
+                return null;
+
+            var sections = article.Sections.Select(x => _mapper.Map<SectionEditDTO, ArticleSection>(x)).ToList();
+            _mapper.Map(article, articleToUpdate);
+            articleToUpdate.Sections = sections;
+
+            _context.Entry(articleToUpdate).State = EntityState.Modified;
+            try
+            {
+                _context.Articles.Update(articleToUpdate);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Error updating article: {e.Message}");
+                //return BadRequest(e.Message);
+            }
+
+            return await Task.FromResult(_mapper.Map<Article, ArticleEditDTO>(articleToUpdate));
+        }
         public static ArticleDTO GetArticleDtoFromArticle(Article article)
         {
             return new ArticleDTO

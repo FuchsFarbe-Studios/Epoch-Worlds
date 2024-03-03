@@ -6,18 +6,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
+    /// <summary>
+    ///    Controller for managing blogs and blog posts.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
     public class BlogsController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
 
+        /// <summary>
+        ///   Constructor for BlogsController.
+        /// </summary>
+        /// <param name="context"> The database context. </param>
         public BlogsController(EpochDataDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Blogs
+        /// <summary>
+        ///    Get all blogs.
+        /// </summary>
+        /// <returns> A list of <see cref="BlogDTO"/>. </returns>
         [HttpGet]
         [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<ActionResult<IEnumerable<BlogDTO>>> GetBlogs()
@@ -35,6 +45,11 @@ namespace EpochApp.Server.Controllers
                                  .ToListAsync();
         }
 
+        /// <summary>
+        ///   Get all blogs of a specific type.
+        /// </summary>
+        /// <param name="blogType"> The blog type. </param>
+        /// <returns> A list of <see cref="BlogDTO"/>. </returns>
         [HttpGet("Type/{blogType}")]
         public async Task<ActionResult<IEnumerable<BlogDTO>>> GetBlogsByType(BlogType blogType)
         {
@@ -54,6 +69,11 @@ namespace EpochApp.Server.Controllers
         }
 
         // Get blog posts
+        /// <summary>
+        ///  Get all blog posts for a specific blog.
+        /// </summary>
+        /// <param name="blogId"> The blog id. </param>
+        /// <returns> A list of <see cref="PostDTO"/>. </returns>
         [HttpGet("BlogPosts/{blogId:int}")]
         public async Task<ActionResult<IEnumerable<PostDTO>>> GetBlogPosts(int blogId)
         {
@@ -85,6 +105,11 @@ namespace EpochApp.Server.Controllers
             return Ok(posts);
         }
 
+        /// <summary>
+        ///  Get all blog posts of a specific type.
+        /// </summary>
+        /// <param name="type"> The blog type. </param>
+        /// <returns> A list of <see cref="PostDTO"/>. </returns>
         [HttpGet("BlogPosts/Type/{type}")]
         public async Task<ActionResult<IEnumerable<PostDTO>>> GetBlogPostsByType(int type)
         {
@@ -117,6 +142,12 @@ namespace EpochApp.Server.Controllers
         }
 
         // Create blog post
+        /// <summary>
+        /// Create a new blog post.
+        /// </summary>
+        /// <param name="blogId"> The blog id. </param>
+        /// <param name="postDto"> The post data. </param>
+        /// <returns> A <see cref="Task{T}"/> where TResult is <see cref="ActionResult{T}"/> where TValue is <see cref="PostDTO"/>. </returns>
         [HttpPost("BlogPosts/{blogId}")]
         [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<ActionResult<PostDTO>> CreateBlogPost(int blogId, PostDTO postDto)
@@ -214,6 +245,11 @@ namespace EpochApp.Server.Controllers
 
         // POST: api/Blogs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        ///   Create a new blog.
+        /// </summary>
+        /// <param name="blogData"> The blog data. </param>
+        /// <returns> A <see cref="Task{T}"/> where TResult is <see cref="ActionResult{T}"/> where TValue is <see cref="Blog"/>. </returns>
         [HttpPost]
         [Authorize(Roles = "ADMIN,INTERNAL")]
         public async Task<ActionResult<Blog>> PostBlog(BlogDTO blogData)
@@ -235,6 +271,11 @@ namespace EpochApp.Server.Controllers
         }
 
         // DELETE: api/Blogs/5
+        /// <summary>
+        /// Delete a blog.
+        /// </summary>
+        /// <param name="id"> The blog id. </param>
+        /// <returns> A <see cref="Task{T}"/> where TResult is <see cref="ActionResult{T}"/> where TValue is <see cref="Blog"/>. </returns>
         [Authorize(Roles = "ADMIN,INTERNAL")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteBlog(int id)
@@ -256,6 +297,11 @@ namespace EpochApp.Server.Controllers
             return _context.Blogs.Any(e => e.BlogID == id);
         }
 
+        /// <summary>
+        /// Get a blog post by id.
+        /// </summary>
+        /// <param name="id"> The post id. </param>
+        /// <returns> A <see cref="Task{T}"/> where TResult is <see cref="PostDTO"/>. </returns>
         [AllowAnonymous]
         [HttpGet("BlogPosts/Post/{id:guid}")]
         public async Task<PostDTO> GetBlogPost(Guid id)

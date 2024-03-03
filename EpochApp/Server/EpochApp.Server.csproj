@@ -5,11 +5,12 @@
         <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>default</LangVersion>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Version>0.0.1</Version>
         <Title>Epoch Worlds Server Application</Title>
         <Authors>FuchsFarbe Studios</Authors>
         <Description>This is the server application for the Epoch World Exchange.</Description>
-        <Copyright>FuchsFarbe Studios 2023</Copyright>
+        <Copyright>FuchsFarbe Studios 2024</Copyright>
         <Company>FuchsFarbe Studios</Company>
         <Product>Epoch Exchange API</Product>
         <UserSecretsId>f5ed99fe-8474-443d-8930-5ad3ef89b749</UserSecretsId>

@@ -3,13 +3,9 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 22-2-2024
-using AutoMapper;
-using EpochApp.Server.Data;
 using EpochApp.Shared;
-using EpochApp.Shared.Articles;
 using EpochApp.Shared.Config;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
@@ -21,16 +17,12 @@ namespace EpochApp.Server.Controllers
     public class ArticlesController : ControllerBase
     {
         private readonly IArticleService _articleService;
-        private readonly EpochDataDbContext _context;
-        private readonly ILogger<ArticlesController> _logger;
-        private readonly IMapper _mapper;
+        private readonly ILookupService _lookupService;
 
-        public ArticlesController(EpochDataDbContext context, IArticleService articleService, IMapper mapper, ILogger<ArticlesController> logger)
+        public ArticlesController(IArticleService articleService, ILookupService lookupService)
         {
-            _context = context;
             _articleService = articleService;
-            _mapper = mapper;
-            _logger = logger;
+            _lookupService = lookupService;
         }
 
         /// <summary>
@@ -57,8 +49,7 @@ namespace EpochApp.Server.Controllers
         [HttpGet("Categories")]
         public async Task<ActionResult<IEnumerable<ArticleCategory>>> IndexCategoriesAsync()
         {
-            var categories = await _context.ArticleCategories
-                                           .ToListAsync();
+            var categories = await _lookupService.GetArticleCategoriesAsync();
             return Ok(categories);
         }
 
@@ -105,20 +96,19 @@ namespace EpochApp.Server.Controllers
             return Ok(article);
         }
 
+        /// <summary>
+        ///    Get an article to edit by its unique identifier.
+        /// </summary>
+        /// <param name="articleId"> The unique identifier for the article. </param>
+        /// <returns> A <see cref="ArticleEditDTO"/>. </returns>
         [HttpGet("Article/Edited/{articleId:guid}")]
         public async Task<ActionResult<ArticleEditDTO>> GetEditArticleAsync(Guid articleId)
         {
-            var article = await _context.Articles
-                                        .Include(a => a.Sections)
-                                        .Include(a => a.Category)
-                                        .Include(a => a.World)
-                                        .Include(a => a.Author)
-                                        .FirstOrDefaultAsync(x => x.ArticleId == articleId);
+            var article = await _articleService.GetEditArticleAsync(articleId);
             if (article == null)
                 return NotFound();
 
-            var dto = _mapper.Map<Article, ArticleEditDTO>(article);
-            return Ok(dto);
+            return Ok(article);
         }
 
         /// <summary>
@@ -165,10 +155,7 @@ namespace EpochApp.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateArticleAsync(ArticleEditDTO article)
         {
-            var newArt = _mapper.Map<ArticleEditDTO, Article>(article);
-            newArt.Sections = article.Sections.Select(x => _mapper.Map<SectionEditDTO, ArticleSection>(x)).ToList();
-            _context.Articles.Add(newArt);
-            await _context.SaveChangesAsync();
+            var newArt = await _articleService.CreateArticleAsync(article);
             return CreatedAtAction("GetArticle", new { articleId = newArt.ArticleId }, newArt);
         }
 
@@ -188,37 +175,11 @@ namespace EpochApp.Server.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateArticleAsync([FromQuery] Guid userId, [FromQuery] Guid articleId, ArticleEditDTO article)
         {
-            _logger.LogInformation("Updating article...");
-            var articleToUpdate = await _context.Articles.Where(x => x.ArticleId == articleId)
-                                                .Include(x => x.World)
-                                                .Include(x => x.Category)
-                                                .Include(x => x.Author)
-                                                .Include(x => x.Sections)
-                                                .FirstOrDefaultAsync();
-            var articleSections = articleToUpdate?.Sections.ToList() ?? new List<ArticleSection>();
-            _logger.LogInformation($"Article sections: {articleSections.Count}");
-            if (articleToUpdate == null)
+            var updatedArticle = await _articleService.UpdateArticleAsync(article, articleId, userId);
+            if (updatedArticle == null)
                 return NotFound();
-            if (articleToUpdate.AuthorId != userId)
-                return Unauthorized();
 
-            var sections = article.Sections.Select(x => _mapper.Map<SectionEditDTO, ArticleSection>(x)).ToList();
-            _mapper.Map(article, articleToUpdate);
-            articleToUpdate.Sections = sections;
-
-            _context.Entry(articleToUpdate).State = EntityState.Modified;
-            try
-            {
-                _context.Articles.Update(articleToUpdate);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Error updating article: {e.Message}");
-                return BadRequest(e.Message);
-            }
-
-            return Ok(articleToUpdate);
+            return Ok(updatedArticle);
         }
     }
 }

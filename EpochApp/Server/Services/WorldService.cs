@@ -3,6 +3,7 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 22-2-2024
+using AutoMapper;
 using EpochApp.Server.Data;
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
@@ -19,16 +20,18 @@ namespace EpochApp.Server.Services
     {
         private readonly EpochDataDbContext _context;
         private readonly ILogger<IWorldService> _logger;
+        private readonly IMapper _mapper;
 
         /// <summary>
         ///     Constructor for WorldService.
         /// </summary>
         /// <param name="context"> Database Context. </param>
         /// <param name="logger"> Logger. </param>
-        public WorldService(EpochDataDbContext context, ILogger<WorldService> logger)
+        public WorldService(EpochDataDbContext context, ILogger<WorldService> logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         /// <inheritdoc />
@@ -52,8 +55,7 @@ namespace EpochApp.Server.Services
             var worldData = new List<UserWorldDTO>();
             foreach (var world in worlds)
             {
-
-                var UserWorldDTO = MapWorldToUserWorldDTO(world);
+                var UserWorldDTO = _mapper.Map<World, UserWorldDTO>(world);
                 worldData.Add(UserWorldDTO);
             }
             _logger.LogInformation("Returning all worlds...");
@@ -105,12 +107,12 @@ namespace EpochApp.Server.Services
         public async Task<UserWorldDTO> CreateWorldAsync(UserWorldDTO world)
         {
             _logger.LogInformation("Creating new world...");
-            var newWorld = MapUserWorldDTOToExistingWorld(world);
+            var newWorld = _mapper.Map<UserWorldDTO, World>(world);
             _logger.LogInformation("Saving new world...");
             await _context.Worlds.AddAsync(newWorld);
             await _context.SaveChangesAsync();
             _logger.LogInformation("Returning saved world...");
-            var w = MapWorldToUserWorldDTO(newWorld);
+            var w = _mapper.Map<World, UserWorldDTO>(newWorld);
             return await Task.FromResult(w);
         }
 
@@ -125,6 +127,7 @@ namespace EpochApp.Server.Services
                                            .ThenInclude(x => x.Tag)
                                            .Include(x => x.MetaData)
                                            .ThenInclude(x => x.Template)
+                                           .ThenInclude(x => x.Category)
                                            .Include(x => x.WorldFiles)
                                            .Include(x => x.WorldArticles)
                                            .ThenInclude(article => article.Sections)
@@ -134,8 +137,8 @@ namespace EpochApp.Server.Services
             var worldData = new List<UserWorldDTO>();
             foreach (var world in userWorlds)
             {
-                var UserWorldDTO = MapWorldToUserWorldDTO(world);
-                worldData.Add(UserWorldDTO);
+                var userWorldDTO = _mapper.Map<World, UserWorldDTO>(world);
+                worldData.Add(userWorldDTO);
             }
             return await Task.FromResult(worldData);
         }
@@ -151,13 +154,14 @@ namespace EpochApp.Server.Services
                                       .ThenInclude(x => x.Tag)
                                       .Include(x => x.MetaData)
                                       .ThenInclude(x => x.Template)
+                                      .ThenInclude(x => x.Category)
                                       .Include(x => x.WorldFiles)
                                       .Include(x => x.WorldArticles)
                                       .ThenInclude(article => article.Sections)
                                       .AsSplitQuery()
                                       .FirstOrDefaultAsync(x => x.WorldId == worldId);
-            var UserWorldDTO = MapWorldToUserWorldDTO(world);
-            return await Task.FromResult(UserWorldDTO);
+            var userWorldDTO = _mapper.Map<World, UserWorldDTO>(world);
+            return await Task.FromResult(userWorldDTO);
         }
 
         /// <inheritdoc />
@@ -170,371 +174,133 @@ namespace EpochApp.Server.Services
         /// <inheritdoc />
         public async Task<UserWorldDTO> UpdateWorldAsync(UserWorldDTO world)
         {
-            var existingWorld = MapUserWorldDTOToExistingWorld(world);
+            var existingWorld = _context.Worlds
+                                        .Include(w => w.CurrentWorldDate)
+                                        .Include(w => w.WorldTags)
+                                        .ThenInclude(w => w.Tag)
+                                        .Include(w => w.WorldFiles)
+                                        .Include(w => w.MetaData)
+                                        .ThenInclude(worldMeta => worldMeta.Template)
+                                        .FirstOrDefault(x => x.WorldId == world.WorldId && x.OwnerId == world.OwnerId);
+            if (existingWorld == null)
+            {
+                _logger.LogError("World does not exist!");
+                return null;
+            }
+
+            // Handling WorldMetas entities
+            // Remove the WorldMetas that are not in the incoming DTO world
+            var worldMetasToRemove = existingWorld.MetaData
+                                                  .Where(meta => !world.MetaData.Any(m => m.TemplateId == meta.Template.TemplateId));
+            foreach (var wm in worldMetasToRemove)
+            {
+                existingWorld.MetaData.Remove(wm);
+            }
+
+            foreach (var wm in world.MetaData)
+            {
+                var existingMeta = existingWorld.MetaData.FirstOrDefault(m => m.Template.TemplateId == wm.TemplateId);
+                if (existingMeta == null)
+                {
+                    // Add new WorldMeta
+                    existingWorld.MetaData.Add(_mapper.Map(wm, new WorldMeta()));
+                }
+                else
+                {
+                    // Update existing WorldMeta
+                    _mapper.Map(wm, existingMeta);
+                }
+            }
+            _mapper.Map(world, existingWorld);
             try
             {
                 _context.Entry(existingWorld).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("World updated!");
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 var exists = await WorldExists(existingWorld.WorldId);
                 if (!exists)
                     return null;
 
-                _logger.LogError("World does not exist!");
+                _logger.LogError($"Error updating world: {ex.Message}");
             }
-            var updatedWorld = MapWorldToUserWorldDTO(existingWorld);
+            var updatedWorld = _mapper.Map<World, UserWorldDTO>(existingWorld);
             return await Task.FromResult(updatedWorld);
-        }
-
-        /// <inheritdoc />
-        public World MapUserWorldDTOToExistingWorld(UserWorldDTO dto)
-        {
-            var world = _context.Worlds
-                                .Include(x => x.CurrentWorldDate)
-                                .Include(x => x.WorldGenres)
-                                .ThenInclude(x => x.Genre)
-                                .Include(x => x.WorldTags)
-                                .ThenInclude(x => x.Tag)
-                                .Include(x => x.MetaData)
-                                .ThenInclude(x => x.Template)
-                                .ThenInclude(x => x.Category)
-                                .Include(x => x.WorldFiles)
-                                .Include(x => x.WorldArticles)
-                                .ThenInclude(article => article.Sections)
-                                .AsSplitQuery()
-                                .FirstOrDefault(x => x.WorldId == dto.WorldId);
-            if (world == null)
-                world = new World();
-            world.OwnerId = dto.OwnerId;
-            world.WorldName = dto.WorldName;
-            world.Pronunciation = dto.Pronunciation;
-            world.Excerpt = dto.Excerpt;
-            world.Image = dto.Image;
-            world.Header = dto.Header;
-            world.SubHeader = dto.SubHeader;
-            world.Description = dto.Description;
-            world.LanguageCode = dto.LanguageCode;
-            world.FollowerNamingSingular = dto.FollowerNamingSingular;
-            world.FollowerNamingPlural = dto.FollowerNamingPlural;
-            world.IsActiveWorld = dto.IsActiveWorld;
-            world.DateModified = DateTime.UtcNow;
-
-            if (world.CurrentWorldDate == null)
-                world.CurrentWorldDate = new WorldDate();
-            world.CurrentWorldDate.CurrentDay = dto.CurrentWorldDate.CurrentDay;
-            world.CurrentWorldDate.CurrentMonth = dto.CurrentWorldDate.CurrentMonth;
-            world.CurrentWorldDate.CurrentYear = dto.CurrentWorldDate.CurrentYear;
-            world.CurrentWorldDate.CurrentAge = dto.CurrentWorldDate.CurrentAge;
-            world.CurrentWorldDate.BeforeEraName = dto.CurrentWorldDate.BeforeEra;
-            world.CurrentWorldDate.AfterEraName = dto.CurrentWorldDate.AfterEra;
-            world.CurrentWorldDate.BeforeEraAbbreviation = dto.CurrentWorldDate.BeforeEraAbbreviation;
-            world.CurrentWorldDate.AfterEraAbbreviation = dto.CurrentWorldDate.AfterEraAbbreviation;
-            world.MetaData = dto.MetaData.Select(x => new WorldMeta
-                                                      {
-                                                          Content = x.Content,
-                                                          Template = _context.MetaTemplates.FirstOrDefault(y => y.TemplateId == x.TemplateId && y.CategoryId == x.CategoryId)
-                                                      })
-                                .ToList();
-            world.WorldTags = dto.WorldTags.Select(x => new WorldTag
-                                                        {
-                                                            World = world,
-                                                            Tag = new Tag
-                                                                  {
-                                                                      Text = x.Text
-                                                                  }
-                                                        })
-                                 .ToList();
-            world.WorldArticles = dto.WorldArticles.Select(x => new Article
-                                                                {
-                                                                    AuthorId = x.AuthorId,
-                                                                    WorldId = x.WorldId,
-                                                                    CategoryId = x.CategoryId,
-                                                                    Title = x?.Title,
-                                                                    Content = x?.Content,
-                                                                    IsPublished = x.IsPublished,
-                                                                    IsNSFW = x.IsNSFW,
-                                                                    DisplayAuthor = x.DisplayAuthor,
-                                                                    ShowInTableOfContents = x.ShowInTableOfContents,
-                                                                    ShowTableOfContents = x.ShowTableOfContents,
-                                                                    CreatedOn = x.CreatedOn,
-                                                                    ModifiedOn = x?.ModifiedOn,
-                                                                    Sections = x?.Sections.Select(y => new ArticleSection
-                                                                                                       {
-                                                                                                           Title = y.Title,
-                                                                                                           Content = y.Content,
-                                                                                                           CreatedOn = DateTime.UtcNow
-                                                                                                       })
-                                                                                .ToList()
-                                                                })
-                                     .ToList();
-            world.WorldFiles = dto.WorldFiles.Select(x => new UserFile
-                                                          {
-                                                              FilePath = x.FilePath,
-                                                              SafeName = x.SafeName,
-                                                              Alias = x.Alias,
-                                                              ImageAlt = x.AltText,
-                                                              UploadedOn = x.UploadedOn
-                                                          })
-                                  .ToList();
-            world.WorldGenres = dto.WorldGenres.Select(x => new WorldGenre
-                                                            {
-                                                                WorldID = x.WorldID,
-                                                                GenreID = x.GenreId,
-                                                                Genre = _context.Genres.FirstOrDefault(y => y.GenreId == x.GenreId)
-                                                            })
-                                   .ToList();
-            return world;
-        }
-
-        /// <inheritdoc />
-        public UserWorldDTO MapWorldToUserWorldDTO(World world)
-        {
-            var metas = world.MetaData.Select(x => new WorldMetaDTO
-                                                   {
-                                                       WorldId = x.WorldId,
-                                                       Content = x.Content,
-                                                       TemplateId = x.Template.TemplateId,
-                                                       CategoryId = x.Template.CategoryId
-                                                   })
-                             .ToList();
-            var articles = world.WorldArticles.Select(x => new ArticleDTO
-                                                           {
-                                                               ArticleId = x.ArticleId,
-                                                               AuthorId = x.AuthorId,
-                                                               WorldId = x.WorldId,
-                                                               CategoryId = x.CategoryId,
-                                                               Title = x?.Title,
-                                                               Content = x?.Content,
-                                                               IsPublished = x.IsPublished,
-                                                               IsNSFW = x.IsNSFW,
-                                                               DisplayAuthor = x.DisplayAuthor,
-                                                               ShowInTableOfContents = x.ShowInTableOfContents,
-                                                               ShowTableOfContents = x.ShowTableOfContents,
-                                                               CreatedOn = x.CreatedOn,
-                                                               ModifiedOn = x?.ModifiedOn,
-                                                               Sections = x?.Sections.Select(y => new SectionDTO
-                                                                                                  {
-                                                                                                      SectionID = y.SectionID,
-                                                                                                      Title = y?.Title,
-                                                                                                      Content = y?.Content,
-                                                                                                      CreatedOn = y?.CreatedOn
-                                                                                                  })
-                                                                           .ToList()
-                                                           })
-                                .ToList();
-            var files = world.WorldFiles.Select(x => new UserFileDTO
-                                                     {
-                                                         FileId = x.FileId,
-                                                         FilePath = x?.FilePath,
-                                                         SafeName = x?.SafeName,
-                                                         Alias = x?.Alias,
-                                                         AltText = x?.ImageAlt,
-                                                         UploadedOn = x?.UploadedOn
-                                                     })
-                             .ToList();
-            var tags = world.WorldTags.Select(x => new WorldTagDTO
-                                                   {
-                                                       TagId = x.TagId,
-                                                       WorldId = x.WorldId,
-                                                       Text = x?.Tag?.Text
-                                                   })
-                            .ToList();
-            var genres = world.WorldGenres.Select(x => new WorldGenreDTO
-                                                       {
-                                                           WorldID = x.WorldID,
-                                                           GenreId = x.GenreID,
-                                                           GenreName = x?.Genre?.GenreName
-                                                       })
-                              .ToList();
-            var date = new WorldDateDTO
-                       {
-                           WorldId = world.WorldId,
-                           CurrentDay = world.CurrentWorldDate.CurrentDay,
-                           CurrentMonth = world.CurrentWorldDate.CurrentMonth,
-                           CurrentYear = world.CurrentWorldDate.CurrentYear,
-                           CurrentAge = world?.CurrentWorldDate.CurrentAge,
-                           BeforeEra = world?.CurrentWorldDate.BeforeEraName,
-                           AfterEra = world?.CurrentWorldDate.AfterEraName,
-                           BeforeEraAbbreviation = world?.CurrentWorldDate.BeforeEraAbbreviation,
-                           AfterEraAbbreviation = world?.CurrentWorldDate.AfterEraAbbreviation,
-                           CurrentEra = world?.CurrentWorldDate.CurrentAge
-                       };
-            var UserWorldDTO = new UserWorldDTO
-                               {
-                                   OwnerId = world.OwnerId,
-                                   WorldId = world.WorldId,
-                                   WorldName = world?.WorldName,
-                                   Pronunciation = world?.Pronunciation,
-                                   Excerpt = world?.Excerpt,
-                                   Image = world?.Image,
-                                   Header = world?.Header,
-                                   SubHeader = world?.SubHeader,
-                                   Description = world?.Description,
-                                   LanguageCode = world?.LanguageCode,
-                                   FollowerNamingSingular = world?.FollowerNamingSingular,
-                                   FollowerNamingPlural = world?.FollowerNamingPlural,
-                                   IsActiveWorld = world.IsActiveWorld,
-                                   DateCreated = world.DateCreated,
-                                   DateModified = world?.DateModified,
-                                   DateRemoved = world?.DateRemoved,
-                                   MetaData = metas,
-                                   WorldArticles = articles,
-                                   WorldTags = tags,
-                                   WorldFiles = files,
-                                   WorldGenres = genres,
-                                   CurrentWorldDate = date
-                               };
-            return UserWorldDTO;
-        }
-
-        /// <inheritdoc />
-        public async Task<UserWorldDTO> GetActiveWorldAsync(Guid userId)
-        {
-            var activeWorld = await _context.Worlds
-                                            .Where(x => x.OwnerId == userId && x.IsActiveWorld.Value == true && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
-                                            .Include(x => x.CurrentWorldDate)
-                                            .Include(x => x.MetaData)
-                                            .Include(x => x.Owner)
-                                            .Select(x => new UserWorldDTO
-                                                         {
-                                                             OwnerId = x.OwnerId,
-                                                             WorldId = x.WorldId,
-                                                             WorldName = x.WorldName,
-                                                             Pronunciation = x.Pronunciation,
-                                                             Description = x.Description,
-                                                             DateCreated = x.DateCreated,
-                                                             DateModified = x.DateModified.Value,
-                                                             DateRemoved = x.DateRemoved.Value,
-                                                             WorldFiles = x.WorldFiles.Select(f => new UserFileDTO
-                                                                                                   {
-                                                                                                       FileId = f.FileId,
-                                                                                                       FilePath = f.FilePath,
-                                                                                                       SafeName = f.SafeName,
-                                                                                                       Alias = f.Alias,
-                                                                                                       AltText = f.ImageAlt,
-                                                                                                       UploadedOn = f.UploadedOn
-                                                                                                   })
-                                                                           .ToList(),
-                                                             MetaData = x.MetaData.Select(m => new WorldMetaDTO
-                                                                                               {
-                                                                                                   TemplateId = m.MetaID,
-                                                                                                   Content = m.Content
-                                                                                               })
-                                                                         .ToList(),
-                                                             IsActiveWorld = x.IsActiveWorld.Value,
-                                                             CurrentWorldDate = new WorldDateDTO
-                                                                                {
-                                                                                    CurrentDay = x.CurrentWorldDate.CurrentDay,
-                                                                                    CurrentMonth = x.CurrentWorldDate.CurrentMonth,
-                                                                                    CurrentYear = x.CurrentWorldDate.CurrentYear,
-                                                                                    CurrentAge = x.CurrentWorldDate.CurrentAge,
-                                                                                    BeforeEra = x.CurrentWorldDate.BeforeEraName,
-                                                                                    AfterEra = x.CurrentWorldDate.AfterEraName,
-                                                                                    BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
-                                                                                    AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
-                                                                                    CurrentEra = x.CurrentWorldDate.CurrentAge
-                                                                                }
-                                                         })
-                                            .FirstOrDefaultAsync();
-            return activeWorld;
-        }
-
-        public async Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
-        {
-            var world = await _context.Worlds.Include(x => x.Owner)
-                                      .Include(x => x.WorldArticles)
-                                      .FirstOrDefaultAsync(x => x.WorldId == worldId);
-            if (world == null)
-                return null;
-            if (world?.OwnerId != userId)
-                return null;
-
-            world.DateRemoved = DateTime.UtcNow;
-            foreach (var article in world.WorldArticles)
-                article.DeletedOn = DateTime.UtcNow;
-            _context.Entry(world).State = EntityState.Modified;
-
-            try
-            {
-                _context.Update(world);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                _logger.LogWarning($"Error updating world!\n\t{ex.Message}");
-                throw;
-            }
-            return await Task.FromResult(MapWorldToUserWorldDTO(world));
         }
 
         /// <inheritdoc />
         public async Task<UserWorldDTO> UpdateActiveUserWorldsAsync(UserWorldDTO world)
         {
-            var userWorlds = await _context.Worlds
-                                           .Where(x => x.OwnerId == world.OwnerId)
-                                           .ToListAsync();
-            var activeWorld = await _context.Worlds
-                                            .Where(x => x.OwnerId == world.OwnerId && x.WorldId == world.WorldId)
-                                            .FirstOrDefaultAsync();
-            foreach (var w in userWorlds)
+            var userWorlds = await _context.Worlds.Where(x => x.OwnerId == world.OwnerId).ToListAsync();
+            var activeWorld = userWorlds.FirstOrDefault(x => x.WorldId == world.WorldId);
+            if (activeWorld == null)
             {
-                if (w == activeWorld)
-                    w.IsActiveWorld = true;
-                else
-                    w.IsActiveWorld = false;
-                _context.Entry(w).State = EntityState.Modified;
+                _logger.LogError("World does not exist!");
+                return null;
             }
 
+            foreach (var w in userWorlds)
+            {
+                w.IsActiveWorld = false;
+                if (w.WorldId == activeWorld.WorldId)
+                    w.IsActiveWorld = true;
+                _context.Entry(w).State = EntityState.Modified;
+                _context.Update(w);
+            }
             try
             {
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("World updated!");
+                return await GetActiveWorldAsync(world.OwnerId);
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                var exists = await WorldExists(world.WorldId);
+                var exists = await WorldExists(activeWorld.WorldId);
                 if (!exists)
-                    _logger.LogError("World does not exist!");
-                throw;
+                    return null;
+
+                _logger.LogError("World does not exist!");
             }
-            var updatedWorld = await _context.Worlds
-                                             .Where(x => x.OwnerId == world.OwnerId && x.IsActiveWorld.Value == true)
-                                             .Include(x => x.CurrentWorldDate)
-                                             .Include(x => x.MetaData)
-                                             .Select(x => new UserWorldDTO
-                                                          {
-                                                              OwnerId = x.OwnerId,
-                                                              WorldId = x.WorldId,
-                                                              WorldName = x.WorldName,
-                                                              Pronunciation = x.Pronunciation,
-                                                              Description = x.Description,
-                                                              DateCreated = x.DateCreated,
-                                                              DateModified = x.DateModified,
-                                                              DateRemoved = x.DateRemoved,
-                                                              MetaData = x.MetaData.Select(y => new WorldMetaDTO
-                                                                                                {
-                                                                                                    TemplateId = y.MetaID,
-                                                                                                    Content = y.Content
-                                                                                                })
-                                                                          .ToList(),
-                                                              IsActiveWorld = x.IsActiveWorld,
-                                                              CurrentWorldDate = new WorldDateDTO
-                                                                                 {
-                                                                                     CurrentDay = x.CurrentWorldDate.CurrentDay,
-                                                                                     CurrentMonth = x.CurrentWorldDate.CurrentMonth,
-                                                                                     CurrentYear = x.CurrentWorldDate.CurrentYear,
-                                                                                     CurrentAge = x.CurrentWorldDate.CurrentAge,
-                                                                                     BeforeEra = x.CurrentWorldDate.BeforeEraName,
-                                                                                     AfterEra = x.CurrentWorldDate.AfterEraName,
-                                                                                     BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
-                                                                                     AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
-                                                                                     CurrentEra = x.CurrentWorldDate.CurrentAge
-                                                                                 }
-                                                          })
-                                             .FirstOrDefaultAsync();
-            return await Task.FromResult(updatedWorld);
+            return null;
+        }
+
+        /// <inheritdoc />
+        public async Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
+        {
+            var worldToDelete = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldId == worldId && x.OwnerId == userId);
+            if (worldToDelete == null)
+            {
+                _logger.LogError("World does not exist!");
+                return null;
+            }
+            worldToDelete.DateRemoved = DateTime.UtcNow;
+            _context.Entry(worldToDelete).State = EntityState.Modified;
+            _context.Update(worldToDelete);
+            try
+            {
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("World deleted!");
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var exists = await WorldExists(worldToDelete.WorldId);
+                if (!exists)
+                    return null;
+
+                _logger.LogError("World does not exist!");
+            }
+            var deletedWorld = _mapper.Map<World, UserWorldDTO>(worldToDelete);
+            return await Task.FromResult(deletedWorld);
+        }
+
+        /// <inheritdoc />
+        public async Task<UserWorldDTO> GetActiveWorldAsync(Guid userId)
+        {
+            var activeWorld = await _context.Worlds.Where(x => x.OwnerId == userId && x.IsActiveWorld == true).FirstOrDefaultAsync();
+            var userWorldDTO = _mapper.Map<World, UserWorldDTO>(activeWorld);
+            return await Task.FromResult(userWorldDTO);
         }
 
         private async Task<bool> WorldExists(Guid existingWorldWorldId)

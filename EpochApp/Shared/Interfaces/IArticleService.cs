@@ -3,6 +3,8 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 29-2-2024
+using EpochApp.Shared.Articles;
+
 namespace EpochApp.Shared
 {
     /// <summary>
@@ -68,6 +70,22 @@ namespace EpochApp.Shared
         /// <returns>
         ///     <see cref="Task{TResult}" /> of <see cref="ArticleDTO" />.
         /// </returns>
-        Task<ArticleDTO> CreateArticleAsync(ArticleDTO article);
+        Task<Article> CreateArticleAsync(ArticleEditDTO article);
+
+        /// <summary>
+        ///    Update an article.
+        /// </summary>
+        /// <param name="article"> The article information to update. </param>
+        /// <param name="articleId"> The article's unique identifier. </param>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="ArticleEditDTO" />. </returns>
+        Task<ArticleEditDTO> UpdateArticleAsync(ArticleEditDTO article, Guid articleId, Guid userId);
+
+        /// <summary>
+        ///    Get an article for editing.
+        /// </summary>
+        /// <param name="articleId"> The article's unique identifier. </param>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="ArticleEditDTO" />. </returns>
+        Task<ArticleEditDTO> GetEditArticleAsync(Guid articleId);
     }
 }

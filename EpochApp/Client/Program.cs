@@ -21,6 +21,8 @@ namespace EpochApp.Client
             // ReSharper disable once UnusedParameter.Local
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<ILocalStorage, LocalStorageAccessor>();
+            builder.Services.AddScoped<ILookupService, LookupService>();
+            builder.Services.AddScoped<IArticleService, ArticleService>();
             builder.Services.AddScoped<IWorldService, WorldService>();
             builder.Services.AddScoped<ClientAuthData>();// Storage
             builder.Services.AddScoped<EpochUserService>();// Service

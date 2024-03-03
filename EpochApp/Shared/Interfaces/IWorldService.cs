@@ -13,7 +13,6 @@ namespace EpochApp.Shared
     /// </summary>
     public interface IWorldService
     {
-
         /// <summary>
         ///    Get all worlds.
         /// </summary>
@@ -89,24 +88,6 @@ namespace EpochApp.Shared
         ///     A <see cref="UserWorldDTO" />.
         /// </returns>
         Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId);
-
-        /// <summary>
-        ///     Map a <see cref="UserWorldDTO" /> to a <see cref="World" />.
-        /// </summary>
-        /// <param name="dto">
-        ///     The <see cref="UserWorldDTO" /> to map.
-        /// </param>
-        /// <returns> A <see cref="World" />. </returns>
-        World MapUserWorldDTOToExistingWorld(UserWorldDTO dto);
-
-        /// <summary>
-        ///     Map a <see cref="World" /> to a <see cref="UserWorldDTO" />.
-        /// </summary>
-        /// <param name="world"> The world to map. </param>
-        /// <returns>
-        ///     A <see cref="UserWorldDTO" />.
-        /// </returns>
-        UserWorldDTO MapWorldToUserWorldDTO(World world);
 
         /// <summary>
         ///     Get the active world for a user.

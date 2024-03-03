@@ -6,17 +6,10 @@
 namespace EpochApp.Shared
 {
 
-    public class WorldMetaDTO
-    {
-        public Guid WorldId { get; set; }
-        public int TemplateId { get; set; }
-        public int CategoryId { get; set; }
-        public string Content { get; set; }
-    }
-
     public class UserWorldDTO
     {
         public Guid OwnerId { get; set; }
+
         public Guid WorldId { get; set; }
 
         /// <summary> The name of the world. </summary>

@@ -27,7 +27,6 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             World ??= new UserWorldDTO
                       {
                           DateCreated = DateTime.Now,
@@ -41,6 +40,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
                       };
             if (Auth?.CurrentUser?.UserID != Guid.Empty)
                 World.OwnerId = Auth.CurrentUser.UserID;
+            await base.OnInitializedAsync();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
                 // Update
                 var response = await Client.UpdateWorldAsync(world);
                 if (response != null)
-                    Nav.NavigateTo(NavRef.WorldNav.Index);
+                    Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{response.WorldId}");
                 else
                     Nav.NavigateTo(NavRef.WorldNav.Index);
             }
@@ -65,7 +65,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
             {
                 // Create
                 var newWorld = await Client.CreateWorldAsync(world);
-                Nav.NavigateTo(NavRef.WorldNav.Index);
+                Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{newWorld.WorldId}");
             }
         }
     }

@@ -3,10 +3,10 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 1-3-2024
-using AutoMapper;
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
 using EpochApp.Shared.Social;
+using Profile=AutoMapper.Profile;
 
 namespace EpochApp.Server.Maps
 {

@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -52,6 +54,8 @@ namespace EpochApp.Server
                     });
             ConfigBuilder.ConfigureCommonServices(services);
             services.AddHttpContextAccessor();
+
+            // Automapper mappings
             services.AddAutoMapper(cfg =>
             {
                 cfg.AllowNullCollections = true;
@@ -59,13 +63,34 @@ namespace EpochApp.Server
             });
             services.AddAutoMapper(typeof(ArticleProfile));
             services.AddAutoMapper(typeof(ManuscriptProfile));
+            services.AddAutoMapper(typeof(FileProfile));
+            services.AddAutoMapper(typeof(WorldProfile));
+            services.AddAutoMapper(typeof(UserProfile));
+
+            // Custom services
             services.AddScoped<ITagService, TagService>();
-            services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<ILookupService, LookupService>();
+            services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<IWorldService, WorldService>();
             services.AddRazorPages();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                                   {
+                                       Title = "The Epoch Worlds API",
+                                       Description = "This is the api for the various endpoints for the Epoch Worlds application.",
+                                       Version = "v1",
+                                       Contact = new OpenApiContact
+                                                 {
+                                                     Name = "Oliver Conover",
+                                                     Email = "contact@epochgen.com",
+                                                 },
+                                   });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             var app = builder.Build();
 
@@ -79,6 +104,7 @@ namespace EpochApp.Server
                 c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Epoch World API V1");
+                    c.DocumentTitle = "Epoch World API";
                 });
                 app.UseWebAssemblyDebugging();
                 app.UseDeveloperExceptionPage();

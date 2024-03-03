@@ -23,7 +23,6 @@ namespace EpochApp.Client.Services
         /// <summary>
         ///     Constructor for WorldService.
         /// </summary>
-        /// <param name="client"> The http client. </param>
         /// <param name="logger"> The logger. </param>
         /// <param name="host">
         ///     The web assembly host environment.
@@ -32,8 +31,7 @@ namespace EpochApp.Client.Services
         {
             _host = host;
             _logger = logger;
-            _client = new HttpClient
-                      { BaseAddress = new Uri($"{_host.BaseAddress}") };
+            _client = new HttpClient { BaseAddress = new Uri($"{_host.BaseAddress}") };
             _logger.LogInformation($"WorldService created, base address: {_client.BaseAddress}");
         }
 
@@ -52,7 +50,10 @@ namespace EpochApp.Client.Services
             return await Task.FromResult(worlds);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Should never be called client side.
+        /// </summary>
+        /// <returns>null</returns>
         public Task<World> CreateRegistrationWorldAsync(RegistrationDTO registration, User user)
         {
             return null;
@@ -116,19 +117,12 @@ namespace EpochApp.Client.Services
         public async Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
         {
             var response = await _client.DeleteFromJsonAsync<UserWorldDTO>($"api/v2/Worlds?userId={userId}&worldId={worldId}");
+            if (response == null)
+            {
+                _logger.LogWarning("World not found!");
+                return null;
+            }
             return await Task.FromResult(response);
-        }
-
-        /// <inheritdoc />
-        public World MapUserWorldDTOToExistingWorld(UserWorldDTO dto)
-        {
-            return null;
-        }
-
-        /// <inheritdoc />
-        public UserWorldDTO MapWorldToUserWorldDTO(World world)
-        {
-            return null;
         }
 
         /// <inheritdoc />
