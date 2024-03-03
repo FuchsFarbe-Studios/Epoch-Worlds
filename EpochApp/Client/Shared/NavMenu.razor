@@ -1,8 +1,14 @@
-﻿@using MudBlazor
+﻿@using Typo=MudBlazor.Typo
+@using MudBlazor
 @if (IsMudMenu)
 {
 	<MudNavMenu Color="Color.Primary" Rounded="false" Bordered="true" Dense="true">
-		<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+		@if (IsMenuOpened)
+		{
+			<MudText Typo="Typo.h6" Class="px-4">The Epoch Exchange</MudText>
+			<MudDivider Class="my-2" />
+			<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+		}
 
 		<!-- User -->
 		<AuthorizeView>

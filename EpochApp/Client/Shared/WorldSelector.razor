@@ -3,7 +3,7 @@
 @using MudBlazor
 @if (_selectedWorld != null && _userWorlds.Any())
 {
-	<MudMenu Dense="true" Variant="Variant.Filled" AnchorOrigin="Origin.TopRight">
+	<MudMenu Class="mt-2" Dense="true" Variant="Variant.Filled" AnchorOrigin="Origin.TopRight">
 		<ActivatorContent>
 			<MudIcon Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success" Title="@($"{_selectedWorld?.WorldName}")" />
 		</ActivatorContent>
@@ -17,7 +17,7 @@
 }
 else
 {
-	<MudMenu Dense="true" Variant="Variant.Filled" ActivationEvent="MouseEvent.RightClick">
+	<MudMenu Class="mt-2" Dense="true" Variant="Variant.Filled" ActivationEvent="MouseEvent.RightClick">
 		<ActivatorContent>
 			<MudChip Size="Size.Large" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success">@($"{_selectedWorld?.WorldName}")</MudChip>
 		</ActivatorContent>

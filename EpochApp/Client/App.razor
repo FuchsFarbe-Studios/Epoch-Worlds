@@ -1,4 +1,8 @@
-﻿<CascadingAuthenticationState>
+﻿@using AlignItems=MudBlazor.AlignItems
+@using Justify=MudBlazor.Justify
+@using Typo=MudBlazor.Typo
+@using MudBlazor
+<CascadingAuthenticationState>
 	<Router AppAssembly="@typeof(App).Assembly">
 
 		<!-- ROUTE FOUND -->
@@ -10,9 +14,12 @@
 					</div>
 				</NotAuthorized>
 				<Authorizing>
-					<FlatContainer>
-						<p class="text-center">Authentication in progress...</p>
-					</FlatContainer>
+					<MudContainer>
+						<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
+							<MudText Typo="Typo.h4" Color="Color.Warning" Align="Align.Center">Authentication in progress...</MudText>
+							<MudProgressCircular Indeterminate="true" Color="Color.Warning" Size="Size.Large" />
+						</MudStack>
+					</MudContainer>
 				</Authorizing>
 			</AuthorizeRouteView>
 			<FocusOnNavigate RouteData="@routeData" Selector="h1" />

@@ -9,10 +9,12 @@ namespace EpochApp.Client.Shared
     /// </summary>
     public partial class SubNav
     {
+        private bool _isOpen = false;
+
         /// <summary>
         ///     The currently active world.
         /// </summary>
-        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
         [Inject] private EpochAuthProvider Auth { get; set; }
     }
 }

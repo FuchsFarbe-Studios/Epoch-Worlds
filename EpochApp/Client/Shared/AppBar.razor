@@ -15,6 +15,7 @@
 	</Authorized>
 </AuthorizeView>
 <MudSpacer />
+<MudIconButton OnClick="@(async () => await ToggleDarkModeAsync())" Icon="@(_isDarkMode ? Icons.Material.Filled.ShieldMoon : Icons.Material.Filled.WbSunny)" Color="@(_isDarkMode ? Color.Primary : Color.Inherit)" Title="@(_isDarkMode ? "Light Mode" : "Dark Mode")" />
 <AuthorizeView>
 	<Authorized>
 		<MudMenu Dense="true" Variant="Variant.Filled" DisableElevation="true" Color="Color.Surface">
