@@ -37,40 +37,7 @@ namespace EpochApp.Server.Controllers
         [HttpGet("User")]
         public async Task<ActionResult<IEnumerable<WorldDTO>>> GetUserWorlds([FromQuery] Guid ownerId)
         {
-            var worlds = await _context.Worlds
-                                       .Where(x => x.OwnerId == ownerId && (x.DateRemoved >= DateTime.Now || x.DateRemoved == null))
-                                       .Include(x => x.CurrentWorldDate)
-                                       .Include(x => x.MetaData)
-                                       .Select(x => new WorldDTO
-                                                    {
-                                                        AuthorID = x.OwnerId,
-                                                        WorldID = x.WorldId,
-                                                        WorldName = x.WorldName,
-                                                        Pronunciation = x.Pronunciation,
-                                                        Description = x.Description,
-                                                        DateCreated = x.DateCreated,
-                                                        DateModified = x.DateModified ?? DateTime.Now,
-                                                        DateRemoved = x.DateRemoved ?? DateTime.Now,
-                                                        CurrentDay = x.CurrentWorldDate.CurrentDay,
-                                                        CurrentMonth = x.CurrentWorldDate.CurrentMonth,
-                                                        CurrentYear = x.CurrentWorldDate.CurrentYear,
-                                                        CurrentAge = x.CurrentWorldDate.CurrentAge,
-                                                        MetaData = x.MetaData,
-                                                        IsActiveWorld = x.IsActiveWorld,
-                                                        WorldDate = new WorldDateDTO
-                                                                    {
-                                                                        CurrentDay = x.CurrentWorldDate.CurrentDay,
-                                                                        CurrentMonth = x.CurrentWorldDate.CurrentMonth,
-                                                                        CurrentYear = x.CurrentWorldDate.CurrentYear,
-                                                                        CurrentAge = x.CurrentWorldDate.CurrentAge,
-                                                                        BeforeEra = x.CurrentWorldDate.BeforeEraName,
-                                                                        AfterEra = x.CurrentWorldDate.AfterEraName,
-                                                                        BeforeEraAbbreviation = x.CurrentWorldDate.BeforeEraAbbreviation,
-                                                                        AfterEraAbbreviation = x.CurrentWorldDate.AfterEraAbbreviation,
-                                                                        CurrentEra = x.CurrentWorldDate.CurrentAge
-                                                                    }
-                                                    })
-                                       .ToListAsync();
+            var worlds = await _worldService.GetUserWorldsAsync(ownerId);
             return Ok(worlds);
         }
 

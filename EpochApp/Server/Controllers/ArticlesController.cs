@@ -3,13 +3,13 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 22-2-2024
+using AutoMapper;
 using EpochApp.Server.Data;
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
 using EpochApp.Shared.Config;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EpochApp.Server.Controllers
 {
@@ -22,11 +22,15 @@ namespace EpochApp.Server.Controllers
     {
         private readonly IArticleService _articleService;
         private readonly EpochDataDbContext _context;
+        private readonly ILogger<ArticlesController> _logger;
+        private readonly IMapper _mapper;
 
-        public ArticlesController(EpochDataDbContext context, IArticleService articleService)
+        public ArticlesController(EpochDataDbContext context, IArticleService articleService, IMapper mapper, ILogger<ArticlesController> logger)
         {
             _context = context;
             _articleService = articleService;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -109,36 +113,12 @@ namespace EpochApp.Server.Controllers
                                         .Include(a => a.Category)
                                         .Include(a => a.World)
                                         .Include(a => a.Author)
-                                        .Select(x => new ArticleEditDTO
-                                                     {
-                                                         ArticleId = x.ArticleId,
-                                                         Title = x.Title,
-                                                         CategoryId = x.CategoryId ?? 0,
-                                                         Content = x.Content,
-                                                         CreatedOn = x.CreatedOn,
-                                                         ModifiedOn = x.ModifiedOn,
-                                                         IsPublished = x.IsPublished,
-                                                         IsNSFW = x.IsNSFW,
-                                                         DisplayAuthor = x.DisplayAuthor,
-                                                         ShowTableOfContents = x.ShowInTableOfContents,
-                                                         ShowInTableOfContents = x.ShowInTableOfContents,
-                                                         Sections = x.Sections.Select(s => new SectionEditDTO
-                                                                                           {
-                                                                                               SectionId = s.SectionID,
-                                                                                               Title = s.Title,
-                                                                                               Content = s.Content,
-                                                                                               CreatedOn = s.CreatedOn
-                                                                                           })
-                                                                     .ToList()
-                                                     })
                                         .FirstOrDefaultAsync(x => x.ArticleId == articleId);
-
             if (article == null)
-            {
                 return NotFound();
-            }
 
-            return Ok(article);
+            var dto = _mapper.Map<Article, ArticleEditDTO>(article);
+            return Ok(dto);
         }
 
         /// <summary>
@@ -185,30 +165,11 @@ namespace EpochApp.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateArticleAsync(ArticleEditDTO article)
         {
-            var art = new Article
-                      {
-                          Title = article.Title,
-                          Content = article.Content,
-                          CreatedOn = DateTime.UtcNow,
-                          AuthorId = article.AuthorId,
-                          WorldId = article.WorldId,
-                          IsPublished = article.IsPublished,
-                          IsNSFW = article.IsNSFW,
-                          DisplayAuthor = article.DisplayAuthor,
-                          ShowTableOfContents = article.ShowInTableOfContents,
-                          ShowInTableOfContents = article.ShowInTableOfContents,
-                          Sections = article.Sections.Select(x => new ArticleSection
-                                                                  {
-                                                                      Title = x.Title,
-                                                                      Content = x.Content,
-                                                                      CreatedOn = DateTime.UtcNow
-                                                                  })
-                                            .ToList()
-
-                      };
-            _context.Articles.Add(art);
+            var newArt = _mapper.Map<ArticleEditDTO, Article>(article);
+            newArt.Sections = article.Sections.Select(x => _mapper.Map<SectionEditDTO, ArticleSection>(x)).ToList();
+            _context.Articles.Add(newArt);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetArticle", new { articleId = art.ArticleId }, art);
+            return CreatedAtAction("GetArticle", new { articleId = newArt.ArticleId }, newArt);
         }
 
         /// <summary> Updates an article. </summary>
@@ -227,59 +188,24 @@ namespace EpochApp.Server.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateArticleAsync([FromQuery] Guid userId, [FromQuery] Guid articleId, ArticleEditDTO article)
         {
-            var articleToUpdate = await _context.Articles.FirstOrDefaultAsync(x => x.ArticleId == articleId);
-            var articleSections = await _context.ArticleSections
-                                                .Where(x => x.ArticleId == articleId)
-                                                .ToListAsync();
+            _logger.LogInformation("Updating article...");
+            var articleToUpdate = await _context.Articles.Where(x => x.ArticleId == articleId)
+                                                .Include(x => x.World)
+                                                .Include(x => x.Category)
+                                                .Include(x => x.Author)
+                                                .Include(x => x.Sections)
+                                                .FirstOrDefaultAsync();
+            var articleSections = articleToUpdate?.Sections.ToList() ?? new List<ArticleSection>();
+            _logger.LogInformation($"Article sections: {articleSections.Count}");
             if (articleToUpdate == null)
                 return NotFound();
             if (articleToUpdate.AuthorId != userId)
                 return Unauthorized();
 
-            // Update or delete sections
-            if (article.Sections.IsNullOrEmpty())
-                if (articleSections.Any())
-                    foreach (var section in articleSections)
-                        _context.ArticleSections.Remove(section);
+            var sections = article.Sections.Select(x => _mapper.Map<SectionEditDTO, ArticleSection>(x)).ToList();
+            _mapper.Map(article, articleToUpdate);
+            articleToUpdate.Sections = sections;
 
-            // Remove sections not found in the updated article
-            foreach (var section in articleSections)
-            {
-                var sectionToUpdate = article.Sections.FirstOrDefault(x => x.SectionId == section.SectionID);
-                if (sectionToUpdate == null)
-                    _context.ArticleSections.Remove(section);
-            }
-
-            foreach (var section in article.Sections)
-            {
-                var sectionToUpdate = articleSections.FirstOrDefault(x => x.SectionID == section.SectionId);
-                if (sectionToUpdate == null)
-                {
-                    articleSections.Add(new ArticleSection
-                                        {
-                                            Title = section.Title,
-                                            Content = section.Content,
-                                            CreatedOn = DateTime.Now
-                                        });
-                }
-                else
-                {
-                    sectionToUpdate.Title = section.Title;
-                    sectionToUpdate.Content = section.Content;
-                    sectionToUpdate.CreatedOn = DateTime.Now;
-                    _context.Entry(sectionToUpdate).State = EntityState.Modified;
-                }
-            }
-
-            articleToUpdate.Title = article.Title;
-            articleToUpdate.Content = article.Content;
-            articleToUpdate.ModifiedOn = DateTime.Now;
-            articleToUpdate.IsPublished = article.IsPublished;
-            articleToUpdate.IsNSFW = article.IsNSFW;
-            articleToUpdate.DisplayAuthor = article.DisplayAuthor;
-            articleToUpdate.ShowTableOfContents = article.ShowInTableOfContents;
-            articleToUpdate.ShowInTableOfContents = article.ShowInTableOfContents;
-            articleToUpdate.Sections = articleSections;
             _context.Entry(articleToUpdate).State = EntityState.Modified;
             try
             {
@@ -288,6 +214,7 @@ namespace EpochApp.Server.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError($"Error updating article: {e.Message}");
                 return BadRequest(e.Message);
             }
 

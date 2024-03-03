@@ -52,6 +52,11 @@ namespace EpochApp.Server
                     });
             ConfigBuilder.ConfigureCommonServices(services);
             services.AddHttpContextAccessor();
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AllowNullCollections = true;
+                cfg.AllowNullDestinationValues = true;
+            });
             services.AddAutoMapper(typeof(ArticleProfile));
             services.AddAutoMapper(typeof(ManuscriptProfile));
             services.AddScoped<ITagService, TagService>();

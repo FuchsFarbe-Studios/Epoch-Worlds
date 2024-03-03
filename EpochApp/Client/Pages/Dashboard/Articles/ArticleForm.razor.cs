@@ -39,14 +39,14 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
             var cats = await Client.GetFromJsonAsync<List<ArticleCategory>>("api/v1/Articles/Categories");
             if (cats != null || cats.Any())
                 _categories = cats;
-
             if (ArticleEdit == null || !IsEditMode)
             {
                 Model = new ArticleEditDTO
                         {
                             WorldId = ActiveWorld?.WorldId,
                             AuthorId = Auth?.CurrentUser?.UserID,
-                            Sections = new List<SectionEditDTO>()
+                            Sections = new List<SectionEditDTO>(),
+                            CategoryId = _categories.FirstOrDefault().CategoryID
                         };
             }
             else

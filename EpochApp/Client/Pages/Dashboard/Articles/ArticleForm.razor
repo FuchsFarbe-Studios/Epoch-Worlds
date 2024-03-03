@@ -32,8 +32,7 @@
 					</MudItem>
 
 					<MudItem xs="12" md="6">
-						<MudSelect T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)">
-							<MudSelectItem Value="0">None</MudSelectItem>
+						<MudSelect T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)" Required="true" Placeholder="Please choose a category for this article...">
 							@if (_categories.Any())
 							{
 								@foreach (var cat in _categories)

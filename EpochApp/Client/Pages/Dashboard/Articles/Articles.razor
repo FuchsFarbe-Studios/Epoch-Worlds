@@ -22,7 +22,7 @@
 							<MudText Typo="Typo.h6">@article.Title</MudText>
 						</MudCardHeader>
 						<MudCardContent>
-							@if (content.Length > 100)
+							@if (content?.Length > 100)
 							{
 								@($"{content.Substring(0, 100)}...")
 							}

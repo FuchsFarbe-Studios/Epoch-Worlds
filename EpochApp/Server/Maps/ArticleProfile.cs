@@ -6,6 +6,7 @@
 using AutoMapper;
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
+using EpochApp.Shared.Social;
 
 namespace EpochApp.Server.Maps
 {
@@ -15,17 +16,15 @@ namespace EpochApp.Server.Maps
         {
             CreateMap<Article, ArticleDTO>();
             CreateMap<ArticleDTO, Article>();
+            CreateMap<Article, ArticleEditDTO>();
+            CreateMap<ArticleEditDTO, Article>();
+            CreateMap<ArticleSection, SectionDTO>();
+            CreateMap<SectionDTO, ArticleSection>();
+            CreateMap<ArticleSection, SectionEditDTO>();
+            CreateMap<SectionEditDTO, ArticleSection>();
+            CreateMap<ArticleTag, ArticleTagDTO>();
+            CreateMap<ArticleTagDTO, ArticleTag>();
         }
     }
 
-    public class ManuscriptProfile : Profile
-    {
-        public ManuscriptProfile()
-        {
-            CreateMap<Manuscript, ManuscriptDTO>();
-            CreateMap<ManuscriptDTO, Manuscript>();
-            CreateMap<ManuscriptChapter, ManuscriptChapterDTO>();
-            CreateMap<ManuscriptChapterDTO, ManuscriptChapter>();
-        }
-    }
 }

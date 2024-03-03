@@ -1,3 +1,4 @@
+using EpochApp.Shared;
 using EpochApp.Shared.Worlds;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
@@ -17,6 +18,7 @@ namespace EpochApp.Client.Pages.ViewContent
         [Parameter] public string WorldId { get; set; }
 
         [Inject] private HttpClient Client { get; set; }
+        [Inject] private IWorldService WorldService { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
