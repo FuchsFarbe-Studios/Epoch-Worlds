@@ -407,9 +407,9 @@ namespace EpochApp.Server.Services
             var vowels = new List<string>();
             for (var i = 0; i < vowelCount; i++)
             {
-                var randConsonant = random.Next(0, vowelsDb.Count - 1);
-                var consonant = vowelsDb[randConsonant];
-                vowels.Add(consonant.PhonemeID);
+                var randVowel = random.Next(0, vowelsDb.Count - 1);
+                var vowel = vowelsDb[randVowel];
+                vowels.Add(vowel.PhonemeChar);
             }
             return await Task.FromResult(vowels);
         }
@@ -422,7 +422,7 @@ namespace EpochApp.Server.Services
             {
                 var randConsonant = random.Next(0, consonantsDb.Count - 1);
                 var consonant = consonantsDb[randConsonant];
-                consonants.Add(consonant.PhonemeID);
+                consonants.Add(consonant.PhonemeChar);
             }
             return await Task.FromResult(consonants);
         }

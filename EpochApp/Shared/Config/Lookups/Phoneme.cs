@@ -6,9 +6,24 @@
 
 namespace EpochApp.Shared.Config
 {
+    /// <summary>
+    ///   Represents a phoneme.
+    /// </summary>
     public class Phoneme
     {
-        public string PhonemeID { get; set; }
+        /// <summary>
+        /// The phoneme's unique identifier.
+        /// </summary>
+        public int PhonemeId { get; set; }
+
+        /// <summary>
+        /// The phoneme's character representation.
+        /// </summary>
+        public string PhonemeChar { get; set; }
+
+        /// <summary>
+        /// The phoneme's audio file.
+        /// </summary>
         public string AudioFile { get; set; }
     }
 }

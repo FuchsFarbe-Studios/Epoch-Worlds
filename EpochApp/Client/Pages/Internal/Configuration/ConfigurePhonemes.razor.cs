@@ -115,7 +115,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
 
         private async Task RemoveConsonantAsync(Consonant deleteCtxItem)
         {
-            var response = await Client.DeleteAsync($"api/v1/Builder/Consonant?phonemeId={deleteCtxItem.PhonemeID}");
+            var response = await Client.DeleteAsync($"api/v1/Builder/Consonant?phonemeId={deleteCtxItem.PhonemeChar}");
             if (!response.IsSuccessStatusCode)
                 Logger.LogWarning("Failed to delete consonant");
             else
@@ -127,7 +127,7 @@ namespace EpochApp.Client.Pages.Internal.Configuration
 
         private async Task RemoveVowelAsync(Vowel deleteCtxItem)
         {
-            var response = await Client.DeleteAsync($"api/v1/Builder/Vowel?phonemeId={deleteCtxItem.PhonemeID}");
+            var response = await Client.DeleteAsync($"api/v1/Builder/Vowel?phonemeId={deleteCtxItem.PhonemeChar}");
             if (!response.IsSuccessStatusCode)
                 Logger.LogWarning("Failed to delete vowel");
             else

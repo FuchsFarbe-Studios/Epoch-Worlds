@@ -46,11 +46,11 @@
 										{
 											if (!con.IsVoiced)
 											{
-												<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(con.PhonemeID))" Color="Color.Primary" Text="@con.PhonemeID" />
+												<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(con.PhonemeChar))" Color="Color.Primary" Text="@con.PhonemeChar" />
 											}
 											if (con.IsVoiced)
 											{
-												<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(con.PhonemeID))" Color="Color.Secondary" Text="@con.PhonemeID" />
+												<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(con.PhonemeChar))" Color="Color.Secondary" Text="@con.PhonemeChar" />
 											}
 										}
 									</MudPaper>
@@ -71,7 +71,7 @@
 					{
 						@foreach (var vowel in _vowels)
 						{
-							<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(vowel.PhonemeID))" Color="Color.Secondary" Text="@vowel.PhonemeID" />
+							<MudChip Size="Size.Large" OnClick="@(async () => await AppendStringAsync(vowel.PhonemeChar))" Color="Color.Secondary" Text="@vowel.PhonemeChar" />
 						}
 					}
 				</MudPaper>

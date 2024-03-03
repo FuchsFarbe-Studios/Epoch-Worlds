@@ -22,17 +22,18 @@
 					<MudLink Color="Color.Warning" Href="@NavRef.AdminNav.Users">Users</MudLink>
 				</MudStack>
 			</MudPaper>
-
-			<MudPaper Width="100%" Class="pa-4 mud-border-error mb-2" Outlined="true">
-				<MudStack Row="true" Spacing="2" Justify="Justify.Center">
-					<MudText Typo="Typo.h6" Align="Align.Left" Color="Color.Error">Internal Configuration</MudText>
-					<MudSpacer />
-					<MudLink Color="Color.Error" Href="/Configure/Templates/Article">Article Templates</MudLink>
-					<MudLink Color="Color.Error" Href="/Internal/Configuration/Dictionary">Word Dictionary</MudLink>
-					<MudLink Color="Color.Error" Href="/Internal/Configuration/Phonemes">Phonemes</MudLink>
-					<MudLink Color="Color.Error" Href="/Internal/Configuration/IPAKeyboard">Keyboard</MudLink>
-				</MudStack>
-			</MudPaper>
+			<AuthorizeView Roles="ADMIN">
+				<MudPaper Width="100%" Class="pa-4 mud-border-error mb-2" Outlined="true">
+					<MudStack Row="true" Spacing="2" Justify="Justify.Center">
+						<MudText Typo="Typo.h6" Align="Align.Left" Color="Color.Error">Administrator Configuration</MudText>
+						<MudSpacer />
+						<MudLink Color="Color.Error" Href="/Configure/Templates/Article">Article Templates</MudLink>
+						<MudLink Color="Color.Error" Href="/Internal/Configuration/Dictionary">Word Dictionary</MudLink>
+						<MudLink Color="Color.Error" Href="/Internal/Configuration/Phonemes">Phonemes</MudLink>
+						<MudLink Color="Color.Error" Href="/Internal/Configuration/IPAKeyboard">Keyboard</MudLink>
+					</MudStack>
+				</MudPaper>
+			</AuthorizeView>
 		</MudStack>
 
 		@Body

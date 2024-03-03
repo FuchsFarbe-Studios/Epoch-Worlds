@@ -67,6 +67,7 @@ namespace EpochApp.Server.Services
             return await _context.ArticleCategories.ToListAsync();
         }
 
+        /// <inheritdoc />
         public async Task<List<SocialMedia>> GetSocialMediasAsync()
         {
             return await _context.SocialMedias.ToListAsync();

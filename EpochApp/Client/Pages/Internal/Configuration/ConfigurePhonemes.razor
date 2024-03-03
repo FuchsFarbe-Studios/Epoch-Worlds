@@ -3,6 +3,7 @@
 @using ButtonType=MudBlazor.ButtonType
 @using Variant=MudBlazor.Variant
 @using Typo=MudBlazor.Typo
+@attribute [Authorize(Roles = "ADMIN")]
 
 <MudText Align="Align.Center" Typo="Typo.h3">Configure Phonemes</MudText>
 
@@ -20,7 +21,8 @@
 				<MudItem xs="12" sm="9">
 					<MudDataGrid Virtualize="true" Outlined="true" Height="1000px" T="Consonant" Items="@_consonants" EditMode="DataGridEditMode.Form" CommittedItemChanges="@CommitConsonantChangesAsync" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
 						<Columns>
-							<PropertyColumn Property="x => x.PhonemeID" Resizable="true" Title="Phoneme" />
+							<PropertyColumn Property="x => x.PhonemeId" Resizable="true" Title="Id" IsEditable="false" />
+							<PropertyColumn Property="x => x.PhonemeChar" Resizable="true" Title="Phoneme" />
 							<PropertyColumn Property="x => x.AudioFile" Resizable="true" />
 							<PropertyColumn Property="x => x.Manner">
 								<EditTemplate Context="cCtx">
@@ -63,30 +65,31 @@
 
 				<MudItem xs="12" sm="3">
 					<EditForm Model="@_consonantModel" OnValidSubmit="@AddConsonantAsync">
+						<MudNumericField T="int" @bind-Value="@_consonantModel.PhonemeId" For="@(() => _consonantModel.PhonemeId)" FullWidth="true" Label="Phoneme Id" ReadOnly="true" />
+						<MudStack Row="true">
+							<MudTextField @bind-Value="@_consonantModel.PhonemeChar" For="@(() => _consonantModel.PhonemeChar)" FullWidth="true" Label="Phoneme" MaxLength="4" Required="true" />
+							<MudTextField @bind-Value="@_consonantModel.AudioFile" For="@(() => _consonantModel.AudioFile)" FullWidth="true" Label="File" MaxLength="155" />
+						</MudStack>
 
-						<MudTextField @bind-Value="@_consonantModel.PhonemeID" For="@(() => _consonantModel.PhonemeID)" Label="Phoneme" MaxLength="4" Required="true" />
-						<MudTextField @bind-Value="@_consonantModel.AudioFile" For="@(() => _consonantModel.AudioFile)" Label="File" MaxLength="155" />
+						<MudStack Row="true">
+							<MudSelect T="ConsonantPlace" @bind-Value="@_consonantModel.Place" For="@(() => _consonantModel.Place)" Required="true">
+								@foreach (var place in Enum.GetValues<ConsonantPlace>())
+								{
+									<MudSelectItem Value="@place">@place.ToDescriptionString()</MudSelectItem>
+								}
+							</MudSelect>
+							<MudSelect T="ConsonantManner" @bind-Value="@_consonantModel.Manner" For="@(() => _consonantModel.Manner)" Label="Depth" Required="true">
+								@foreach (var manner in Enum.GetValues<ConsonantManner>())
+								{
+									<MudSelectItem Value="@manner">@manner.ToDescriptionString()</MudSelectItem>
+								}
+							</MudSelect>
+						</MudStack>
 
-						<MudSelect T="ConsonantManner" @bind-Value="@_consonantModel.Manner" For="@(() => _consonantModel.Manner)" Label="Depth" Required="true">
-							@foreach (var manner in Enum.GetValues<ConsonantManner>())
-							{
-								<MudSelectItem Value="@manner">@manner.ToDescriptionString()</MudSelectItem>
-							}
-						</MudSelect>
-
-						<MudSelect T="ConsonantPlace" @bind-Value="@_consonantModel.Place" For="@(() => _consonantModel.Place)" Required="true">
-							@foreach (var place in Enum.GetValues<ConsonantPlace>())
-							{
-								<MudSelectItem Value="@place">@place.ToDescriptionString()</MudSelectItem>
-							}
-						</MudSelect>
-
-						<MudSwitch @bind-Value="@_consonantModel.IsVoiced" For="@(() => _consonantModel.IsVoiced)" Label="Is Voiced?" />
-
-						<MudDivider DividerType="DividerType.FullWidth" />
-
-						<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Add</MudButton>
-
+						<MudStack Row="true">
+							<MudCheckBox Color="Color.Primary" @bind-Value="@_consonantModel.IsVoiced" For="@(() => _consonantModel.IsVoiced)" Label="@(_consonantModel.IsVoiced ? "Voiced" : "Voiceless")" />
+							<MudButton FullWidth="true" ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Add</MudButton>
+						</MudStack>
 					</EditForm>
 				</MudItem>
 
@@ -106,7 +109,8 @@
 				<MudItem xs="12" sm="9">
 					<MudDataGrid Virtualize="true" Outlined="true" Height="1000px" T="Vowel" Items="@_vowels" EditMode="DataGridEditMode.Form" CommittedItemChanges="@CommitVowelChangesAsync" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">
 						<Columns>
-							<PropertyColumn Property="x => x.PhonemeID" Resizable="true" Title="Phoneme" />
+							<PropertyColumn Property="x => x.PhonemeId" Resizable="true" Title="Id" IsEditable="false" />
+							<PropertyColumn Property="x => x.PhonemeChar" Resizable="true" Title="Phoneme" />
 							<PropertyColumn Property="x => x.AudioFile" Resizable="true" />
 							<PropertyColumn Property="x => x.Depth" Title="Depth">
 								<EditTemplate Context="vCtx">
@@ -149,30 +153,32 @@
 
 				<MudItem xs="12" sm="3">
 					<EditForm Model="@_vowelModel" OnValidSubmit="@AddVowelAsync">
+						<MudNumericField T="int" @bind-Value="@_vowelModel.PhonemeId" For="@(() => _vowelModel.PhonemeId)" FullWidth="true" Label="Phoneme Id" ReadOnly="true" />
+						<MudStack Row="true">
+							<MudTextField @bind-Value="@_vowelModel.PhonemeChar" For="@(() => _vowelModel.PhonemeChar)" FullWidth="true" Label="Phoneme" MaxLength="4" Required="true" />
+							<MudTextField @bind-Value="@_vowelModel.AudioFile" For="@(() => _vowelModel.AudioFile)" FullWidth="true" Label="File" MaxLength="155" />
+						</MudStack>
 
-						<MudTextField @bind-Value="@_vowelModel.PhonemeID" For="@(() => _vowelModel.PhonemeID)" Label="Phoneme" MaxLength="4" Required="true" />
-						<MudTextField @bind-Value="@_vowelModel.AudioFile" For="@(() => _vowelModel.AudioFile)" Label="File" MaxLength="155" />
+						<MudStack Row="true">
+							<MudSelect T="VowelDepth" @bind-Value="@_vowelModel.Depth" For="@(() => _vowelModel.Depth)" Label="Depth" Required="true">
+								@foreach (var depth in Enum.GetValues<VowelDepth>())
+								{
+									<MudSelectItem Value="@depth">@depth.ToDescriptionString()</MudSelectItem>
+								}
+							</MudSelect>
 
-						<MudSelect T="VowelDepth" @bind-Value="@_vowelModel.Depth" For="@(() => _vowelModel.Depth)" Label="Depth" Required="true">
-							@foreach (var depth in Enum.GetValues<VowelDepth>())
-							{
-								<MudSelectItem Value="@depth">@depth.ToDescriptionString()</MudSelectItem>
-							}
-						</MudSelect>
+							<MudSelect T="VowelVerticality" @bind-Value="@_vowelModel.Verticality" For="@(() => _vowelModel.Verticality)" Label="Verticality" Required="true">
+								@foreach (var vert in Enum.GetValues<VowelVerticality>())
+								{
+									<MudSelectItem Value="@vert">@vert.ToDescriptionString()</MudSelectItem>
+								}
+							</MudSelect>
+						</MudStack>
 
-						<MudSelect T="VowelVerticality" @bind-Value="@_vowelModel.Verticality" For="@(() => _vowelModel.Verticality)" Label="Verticality" Required="true">
-							@foreach (var vert in Enum.GetValues<VowelVerticality>())
-							{
-								<MudSelectItem Value="@vert">@vert.ToDescriptionString()</MudSelectItem>
-							}
-						</MudSelect>
-
-						<MudSwitch @bind-Value="@_vowelModel.IsRounded" For="@(() => _vowelModel.IsRounded)" Label="Is Rounded?" />
-
-						<MudDivider DividerType="DividerType.FullWidth" />
-
-						<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Add</MudButton>
-
+						<MudStack Row="true">
+							<MudCheckBox Color="Color.Secondary" @bind-Value="@_vowelModel.IsRounded" For="@(() => _vowelModel.IsRounded)" Label="Is Rounded?" />
+							<MudButton FullWidth="true" ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Add</MudButton>
+						</MudStack>
 					</EditForm>
 				</MudItem>
 			</MudGrid>

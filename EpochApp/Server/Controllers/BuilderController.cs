@@ -4,7 +4,6 @@
 // matsu
 // Modified: 9-2-2024
 using EpochApp.Server.Data;
-using EpochApp.Server.Services;
 using EpochApp.Shared;
 using EpochApp.Shared.Config;
 using EpochApp.Shared.Services;
@@ -318,6 +317,10 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        ///    Get all phonemes.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("Phonemes")]
         public async Task<List<Phoneme>> GetPhonemes()
         {
@@ -325,6 +328,11 @@ namespace EpochApp.Server.Controllers
             return await Task.FromResult(phonemes);
         }
 
+        /// <summary>
+        ///   Adds a consonant phoneme to the database.
+        /// </summary>
+        /// <param name="consonant"></param>
+        /// <returns></returns>
         [HttpPost("Consonant")]
         public async Task<IActionResult> AddConsonantAsync(Consonant consonant)
         {
@@ -332,6 +340,11 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Adds a vowel phoneme to the database.
+        /// </summary>
+        /// <param name="vowel"></param>
+        /// <returns></returns>
         [HttpPost("Vowel")]
         public async Task<IActionResult> AddVowelAsync(Vowel vowel)
         {
@@ -339,10 +352,15 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Updates a consonant phoneme in the database.
+        /// </summary>
+        /// <param name="consonant"> The <see cref="Consonant" /> to update in the database. </param>
+        /// <returns> <see cref="IActionResult" /> </returns>
         [HttpPut("Consonant")]
         public async Task<IActionResult> UpdateConsonantAsync(Consonant consonant)
         {
-            var cons = await _context.Consonants.Where(x => x.PhonemeID == consonant.PhonemeID)
+            var cons = await _context.Consonants.Where(x => x.PhonemeId == consonant.PhonemeId)
                                      .FirstOrDefaultAsync();
             cons.Manner = consonant.Manner;
             cons.Place = consonant.Place;
@@ -352,10 +370,15 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Updates a vowel phoneme in the database.
+        /// </summary>
+        /// <param name="vowel"> The <see cref="Vowel" /> to update in the database. </param>
+        /// <returns> <see cref="IActionResult" /> </returns>
         [HttpPut("Vowel")]
         public async Task<IActionResult> UpdateVowelAsync(Vowel vowel)
         {
-            var vow = await _context.Vowels.Where(x => x.PhonemeID == vowel.PhonemeID)
+            var vow = await _context.Vowels.Where(x => x.PhonemeId == vowel.PhonemeId)
                                     .FirstOrDefaultAsync();
             vow.Depth = vowel.Depth;
             vow.Verticality = vowel.Verticality;
@@ -365,22 +388,36 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Removes a consonant phoneme from the database.
+        /// </summary>
+        /// <param name="phonemeId"> The <see cref="Consonant" />'s ID to remove from the database. </param>
+        /// <returns> <see cref="IActionResult" /> </returns>
         [HttpDelete("Consonant")]
         public async Task<IActionResult> RemoveConsonantAsync([FromQuery] string phonemeId)
         {
-            var consToRemove = await _context.Consonants.FirstOrDefaultAsync(x => x.PhonemeID == phonemeId);
+            var consToRemove = await _context.Consonants.FirstOrDefaultAsync(x => x.PhonemeChar == phonemeId);
             await _language.RemoveConsonantAsync(consToRemove);
             return Ok();
         }
 
+        /// <summary>
+        /// Removes a vowel phoneme from the database.
+        /// </summary>
+        /// <param name="phonemeId"> The <see cref="Vowel" />'s ID to remove from the database. </param>
+        /// <returns> <see cref="IActionResult" /> </returns>
         [HttpDelete("Vowel")]
         public async Task<IActionResult> RemoveVowelAsync([FromQuery] string phonemeId)
         {
-            var vowel = await _context.Vowels.FirstOrDefaultAsync(x => x.PhonemeID == phonemeId);
+            var vowel = await _context.Vowels.FirstOrDefaultAsync(x => x.PhonemeChar == phonemeId);
             await _language.RemoveVowelAsync(vowel);
             return Ok();
         }
 
+        /// <summary>
+        /// Get all consonants.
+        /// </summary>
+        /// <returns> <see cref="Task{TResult}" /> where TResult is <see cref="IEnumerable{T}" /> where T is <see cref="Consonant" />. </returns>
         [HttpGet("Consonants")]
         public async Task<ActionResult<List<Consonant>>> GetConsonantsAsync()
         {
@@ -388,6 +425,10 @@ namespace EpochApp.Server.Controllers
             return Ok(cons);
         }
 
+        /// <summary>
+        /// Get all vowels.
+        /// </summary>
+        /// <returns> <see cref="Task{TResult}" /> where TResult is <see cref="IEnumerable{T}" /> where T is <see cref="Vowel" />. </returns>
         [HttpGet("Vowels")]
         public async Task<ActionResult<List<Vowel>>> GetVowelsAsync()
         {

@@ -115,8 +115,8 @@ namespace EpochApp.Server.Data
                 entity.HasKey(a => a.TemplateId);
                 entity.Property(a => a.TemplateId)
                       .ValueGeneratedOnAdd();
-                entity.Property(a => a.TemplateName).HasMaxLength(100);
-                entity.Property(a => a.Description).HasMaxLength(500);
+                entity.Property(a => a.TemplateName).HasMaxLength(100).IsUnicode(true);
+                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode(true);
                 entity.HasOne(a => a.Category)
                       .WithMany()
                       .HasForeignKey(a => a.CategoryId)
@@ -127,10 +127,10 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("ArticleTemplateMetaData", "Templates");
                 entity.HasKey(a => new { a.TemplateId, a.MetaName });
-                entity.Property(a => a.MetaName).HasMaxLength(100);
-                entity.Property(a => a.Description).HasMaxLength(500);
-                entity.Property(a => a.Placeholder).HasMaxLength(255);
-                entity.Property(a => a.HelpText).HasMaxLength(255);
+                entity.Property(a => a.MetaName).HasMaxLength(100).IsUnicode(true);
+                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode(true);
+                entity.Property(a => a.Placeholder).HasMaxLength(255).IsUnicode(true);
+                entity.Property(a => a.HelpText).HasMaxLength(255).IsUnicode(true);
                 entity.Property(e => e.Type).HasConversion<string>();
                 entity.HasOne(a => a.Template)
                       .WithMany(t => t.Meta)
@@ -143,10 +143,10 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("ArticleTemplateSections", "Templates");
                 entity.HasKey(a => new { a.TemplateId, a.SectionName });
-                entity.Property(a => a.SectionName).HasMaxLength(100);
-                entity.Property(a => a.Description).HasMaxLength(500);
-                entity.Property(a => a.Placeholder).HasMaxLength(255);
-                entity.Property(a => a.HelpText).HasMaxLength(255);
+                entity.Property(a => a.SectionName).HasMaxLength(100).IsUnicode(true);
+                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode(true);
+                entity.Property(a => a.Placeholder).HasMaxLength(255).IsUnicode(true);
+                entity.Property(a => a.HelpText).HasMaxLength(255).IsUnicode(true);
                 entity.HasOne(a => a.Template)
                       .WithMany(t => t.Sections)
                       .HasForeignKey(a => a.TemplateId)
@@ -163,7 +163,8 @@ namespace EpochApp.Server.Data
                       .ValueGeneratedOnAdd();
                 entity.Property(m => m.Title).HasMaxLength(255);
                 entity.Property(m => m.Summary)
-                      .HasMaxLength(10000);
+                      .HasMaxLength(10000)
+                      .IsUnicode(true);
                 entity.Property(m => m.CoverArt)
                       .HasMaxLength(500);
                 entity.HasOne(d => d.User)
@@ -819,9 +820,10 @@ namespace EpochApp.Server.Data
             modelBuilder.Entity<Phoneme>(entity =>
             {
                 entity.ToTable("lkPhonemes", "Lookups");
-                entity.HasKey(e => e.PhonemeID);
-                entity.Property(e => e.PhonemeID)
-                      .HasMaxLength(4)
+                entity.HasKey(e => e.PhonemeId);
+                entity.Property(e => e.PhonemeChar)
+                      .HasMaxLength(10)
+                      .IsUnicode(true)
                       .ValueGeneratedNever();
                 entity.Property(e => e.AudioFile)
                       .HasMaxLength(155);
@@ -830,6 +832,7 @@ namespace EpochApp.Server.Data
             modelBuilder.Entity<Consonant>(entity =>
             {
                 entity.ToTable("lkConsonants", "Lookups");
+                entity.Property(e => e.PhonemeId).UseIdentityColumn(2, 2);
                 entity.Property(e => e.Manner).HasConversion<string>();
                 entity.Property(e => e.Place).HasConversion<string>();
             });
@@ -837,6 +840,7 @@ namespace EpochApp.Server.Data
             modelBuilder.Entity<Vowel>(entity =>
             {
                 entity.ToTable("lkVowels", "Lookups");
+                entity.Property(e => e.PhonemeId).UseIdentityColumn(1, 2);
                 entity.Property(e => e.Depth).HasConversion<string>();
                 entity.Property(e => e.Verticality).HasConversion<string>();
             });
