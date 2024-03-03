@@ -126,6 +126,7 @@ namespace EpochApp.Client.Services
         private void PersistUserToBrowser(string token)
         {
             _authData.Token = token;
+            _client.DefaultRequestHeaders.Authorization = new("Bearer", token);
         }
 
         /// <summary>
@@ -134,6 +135,7 @@ namespace EpochApp.Client.Services
         public async Task ClearBrowserUserData()
         {
             _authData.Token = "";
+            _client.DefaultRequestHeaders.Authorization = null;
             await _client.PostAsJsonAsync("api/v1/EpochUsers/Logout", "");
             await Task.CompletedTask;
         }

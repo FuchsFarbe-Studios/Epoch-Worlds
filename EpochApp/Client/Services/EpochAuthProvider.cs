@@ -90,7 +90,6 @@ namespace EpochApp.Client.Services
             }
             principal = user.ToClaimsPrincipal();
             CurrentUser = user;
-            _logger.LogInformation($"User: {CurrentUser.UserName} logged in.");
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
         }
 

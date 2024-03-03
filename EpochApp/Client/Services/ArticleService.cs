@@ -85,13 +85,13 @@ namespace EpochApp.Client.Services
         }
 
         /// <inheritdoc />
-        public Task<ArticleEditDTO> UpdateArticleAsync(ArticleEditDTO article, Guid articleId, Guid userId)
+        public async Task<ArticleEditDTO> UpdateArticleAsync(ArticleEditDTO article, Guid articleId, Guid userId)
         {
-            var response = _client.PutAsJsonAsync($"api/v1/Articles?userId={userId}&articleId={articleId}", article);
-            if (response.IsCompletedSuccessfully)
+            var response = await _client.PutAsJsonAsync($"api/v1/Articles?userId={userId}&articleId={articleId}", article);
+            if (response.IsSuccessStatusCode)
             {
                 _logger.LogInformation($"Updated article {articleId} - {article.Title}");
-                return Task.FromResult(article);
+                return await Task.FromResult(article);
             }
             _logger.LogWarning("Failed to update article!");
             return null;
