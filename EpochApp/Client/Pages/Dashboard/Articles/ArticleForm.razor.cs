@@ -17,6 +17,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         private int _activePanelIndex;
         private List<ArticleCategory> _categories = new List<ArticleCategory>();
         private MudDynamicTabs _sectionTabs;
+        private ArticleTemplateDTO _template = null!;
         private EpochValidator _validator;
 
         /// <summary>
@@ -106,6 +107,19 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
                 StateHasChanged();
             }
             await Task.CompletedTask;
+        }
+
+        private async Task GenerateArticleTemplateAsync()
+        {
+            var template = await ArticleService.GetArticleTemplateAsync(Model.CategoryId);
+            if (template == null)
+                await Task.CompletedTask;
+            else
+            {
+                _template = template;
+                _activePanelIndex = 1;
+                StateHasChanged();
+            }
         }
     }
 }

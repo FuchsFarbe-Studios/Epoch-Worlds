@@ -112,7 +112,11 @@ namespace EpochApp.Server.Services
                                         .Include(a => a.World)
                                         .Include(a => a.Author)
                                         .FirstOrDefaultAsync(a => a.ArticleId == articleId);
-            return _mapper.Map(article, new ArticleEditDTO());
+            if (article == null)
+                return null;
+
+            var dto = _mapper.Map(article, new ArticleEditDTO());
+            return dto;
         }
 
         public async Task<IEnumerable<ArticleTemplateDTO>> GetArticleTemplatesAsync()

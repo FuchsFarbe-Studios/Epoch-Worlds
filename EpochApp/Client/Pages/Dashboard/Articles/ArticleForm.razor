@@ -32,15 +32,19 @@
 					</MudItem>
 
 					<MudItem xs="12" md="6">
-						<MudSelect T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)" Required="true" Placeholder="Please choose a category for this article...">
-							@if (_categories.Any())
-							{
-								@foreach (var cat in _categories)
+
+						<MudStack>
+							<MudSelect FullWidth="true" T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)" Required="true" Placeholder="Please choose a category for this article...">
+								@if (_categories.Any())
 								{
-									<MudSelectItem Value="@cat.CategoryID">@cat.Description</MudSelectItem>
+									@foreach (var cat in _categories)
+									{
+										<MudSelectItem Value="@cat.CategoryID">@cat.Description</MudSelectItem>
+									}
 								}
-							}
-						</MudSelect>
+							</MudSelect>
+							<MudButton OnClick="@(async () => await GenerateArticleTemplateAsync())">Generate Article Template</MudButton>
+						</MudStack>
 					</MudItem>
 
 					<MudItem xs="12">
@@ -110,16 +114,16 @@
 				<MudGrid Spacing="2">
 
 					<MudItem xs="12">
-						<MudSwitch @bind-Value="@Model.IsPublished" For="@(() => Model.IsPublished)" Label="@($"{(Model.IsPublished ? "Published" : "Unpublished")}")" />
+						<MudSwitch Color="Color.Primary" @bind-Value="@Model.IsPublished" For="@(() => Model.IsPublished)" Label="@($"{(Model.IsPublished ? "Published" : "Unpublished")}")" />
 					</MudItem>
 					<MudItem xs="12">
-						<MudSwitch @bind-Value="@Model.IsNSFW" For="@(() => Model.IsNSFW)" Label="@($"{(Model.IsNSFW ? "Not safe for work" : "Safe for work")}")" />
+						<MudSwitch Color="Color.Primary" @bind-Value="@Model.IsNSFW" For="@(() => Model.IsNSFW)" Label="@($"{(Model.IsNSFW ? "Not safe for work" : "Safe for work")}")" />
 					</MudItem>
 					<MudItem xs="12">
-						<MudSwitch @bind-Value="@Model.ShowTableOfContents" For="@(() => Model.ShowTableOfContents)" Label="@($"{(Model.ShowTableOfContents ? "Display Table of Contents" : "No Table of Contents")}")" />
+						<MudSwitch Color="Color.Primary" @bind-Value="@Model.ShowTableOfContents" For="@(() => Model.ShowTableOfContents)" Label="@($"{(Model.ShowTableOfContents ? "Display Table of Contents" : "No Table of Contents")}")" />
 					</MudItem>
 					<MudItem xs="12">
-						<MudSwitch @bind-Value="@Model.ShowInTableOfContents" For="@(() => Model.ShowInTableOfContents)" Label="@($"{(Model.ShowInTableOfContents ? "Show in World Table of Contents" : "Do not display in World Table of Contents")}")" />
+						<MudSwitch Color="Color.Primary" @bind-Value="@Model.ShowInTableOfContents" For="@(() => Model.ShowInTableOfContents)" Label="@($"{(Model.ShowInTableOfContents ? "Show in World Table of Contents" : "Do not display in World Table of Contents")}")" />
 					</MudItem>
 
 				</MudGrid>

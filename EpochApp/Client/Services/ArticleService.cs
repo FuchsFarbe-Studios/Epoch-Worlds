@@ -114,8 +114,16 @@ namespace EpochApp.Client.Services
         /// <inheritdoc />
         public async Task<ArticleTemplateDTO> GetArticleTemplateAsync(int categoryId)
         {
-            var template = await _client.GetFromJsonAsync<ArticleTemplateDTO>($"api/v1/Articles/Template/{categoryId}");
-            return await Task.FromResult(template);
+            try
+            {
+                var template = await _client.GetFromJsonAsync<ArticleTemplateDTO>($"api/v1/Articles/Template/{categoryId}");
+                return template;
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning($"Failed to get template! {e.Message}");
+                return null;
+            }
         }
 
         /// <inheritdoc />

@@ -212,7 +212,7 @@ namespace EpochApp.Server.Controllers
         /// <param name="categoryId"> The category's unique identifier. </param>
         /// <returns> A <see cref="ArticleTemplate"/>. </returns>
         [HttpGet("Template/{categoryId:int}")]
-        public async Task<ActionResult<ArticleTemplateDTO>> GetArticleTemplateAsync(int categoryId)
+        public async Task<IActionResult> GetArticleTemplateAsync(int categoryId)
         {
             var template = await _articleService.GetArticleTemplateAsync(categoryId);
             return Ok(template);
