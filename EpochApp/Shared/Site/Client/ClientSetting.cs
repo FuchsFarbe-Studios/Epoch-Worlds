@@ -1,7 +1,6 @@
 // EpochWorlds
 // ClientSetting.cs
 // FuchsFarbe Studios 2024
-// matsu
 // Modified: 2-2-2024
 namespace EpochApp.Shared.Client
 {

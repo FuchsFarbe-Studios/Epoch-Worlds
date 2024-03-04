@@ -121,5 +121,13 @@ namespace EpochApp.Shared
         /// <param name="templateId"> The template's unique identifier. </param>
         /// <returns> <see cref="Task{TResult}" /> of <see cref="bool" />. </returns>
         Task<bool> DeleteArticleTemplateAsync(int templateId);
+
+        /// <summary>
+        ///   Delete an article.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <param name="articleId"> The article's unique identifier. </param>
+        /// <returns></returns>
+        Task DeleteArticleAsync(Guid userId, Guid articleId);
     }
 }

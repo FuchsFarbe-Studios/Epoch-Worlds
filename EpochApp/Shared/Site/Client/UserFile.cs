@@ -6,6 +6,8 @@
 using EpochApp.Shared.Users;
 using EpochApp.Shared.Worlds;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Shared.Client
 {
     /// <summary>

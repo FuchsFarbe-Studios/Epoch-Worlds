@@ -187,6 +187,22 @@ namespace EpochApp.Client.Services
             return await Task.FromResult(false);
         }
 
+        /// <inheritdoc />
+        public async Task DeleteArticleAsync(Guid userId, Guid articleId)
+        {
+            var response = await _client.DeleteAsync($"api/v1/Articles?userId={userId}&articleId={articleId}");
+            if (response.IsSuccessStatusCode)
+            {
+                AddSuccessSnackbar("Article deleted successfully!");
+                _logger.LogInformation($"Deleted article {articleId}");
+            }
+            else
+            {
+                AddErrorSnackbar("Failed to delete article!");
+                _logger.LogWarning("Failed to delete article!");
+            }
+        }
+
         private void AddSuccessSnackbar(string msg)
         {
             _snackbar.Add(msg, Severity.Success, config =>

@@ -5,6 +5,8 @@
 // Modified: 2-2-2024
 using EpochApp.Server.Data;
 using EpochApp.Shared;
+using EpochApp.Shared.Client;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,15 +14,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
+    /// <summary>
+    ///    Settings for the client.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class SettingsController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
 
+        /// <summary>
+        ///    Constructor for the settings controller.
+        /// </summary>
+        /// <param name="context"> The database context. </param>
         public SettingsController(EpochDataDbContext context)
         {
             _context = context;
+        }
+
+        /// <summary>
+        ///   Get all client settings.
+        /// </summary>
+        /// <returns> A list of client settings. </returns>
+        [HttpGet("ClientSettings")]
+        public async Task<ActionResult<List<ClientSetting>>> IndexSettingsAsync()
+        {
+            return await _context.ClientSettings.ToListAsync();
         }
 
         [HttpGet]

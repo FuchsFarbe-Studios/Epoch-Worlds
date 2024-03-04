@@ -195,6 +195,20 @@ namespace EpochApp.Server.Controllers
         }
 
         /// <summary>
+        ///   Deletes an article.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <param name="articleId"> The article's unique identifier. </param>
+        /// <returns> A <see cref="IActionResult"/>. </returns>
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> DeleteArticleAsync([FromQuery] Guid userId, [FromQuery] Guid articleId)
+        {
+            await _articleService.DeleteArticleAsync(userId, articleId);
+            return Ok();
+        }
+
+        /// <summary>
         ///    Get all article templates.
         /// </summary>
         /// <returns> A <see cref="IEnumerable{T}" /> of <see cref="ArticleTemplateDTO"/>. </returns>

@@ -1,23 +1,22 @@
 @using AlignItems=MudBlazor.AlignItems
 @using Justify=MudBlazor.Justify
-@using Variant=MudBlazor.Variant
+@using Typo=MudBlazor.Typo
 @using MudBlazor
-<div class="flex-center">
-	<MudContainer>
-		<MudStack Justify="Justify.Center">
-			<MudStack Row="true" AlignItems="AlignItems.Baseline" Justify="Justify.SpaceBetween">
-				<MudLink Href="/">
-					<MudImage Height="72" Elevation="0" Src="images/logos/SVG/words-svg.svg" Alt="Site footer logo." ObjectFit="ObjectFit.Contain" />
-				</MudLink>
-				@ChildContent
-				<MudToolBar Dense="true">
-					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.About">About</MudButton>
-					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.Policy">Policy</MudButton>
-					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.Contact">Contact</MudButton>
-					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.Faq">FAQ</MudButton>
-					<MudButton Color="Color.Surface" Variant="Variant.Text" Href="@NavRef.Site.Support">Support</MudButton>
-				</MudToolBar>
+
+<footer class="site-footer mud-theme-dark d-flex align-content-center">
+	<MudStack Class="px-4 flex-grow-1" Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+		<MudLink Href="/">
+			<MudImage Height="72" Elevation="0" Src="images/logos/SVG/words-svg.svg" Alt="Site footer logo." ObjectFit="ObjectFit.Contain" />
+		</MudLink>
+		@ChildContent
+		<MudToolBar Dense="true">
+			<MudStack Row="true" Spacing="3">
+				<MudLink Typo="Typo.subtitle2" Underline="Underline.None" Color="Color.Inherit" Href="@NavRef.Site.About">About</MudLink>
+				<MudLink Typo="Typo.subtitle2" Underline="Underline.None" Color="Color.Inherit" Href="@NavRef.Site.Policy">Policy</MudLink>
+				<MudLink Typo="Typo.subtitle2" Underline="Underline.None" Color="Color.Inherit" Href="@Settings?.ContactSettings?.ContactLink">Contact</MudLink>
+				<MudLink Typo="Typo.subtitle2" Underline="Underline.None" Color="Color.Inherit" Href="@NavRef.Site.Faq">FAQ</MudLink>
+				<MudLink Typo="Typo.subtitle2" Underline="Underline.None" Color="Color.Inherit" Href="@NavRef.Site.Support">Support</MudLink>
 			</MudStack>
-		</MudStack>
-	</MudContainer>
-</div>
+		</MudToolBar>
+	</MudStack>
+</footer>

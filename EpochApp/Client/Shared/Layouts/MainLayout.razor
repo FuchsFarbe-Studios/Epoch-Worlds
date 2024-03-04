@@ -9,33 +9,33 @@
 <MudSnackbarProvider />
 <FlatThemeProvider />
 
-<MudLayout>
-	<MudAppBar Elevation="0" Color="Color.Dark" WrapContent="true">
-		@* ReSharper disable once UnusedParameter.Local *@
-		<MudIconButton Icon="@(_drawerOpen ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)" Variant="@(_drawerOpen ? Variant.Outlined : Variant.Text)" Title="@($"{(_drawerOpen ? "Close" : "Open")} side menu.")" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
-		<AppBar OnDarkModeToggle="@ToggleDarkModeAsync" />
-	</MudAppBar>
+<CascadingValue Name="Settings" Value="@_settings">
+	<MudLayout>
+		<MudAppBar Elevation="0" Color="Color.Dark" WrapContent="true">
+			@* ReSharper disable once UnusedParameter.Local *@
+			<MudIconButton Icon="@(_drawerOpen ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)" Variant="@(_drawerOpen ? Variant.Outlined : Variant.Text)" Title="@($"{(_drawerOpen ? "Close" : "Open")} side menu.")" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
+			<AppBar OnDarkModeToggle="@ToggleDarkModeAsync" />
+		</MudAppBar>
 
-	<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0" Variant="DrawerVariant.Mini" OpenMiniOnHover="true">
-		@*	NavMenu	*@
-		<AuthorizeView>
-			<CascadingValue Value="@_drawerOpen" Name="IsNavCollapsed">
-				<WorldSelector OnNewWorldChanged="@HandleNewWorldChanged" />
+		<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0" Variant="DrawerVariant.Mini" OpenMiniOnHover="true">
+			@*	NavMenu	*@
+			<AuthorizeView>
+				<CascadingValue Value="@_drawerOpen" Name="IsNavCollapsed">
+					<WorldSelector OnNewWorldChanged="@HandleNewWorldChanged" />
+				</CascadingValue>
+			</AuthorizeView>
+			<CascadingValue Name="MenuOpened" Value="@_drawerOpen">
+				<NavMenu IsMudMenu="true" />
 			</CascadingValue>
-		</AuthorizeView>
-		<CascadingValue Name="MenuOpened" Value="@_drawerOpen">
-			<NavMenu IsMudMenu="true" />
-		</CascadingValue>
-	</MudDrawer>
+		</MudDrawer>
 
-	<MudMainContent Style="background-image: url('images/worldbuilding.jpg') !important; background-repeat: no-repeat; background-attachment: fixed; background-position: center;">
-		<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="min-height: 90vh;">
-			<CascadingValue Value="@_newWorld">
-				@Body
-			</CascadingValue>
-		</MudContainer>
-		<footer class="site-footer menu-items-wrapper mud-theme-dark">
+		<MudMainContent Style="background-image: url('images/worldbuilding.jpg') !important; background-repeat: no-repeat; background-attachment: fixed; background-position: center;">
+			<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="min-height: 90vh;">
+				<CascadingValue Value="@_newWorld">
+					@Body
+				</CascadingValue>
+			</MudContainer>
 			<Footer />
-		</footer>
-	</MudMainContent>
-</MudLayout>
+		</MudMainContent>
+	</MudLayout>
+</CascadingValue>

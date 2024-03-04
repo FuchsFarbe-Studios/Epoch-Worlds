@@ -1,4 +1,5 @@
 @namespace EpochApp.Client.Shared
+@using MaxWidth=MudBlazor.MaxWidth
 @using MudBlazor
 @inherits LayoutComponentBase
 @layout MainLayout
@@ -6,7 +7,7 @@
 <AuthorizeView>
 	<Authorized>
 		<SubNav />
-		<MudContainer>
+		<MudContainer MaxWidth="MaxWidth.Large">
 			<MudPaper Outlined="true" Width="100%" MinHeight="300px" Class="mud-border-dark pa-4 mt-2">
 				@Body
 			</MudPaper>

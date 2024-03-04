@@ -3,6 +3,7 @@
 @using Position=MudBlazor.Position
 @using Typo=MudBlazor.Typo
 @using MudBlazor
+@using EpochApp.Components.Forms
 @inherits RequestComponent<UserWorldDTO>
 
 @if (WorldModel != null)
@@ -11,27 +12,19 @@
 		<DataAnnotationsValidator />
 		<ValidationSummary />
 
-		<MudTabs Border="true" Color="Color.Surface" SliderColor="Color.Primary" Elevation="0" Outlined="true" Rounded="true" KeepPanelsAlive="true" ApplyEffectsToContainer="true" TabPanelClass="ma-2 pa-2" PanelClass="pa-4">
+		<MudTabs Border="true" Color="Color.Surface" SliderColor="Color.Primary" Elevation="0" Outlined="true" Rounded="true" KeepPanelsAlive="true" ApplyEffectsToContainer="false" PanelClass="pa-4">
 
 			<!-- General World Information -->
 			<MudTabPanel Text="General" ID="@("General")">
-				<MudGrid>
-					<MudItem xs="12" sm="6">
+				<MudStack>
+					<MudStack Row="true">
 						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.WorldName" For="@(() => WorldModel.WorldName)" Label="Name" Variant="Variant.Filled" Required="true" AutoFocus="true" FullWidth="true" MaxLength="255" />
-					</MudItem>
-					<MudItem xs="12" sm="6">
 						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Pronunciation" For="@(() => WorldModel.Pronunciation)" Label="Pronunciation" FullWidth="true" MaxLength="255" />
-					</MudItem>
-					<MudItem xs="12">
+					</MudStack>
+					<MudStack Row="true">
 						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Header" For="@(() => WorldModel.Header)" Label="Header" FullWidth="true" MaxLength="255" />
-					</MudItem>
-					<MudItem xs="12">
-						<MudTextField Margin="Margin.Dense" @bind-Value="@WorldModel.Description" For="@(() => WorldModel.Description)" Label="Description" Variant="Variant.Outlined" Lines="5" FullWidth="true" MaxLength="2000" />
-					</MudItem>
-
-					@if (WorldModel.WorldFiles.Any())
-					{
-						<MudItem xs="12" sm="6">
+						@if (WorldModel.WorldFiles.Any())
+						{
 							<MudSelect Margin="Margin.Dense" @bind-Value="@WorldModel.Image" For="@(() => WorldModel.Image)" Label="Select Cover Image" FullWidth="true">
 								@foreach (var file in WorldModel.WorldFiles)
 								{
@@ -43,9 +36,10 @@
 									</MudSelectItem>
 								}
 							</MudSelect>
-						</MudItem>
-					}
-				</MudGrid>
+						}
+					</MudStack>
+					<EpochMarkup @bind-MarkupString="@WorldModel.Description" For="@(() => WorldModel.Description)" Label="Description" />
+				</MudStack>
 			</MudTabPanel>
 
 			<MudTabPanel Text="Details" ID="@("Details")">

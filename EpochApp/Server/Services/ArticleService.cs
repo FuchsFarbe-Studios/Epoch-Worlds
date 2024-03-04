@@ -97,6 +97,10 @@ namespace EpochApp.Server.Services
         {
             _logger.LogInformation("Creating new article...");
             var articleToAdd = _mapper.Map<ArticleEditDTO, Article>(article);
+            articleToAdd.CreatedOn = DateTime.UtcNow;
+            var sections = articleToAdd.Sections.ToList();
+            sections.ForEach(x => x.CreatedOn = DateTime.UtcNow);
+            articleToAdd.Sections = sections;
             _context.Articles.Add(articleToAdd);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"Article {articleToAdd.Title} created!");
@@ -119,6 +123,7 @@ namespace EpochApp.Server.Services
             return dto;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<ArticleTemplateDTO>> GetArticleTemplatesAsync()
         {
             var templates = await _context.ArticleTemplates
@@ -175,6 +180,24 @@ namespace EpochApp.Server.Services
         }
 
         /// <inheritdoc />
+        public async Task DeleteArticleAsync(Guid userId, Guid articleId)
+        {
+            var articleToDelete = await _context.Articles.Include(x => x.Author)
+                                                .Where(x => x.ArticleId == articleId)
+                                                .FirstOrDefaultAsync();
+            if (articleToDelete == null)
+                return;
+            if (articleToDelete.AuthorId != userId)
+                return;
+
+            articleToDelete.DeletedOn = DateTime.UtcNow;
+            _context.Entry(articleToDelete).State = EntityState.Modified;
+            _logger.LogInformation($"Deleting article {articleToDelete.Title}...");
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Article {articleToDelete.Title} deleted!");
+        }
+
+        /// <inheritdoc />
         public async Task<ArticleEditDTO> UpdateArticleAsync(ArticleEditDTO article, Guid articleId, Guid userId)
         {
             _logger.LogInformation("Updating article...");
@@ -194,8 +217,10 @@ namespace EpochApp.Server.Services
             var sections = article.Sections.Select(x => _mapper.Map<SectionEditDTO, ArticleSection>(x)).ToList();
             _mapper.Map(article, articleToUpdate);
             articleToUpdate.Sections = sections;
+            articleToUpdate.ModifiedOn = DateTime.UtcNow;
 
             _context.Entry(articleToUpdate).State = EntityState.Modified;
+
             try
             {
                 _context.Articles.Update(articleToUpdate);
