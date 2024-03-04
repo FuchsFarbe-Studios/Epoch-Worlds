@@ -5,7 +5,9 @@
 // Modified: 3-3-2024
 using EpochApp.Shared;
 using EpochApp.Shared.Articles;
+using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor;
 using System.Net.Http.Json;
 
 namespace EpochApp.Client.Services
@@ -19,6 +21,7 @@ namespace EpochApp.Client.Services
         private readonly HttpClient _client;
         private readonly IWebAssemblyHostEnvironment _host;
         private readonly ILogger<IArticleService> _logger;
+        private readonly ISnackbar _snackbar;
 
         /// <summary>
         ///    Constructor for ArticleService.
@@ -26,11 +29,23 @@ namespace EpochApp.Client.Services
         /// <param name="logger"> The logger. </param>
         /// <param name="host"> The web assembly host environment. </param>
         /// <param name="client"> The http client. </param>
-        public ArticleService(ILogger<ArticleService> logger, IWebAssemblyHostEnvironment host, HttpClient client)
+        /// <param name="snackbar"> The snackbar. </param>
+        public ArticleService(ILogger<ArticleService> logger, IWebAssemblyHostEnvironment host, HttpClient client, ISnackbar snackbar)
         {
             _logger = logger;
             _host = host;
             _client = client;
+            _snackbar = snackbar;
+
+            _snackbar.Configuration.ShowCloseIcon = true;
+            _snackbar.Configuration.RequireInteraction = false;
+            _snackbar.Configuration.SnackbarVariant = Variant.Outlined;
+            _snackbar.Configuration.NewestOnTop = true;
+            _snackbar.Configuration.PreventDuplicates = true;
+            _snackbar.Configuration.VisibleStateDuration = 20000;
+            _snackbar.Configuration.MaxDisplayedSnackbars = 10;
+            _snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+            _snackbar.Configuration.ClearAfterNavigation = false;
             // _client = new HttpClient { BaseAddress = new Uri($"{_host.BaseAddress}") };
             _logger.LogInformation($"ArticleService created, base address: {_client.BaseAddress}");
         }
@@ -73,13 +88,16 @@ namespace EpochApp.Client.Services
         /// <inheritdoc />
         public async Task<Article> CreateArticleAsync(ArticleEditDTO article)
         {
+            AddInfoSnackbar("Creating article...");
             var response = await _client.PostAsJsonAsync("api/v1/Articles", article);
             if (response.IsSuccessStatusCode)
             {
                 var newArticle = await response.Content.ReadFromJsonAsync<Article>();
+                AddSuccessSnackbar("Article created successfully!");
                 _logger.LogInformation($"Created article {newArticle.ArticleId} - {newArticle.Title}");
                 return await Task.FromResult(newArticle);
             }
+            AddErrorSnackbar("Failed to create article!");
             _logger.LogWarning("Failed to create article!");
             return null;
         }
@@ -87,12 +105,15 @@ namespace EpochApp.Client.Services
         /// <inheritdoc />
         public async Task<ArticleEditDTO> UpdateArticleAsync(ArticleEditDTO article, Guid articleId, Guid userId)
         {
+            AddInfoSnackbar("Updating article...");
             var response = await _client.PutAsJsonAsync($"api/v1/Articles?userId={userId}&articleId={articleId}", article);
             if (response.IsSuccessStatusCode)
             {
+                AddSuccessSnackbar("Article updated successfully!");
                 _logger.LogInformation($"Updated article {articleId} - {article.Title}");
                 return await Task.FromResult(article);
             }
+            AddErrorSnackbar("Failed to update article!");
             _logger.LogWarning("Failed to update article!");
             return null;
         }
@@ -164,6 +185,50 @@ namespace EpochApp.Client.Services
             }
             _logger.LogWarning("Failed to delete template!");
             return await Task.FromResult(false);
+        }
+
+        private void AddSuccessSnackbar(string msg)
+        {
+            _snackbar.Add(msg, Severity.Success, config =>
+            {
+                config.SnackbarVariant = Variant.Outlined;
+                config.Icon = StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand];
+                config.IconColor = Color.Success;
+                config.IconSize = Size.Medium;
+            });
+        }
+
+        private void AddWarningSnackbar(string msg)
+        {
+            _snackbar.Add(msg, Severity.Warning, config =>
+            {
+                config.SnackbarVariant = Variant.Outlined;
+                config.Icon = StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand];
+                config.IconColor = Color.Success;
+                config.IconSize = Size.Medium;
+            });
+        }
+
+        private void AddInfoSnackbar(string msg)
+        {
+            _snackbar.Add(msg, Severity.Info, config =>
+            {
+                config.SnackbarVariant = Variant.Outlined;
+                config.Icon = StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand];
+                config.IconColor = Color.Success;
+                config.IconSize = Size.Medium;
+            });
+        }
+
+        private void AddErrorSnackbar(string msg)
+        {
+            _snackbar.Add(msg, Severity.Error, config =>
+            {
+                config.SnackbarVariant = Variant.Outlined;
+                config.Icon = StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand];
+                config.IconColor = Color.Error;
+                config.IconSize = Size.Medium;
+            });
         }
     }
 }
