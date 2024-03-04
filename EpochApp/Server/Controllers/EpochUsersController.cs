@@ -1,3 +1,4 @@
+using AutoMapper;
 using EpochApp.Server.Data;
 using EpochApp.Server.Services.MailService;
 using EpochApp.Shared;
@@ -10,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Profile=EpochApp.Shared.Users.Profile;
 
 // ReSharper disable EntityFramework.NPlusOne.IncompleteDataUsage
 
@@ -28,6 +30,8 @@ namespace EpochApp.Server.Controllers
         private readonly EpochDataDbContext _context;
         private readonly ILogger<EpochUsersController> _logger;
         private readonly IMailService _mail;
+        private readonly IMapper _mapper;
+
         private readonly Random _random = new Random();
         private readonly IWorldService _worldService;
         private HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
@@ -44,13 +48,15 @@ namespace EpochApp.Server.Controllers
         /// <param name="mail"> The injected <see cref="IMailService" /> mail service. </param>
         /// <param name="worldService"> The injected <see cref="IWorldService" /> world service. </param>
         /// <param name="logger"> The injected <see cref="ILogger{TCategoryName}" /> logger. </param>
-        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration, IMailService mail, IWorldService worldService, ILogger<EpochUsersController> logger)
+        /// <param name="mapper"> The injected <see cref="IMapper" /> mapper. </param>
+        public EpochUsersController(EpochDataDbContext context, IConfiguration configuration, IMailService mail, IWorldService worldService, ILogger<EpochUsersController> logger, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
             _mail = mail;
             _worldService = worldService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -86,23 +92,12 @@ namespace EpochApp.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserData>> GetUserAsync(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserID == id);
 
             if (user == null)
-            {
                 return NotFound();
-            }
 
-            var data = new UserData
-                       {
-                           UserID = user.UserID,
-                           UserName = user.UserName,
-                           Hash = user.PasswordHash,
-                           Email = user.Email,
-                           DateOfBirth = user.DateOfBirth,
-                           Roles = user?.UserRoles?.Select(ur => ur?.Role?.Description).ToList()
-                       };
-
+            var data = _mapper.Map(user, new UserData());
             return data;
         }
 
@@ -304,6 +299,10 @@ namespace EpochApp.Server.Controllers
             return Ok(jwt);
         }
 
+        /// <summary>
+        ///    GetRefreshTokenAsync() is a POST method used for refreshing the JWT token.
+        /// </summary>
+        /// <returns> Returns JWT if refresh token is valid else error message. </returns>
         [HttpPost("Refresh-Token")]
         public async Task<ActionResult<string>> GetRefreshTokenAsync()
         {
@@ -346,6 +345,7 @@ namespace EpochApp.Server.Controllers
             var token = Request.Cookies["refreshToken"];
             token = null;
             Response.Cookies.Delete("refreshToken");
+            await Task.CompletedTask;
             return Ok();
         }
 
@@ -429,6 +429,11 @@ namespace EpochApp.Server.Controllers
             return Ok(jwt);
         }
 
+        /// <summary>
+        ///    Sends a password reset email to the user.
+        /// </summary>
+        /// <param name="forgotPassword"> The user to send the reset email to. </param>
+        /// <returns> Ok if successful. </returns>
         [AllowAnonymous]
         [HttpPost("Forgot-Password")]
         public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordDTO forgotPassword)
@@ -448,6 +453,11 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        ///   Resets a user's password.
+        /// </summary>
+        /// <param name="forgotPassword"> The user to reset the password for. </param>
+        /// <returns> Ok if successful. </returns>
         [AllowAnonymous]
         [HttpPost("Reset-Password")]
         public async Task<IActionResult> ResetPasswordAsync(ResetPasswordDTO forgotPassword)
@@ -492,13 +502,20 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        ///    GetRolesAsync() is a GET method that retrieves all the roles from the Roles DBSet.
+        /// </summary>
+        /// <returns> <see cref="Task{TResult}"/> where TResult is <see cref="ActionResult{T}"/> where TValue is <see cref="Role"/>. </returns>
         [Authorize(Roles = "ADMIN,INTERNAL")]
         [HttpGet("Get-Roles")]
-        public async Task<ActionResult<IEnumerable<Role>>> GetRolesAsync()
-        {
-            return await _context.Roles.ToListAsync();
-        }
+        public async Task<ActionResult<IEnumerable<Role>>> GetRolesAsync() => await _context.Roles.ToListAsync();
 
+        /// <summary>
+        ///  Adds a role to an existing user.
+        /// </summary>
+        /// <param name="userId"> The id of the user to add the role to. </param>
+        /// <param name="roleId"> The id of the role to add to the user. </param>
+        /// <returns> <see cref="Task{TResult}"/> where TResult is <see cref="IActionResult"/>. </returns>
         [Authorize(Roles = "ADMIN,INTERNAL")]
         [HttpPost("Add-Role")]
         public async Task<IActionResult> AddUserRoleAsync([FromQuery] Guid userId, [FromQuery] int roleId)
@@ -518,6 +535,12 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        ///    Removes a role from a user.
+        /// </summary>
+        /// <param name="userId"> The id of the user to remove the role from. </param>
+        /// <param name="roleId"> The id of the role to remove from the user. </param>
+        /// <returns> <see cref="Task{TResult}"/> where TResult is <see cref="IActionResult"/>. </returns>
         [Authorize(Roles = "ADMIN,INTERNAL")]
         [HttpPost("Remove-Role")]
         public async Task<IActionResult> RemoveUserRoleAsync([FromQuery] Guid userId, [FromQuery] int roleId)
@@ -554,9 +577,7 @@ namespace EpochApp.Server.Controllers
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
-            {
                 return NotFound();
-            }
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();

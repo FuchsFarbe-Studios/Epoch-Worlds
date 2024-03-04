@@ -6,6 +6,8 @@
 using EpochApp.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Shared.Utils
 {
     public static class ConfigBuilder

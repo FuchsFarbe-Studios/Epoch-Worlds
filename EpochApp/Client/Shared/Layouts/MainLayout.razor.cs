@@ -13,7 +13,7 @@ namespace EpochApp.Client.Shared
     {
         private List<ClientSetting> _clientSettings = new List<ClientSetting>();
         private bool _drawerOpen;
-        private bool _isDarkMode = false;
+        private bool _isDarkMode;
         private WorldDTO _newWorld;
         private SiteSettings _settings = new SiteSettings();
 

@@ -27,7 +27,10 @@ namespace EpochApp.Shared
         /// </summary>
         public Guid? WorldID { get; set; }
 
-        public string? ContentName { get; set; }
+        /// <summary>
+        ///    Name of the content.
+        /// </summary>
+        public string ContentName { get; set; }
 
         /// <summary> Type of content. </summary>
         public ContentType ContentType { get; set; }
@@ -58,11 +61,11 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Author property of this content.
         /// </summary>
-        public virtual User? Author { get; set; }
+        public virtual User Author { get; set; }
 
         /// <summary>
         ///     World property of this content.
         /// </summary>
-        public virtual World? World { get; set; }
+        public virtual World World { get; set; }
     }
 }

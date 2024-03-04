@@ -54,22 +54,22 @@ namespace EpochApp.Shared
         /// <summary>
         /// Title of this article.
         /// </summary>
-        public string? Title { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Subtitle of this article.
         /// </summary>
-        public string? SubTitle { get; set; }
+        public string SubTitle { get; set; }
 
         /// <summary>
         ///     Content of this article.
         /// </summary>
-        public string? Content { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
         /// Short summary of the article.
         /// </summary>
-        public string? Excerpt { get; set; }
+        public string Excerpt { get; set; }
 
         /// <summary>
         /// Snippet that displays when the mouse is hovered over and article link.
@@ -79,7 +79,7 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Generated article content will go here.
         /// </summary>
-        public string? GeneratedContentXml { get; set; }
+        public string GeneratedContentXml { get; set; }
 
         /// <summary>
         ///     Determines the type of content to generate.
@@ -104,47 +104,47 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Published articles are viewable by other users.
         /// </summary>
-        public bool IsPublished { get; set; } = false;
+        public bool IsPublished { get; set; }
 
         /// <summary>
         ///    Indicates if this article is public.
         /// </summary>
-        public bool IsPublic { get; set; } = false;
+        public bool IsPublic { get; set; }
 
         /// <summary>
         ///    Indicates if this article is a work in progress.
         /// </summary>
-        public bool IsWorkInProgress { get; set; } = false;
+        public bool IsWorkInProgress { get; set; }
 
         /// <summary>
         ///     Indicates if this article is not safe for work.
         /// </summary>
-        public bool IsNSFW { get; set; } = false;
+        public bool IsNSFW { get; set; }
 
         /// <summary>
         ///     Display the author of this article.
         /// </summary>
-        public bool DisplayAuthor { get; set; } = false;
+        public bool DisplayAuthor { get; set; }
 
         /// <summary>
         ///    Allow comments on this article.
         /// </summary>
-        public bool AllowComments { get; set; } = false;
+        public bool AllowComments { get; set; }
 
         /// <summary>
         ///   Allow copy of this article.
         /// </summary>
-        public bool AllowCopy { get; set; } = false;
+        public bool AllowCopy { get; set; }
 
         /// <summary>
         ///     Show this article in the table of contents.
         /// </summary>
-        public bool ShowInTableOfContents { get; set; } = false;
+        public bool ShowInTableOfContents { get; set; }
 
         /// <summary>
         ///     Show the table of content for this article.
         /// </summary>
-        public bool ShowTableOfContents { get; set; } = false;
+        public bool ShowTableOfContents { get; set; }
 
         /// <summary>
         ///     ID of the template used to generate this article.
@@ -169,17 +169,17 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Author navigation property.
         /// </summary>
-        public virtual User? Author { get; set; }
+        public virtual User Author { get; set; }
 
         /// <summary>
         ///     World navigation property.
         /// </summary>
-        public virtual World? World { get; set; }
+        public virtual World World { get; set; }
 
         /// <summary>
         ///     Category navigation property.
         /// </summary>
-        public virtual ArticleCategory? Category { get; set; }
+        public virtual ArticleCategory Category { get; set; }
 
         /// <summary>
         ///    Header navigation property.

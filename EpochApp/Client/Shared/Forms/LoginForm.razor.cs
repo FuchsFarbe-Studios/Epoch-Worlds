@@ -15,12 +15,6 @@ namespace EpochApp.Client.Shared
         private LoginDTO _loginDto = new LoginDTO();
         private EpochValidator _validator;
 
-        /// <inheritdoc />
-        protected override Task OnInitializedAsync()
-        {
-            return base.OnInitializedAsync();
-        }
-
         private async Task AttemptLoginAsync(EditContext ctx)
         {
             Logger.LogInformation($"Logging in: {_loginDto.UserName}");

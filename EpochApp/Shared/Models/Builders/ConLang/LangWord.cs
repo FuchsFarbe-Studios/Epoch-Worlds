@@ -30,6 +30,6 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Spelling override for this word.
         /// </summary>
-        public string? SpellingOverride { get; set; }
+        public string SpellingOverride { get; set; }
     }
 }

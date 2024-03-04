@@ -23,6 +23,7 @@ namespace EpochApp.Server.Services
         /// </summary>
         /// <param name="context"> Database Context. </param>
         /// <param name="logger"> Logger. </param>
+        /// <param name="mapper"> Mapper. </param>
         public WorldService(EpochDataDbContext context, ILogger<WorldService> logger, IMapper mapper)
         {
             _context = context;
@@ -257,7 +258,7 @@ namespace EpochApp.Server.Services
                 if (!exists)
                     return null;
 
-                _logger.LogError("World does not exist!");
+                _logger.LogError($"World does not exist! {ex.Message}");
             }
             return null;
         }
@@ -285,7 +286,7 @@ namespace EpochApp.Server.Services
                 if (!exists)
                     return null;
 
-                _logger.LogError("World does not exist!");
+                _logger.LogError($"World does not exist! {ex.Message}");
             }
             var deletedWorld = _mapper.Map<World, WorldDTO>(worldToDelete);
             return await Task.FromResult(deletedWorld);

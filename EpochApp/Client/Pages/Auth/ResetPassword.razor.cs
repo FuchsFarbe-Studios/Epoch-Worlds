@@ -9,6 +9,7 @@ namespace EpochApp.Client.Pages.Auth
     /// <summary> Reset password page. </summary>
     public partial class ResetPassword
     {
+        //private EpochValidator _validator;
         private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
         private bool _submitting = false;
         /// <summary>

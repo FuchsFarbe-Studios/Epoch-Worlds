@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+#pragma warning disable 1591// Missing XML comment for publicly visible type or member
 // ReSharper disable UnusedMember.Local
 
 namespace EpochApp.Server.Controllers

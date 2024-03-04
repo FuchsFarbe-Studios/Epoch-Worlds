@@ -36,23 +36,24 @@ namespace EpochApp.Server.Services
         }
 
         // Report a user
-        public async Task<UserReport> ReportUser(UserReportDTO report)
+        /// <inheritdoc />
+        public async Task<UserReport> ReportUserAsync(UserReportDTO report)
         {
             var accuser = await _context.Users.Include(x => x.UserRoles).ThenInclude(r => r.Role).FirstOrDefaultAsync(x => x.UserID == report.PlaintiffId);
             var defendant = await _context.Users.Include(x => x.UserRoles).ThenInclude(r => r.Role).FirstOrDefaultAsync(x => x.UserID == report.DefendantId);
-            var accuserIsAdmin = accuser.UserRoles.Any(r => r.Role.Description == "ADMIN" || r.Role.Description == "INTERNAL");
-            var defendantIsAdmin = defendant.UserRoles.Any(r => r.Role.Description == "ADMIN" || r.Role.Description == "INTERNAL");
+            var accuserIsAdmin = Enumerable.Any<UserRole>(accuser.UserRoles, r => r.Role.Description == "ADMIN" || r.Role.Description == "INTERNAL");
+            var defendantIsAdmin = Enumerable.Any<UserRole>(defendant.UserRoles, r => r.Role.Description == "ADMIN" || r.Role.Description == "INTERNAL");
 
             if (accuserIsAdmin && defendantIsAdmin)
             {
-                _logger.LogWarning("Admins cannot report other admins!");
+                LoggerExtensions.LogWarning(_logger, "Admins cannot report other admins!");
                 return null;
             }
 
             var newReport = _mapper.Map(report, new UserReport());
             _context.UserReports.Add(newReport);
             await _context.SaveChangesAsync();
-            return await Task.FromResult(newReport);
+            return await Task.FromResult<UserReport>(newReport);
         }
     }
 }

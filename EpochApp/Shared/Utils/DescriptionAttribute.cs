@@ -19,6 +19,9 @@ namespace EpochApp.Shared.Utils
         /// </summary>
         public static readonly DescriptionAttribute Default = new DescriptionAttribute();
 
+        /// <summary>
+        ///    Initializes a new instance of the <see cref='System.ComponentModel.DescriptionAttribute' /> class.
+        /// </summary>
         public DescriptionAttribute() : this(string.Empty)
         {
         }
@@ -42,16 +45,19 @@ namespace EpochApp.Shared.Utils
         /// </summary>
         protected string DescriptionValue { get; set; }
 
+        /// <inheritdoc />
         public override bool Equals([NotNullWhen(true)] object obj)
         {
             return obj is DescriptionAttribute other && other.Description == Description;
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return Description?.GetHashCode() ?? 0;
         }
 
+        /// <inheritdoc />
         public override bool IsDefaultAttribute()
         {
             return Equals(Default);

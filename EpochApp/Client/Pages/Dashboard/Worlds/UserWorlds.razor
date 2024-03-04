@@ -1,6 +1,4 @@
 @page "/Worlds"
-@using Typo=MudBlazor.Typo
-@using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Worlds
 
 <PageTitle>@StaticUtils.Constants.AppName - @(Auth.CurrentUser.UserName)'s Worlds</PageTitle>
@@ -29,7 +27,7 @@
 					<CardHeaderContent>
 						<MudText Typo="Typo.h5" Color="@(world.WorldId == NewActiveWorld?.WorldId ? Color.Success : Color.Default)" GutterBottom="true">@world.WorldName @($"{(world.WorldId == NewActiveWorld?.WorldId ? "(Active)" : "")}")</MudText>
 						<MudDivider DividerType="DividerType.Middle" />
-						<MudText Typo="Typo.subtitle1" GutterBottom="true">@world?.Header</MudText>
+						<MudText Typo="Typo.subtitle1" GutterBottom="true">@world.Header</MudText>
 					</CardHeaderContent>
 				</MudCardHeader>
 				<MudCardContent>
@@ -37,7 +35,7 @@
 						<AuthorizeView Roles="ADMIN,INTERNAL">
 							<MudText Typo="Typo.caption">@world.WorldId</MudText>
 						</AuthorizeView>
-						<MudText Typo="Typo.caption">@world?.Excerpt</MudText>
+						<MudText Typo="Typo.caption">@world.Excerpt</MudText>
 					</MudStack>
 				</MudCardContent>
 			</MudCard>

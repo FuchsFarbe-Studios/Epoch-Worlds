@@ -1,13 +1,9 @@
-﻿@using MaxWidth=MudBlazor.MaxWidth
-@using Variant=MudBlazor.Variant
-@using MudBlazor
-@namespace EpochApp.Client.Shared
+﻿@namespace EpochApp.Client.Shared
 @inherits LayoutComponentBase
 
 <MudThemeProvider Theme="@_theme" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
-<FlatThemeProvider />
 
 <CascadingValue Name="Settings" Value="@_settings">
 	<MudLayout>

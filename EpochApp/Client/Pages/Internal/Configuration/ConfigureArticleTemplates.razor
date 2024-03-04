@@ -1,14 +1,10 @@
 @page "/Configure/Templates/Article"
-@using Typo=MudBlazor.Typo
-@using Variant=MudBlazor.Variant
-@using ButtonType=MudBlazor.ButtonType
 @using FieldType=EpochApp.Shared.FieldType
 @attribute [Authorize(Roles = "ADMIN")]
 
 <MudText Typo="Typo.h3" Align="Align.Center">Configure Article Templates</MudText>
 
 <MudTabs Border="true" Color="Color.Primary" Outlined="true" Rounded="true" TabPanelClass="pa-4" KeepPanelsAlive="false">
-
 	<MudTabPanel Text="Edit Templates">
 		<MudStack>
 			<MudDataGrid Virtualize="true" Outlined="true" Height="400px" T="ArticleTemplateDTO" Items="@_articleTemplates" EditMode="DataGridEditMode.Form" EditTrigger="DataGridEditTrigger.Manual" Dense="true" Bordered="true" ReadOnly="false" Elevation="0" Hover="true" Striped="true">

@@ -1,9 +1,3 @@
-@using AlignItems=MudBlazor.AlignItems
-@using ButtonType=MudBlazor.ButtonType
-@using Justify=MudBlazor.Justify
-@using Variant=MudBlazor.Variant
-@using Typo=MudBlazor.Typo
-@using MudBlazor
 @inherits EpochApp.Client.Shared.Forms.BuilderFormBase<ConstructedLanguage, ConstructedLanguageResult>
 @namespace EpochApp.Client.Pages.Dashboard.Builders
 
@@ -576,7 +570,7 @@
 				<MudSwitch Size="Size.Large" Color="Color.Primary" @bind-Value="@ContentModel.Syntax.UseNounGender" For="@(() => ContentModel.Syntax.UseNounGender)" Label="Use Noun Genders?" />
 			</MudItem>
 			@if (ContentModel.Syntax.UseNounGender)
-			{	
+			{
 				<MudItem xs="12" sm="4">
 					<EditForm Model="@_genderModel" OnSubmit="@HandleNounGenderSubmitted">
 						<ChildContent Context="genderModelCtx">

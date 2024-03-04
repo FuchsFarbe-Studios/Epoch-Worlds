@@ -1,110 +1,75 @@
-﻿@using Typo=MudBlazor.Typo
-@using MudBlazor
-@if (IsMudMenu)
-{
-	<MudNavMenu Color="Color.Primary" Rounded="false" Bordered="true" Dense="true">
-		@if (IsMenuOpened)
-		{
-			<MudText Typo="Typo.h6" Class="px-4">The Epoch Exchange</MudText>
-			<MudDivider Class="my-2" />
-			<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-		}
+﻿<MudNavMenu Color="Color.Primary" Rounded="false" Bordered="true" Dense="true">
+	@if (IsMenuOpened)
+	{
+		<MudText Typo="Typo.h6" Class="px-4">The Epoch Exchange</MudText>
+		<MudDivider Class="my-2" />
+		<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+	}
 
-		<!-- User -->
-		<AuthorizeView>
-			<Authorized>
-				<MudNavLink Href="@NavRef.Site.Dash" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+	<!-- User -->
+	<AuthorizeView>
+		<Authorized>
+			<MudNavLink Href="@NavRef.Site.Dash" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
 
-				<!-- Worlds -->
-				<MudNavGroup Title="Worlds" Expanded="false" Icon="@Icons.Material.Filled.SouthAmerica">
-					<MudNavLink Href="@NavRef.WorldNav.Index" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAmericas]">My Worlds</MudNavLink>
-					<MudNavLink Href="@NavRef.WorldNav.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create World</MudNavLink>
-					<MudNavLink Href="@NavRef.WorldNav.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit World</MudNavLink>
-				</MudNavGroup>
-
-				<!-- Articles -->
-				<MudNavGroup Title="Articles" Expanded="false" Icon="@Icons.Material.Filled.Article">
-					<MudNavLink Href="@NavRef.ArticleNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Article">World Articles</MudNavLink>
-					<MudNavLink Href="@NavRef.ArticleNav.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Article</MudNavLink>
-					<MudNavLink Href="@NavRef.ArticleNav.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Article</MudNavLink>
-				</MudNavGroup>
-
-				<!-- Builders -->
-				<MudNavGroup Title="Builders" Expanded="false" Icon="@Icons.Material.Filled.Build">
-					<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.BuildCircle">Builders</MudNavLink>
-					<MudNavGroup Title="Constructed Language" Expanded="false" Icon="@Icons.Material.Filled.Language">
-						<MudNavLink Href="@NavRef.BuilderNav.CongLang.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Language</MudNavLink>
-						<MudNavLink Href="@NavRef.BuilderNav.CongLang.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Language</MudNavLink>
-					</MudNavGroup>
-					<MudNavGroup Title="Character" Expanded="false" Icon="@Icons.Material.Filled.Person">
-						<MudNavLink Href="@NavRef.BuilderNav.Character.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Character</MudNavLink>
-						<MudNavLink Href="@NavRef.BuilderNav.Character.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Character</MudNavLink>
-					</MudNavGroup>
-				</MudNavGroup>
-
-				<!-- Auth -->
-				<MudNavGroup Title="User" Expanded="true" Icon="@Icons.Material.Filled.PermIdentity">
-					<MudNavLink Href="@NavRef.UserNav.Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Face">Profile</MudNavLink>
-					<MudNavLink Href="@NavRef.UserNav.Account" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AccountCircle">Account</MudNavLink>
-					<MudNavLink Href="@NavRef.UserNav.Settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Settings">Settings</MudNavLink>
-					<MudNavLink Href="@NavRef.Auth.Logout" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error">Log-Out</MudNavLink>
-				</MudNavGroup>
-			</Authorized>
-			<NotAuthorized>
-				<!-- Auth -->
-				<MudNavLink Href="@NavRef.Auth.Registration" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AppRegistration">Register</MudNavLink>
-				<MudNavLink Href="@NavRef.Auth.Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Login">Log-In</MudNavLink>
-			</NotAuthorized>
-
-		</AuthorizeView>
-
-		<!-- Internal -->
-		<AuthorizeView Roles="ADMIN,INTERNAL">
-			<MudNavGroup Title="Internal" Expanded="false" Icon="@Icons.Material.Filled.Warning" IconColor="Color.Warning">
-				<MudNavLink Href="@NavRef.AdminNav.Index" Match="NavLinkMatch.Prefix">Internal</MudNavLink>
-				<MudNavLink Href="@NavRef.AdminNav.Blogs" Match="NavLinkMatch.Prefix">Manage Blogs</MudNavLink>
-				<MudNavLink Href="@NavRef.AdminNav.Posts" Match="NavLinkMatch.Prefix">Blog Posts</MudNavLink>
-				<MudNavLink Href="@NavRef.AdminNav.Contacts" Match="NavLinkMatch.Prefix">Contacts</MudNavLink>
-				<MudNavLink Href="@NavRef.AdminNav.Logs" Match="NavLinkMatch.Prefix">Site Logs</MudNavLink>
+			<!-- Worlds -->
+			<MudNavGroup Title="Worlds" Expanded="false" Icon="@Icons.Material.Filled.SouthAmerica">
+				<MudNavLink Href="@NavRef.WorldNav.Index" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAmericas]">My Worlds</MudNavLink>
+				<MudNavLink Href="@NavRef.WorldNav.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create World</MudNavLink>
+				<MudNavLink Href="@NavRef.WorldNav.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit World</MudNavLink>
 			</MudNavGroup>
-		</AuthorizeView>
 
-		<!-- Site -->
-		<MudNavGroup Title="Site" Expanded="false" Icon="@Icons.Material.Filled.Map">
-			<MudNavLink Href="@NavRef.Site.Features" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ViewList">Features</MudNavLink>
-			<MudNavLink Href="@NavRef.Site.About" Icon="@Icons.Material.Filled.QuestionMark" Match="NavLinkMatch.Prefix">About</MudNavLink>
-			<MudNavLink Href="@NavRef.Site.Faq" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.QuestionAnswer">FAQ</MudNavLink>
-			<MudNavLink Href="@NavRef.Site.Contact" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ContactPage">Contact Us!</MudNavLink>
+			<!-- Articles -->
+			<MudNavGroup Title="Articles" Expanded="false" Icon="@Icons.Material.Filled.Article">
+				<MudNavLink Href="@NavRef.ArticleNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Article">World Articles</MudNavLink>
+				<MudNavLink Href="@NavRef.ArticleNav.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Article</MudNavLink>
+				<MudNavLink Href="@NavRef.ArticleNav.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Article</MudNavLink>
+			</MudNavGroup>
+
+			<!-- Builders -->
+			<MudNavGroup Title="Builders" Expanded="false" Icon="@Icons.Material.Filled.Build">
+				<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.BuildCircle">Builders</MudNavLink>
+				<MudNavGroup Title="Constructed Language" Expanded="false" Icon="@Icons.Material.Filled.Language">
+					<MudNavLink Href="@NavRef.BuilderNav.CongLang.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Language</MudNavLink>
+					<MudNavLink Href="@NavRef.BuilderNav.CongLang.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Language</MudNavLink>
+				</MudNavGroup>
+				<MudNavGroup Title="Character" Expanded="false" Icon="@Icons.Material.Filled.Person">
+					<MudNavLink Href="@NavRef.BuilderNav.Character.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Character</MudNavLink>
+					<MudNavLink Href="@NavRef.BuilderNav.Character.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Character</MudNavLink>
+				</MudNavGroup>
+			</MudNavGroup>
+
+			<!-- Auth -->
+			<MudNavGroup Title="User" Expanded="true" Icon="@Icons.Material.Filled.PermIdentity">
+				<MudNavLink Href="@NavRef.UserNav.Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Face">Profile</MudNavLink>
+				<MudNavLink Href="@NavRef.UserNav.Account" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AccountCircle">Account</MudNavLink>
+				<MudNavLink Href="@NavRef.UserNav.Settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Settings">Settings</MudNavLink>
+				<MudNavLink Href="@NavRef.Auth.Logout" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error">Log-Out</MudNavLink>
+			</MudNavGroup>
+		</Authorized>
+		<NotAuthorized>
+			<!-- Auth -->
+			<MudNavLink Href="@NavRef.Auth.Registration" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AppRegistration">Register</MudNavLink>
+			<MudNavLink Href="@NavRef.Auth.Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Login">Log-In</MudNavLink>
+		</NotAuthorized>
+
+	</AuthorizeView>
+
+	<!-- Internal -->
+	<AuthorizeView Roles="ADMIN,INTERNAL">
+		<MudNavGroup Title="Internal" Expanded="false" Icon="@Icons.Material.Filled.Warning" IconColor="Color.Warning">
+			<MudNavLink Href="@NavRef.AdminNav.Index" Match="NavLinkMatch.Prefix">Internal</MudNavLink>
+			<MudNavLink Href="@NavRef.AdminNav.Blogs" Match="NavLinkMatch.Prefix">Manage Blogs</MudNavLink>
+			<MudNavLink Href="@NavRef.AdminNav.Posts" Match="NavLinkMatch.Prefix">Blog Posts</MudNavLink>
+			<MudNavLink Href="@NavRef.AdminNav.Contacts" Match="NavLinkMatch.Prefix">Contacts</MudNavLink>
+			<MudNavLink Href="@NavRef.AdminNav.Logs" Match="NavLinkMatch.Prefix">Site Logs</MudNavLink>
 		</MudNavGroup>
-	</MudNavMenu>
-}
-else
-{
-	<FlatNavBar BrandLink="/" BrandName="@StaticUtils.Constants.CompanyName" UseBranding="true" Color="FlatColor.Dark">
-		<LeftBar>
-			<FlatLink MenuItem="true" Link="@NavRef.Site.Index" MatchMode="NavLinkMatch.All">Home</FlatLink>
-			<FlatLink MenuItem="true" Link="@NavRef.Site.Features" MatchMode="NavLinkMatch.All">Features</FlatLink>
-		</LeftBar>
+	</AuthorizeView>
 
-		<RightBar>
-			<AuthorizeView Roles="ADMIN,INTERNAL">
-				<FlatLink MenuItem="true" Link="@NavRef.AdminNav.Index" MatchMode="NavLinkMatch.All">Internal</FlatLink>
-			</AuthorizeView>
-			<AuthorizeView>
-				<Authorized>
-					<FlatLink MenuItem="true" Link="@NavRef.Site.Dash" MatchMode="NavLinkMatch.All">Dashboard</FlatLink>
-					<FlatLink MenuItem="true" Link="@NavRef.UserNav.Profile" MatchMode="NavLinkMatch.All">Profile</FlatLink>
-					<FlatLink MenuItem="true" Link="@NavRef.Auth.Logout" MatchMode="NavLinkMatch.All">Logout</FlatLink>
-				</Authorized>
-				<Authorizing>
-					<FlatLink MenuItem="true" Link="@NavRef.Auth.Registration" MatchMode="NavLinkMatch.All">Create Account</FlatLink>
-					<FlatLink MenuItem="true" Link="@NavRef.Auth.Login" MatchMode="NavLinkMatch.All">Login</FlatLink>
-				</Authorizing>
-				<NotAuthorized>
-					<FlatLink MenuItem="true" Link="@NavRef.Auth.Registration" MatchMode="NavLinkMatch.All">Create Account</FlatLink>
-					<FlatLink MenuItem="true" Link="@NavRef.Auth.Login" MatchMode="NavLinkMatch.All">Login</FlatLink>
-				</NotAuthorized>
-			</AuthorizeView>
-		</RightBar>
-	</FlatNavBar>
-}
+	<!-- Site -->
+	<MudNavGroup Title="Site" Expanded="false" Icon="@Icons.Material.Filled.Map">
+		<MudNavLink Href="@NavRef.Site.Features" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ViewList">Features</MudNavLink>
+		<MudNavLink Href="@NavRef.Site.About" Icon="@Icons.Material.Filled.QuestionMark" Match="NavLinkMatch.Prefix">About</MudNavLink>
+		<MudNavLink Href="@NavRef.Site.Faq" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.QuestionAnswer">FAQ</MudNavLink>
+		<MudNavLink Href="@NavRef.Site.Contact" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ContactPage">Contact Us!</MudNavLink>
+	</MudNavGroup>
+</MudNavMenu>

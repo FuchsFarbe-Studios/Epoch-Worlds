@@ -10,7 +10,7 @@ namespace EpochApp.Shared
     {
         Task<ProfileDTO> GetProfileByUsername(string userName);
 
-        Task<ProfileDTO> GetProfileByUserId(Guid userId);
+        Task<ProfileDTO> GetProfileByUserIdAsync(Guid userId);
 
         Task<ProfileDTO> UpdateProfile(Guid userId, ProfileDTO profile);
     }

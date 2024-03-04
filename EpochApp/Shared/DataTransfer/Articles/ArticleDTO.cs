@@ -36,22 +36,22 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The title of this article.
         /// </summary>
-        public string? Title { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Subtitle of this article.
         /// </summary>
-        public string? SubTitle { get; set; }
+        public string SubTitle { get; set; }
 
         /// <summary>
         ///     Content of this article.
         /// </summary>
-        public string? Content { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
         /// Short summary of the article.
         /// </summary>
-        public string? Excerpt { get; set; }
+        public string Excerpt { get; set; }
 
         /// <summary>
         /// Snippet that displays when the mouse is hovered over and article link.
@@ -61,7 +61,7 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Generated article content will go here.
         /// </summary>
-        public string? GeneratedContentXml { get; set; }
+        public string GeneratedContentXml { get; set; }
 
         /// <summary>
         ///     Determines the type of content to generate.

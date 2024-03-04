@@ -21,6 +21,7 @@
 // FuchsFarbe Studios 2023
 // Oliver MacDougall
 // Modified: 29-11-2023
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Shared
 {
     public class WorldDate
@@ -53,22 +54,22 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The equivalent of BC/BCE in your world.
         /// </summary>
-        public string? BeforeEraName { get; set; }
+        public string BeforeEraName { get; set; }
 
         /// <summary>
         ///     Abbreviation of <see cref="BeforeEraName" />.
         /// </summary>
-        public string? BeforeEraAbbreviation { get; set; }
+        public string BeforeEraAbbreviation { get; set; }
 
         /// <summary>
         ///     The equivalent of AD/CE in your world.
         /// </summary>
-        public string? AfterEraName { get; set; }
+        public string AfterEraName { get; set; }
 
         /// <summary>
         ///     Abbreviation of <see cref="AfterEraName" />.
         /// </summary>
-        public string? AfterEraAbbreviation { get; set; }
+        public string AfterEraAbbreviation { get; set; }
 
         /// <summary>
         ///     World the date is associated with.

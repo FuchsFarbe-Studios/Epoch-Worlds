@@ -1,11 +1,14 @@
-using EpochApp.Components.Services;
+using EpochApp.Client.Services;
 using Microsoft.AspNetCore.Components;
 using System.Linq.Expressions;
 
-namespace EpochApp.Components.Forms
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
+namespace EpochApp.Client.Shared.Forms
 {
     public partial class EpochMarkup
     {
+        private ElementReference _codeBlock;
         private bool _previewMarkup = false;
         private MarkupString _previewString = new MarkupString("");
 
@@ -34,7 +37,7 @@ namespace EpochApp.Components.Forms
         /// </summary>
         [Parameter] public EventCallback<string> MarkupStringChanged { get; set; }
 
-        [Parameter] public Expression<Func<string>>? For { get; set; }
+        [Parameter] public Expression<Func<string>> For { get; set; }
 
         [Inject] private MarkupService MarkupService { get; set; }
 

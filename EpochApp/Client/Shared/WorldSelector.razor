@@ -1,6 +1,3 @@
-@using Variant=MudBlazor.Variant
-@using MouseEvent=MudBlazor.MouseEvent
-@using MudBlazor
 @if (_selectedWorld != null && _userWorlds.Any())
 {
 	<MudMenu Class="mt-2" Dense="true" Variant="Variant.Filled" AnchorOrigin="Origin.TopRight">
@@ -28,13 +25,4 @@ else
 			}
 		</ChildContent>
 	</MudMenu>
-	@* <MudPaper Class="pa-3 flex-center" Width="100%" Outlined="false" Elevation="0"> *@
-	@* 	<MudSelect Adornment="Adornment.Start" AdornmentIcon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" AdornmentColor="Color.Success" T="WorldDTO" Value="@_selectedWorld" ValueChanged="@(async w => await WorldChanged(w))" Label="Active World" Margin="Margin.Dense" Dense="true" HelperText="Change your active world." Variant="Variant.Filled" FullWidth="true"> *@
-	@* 		$1$ <MudSelectItem Value="null" Href="@NavRef.WorldNav.Create">Create New World</MudSelectItem	> #1# *@
-	@* 		@foreach (var world in _userWorlds) *@
-	@* 		{ *@
-	@* 			<MudSelectItem Value="@world">@world.WorldName</MudSelectItem> *@
-	@* 		} *@
-	@* 	</MudSelect> *@
-	@* </MudPaper> *@
 }

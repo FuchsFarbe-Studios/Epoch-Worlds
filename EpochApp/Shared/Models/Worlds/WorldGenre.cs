@@ -2,6 +2,7 @@
 // WorldGenre.cs
 // FuchsFarbe Studios 2024
 // Modified: 27-2-2024
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Shared
 {
     /// <summary>

@@ -5,6 +5,8 @@
 // Modified: 2-2-2024
 using System.ComponentModel.DataAnnotations;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Shared
 {
     [Serializable]

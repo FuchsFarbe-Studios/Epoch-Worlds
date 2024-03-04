@@ -18,6 +18,11 @@ namespace EpochApp.Server.Services
         private readonly EpochDataDbContext _context;
         private readonly ILogger<ITagService> _logger;
 
+        /// <summary>
+        ///    Constructor for the tag service.
+        /// </summary>
+        /// <param name="context"> The database context. </param>
+        /// <param name="logger"> The logger. </param>
         public TagService(EpochDataDbContext context, ILogger<TagService> logger)
         {
             _context = context;

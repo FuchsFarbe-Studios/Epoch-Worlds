@@ -18,6 +18,11 @@ namespace EpochApp.Server.Services
         private readonly EpochDataDbContext _context;
         private readonly ILogger<LookupService> _logger;
 
+        /// <summary>
+        ///    Constructor for the lookup service.
+        /// </summary>
+        /// <param name="context"> The database context. </param>
+        /// <param name="logger"> The logger. </param>
         public LookupService(EpochDataDbContext context, ILogger<LookupService> logger)
         {
             _context = context;

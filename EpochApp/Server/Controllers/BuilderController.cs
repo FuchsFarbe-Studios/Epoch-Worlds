@@ -77,8 +77,7 @@ namespace EpochApp.Server.Controllers
             var builderContents = await _context.BuilderContents
                                                 .Where(x => x.AuthorID == userId)
                                                 .Include(x => x.Author)
-                                                .ToListAsync()
-                                  ?? new List<BuilderContent>();
+                                                .ToListAsync();
             return Ok(builderContents);
         }
 
@@ -103,6 +102,12 @@ namespace EpochApp.Server.Controllers
             return Ok(content);
         }
 
+        /// <summary>
+        ///    Get all builder content by a specific user and content type.
+        /// </summary>
+        /// <param name="userId"> The ID of the user to retrieve content for. </param>
+        /// <param name="contentType"> The type of content to retrieve. </param>
+        /// <returns> <see cref="IActionResult" /> </returns>
         [HttpGet("ContentByType")]
         public async Task<IActionResult> GetBuilderContentByType([FromQuery] Guid userId, [FromQuery] int contentType)
         {
@@ -142,6 +147,13 @@ namespace EpochApp.Server.Controllers
             }
         }
 
+        /// <summary>
+        ///    Updates builder content in the database.
+        /// </summary>
+        /// <param name="userId"> The ID of the user updating the content. </param>
+        /// <param name="contentId"> The ID of the content to update. </param>
+        /// <param name="content"> The updated content. </param>
+        /// <returns> <see cref="IActionResult" /> </returns>
         [HttpPut("Content")]
         public async Task<IActionResult> UpdateContentAsync([FromQuery] Guid userId, [FromQuery] Guid contentId, [FromBody] BuilderContent content)
         {
@@ -175,6 +187,12 @@ namespace EpochApp.Server.Controllers
             }
         }
 
+        /// <summary>
+        ///   Deletes builder content from the database.
+        /// </summary>
+        /// <param name="userId"> The ID of the user deleting the content. </param>
+        /// <param name="contentId"> The ID of the content to delete. </param>
+        /// <returns> <see cref="IActionResult" /> </returns>
         [HttpDelete("Content")]
         public async Task<IActionResult> DeleteContentAsync([FromQuery] Guid userId, [FromQuery] Guid contentId)
         {
@@ -197,6 +215,12 @@ namespace EpochApp.Server.Controllers
             }
         }
 
+        /// <summary>
+        ///    Generates content based on the content type.
+        /// </summary>
+        /// <param name="userId"> The ID of the user generating the content. </param>
+        /// <param name="contentId"> The ID of the content to generate. </param>
+        /// <returns> <see cref="IActionResult" /> </returns>
         [HttpGet("GeneratedContent")]
         public async Task<IActionResult> GenerateContentAsync([FromQuery] Guid userId, [FromQuery] Guid contentId)
         {

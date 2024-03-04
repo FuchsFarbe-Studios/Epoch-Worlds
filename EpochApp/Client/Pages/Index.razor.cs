@@ -13,6 +13,9 @@ namespace EpochApp.Client.Pages
     /// <summary> Index page. </summary>
     public partial class Index
     {
+        /// <summary>
+        ///    The site settings.
+        /// </summary>
         [CascadingParameter(Name = "Settings")] protected SiteSettings Settings { get; set; }
         [Inject] private ILogger<Index> Logger { get; set; }
         [Inject] private ILocalStorage Storage { get; set; }

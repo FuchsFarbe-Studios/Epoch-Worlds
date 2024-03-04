@@ -2,6 +2,7 @@ using EpochApp.Server.Data;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Mvc;
 
+#pragma warning disable 1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Server.Controllers
 {
     /// <summary>

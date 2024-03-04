@@ -5,6 +5,8 @@
 // Modified: 17-2-2024
 using System.ComponentModel.DataAnnotations;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Shared
 {
     public class ContactDTO
@@ -14,7 +16,7 @@ namespace EpochApp.Shared
         /// </summary>
         [Required]
         [MinLength(8)]
-        public string? UserName { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
         ///     The email of the contact.

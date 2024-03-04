@@ -1,5 +1,4 @@
 using EpochApp.Client.Services;
-using EpochApp.Components.Services;
 using EpochApp.Shared;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -21,7 +20,9 @@ namespace EpochApp.Client
 
             // ReSharper disable once UnusedParameter.Local
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddTransient<MarkupService>();
             builder.Services.AddScoped<ILocalStorage, LocalStorageAccessor>();
+            builder.Services.AddScoped<IProfileSerivce, ProfileService>();
             builder.Services.AddScoped<MarkupService>();
             builder.Services.AddScoped<ILookupService, LookupService>();
             builder.Services.AddScoped<IArticleService, ArticleService>();

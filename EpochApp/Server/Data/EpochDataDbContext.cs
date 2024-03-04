@@ -158,8 +158,8 @@ namespace EpochApp.Server.Data
                 entity.HasKey(a => a.TemplateId);
                 entity.Property(a => a.TemplateId)
                       .ValueGeneratedOnAdd();
-                entity.Property(a => a.TemplateName).HasMaxLength(100).IsUnicode(true);
-                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode(true);
+                entity.Property(a => a.TemplateName).HasMaxLength(100).IsUnicode();
+                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode();
                 entity.HasOne(a => a.Category)
                       .WithMany()
                       .HasForeignKey(a => a.CategoryId)
@@ -170,10 +170,10 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("ArticleTemplateMetaData", "Templates");
                 entity.HasKey(a => new { a.TemplateId, a.MetaName });
-                entity.Property(a => a.MetaName).HasMaxLength(100).IsUnicode(true);
-                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode(true);
-                entity.Property(a => a.Placeholder).HasMaxLength(255).IsUnicode(true);
-                entity.Property(a => a.HelpText).HasMaxLength(255).IsUnicode(true);
+                entity.Property(a => a.MetaName).HasMaxLength(100).IsUnicode();
+                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode();
+                entity.Property(a => a.Placeholder).HasMaxLength(255).IsUnicode();
+                entity.Property(a => a.HelpText).HasMaxLength(255).IsUnicode();
                 entity.Property(e => e.Type).HasConversion<string>();
                 entity.HasOne(a => a.Template)
                       .WithMany(t => t.Meta)
@@ -186,10 +186,10 @@ namespace EpochApp.Server.Data
             {
                 entity.ToTable("ArticleTemplateSections", "Templates");
                 entity.HasKey(a => new { a.TemplateId, a.SectionName });
-                entity.Property(a => a.SectionName).HasMaxLength(100).IsUnicode(true);
-                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode(true);
-                entity.Property(a => a.Placeholder).HasMaxLength(255).IsUnicode(true);
-                entity.Property(a => a.HelpText).HasMaxLength(255).IsUnicode(true);
+                entity.Property(a => a.SectionName).HasMaxLength(100).IsUnicode();
+                entity.Property(a => a.Description).HasMaxLength(500).IsUnicode();
+                entity.Property(a => a.Placeholder).HasMaxLength(255).IsUnicode();
+                entity.Property(a => a.HelpText).HasMaxLength(255).IsUnicode();
                 entity.HasOne(a => a.Template)
                       .WithMany(t => t.Sections)
                       .HasForeignKey(a => a.TemplateId)
@@ -207,7 +207,7 @@ namespace EpochApp.Server.Data
                 entity.Property(m => m.Title).HasMaxLength(255);
                 entity.Property(m => m.Summary)
                       .HasMaxLength(10000)
-                      .IsUnicode(true);
+                      .IsUnicode();
                 entity.Property(m => m.CoverArt)
                       .HasMaxLength(500);
                 entity.HasOne(d => d.User)
@@ -608,24 +608,24 @@ namespace EpochApp.Server.Data
 
                 // Content Generation
 
-                modelBuilder.Entity<BuilderContent>(entity =>
+                modelBuilder.Entity<BuilderContent>(builder =>
                 {
-                    entity.ToTable("BuilderContents", "Users");
-                    entity.HasKey(bc => bc.ContentID);
+                    builder.ToTable("BuilderContents", "Users");
+                    builder.HasKey(bc => bc.ContentID);
 
                     // Defines conversion from ContentType enum to string and back
-                    entity.Property(bc => bc.ContentType)
-                          .HasConversion<string>();
+                    builder.Property(bc => bc.ContentType)
+                           .HasConversion<string>();
 
-                    entity.HasOne(bc => bc.Author)
-                          .WithMany()
-                          .HasForeignKey(bc => bc.AuthorID)
-                          .OnDelete(DeleteBehavior.Restrict);// Or DeleteBehavior.SetNull, Cascade etc. based on your needs.
+                    builder.HasOne(bc => bc.Author)
+                           .WithMany()
+                           .HasForeignKey(bc => bc.AuthorID)
+                           .OnDelete(DeleteBehavior.Restrict);// Or DeleteBehavior.SetNull, Cascade etc. based on your needs.
 
-                    entity.HasOne(bc => bc.World)
-                          .WithMany()
-                          .HasForeignKey(bc => bc.WorldID)
-                          .OnDelete(DeleteBehavior.Restrict);// Or DeleteBehavior.SetNull, Cascade etc. based on your needs.
+                    builder.HasOne(bc => bc.World)
+                           .WithMany()
+                           .HasForeignKey(bc => bc.WorldID)
+                           .OnDelete(DeleteBehavior.Restrict);// Or DeleteBehavior.SetNull, Cascade etc. based on your needs.
                 });
             });
 
@@ -960,7 +960,7 @@ namespace EpochApp.Server.Data
                 entity.HasKey(e => e.PhonemeId);
                 entity.Property(e => e.PhonemeChar)
                       .HasMaxLength(10)
-                      .IsUnicode(true)
+                      .IsUnicode()
                       .ValueGeneratedNever();
                 entity.Property(e => e.AudioFile)
                       .HasMaxLength(155);

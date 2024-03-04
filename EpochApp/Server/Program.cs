@@ -1,4 +1,4 @@
-using EpochApp.Server.Data;
+﻿using EpochApp.Server.Data;
 using EpochApp.Server.Maps;
 using EpochApp.Server.Services;
 using EpochApp.Server.Services.MailService;
@@ -17,13 +17,14 @@ using ArticleService=EpochApp.Server.Services.ArticleService;
 using LookupService=EpochApp.Server.Services.LookupService;
 using WorldService=EpochApp.Server.Services.WorldService;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Server
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
             var services = builder.Services;
@@ -56,17 +57,6 @@ namespace EpochApp.Server
                                                                 ClockSkew = TimeSpan.Zero
                                                             };
                     });
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  policy =>
-                                  {
-                                      policy.WithOrigins(builder.Configuration.GetSection("JetBrains:Url").Value)
-                                            .AllowAnyHeader()
-                                            .AllowAnyMethod()
-                                            .AllowCredentials();
-                                  });
-            });
             ConfigBuilder.ConfigureCommonServices(services);
             services.AddHttpContextAccessor();
 
@@ -84,6 +74,8 @@ namespace EpochApp.Server
 
             // Custom services
             services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IProfileSerivce, ProfileService>();
+            services.AddScoped<IUserModeration, ModerationService>();
             services.AddScoped<ILookupService, LookupService>();
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<ILanguageService, LanguageService>();
@@ -158,7 +150,6 @@ namespace EpochApp.Server
 
             app.UseAuthentication();
             app.UseRouting();
-            app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthorization();
             app.MapRazorPages();
             app.MapControllers();

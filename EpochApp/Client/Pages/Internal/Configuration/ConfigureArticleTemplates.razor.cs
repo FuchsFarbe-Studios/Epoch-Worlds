@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace EpochApp.Client.Pages.Internal.Configuration
 {
+    /// <summary>
+    ///    Article template configuration page.
+    /// </summary>
     public partial class ConfigureArticleTemplates
     {
         private List<ArticleTemplateDTO> _articleTemplates = new List<ArticleTemplateDTO>();

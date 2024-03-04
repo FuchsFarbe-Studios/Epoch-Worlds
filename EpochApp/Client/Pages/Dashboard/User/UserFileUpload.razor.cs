@@ -34,7 +34,7 @@ namespace EpochApp.Client.Pages.Dashboard.User
         {
             _uploading = true;
             var buffer = new byte[file.Size];
-            var readData = await file.OpenReadStream().ReadAsync(buffer);
+            _ = await file.OpenReadStream().ReadAsync(buffer);
             var data = Convert.ToBase64String(buffer);
             var newFile = new FileUploadDto
                           {

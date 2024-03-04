@@ -36,7 +36,7 @@ namespace EpochApp.Server.Services
             return await Task.FromResult(profile);
         }
 
-        public async Task<ProfileDTO> GetProfileByUserId(Guid userId)
+        public async Task<ProfileDTO> GetProfileByUserIdAsync(Guid userId)
         {
             var user = await _context.Users.Include(x => x.UserRoles).ThenInclude(r => r.Role).FirstOrDefaultAsync(x => x.UserID == userId);
             if (user == null)
@@ -55,16 +55,35 @@ namespace EpochApp.Server.Services
                 _logger.LogWarning("User ID does not match profile ID!");
                 return null;
             }
-            var user = await _context.Users.Include(x => x.UserRoles).ThenInclude(r => r.Role).FirstOrDefaultAsync(x => x.UserName == profile.UserName);
-            if (user == null)
-            {
-                _logger.LogWarning("User not found!");
-                return null;
-            }
+            var user = await _context.Users.Include(user => user.Profile)
+                                     .Select(x => x.Profile)
+                                     .FirstOrDefaultAsync(x => x.UserID == profile.UserId);
             _mapper.Map(profile, user);
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            _context.Profiles.Update(user);
+            _context.Entry(profile).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (!ProfileExists(profile.UserId))
+                {
+                    _logger.LogWarning("Profile not found!");
+                    return null;
+                }
+                else
+                {
+                    _logger.LogError(ex.Message);
+                    throw;
+                }
+            }
             return await Task.FromResult(_mapper.Map(user, new ProfileDTO()));
+        }
+
+        private bool ProfileExists(Guid id)
+        {
+            return _context.Profiles.Any(e => e.UserID == id);
         }
     }
 }

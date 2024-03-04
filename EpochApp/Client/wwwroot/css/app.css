@@ -1,3 +1,34 @@
+@font-face {
+    font-family: "Code New Roman";
+    src: url("fonts/code_new_roman/Code New Roman.otf");
+    src: url("fonts/code_new_roman/Code New Roman.otf") format("opentype"),
+    url("fonts/code_new_roman/Code New Roman.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Code New Roman";
+    src: url("fonts/code_new_roman/Code New Roman i.otf");
+    src: url("fonts/code_new_roman/Code New Roman i.otf") format("opentype"),
+    url("fonts/code_new_roman/Code New Roman i.woff") format("woff");
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Code New Roman";
+    src: url("fonts/code_new_roman/Code New Roman b.otf");
+    src: url("fonts/code_new_roman/Code New Roman b.otf") format("opentype"),
+    url("fonts/code_new_roman/Code New Roman b.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+}
+
+.mono-font {
+    font-family: "Code New Roman", "Calibri", monospace;
+}
+
 * {
     margin: 0;
 }

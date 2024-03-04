@@ -1,7 +1,6 @@
 // EpochWorlds
 // ContactController.cs
 // FuchsFarbe Studios 2024
-// matsu
 // Modified: 17-2-2024
 using EpochApp.Server.Data;
 using EpochApp.Shared;
@@ -50,6 +49,10 @@ namespace EpochApp.Server.Controllers
                                  .ToListAsync();
         }
 
+        /// <summary>
+        ///    Get all internal contact points.
+        /// </summary>
+        /// <returns> All internal contact points. </returns>
         [HttpGet("Internal")]
         public async Task<ActionResult<IEnumerable<InternalContactDTO>>> GetInternalContactPoints()
         {

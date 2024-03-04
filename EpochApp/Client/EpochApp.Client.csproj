@@ -34,30 +34,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\FuchsFarbe\Flatify\Flatify\Flatify.csproj"/>
-        <ProjectReference Include="..\Components\EpochApp.Components.csproj"/>
         <ProjectReference Include="..\Shared\EpochApp.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="Pages\Community\Community.razor"/>
-        <_ContentIncludedByDefault Remove="Kit\Auth\RegistrationKit.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Authoring\Articles\Article.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Authoring\Epoch\Epoch.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Authoring\Worlds\World.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Site\Manuals\ManualsHome.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Manuals\CreateLanguage.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Manuals\EditLanguage.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Manuals\LanguageManual.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Manuals\Manuals.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Dashboard\Articles\Articles.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\Dashboard\_Imports.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\User\Dashboard\Articles\Articles.razor"/>
-        <_ContentIncludedByDefault Remove="Pages\User\Dashboard\_Imports.razor"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <AdditionalFiles Include="Pages\Dashboard\User\Account.razor"/>
         <AdditionalFiles Include="Shared\Forms\EpochValidator.razor"/>
     </ItemGroup>
 

@@ -108,18 +108,21 @@ namespace EpochApp.Server.Services
             _logger.LogInformation("Changes saved!");
         }
 
+        /// <inheritdoc />
         public async Task AddConsonantAsync(Consonant consonant)
         {
             await _context.Consonants.AddAsync(consonant);
             await _context.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         public async Task AddVowelAsync(Vowel vowel)
         {
             await _context.Vowels.AddAsync(vowel);
             await _context.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         public async Task UpdateConsonantAsync(Consonant consonant)
         {
             var cons = await _context.Consonants.ToListAsync();
@@ -135,6 +138,7 @@ namespace EpochApp.Server.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task UpdateVowelAsync(Vowel vowel)
         {
             var vowels = await _context.Vowels.ToListAsync();
@@ -150,12 +154,14 @@ namespace EpochApp.Server.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task RemoveConsonantAsync(Consonant consonant)
         {
             _context.Consonants.Remove(consonant);
             await _context.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         public async Task RemoveVowelAsync(Vowel vowel)
         {
             _context.Vowels.Remove(vowel);
@@ -320,18 +326,18 @@ namespace EpochApp.Server.Services
             }
         }
 
-        private async Task<string> ApplyAltSpellingRulesAsync(string ipa, Spelling spelling)
+        private Task<string> ApplyAltSpellingRulesAsync(string ipa, Spelling spelling)
         {
-            return null;
+            return Task.FromResult<string>(null);
         }
 
-        private async Task<string> ApplySpellingRulesAsync(string ipa, Spelling spelling)
+        private Task<string> ApplySpellingRulesAsync(string ipa, Spelling spelling)
         {
             if (spelling.UseSpellingRules)
             {
-                return "conlang word here...";
+                return Task.FromResult("conlang word here...");
             }
-            return ipa;
+            return Task.FromResult(ipa);
         }
 
         private async Task<string> GenerateWordAsync(List<string> consonants, List<string> vowels, Phonology phonology)
@@ -426,12 +432,20 @@ namespace EpochApp.Server.Services
             return await Task.FromResult(consonants);
         }
 
+        /// <summary>
+        ///    Get consonants from the database.
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Consonant>> GetConsonantsAsync()
         {
             var cons = await _context.Consonants.ToListAsync();
             return await Task.FromResult(cons);
         }
 
+        /// <summary>
+        ///   Get vowels from the database.
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Vowel>> GetVowelsAsync()
         {
             var vowels = await _context.Vowels.ToListAsync();

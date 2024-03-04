@@ -32,6 +32,6 @@ namespace EpochApp.Shared
         /// <summary>
         ///     Alternate spelling, if any.
         /// </summary>
-        public string? ConLangWordAlt { get; set; }
+        public string ConLangWordAlt { get; set; }
     }
 }

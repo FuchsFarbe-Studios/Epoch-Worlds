@@ -6,6 +6,7 @@
 using EpochApp.Server.Data;
 using EpochApp.Shared;
 
+#pragma warning disable 1591
 namespace EpochApp.Server.Services
 {
     public class TemplateService : ITemplateService
