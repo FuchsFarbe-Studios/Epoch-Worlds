@@ -49,6 +49,7 @@
 
     <ItemGroup>
         <Compile Remove="Controllers\ArticleCategoriesController.cs"/>
+        <Compile Remove="Services\SpaceService.cs"/>
     </ItemGroup>
 
     <ItemGroup>

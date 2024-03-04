@@ -13,6 +13,9 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using ArticleService=EpochApp.Server.Services.ArticleService;
+using LookupService=EpochApp.Server.Services.LookupService;
+using WorldService=EpochApp.Server.Services.WorldService;
 
 namespace EpochApp.Server
 {
@@ -20,6 +23,7 @@ namespace EpochApp.Server
     {
         public static void Main(string[] args)
         {
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
             var services = builder.Services;
@@ -52,6 +56,17 @@ namespace EpochApp.Server
                                                                 ClockSkew = TimeSpan.Zero
                                                             };
                     });
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins(builder.Configuration.GetSection("JetBrains:Url").Value)
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .AllowCredentials();
+                                  });
+            });
             ConfigBuilder.ConfigureCommonServices(services);
             services.AddHttpContextAccessor();
 
@@ -143,6 +158,7 @@ namespace EpochApp.Server
 
             app.UseAuthentication();
             app.UseRouting();
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthorization();
             app.MapRazorPages();
             app.MapControllers();
