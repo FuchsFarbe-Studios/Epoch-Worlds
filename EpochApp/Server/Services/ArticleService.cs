@@ -6,8 +6,6 @@
 using AutoMapper;
 using EpochApp.Server.Data;
 using EpochApp.Shared;
-using EpochApp.Shared.Articles;
-using EpochApp.Shared.Config;
 using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Services

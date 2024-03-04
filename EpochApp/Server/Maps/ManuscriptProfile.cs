@@ -5,7 +5,6 @@
 // Modified: 3-3-2024
 using AutoMapper;
 using EpochApp.Shared;
-using EpochApp.Shared.Articles;
 
 #pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 

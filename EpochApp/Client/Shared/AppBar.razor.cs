@@ -2,6 +2,8 @@ using EpochApp.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Client.Shared
 {
     /// <summary> AppBar component </summary>

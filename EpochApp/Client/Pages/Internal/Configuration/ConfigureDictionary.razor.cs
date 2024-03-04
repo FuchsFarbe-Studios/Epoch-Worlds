@@ -1,4 +1,4 @@
-using EpochApp.Shared.Config;
+using EpochApp.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Net.Http.Json;

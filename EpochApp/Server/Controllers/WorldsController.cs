@@ -1,6 +1,5 @@
 using EpochApp.Server.Data;
 using EpochApp.Shared;
-using EpochApp.Shared.Worlds;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

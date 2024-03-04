@@ -17,9 +17,25 @@
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmodels/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=manualservices_005Cmodels_005Clanguage/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Carticles/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Cblog/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Cbuilders_005Cconlang/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Cbuilders/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Cclient/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
             x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Clookups/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Csocial/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
             x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Ctemplates/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean
+            x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=models_005Cworlds/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cmailservice/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cserialization/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=site/@EntryIndexedValue">True</s:Boolean>

@@ -18,6 +18,10 @@
 				}
 				<MudCardHeader>
 					<CardHeaderActions>
+						@if (world.WorldId == NewActiveWorld?.WorldId)
+						{
+							<MudIconButton Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]" Href="@($"{NavRef.ArticleNav.Index}")" Title="World world articles." />
+						}
 						<MudIconButton Icon="@Icons.Material.Filled.Visibility" Href="@($"/W/{world.WorldId}")" Title="View world." />
 						<MudIconButton Icon="@Icons.Material.Filled.Edit" Href="@($"{NavRef.WorldNav.Edit}/{world.WorldId}")" Title="Edit this world." />
 						<MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await HandleWorldDeletionAsync(world))" Title="Delete world." />

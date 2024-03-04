@@ -2,6 +2,8 @@
 @using Typo=MudBlazor.Typo
 @using MaxWidth=MudBlazor.MaxWidth
 @using Variant=MudBlazor.Variant
+@using AlignItems=MudBlazor.AlignItems
+@using Justify=MudBlazor.Justify
 @using MudBlazor
 @namespace EpochApp.Client.Pages.Dashboard.Articles
 
@@ -30,7 +32,7 @@
 
 		<MudItem xs="12" md="9">
 			<MudStack>
-				<MudButton Variant="Variant.Filled" DisableElevation="true" FullWidth="true" Href="@($"{NavRef.ArticleNav.Create}")">Create Article</MudButton>
+				<MudButton Color="Color.Primary" Variant="Variant.Filled" DisableElevation="true" FullWidth="true" Href="@($"{NavRef.ArticleNav.Create}")">Create New Article</MudButton>
 
 				@if (_worldArticles.Any())
 				{
@@ -52,7 +54,7 @@
 								</CardHeaderActions>
 							</MudCardHeader>
 							<MudCardContent>
-								<MudStack Row="true">
+								<MudStack Row="true" AlignItems="AlignItems.Baseline" Justify="Justify.FlexStart">
 									<MudText Typo="Typo.caption">in @(_categories.FirstOrDefault(x => x.CategoryID == article.CategoryId)?.Description)</MudText>
 									<MudText Typo="Typo.caption">Word Count: @(content?.Split(" ")?.Length)</MudText>
 									<MudText Typo="Typo.body1">

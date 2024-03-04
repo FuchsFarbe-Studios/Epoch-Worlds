@@ -5,7 +5,6 @@
 // Modified: 26-2-2024
 using EpochApp.Server.Data;
 using EpochApp.Shared;
-using EpochApp.Shared.Client;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

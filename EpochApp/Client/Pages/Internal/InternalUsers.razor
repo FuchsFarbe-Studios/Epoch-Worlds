@@ -1,6 +1,5 @@
 @page "/Internal/Users"
 @using Variant=MudBlazor.Variant
-@using MudBlazor
 
 <MudTable T="UserData" Items="@_users" Dense="true" Loading="@(!_users.Any())" Hover="true" Outlined="true" Striped="true" Bordered="true">
 	<HeaderContent>

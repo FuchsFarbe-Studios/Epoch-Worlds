@@ -5,7 +5,6 @@
 // Modified: 22-2-2024
 using EpochApp.Server.Data;
 using EpochApp.Shared;
-using EpochApp.Shared.Config;
 using EpochApp.Shared.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

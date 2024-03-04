@@ -3,8 +3,6 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 3-3-2024
-using EpochApp.Shared.Config;
-
 namespace EpochApp.Shared
 {
     #pragma warning disable CS1591

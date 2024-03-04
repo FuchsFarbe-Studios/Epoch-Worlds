@@ -1,6 +1,5 @@
 using EpochApp.Client.Services;
 using EpochApp.Shared;
-using EpochApp.Shared.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;

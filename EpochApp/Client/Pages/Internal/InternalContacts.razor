@@ -1,5 +1,4 @@
 @page "/Internal/Contacts"
-@using MudBlazor
 
 <MudTable Virtualize="true" Height="500px" T="InternalContactDTO" Items="@_contacts" Dense="true" Loading="@(!_contacts.Any())" Hover="true" Outlined="true" Striped="true" Bordered="true">
 	<HeaderContent>

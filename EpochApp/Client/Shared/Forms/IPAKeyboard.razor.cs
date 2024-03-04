@@ -1,4 +1,4 @@
-using EpochApp.Shared.Config;
+using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Json;

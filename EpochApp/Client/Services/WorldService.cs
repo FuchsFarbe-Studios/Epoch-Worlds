@@ -5,8 +5,6 @@
 // Modified: 29-2-2024
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
-using EpochApp.Shared.Worlds;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Net.Http.Json;
 
 namespace EpochApp.Client.Services
@@ -17,20 +15,15 @@ namespace EpochApp.Client.Services
     public class WorldService : IWorldService
     {
         private readonly HttpClient _client;
-        private readonly IWebAssemblyHostEnvironment _host;
         private readonly ILogger<IWorldService> _logger;
 
         /// <summary>
         ///     Constructor for WorldService.
         /// </summary>
         /// <param name="logger"> The logger. </param>
-        /// <param name="host">
-        ///     The web assembly host environment.
-        /// </param>
         /// <param name="client"> The http client. </param>
-        public WorldService(ILogger<WorldService> logger, IWebAssemblyHostEnvironment host, HttpClient client)
+        public WorldService(ILogger<WorldService> logger, HttpClient client)
         {
-            _host = host;
             _client = client;
             _logger = logger;
             // _client = new HttpClient { BaseAddress = new Uri($"{_host.BaseAddress}") };
@@ -41,7 +34,7 @@ namespace EpochApp.Client.Services
         public async Task<List<UserWorldDTO>> GetWorldsAsync()
         {
             var worlds = await _client.GetFromJsonAsync<List<UserWorldDTO>>("api/v2/Worlds");
-            return null;
+            return await Task.FromResult(worlds);
         }
 
         /// <inheritdoc />

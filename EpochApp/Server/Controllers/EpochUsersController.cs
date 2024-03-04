@@ -2,7 +2,6 @@ using EpochApp.Server.Data;
 using EpochApp.Server.Services.MailService;
 using EpochApp.Shared;
 using EpochApp.Shared.Users;
-using EpochApp.Shared.Worlds;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

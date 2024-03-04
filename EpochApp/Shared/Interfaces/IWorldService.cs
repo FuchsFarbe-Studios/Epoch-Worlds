@@ -4,7 +4,6 @@
 // matsu
 // Modified: 22-2-2024
 using EpochApp.Shared.Users;
-using EpochApp.Shared.Worlds;
 
 namespace EpochApp.Shared
 {

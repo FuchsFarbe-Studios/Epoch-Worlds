@@ -4,8 +4,6 @@
 // matsu
 // Modified: 3-3-2024
 using EpochApp.Shared;
-using EpochApp.Shared.Config;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Net.Http.Json;
 
 namespace EpochApp.Client.Services
@@ -16,21 +14,17 @@ namespace EpochApp.Client.Services
     public class LookupService : ILookupService
     {
         private readonly HttpClient _client;
-        private readonly IWebAssemblyHostEnvironment _host;
         private readonly ILogger<ILookupService> _logger;
 
         /// <summary>
         ///   Constructor for LookupService.
         /// </summary>
-        /// <param name="host"> The web assembly host environment. </param>
         /// <param name="logger"> The logger. </param>
         /// <param name="client"> The http client. </param>
-        public LookupService(IWebAssemblyHostEnvironment host, ILogger<LookupService> logger, HttpClient client)
+        public LookupService(ILogger<LookupService> logger, HttpClient client)
         {
-            _host = host;
             _logger = logger;
             _client = client;
-            _logger.LogInformation($"LookupService created, base address: {_client.BaseAddress}");
         }
 
         /// <inheritdoc />

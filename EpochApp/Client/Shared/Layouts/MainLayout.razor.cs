@@ -1,6 +1,5 @@
 using EpochApp.Client.Services;
 using EpochApp.Shared;
-using EpochApp.Shared.Client;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;

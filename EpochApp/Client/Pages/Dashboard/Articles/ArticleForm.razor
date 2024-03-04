@@ -28,14 +28,11 @@
 						</Authorized>
 					</AuthorizeView>
 
-					<MudItem xs="12" md="6">
-						<MudTextField Label="Title" @bind-Value="@Model.Title" For="@(() => Model.Title)" MaxLength="255" Required="true" />
-					</MudItem>
+					<MudItem xs="12">
 
-					<MudItem xs="12" md="6">
-
-						<MudStack>
-							<MudSelect FullWidth="true" T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)" Required="true" Placeholder="Please choose a category for this article...">
+						<MudStack Row="true">
+							<MudTextField Variant="Variant.Outlined" Label="Title" @bind-Value="@Model.Title" For="@(() => Model.Title)" MaxLength="255" Required="true" AutoFocus="true" />
+							<MudSelect Variant="Variant.Outlined" T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)" Required="true" Placeholder="Please choose a category for this article..." Adornment="Adornment.End" AdornmentColor="Color.Primary" AdornmentIcon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Bolt]" OnAdornmentClick="@(async () => await GenerateArticleTemplateAsync())" AdornmentAriaLabel="Generate article templated sections.">
 								@if (_categories.Any())
 								{
 									@foreach (var cat in _categories)
@@ -44,7 +41,6 @@
 									}
 								}
 							</MudSelect>
-							<MudButton OnClick="@(async () => await GenerateArticleTemplateAsync())">Generate Article Template</MudButton>
 						</MudStack>
 					</MudItem>
 

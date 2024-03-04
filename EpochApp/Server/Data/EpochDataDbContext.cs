@@ -5,12 +5,7 @@
 // Modified: 29-11-2023
 
 using EpochApp.Shared;
-using EpochApp.Shared.Articles;
-using EpochApp.Shared.Client;
-using EpochApp.Shared.Config;
-using EpochApp.Shared.Social;
 using EpochApp.Shared.Users;
-using EpochApp.Shared.Worlds;
 using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable CS1591// Missing XML comment for publicly visible type or member

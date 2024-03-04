@@ -25,8 +25,6 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
-using EpochApp.Shared.Config;
-
 namespace EpochApp.Shared
 {
     public class TemplateDTO

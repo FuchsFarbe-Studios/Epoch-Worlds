@@ -1,7 +1,8 @@
 using EpochApp.Shared;
-using EpochApp.Shared.Config;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+
+// ReSharper disable All
 
 namespace EpochApp.Client.Pages.Internal.Configuration
 {

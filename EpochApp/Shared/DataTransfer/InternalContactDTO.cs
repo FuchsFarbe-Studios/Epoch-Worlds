@@ -3,8 +3,6 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 17-2-2024
-using EpochApp.Shared.Client;
-
 namespace EpochApp.Shared
 {
     /// <summary>

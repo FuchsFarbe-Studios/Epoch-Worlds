@@ -4,8 +4,6 @@
 // matsu
 // Modified: 1-3-2024
 using EpochApp.Shared;
-using EpochApp.Shared.Articles;
-using EpochApp.Shared.Config;
 using Profile=AutoMapper.Profile;
 
 #pragma warning disable CS1591// Missing XML comment for publicly visible type or member

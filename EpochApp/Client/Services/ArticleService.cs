@@ -4,11 +4,11 @@
 // matsu
 // Modified: 3-3-2024
 using EpochApp.Shared;
-using EpochApp.Shared.Articles;
 using EpochApp.Shared.Utils;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
 using System.Net.Http.Json;
+
+// ReSharper disable All
 
 namespace EpochApp.Client.Services
 {
@@ -19,7 +19,6 @@ namespace EpochApp.Client.Services
     public class ArticleService : IArticleService
     {
         private readonly HttpClient _client;
-        private readonly IWebAssemblyHostEnvironment _host;
         private readonly ILogger<IArticleService> _logger;
         private readonly ISnackbar _snackbar;
 
@@ -27,13 +26,11 @@ namespace EpochApp.Client.Services
         ///    Constructor for ArticleService.
         /// </summary>
         /// <param name="logger"> The logger. </param>
-        /// <param name="host"> The web assembly host environment. </param>
         /// <param name="client"> The http client. </param>
         /// <param name="snackbar"> The snackbar. </param>
-        public ArticleService(ILogger<ArticleService> logger, IWebAssemblyHostEnvironment host, HttpClient client, ISnackbar snackbar)
+        public ArticleService(ILogger<ArticleService> logger, HttpClient client, ISnackbar snackbar)
         {
             _logger = logger;
-            _host = host;
             _client = client;
             _snackbar = snackbar;
 
