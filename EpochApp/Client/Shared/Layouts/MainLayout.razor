@@ -6,32 +6,85 @@
 <MudSnackbarProvider />
 
 <CascadingValue Name="Settings" Value="@_settings">
-	<MudLayout>
-		<MudAppBar Elevation="0" Color="Color.Dark" WrapContent="true">
-			@* ReSharper disable once UnusedParameter.Local *@
-			<MudIconButton Icon="@(_drawerOpen ? Icons.Material.Filled.MenuOpen : Icons.Material.Filled.Menu)" Variant="@(_drawerOpen ? Variant.Outlined : Variant.Text)" Title="@($"{(_drawerOpen ? "Close" : "Open")} side menu.")" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())" />
-			<AppBar OnDarkModeToggle="@ToggleDarkModeAsync" />
-		</MudAppBar>
+	<CascadingValue Value="@_newWorld">
+		<MudLayout>
 
-		<MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0" Variant="DrawerVariant.Mini" OpenMiniOnHover="true">
-			@*	NavMenu	*@
-			<AuthorizeView>
-				<CascadingValue Value="@_drawerOpen" Name="IsNavCollapsed">
-					<WorldSelector OnNewWorldChanged="@HandleNewWorldChanged" />
+			<!-- FANCY APP BAR -->
+			<MudAppBar DisableGutters="true" Fixed="true" Elevation="0" Color="Color.Transparent" WrapContent="true" Dense="true">
+
+				<!-- WORLD SELECTION AND LOGO -->
+				<AuthorizeView>
+					<Authorized>
+						<MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
+							<MudPaper Width="280px" Square="true" Outlined="false" Height="48px" Class="rounded-b-xl flex-grow-1" Style="position: fixed; left: 50%; margin-left: -140px;">
+								<MudStack AlignItems="AlignItems.Center" Justify="Justify.FlexStart" Row="true">
+									<MudLink Href="/">
+										<MudImage Src="images/logos/SVG/world-svg.svg" Height="44" Alt="The logo for the website's application bar." Elevation="0" Class="mx-2" />
+									</MudLink>
+									<WorldSelector OnNewWorldChanged="@HandleNewWorldChanged" />
+								</MudStack>
+							</MudPaper>
+						</MudHidden>
+						<MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+							<MudPaper Width="600px" Square="true" Outlined="false" Height="48px" Class="rounded-b-xl flex-grow-1" Style="position: fixed; left: 50%; margin-left: -300px;">
+								<MudStack AlignItems="AlignItems.Center" Justify="Justify.FlexStart" Row="true">
+									<MudLink Href="/">
+										<MudImage Src="images/logos/SVG/world-svg.svg" Height="44" Alt="The logo for the website's application bar." Elevation="0" Class="mx-2" />
+									</MudLink>
+									<WorldSelector OnNewWorldChanged="@HandleNewWorldChanged" />
+								</MudStack>
+							</MudPaper>
+						</MudHidden>
+					</Authorized>
+					<NotAuthorized>
+						<MudPaper Square="true" Outlined="false" Height="48px" Class="rounded-br-xl flex-grow-1">
+							<MudLink Href="/">
+								<MudImage Src="images/logos/SVG/world-svg.svg" Height="40" Alt="The logo for the website's application bar." Elevation="0" Class="mx-2" />
+							</MudLink>
+						</MudPaper>
+					</NotAuthorized>
+				</AuthorizeView>
+
+				<MudPaper Square="true" Outlined="false" Height="48px" Class="rounded-bl-xl" Style="position: fixed; right: 0%; margin-right: 0;">
+					<!-- DARK MODE TOGGLE -->
+					<MudIconButton OnClick="@(async () => await ToggleDarkModeAsync())" Icon="@(_isDarkMode ? Icons.Material.Filled.ShieldMoon : Icons.Material.Filled.WbSunny)" Color="@(_isDarkMode ? Color.Primary : Color.Inherit)" Title="@(_isDarkMode ? "Light Mode" : "Dark Mode")" />
+
+					<!-- USER LOGINS -->
+					<AuthorizeView>
+						<Authorized>
+							<MudChip Href="@NavRef.UserNav.Profile" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.D20]}")" IconColor="Color.Default" Color="Color.Default">
+								<MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+									@($"{Auth.CurrentUser.UserName}")
+								</MudHidden>
+							</MudChip>
+						</Authorized>
+						<NotAuthorized>
+							<MudButton StartIcon="@Icons.Material.Rounded.AppRegistration" Variant="Variant.Text" DisableElevation="true" Href="@NavRef.Auth.Registration" Color="Color.Inherit" Size="Size.Small">
+								Register
+							</MudButton>
+							<MudButton StartIcon="@Icons.Material.Rounded.Login" Variant="Variant.Text" DisableElevation="true" Href="@NavRef.Auth.Login" Color="Color.Inherit" Size="Size.Small">
+								Log-In
+							</MudButton>
+						</NotAuthorized>
+					</AuthorizeView>
+				</MudPaper>
+			</MudAppBar>
+
+			<!-- NAVIGATION -->
+			<MudDrawer Fixed="true" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Never" Elevation="0" Variant="DrawerVariant.Mini" OpenMiniOnHover="true">
+				<CascadingValue Name="MenuOpened" Value="@_drawerOpen">
+					<NavMenu />
 				</CascadingValue>
-			</AuthorizeView>
-			<CascadingValue Name="MenuOpened" Value="@_drawerOpen">
-				<NavMenu IsMudMenu="true" />
-			</CascadingValue>
-		</MudDrawer>
+			</MudDrawer>
 
-		<MudMainContent Style="background-image: url('images/worldbuilding.jpg') !important; background-repeat: no-repeat; background-attachment: fixed; background-position: center;">
-			<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="min-height: 90vh;">
-				<CascadingValue Value="@_newWorld">
+			<!-- MAIN CONTENT -->
+			<MudMainContent Style="background-image: url('images/worldbuilding.jpg') !important; background-repeat: no-repeat; background-attachment: fixed; background-position: center;">
+				<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="min-height: 90vh;">
 					@Body
-				</CascadingValue>
-			</MudContainer>
-			<Footer />
-		</MudMainContent>
-	</MudLayout>
+				</MudContainer>
+				<Footer />
+			</MudMainContent>
+
+		</MudLayout>
+	</CascadingValue>
 </CascadingValue>

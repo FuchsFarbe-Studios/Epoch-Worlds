@@ -229,9 +229,9 @@ namespace EpochApp.Client.Shared
             await Task.CompletedTask;
         }
 
-        private Task ToggleDarkModeAsync(bool arg)
+        private Task ToggleDarkModeAsync()
         {
-            _isDarkMode = arg;
+            _isDarkMode = !_isDarkMode;
             StateHasChanged();
             return Task.CompletedTask;
         }

@@ -63,6 +63,7 @@ namespace EpochApp.Shared.Utils
             {
                 public const string View = "/World/Active";
                 public const string Articles = "/World/Articles";
+                public const string Files = "/World/Files";
             }
         }
 

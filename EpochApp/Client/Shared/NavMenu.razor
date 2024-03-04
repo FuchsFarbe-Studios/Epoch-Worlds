@@ -3,31 +3,24 @@
 	{
 		<MudText Typo="Typo.h6" Class="px-4">The Epoch Exchange</MudText>
 		<MudDivider Class="my-2" />
-		<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
 	}
 
 	<!-- User -->
 	<AuthorizeView>
 		<Authorized>
+			<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
 			<MudNavLink Href="@NavRef.Site.Dash" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
 
 			<!-- Worlds -->
-			<MudNavGroup Title="Worlds" Expanded="false" Icon="@Icons.Material.Filled.SouthAmerica">
-				<MudNavLink Href="@NavRef.WorldNav.Index" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAmericas]">My Worlds</MudNavLink>
-				<MudNavLink Href="@NavRef.WorldNav.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create World</MudNavLink>
-				<MudNavLink Href="@NavRef.WorldNav.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit World</MudNavLink>
-			</MudNavGroup>
-
+			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Globe]" Href="@NavRef.WorldNav.Index">World</MudNavLink>
 			<!-- Articles -->
-			<MudNavGroup Title="Articles" Expanded="false" Icon="@Icons.Material.Filled.Article">
-				<MudNavLink Href="@NavRef.ArticleNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Article">World Articles</MudNavLink>
-				<MudNavLink Href="@NavRef.ArticleNav.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Article</MudNavLink>
-				<MudNavLink Href="@NavRef.ArticleNav.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Article</MudNavLink>
-			</MudNavGroup>
+			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]" Href="@NavRef.ArticleNav.Index">Articles</MudNavLink>
+			<!-- Files -->
+			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.File]" Href="@NavRef.WorldNav.Current.Files">Articles</MudNavLink>
 
 			<!-- Builders -->
-			<MudNavGroup Title="Builders" Expanded="false" Icon="@Icons.Material.Filled.Build">
-				<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.BuildCircle">Builders</MudNavLink>
+			<MudNavGroup Title="Builders" Expanded="false" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand]">
+				<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand]">Builders</MudNavLink>
 				<MudNavGroup Title="Constructed Language" Expanded="false" Icon="@Icons.Material.Filled.Language">
 					<MudNavLink Href="@NavRef.BuilderNav.CongLang.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Language</MudNavLink>
 					<MudNavLink Href="@NavRef.BuilderNav.CongLang.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Language</MudNavLink>
@@ -39,7 +32,7 @@
 			</MudNavGroup>
 
 			<!-- Auth -->
-			<MudNavGroup Title="User" Expanded="true" Icon="@Icons.Material.Filled.PermIdentity">
+			<MudNavGroup Title="User" Expanded="false" Icon="@Icons.Material.Filled.PermIdentity">
 				<MudNavLink Href="@NavRef.UserNav.Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Face">Profile</MudNavLink>
 				<MudNavLink Href="@NavRef.UserNav.Account" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AccountCircle">Account</MudNavLink>
 				<MudNavLink Href="@NavRef.UserNav.Settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Settings">Settings</MudNavLink>

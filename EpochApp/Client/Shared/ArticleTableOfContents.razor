@@ -1,5 +1,3 @@
-@using Typo=MudBlazor.Typo
-@using MudBlazor
 @if (Article != null && Article.ShowTableOfContents)
 {
 	<MudPaper Width="100%" Elevation="0" Outlined="true" Class="mud-border-primary">
@@ -7,9 +5,12 @@
 		<MudList>
 			@foreach (var s in Sections)
 			{
-				<MudListItem @key=@s.SectionID Dense="true">
-					<MudLink Color="Color.Primary" Href="@($"/W/{Article.WorldId}/A/{Article.ArticleId}#{s.SectionID.ToString()}")" Class="text-decoration-none">@(Sections?.IndexOf(s) + 1) - @s.Title</MudLink>
-				</MudListItem>
+				@if (!string.IsNullOrEmpty(s.Content))
+				{
+					<MudListItem @key=@s.SectionID Dense="true">
+						<MudLink Color="Color.Primary" Href="@($"/W/{Article.WorldId}/A/{Article.ArticleId}#{s.SectionID.ToString()}")" Class="text-decoration-none">@(Sections?.IndexOf(s) + 1) - @s.Title</MudLink>
+					</MudListItem>
+				}
 			}
 		</MudList>
 	</MudPaper>

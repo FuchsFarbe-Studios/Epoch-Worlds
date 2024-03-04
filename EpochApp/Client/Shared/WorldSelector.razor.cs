@@ -17,24 +17,7 @@ namespace EpochApp.Client.Shared
         /// </summary>
         [Parameter] public EventCallback<WorldDTO> OnNewWorldChanged { get; set; }
 
-        /// <summary>
-        ///     The event that is called when the selected world is changed.
-        /// </summary>
-        [CascadingParameter(Name = "IsNavCollapsed")] public bool Condensed
-        {
-            get => _condensed;
-            set
-            {
-                if (_condensed == value)
-                    _isDirty = false;
-                else
-                    _isDirty = true;
-                _condensed = value;
-            }
-        }
-
         [Inject] private IWorldService Client { get; set; }
-
         [Inject] private EpochAuthProvider Auth { get; set; }
 
         /// <inheritdoc />

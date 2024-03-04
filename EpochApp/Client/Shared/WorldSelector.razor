@@ -1,8 +1,8 @@
-@if (_selectedWorld != null && _userWorlds.Any())
+@if (_userWorlds.Any())
 {
-	<MudMenu Class="mt-2" Dense="true" Variant="Variant.Filled" AnchorOrigin="Origin.TopRight">
+	<MudMenu Dense="false" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
 		<ActivatorContent>
-			<MudIcon Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success" Title="@($"{_selectedWorld?.WorldName}")" />
+			<MudChip Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" IconColor="Color.Dark" Variant="Variant.Filled" Text="@($"{_selectedWorld.WorldName}")" Color="Color.Success" />
 		</ActivatorContent>
 		<ChildContent>
 			@foreach (var w in _userWorlds)
@@ -14,15 +14,5 @@
 }
 else
 {
-	<MudMenu Class="mt-2" Dense="true" Variant="Variant.Filled" ActivationEvent="MouseEvent.RightClick">
-		<ActivatorContent>
-			<MudChip Size="Size.Large" Icon="@($"{StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.EarthAsia]}")" Color="Color.Success">@($"{_selectedWorld?.WorldName}")</MudChip>
-		</ActivatorContent>
-		<ChildContent>
-			@foreach (var w in _userWorlds)
-			{
-				<MudMenuItem OnClick="@(async () => await WorldChanged(w))">@w.WorldName</MudMenuItem>
-			}
-		</ChildContent>
-	</MudMenu>
+	<MudProgressCircular Size="Size.Small" Color="Color.Warning" Indeterminate="true" Class="my-1 mx-2" />
 }
