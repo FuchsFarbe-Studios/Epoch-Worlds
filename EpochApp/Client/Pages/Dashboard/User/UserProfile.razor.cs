@@ -8,7 +8,7 @@ namespace EpochApp.Client.Pages.User
     ///     Profile page for a logged in user.
     /// </summary>
     [Authorize]
-    public partial class Profile
+    public partial class UserProfile
     {
         [Inject] private EpochAuthProvider Auth { get; set; }
     }

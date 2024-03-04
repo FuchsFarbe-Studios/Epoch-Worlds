@@ -26,6 +26,11 @@ namespace EpochApp.Shared.Users
         public bool IsSuccessful { get; set; } = false;
 
         /// <summary>
+        /// The reason the login attempt failed.
+        /// </summary>
+        public string FailReason { get; set; }
+
+        /// <summary>
         /// The ip address of the login attempt.
         /// </summary>
         public string IpAddress { get; set; }

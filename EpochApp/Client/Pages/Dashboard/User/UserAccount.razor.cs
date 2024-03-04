@@ -12,7 +12,7 @@ namespace EpochApp.Client.Pages.User
 {
     /// <summary> The user account page. </summary>
     [Authorize]
-    public partial class Account
+    public partial class UserAccount
     {
         [Inject] private EpochAuthProvider Auth { get; set; }
     }

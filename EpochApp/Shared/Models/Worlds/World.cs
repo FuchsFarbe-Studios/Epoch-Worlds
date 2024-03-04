@@ -89,17 +89,17 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The date this world was created.
         /// </summary>
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         /// <summary>
         ///     The date this world was last modified.
         /// </summary>
-        public DateTime? DateModified { get; set; }
+        public DateTime? ModifiedOn { get; set; }
 
         /// <summary>
         ///     The date this world was removed or deleted by the owner.
         /// </summary>
-        public DateTime? DateRemoved { get; set; }
+        public DateTime? RemovedOn { get; set; }
 
         /// <summary>
         ///     The user that owns this world.

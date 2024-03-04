@@ -4,8 +4,10 @@
 // Oliver MacDougall
 // Modified: 29-11-2023
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Shared.Users
 {
+
     public class User
     {
         public User()
@@ -93,5 +95,30 @@ namespace EpochApp.Shared.Users
         ///    The subscriptions this user has.
         /// </summary>
         public virtual ICollection<Subscription> Subscriptions { get; set; }
+
+        /// <summary>
+        ///    The ban tickets this user is associated with.
+        /// </summary>
+        public virtual ICollection<UserReport> AdminReports { get; set; }
+
+        /// <summary>
+        /// Reports filed by this user.
+        /// </summary>
+        public ICollection<UserReport> PlaintiffReports { get; set; }
+
+        /// <summary>
+        /// Reports this user has been reported in.
+        /// </summary>
+        public ICollection<UserReport> DefendantReports { get; set; }
+
+        /// <summary>
+        ///   The ban tickets this admin is associated with.
+        /// </summary>
+        public virtual ICollection<BanTicket> AdminTickets { get; set; }
+
+        /// <summary>
+        ///  The ban tickets this user is associated with.
+        /// </summary>
+        public virtual ICollection<BanTicket> UserTickets { get; set; }
     }
 }

@@ -80,7 +80,7 @@ namespace EpochApp.Server
             services.AddAutoMapper(typeof(ManuscriptProfile));
             services.AddAutoMapper(typeof(FileProfile));
             services.AddAutoMapper(typeof(WorldProfile));
-            services.AddAutoMapper(typeof(UserProfile));
+            services.AddAutoMapper(typeof(UserMapProfile));
 
             // Custom services
             services.AddScoped<ITagService, TagService>();

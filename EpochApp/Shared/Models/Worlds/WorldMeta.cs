@@ -13,5 +13,8 @@ namespace EpochApp.Shared
 
         public World World { get; set; }
         public MetaTemplate Template { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public DateTime? DateRemoved { get; set; }
     }
 }

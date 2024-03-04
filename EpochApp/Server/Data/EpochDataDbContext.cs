@@ -35,6 +35,9 @@ namespace EpochApp.Server.Data
 
         // Users
         public DbSet<User> Users { get; set; }
+        public DbSet<BanTicket> BanList { get; set; }
+        public DbSet<UserReport> UserReports { get; set; }
+        public DbSet<LoginAttempt> LoginAttempts { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserSocial> UserSocials { get; set; }
@@ -46,7 +49,6 @@ namespace EpochApp.Server.Data
 
         // Lookups
         public DbSet<ISOLanguage> Languages { get; set; }
-        public DbSet<SocialMedia> SocialMediae { get; set; }
         public DbSet<PartOfSpeech> PartsOfSpeech { get; set; }
         public DbSet<DictionaryWord> DictionaryWords { get; set; }
 
@@ -71,22 +73,18 @@ namespace EpochApp.Server.Data
         public DbSet<ArticleTemplate> ArticleTemplates { get; set; }
         public DbSet<ArticleTemplateMeta> ArticleTemplateMetas { get; set; }
         public DbSet<ArticleTemplateSection> ArticleTemplateSections { get; set; }
-        // public DbSet<ArticleTemplate> ArticleTemplates { get; set; }
-        // public DbSet<ArticleTemplateMeta> ArticleTemplateMetas { get; set; }
-        // public DbSet<ArticleTemplateSection> ArticleTemplateSections { get; set; }
+
         public DbSet<Phoneme> Phonemes { get; set; }
         public DbSet<Vowel> Vowels { get; set; }
         public DbSet<Consonant> Consonants { get; set; }
         public DbSet<Genre> Genres { get; set; }
 
-        // Blogs
-
         // Content generation
-
         public DbSet<BuilderContent> BuilderContents { get; set; }
 
         // Social
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<PostTag> PostTags { get; set; }
         public DbSet<UserTag> UserTags { get; set; }
         public DbSet<WorldTag> WorldTags { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
@@ -96,7 +94,53 @@ namespace EpochApp.Server.Data
             ConfigureClient(modelBuilder);
             ConfigureBlogs(modelBuilder);
 
-            modelBuilder.HasDefaultSchema("Users");
+            modelBuilder.Entity<BanTicket>(entity =>
+            {
+                entity.ToTable("Blacklist", "Users");
+                entity.HasKey(e => e.TicketId);
+                entity.Property(x => x.Reason).HasMaxLength(2000);
+                entity.HasOne(d => d.Admin)
+                      .WithMany(p => p.AdminTickets)
+                      .HasForeignKey(d => d.AdminID)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                      .HasConstraintName("FK_BanTicket_Admin");
+                entity.HasOne(d => d.User)
+                      .WithMany(p => p.UserTickets)
+                      .HasForeignKey(d => d.UserID)
+                      .OnDelete(DeleteBehavior.ClientSetNull)
+                      .HasConstraintName("FK_BanTicket_User");
+            });
+
+            modelBuilder.Entity<UserReport>(entity =>
+            {
+                entity.ToTable("GriefReports", "Users");
+                entity.HasKey(e => new { e.PlaintiffId, e.DefendantId, e.OverseerId });
+                entity.Property(x => x.Details).HasMaxLength(2000);
+                entity.HasOne(d => d.Overseer)
+                      .WithMany(p => p.AdminReports)
+                      .HasForeignKey(d => d.OverseerId)
+                      .HasConstraintName("FK_UserReports_Overseer");
+                entity.HasOne(d => d.Plaintiff)
+                      .WithMany(p => p.PlaintiffReports)
+                      .HasForeignKey(d => d.PlaintiffId)
+                      .HasConstraintName("FK_UserReports_Plaintiff");
+                entity.HasOne(d => d.Defendant)
+                      .WithMany(p => p.DefendantReports)
+                      .HasForeignKey(d => d.DefendantId)
+                      .HasConstraintName("FK_UserReports_Defendant");
+            });
+
+            modelBuilder.Entity<LoginAttempt>(entity =>
+            {
+                entity.ToTable("LoginAttempts", "Users");
+                entity.HasKey(e => e.LoginAttempId);
+                entity.Property(e => e.LoginAttempId).ValueGeneratedOnAdd();
+                entity.Property(x => x.Browser).HasMaxLength(255);
+                entity.Property(x => x.Device).HasMaxLength(255);
+                entity.Property(x => x.Location).HasMaxLength(255);
+                entity.Property(x => x.UserAgent).HasMaxLength(255);
+                entity.Property(x => x.UsernameOrEmail).HasMaxLength(255);
+            });
 
             modelBuilder.Entity<ArticleCategory>(entity =>
             {
@@ -303,6 +347,7 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<Subscription>(entity =>
             {
+                entity.ToTable("Subscriptions", "Users");
                 entity.HasKey(x => new { x.UserId, x.SubscriptionId });
                 entity.Property(x => x.SubscriptionId)
                       .UseIdentityColumn(10000);
@@ -319,10 +364,12 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<SubscriptionTier>(entity =>
             {
+                entity.ToTable("Tiers", "Users");
                 entity.HasKey(x => x.TierId);
                 entity.Property(x => x.Description).HasMaxLength(500);
                 entity.Property(x => x.Icon).HasMaxLength(100);
                 entity.Property(x => x.IconAlt).HasMaxLength(500);
+                entity.Property(x => x.Price).HasPrecision(18, 2);
                 entity.Property(x => x.Image).HasMaxLength(255);
                 entity.Property(x => x.ImageAlt).HasMaxLength(500);
                 entity.Property(x => x.Name).HasMaxLength(50);
@@ -350,6 +397,7 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<User>(user =>
             {
+                user.ToTable("Users", "Users");
                 user.Property(p => p.UserName)
                     .HasMaxLength(128);
                 user.Property(p => p.Email)
@@ -366,6 +414,7 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<UserRole>(entity =>
             {
+                entity.ToTable("UserRoles", "Users");
                 entity.HasKey(ur => new { ur.RoleID, ur.UserID });
                 entity.HasOne(ur => ur.User)
                       .WithMany(u => u.UserRoles)
@@ -381,6 +430,7 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<Role>(entity =>
             {
+                entity.ToTable("Roles", "Users");
                 entity.HasData(
                 new List<Role>
                 {
@@ -409,14 +459,10 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<UserSocial>(us =>
             {
+                us.ToTable("UserSocials", "Users");
                 us.HasKey(x => new { x.SocialID, x.UserID });
-
-                us.HasOne(x => x.Social)
-                  .WithMany()
-                  .HasForeignKey(x => x.SocialID)
-                  .HasConstraintName("FK_UserSocials_SocialMediae")
-                  .OnDelete(DeleteBehavior.Cascade);
-
+                us.Property(x => x.SocialID).ValueGeneratedOnAdd();
+                us.Property(x => x.SocialHandle).HasMaxLength(255);
                 us.HasOne(x => x.Profile)
                   .WithMany(p => p.Socials)
                   .HasForeignKey(x => x.UserID)
@@ -426,6 +472,7 @@ namespace EpochApp.Server.Data
 
             modelBuilder.Entity<Profile>(entity =>
             {
+                entity.ToTable("Profiles", "Users");
                 entity.HasKey(p => p.UserID);
                 entity.Property(x => x.Signature).HasMaxLength(300);
                 entity.Property(x => x.CommunitySignature).HasMaxLength(300);
@@ -461,7 +508,7 @@ namespace EpochApp.Server.Data
                       .AutoInclude();
                 entity.Navigation(x => x.WorldTags)
                       .AutoInclude();
-                entity.HasQueryFilter(x => x.DateRemoved == null || x.DateRemoved > DateTime.UtcNow);
+                entity.HasQueryFilter(x => x.RemovedOn == null || x.RemovedOn > DateTime.UtcNow);
             });
 
             modelBuilder.Entity<WorldGenre>(entity =>
@@ -498,40 +545,8 @@ namespace EpochApp.Server.Data
                       .WithMany()// assuming no navigation back from MetaTemplate
                       .HasForeignKey(wm => wm.MetaID)
                       .HasConstraintName("FK_WorldMetas_MetaTemplates");
+                entity.HasQueryFilter(x => x.DateRemoved == null || x.DateRemoved > DateTime.UtcNow);
             });
-
-            // modelBuilder.Entity<ArticleTemplateSection>(entity =>
-            // {
-            //     entity.ToTable("ArticleTemplateSections", "Templates");
-            //     entity.HasKey(e => new {e.TemplateId, e.SectionName});
-            //     entity.Property(e => e.SectionName)
-            //           .HasMaxLength(100);
-            //     entity.Property(e => e.Description)
-            //           .HasMaxLength(500);
-            //     entity.Property(e => e.Placeholder)
-            //           .HasMaxLength(255);
-            //     entity.Property(e => e.HelpText)
-            //           .HasMaxLength(255);
-            // });
-            //
-            // modelBuilder.Entity<ArticleTemplateMeta>(entity =>
-            // {
-            //     entity.ToTable("ArticleTemplateMetaData", "Templates");
-            //     entity.HasKey(a => new {a.TemplateId, a.MetaName});
-            //     entity.Property(e => e.MetaName)
-            //           .HasMaxLength(100);
-            //     entity.Property(e => e.Description)
-            //           .HasMaxLength(500);
-            //     entity.Property(e => e.Placeholder)
-            //           .HasMaxLength(255);
-            //     entity.Property(e => e.HelpText)
-            //           .HasMaxLength(255);
-            //     entity.HasOne(atm => atm.Template)
-            //           .WithMany(t => t.Meta)
-            //           .HasForeignKey(atm => atm.TemplateId)
-            //           .HasConstraintName("FK_ArticleTemplateMetas_ArticleTemplates")
-            //           .OnDelete(DeleteBehavior.Cascade);
-            // });
 
             modelBuilder.Entity<MetaTemplate>(entity =>
             {
@@ -595,6 +610,7 @@ namespace EpochApp.Server.Data
 
                 modelBuilder.Entity<BuilderContent>(entity =>
                 {
+                    entity.ToTable("BuilderContents", "Users");
                     entity.HasKey(bc => bc.ContentID);
 
                     // Defines conversion from ContentType enum to string and back

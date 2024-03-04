@@ -32,5 +32,4 @@ namespace EpochApp.Shared.Users
         public virtual User User { get; set; }
         public virtual ICollection<UserSocial> Socials { get; set; }
     }
-
 }

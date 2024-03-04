@@ -81,7 +81,7 @@ namespace EpochApp.Server.Services
                         {
                             WorldName = registration?.WorldName,
                             IsActiveWorld = true,
-                            DateCreated = DateTime.UtcNow
+                            CreatedOn = DateTime.UtcNow
                             //Owner = user,
                         };
             metaTemplates.ForEach(x => meta.Add(new WorldMeta
@@ -127,7 +127,7 @@ namespace EpochApp.Server.Services
                                            .Include(x => x.WorldFiles)
                                            .Include(x => x.WorldArticles)
                                            .ThenInclude(article => article.Sections)
-                                           .Where(x => x.DateRemoved == null || x.DateRemoved > DateTime.UtcNow)
+                                           .Where(x => x.RemovedOn == null || x.RemovedOn > DateTime.UtcNow)
                                            .AsSplitQuery()
                                            .ToListAsync();
             var worldData = new List<WorldDTO>();
@@ -271,7 +271,7 @@ namespace EpochApp.Server.Services
                 _logger.LogError("World does not exist!");
                 return null;
             }
-            worldToDelete.DateRemoved = DateTime.UtcNow;
+            worldToDelete.RemovedOn = DateTime.UtcNow;
             _context.Entry(worldToDelete).State = EntityState.Modified;
             _context.Update(worldToDelete);
             try

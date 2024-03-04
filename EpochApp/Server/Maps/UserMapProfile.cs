@@ -11,10 +11,22 @@ using MapProfile=AutoMapper.Profile;
 
 namespace EpochApp.Server.Maps
 {
-    public class UserProfile : MapProfile
+    public class UserMapProfile : MapProfile
     {
-        public UserProfile()
+        public UserMapProfile()
         {
+            CreateMap<UserReport, UserReportDTO>();
+            CreateMap<UserReportDTO, UserReport>();
+            CreateMap<BanTicket, BanTicketDTO>();
+            CreateMap<BanTicketDTO, BanTicket>();
+            CreateMap<ProfileDTO, Profile>();
+            CreateMap<Profile, ProfileDTO>()
+                .ForMember(x => x.MemberSince, opt => opt.MapFrom(x => x.User.DateCreated))
+                .ForMember(x => x.DateOfBirth, opt => opt.MapFrom(x => x.User.DateOfBirth))
+                .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.User.UserName))
+                .ForMember(x => x.Email, opt => opt.MapFrom(x => x.User.Email));
+            CreateMap<UserSocial, UserSocialDTO>();
+            CreateMap<UserSocialDTO, UserSocial>();
             CreateMap<User, UserData>()
                 .ForMember(x => x.UserID, opt => opt.MapFrom(x => x.UserID))
                 .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.UserName))

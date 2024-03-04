@@ -8,8 +8,8 @@ namespace EpochApp.Shared
 {
     public class UserSocialDTO
     {
-        public string Icon { get; set; }
-        public string SocialName { get; set; }
-        public string Handle { get; set; }
+        public int SocialID { get; set; }
+        public Guid UserID { get; set; }
+        public string SocialHandle { get; set; }
     }
 }

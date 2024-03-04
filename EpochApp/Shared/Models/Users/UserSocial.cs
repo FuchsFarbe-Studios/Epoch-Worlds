@@ -13,7 +13,6 @@ namespace EpochApp.Shared.Users
         public Guid UserID { get; set; }
         public string SocialHandle { get; set; }
 
-        public virtual SocialMedia Social { get; set; }
         public virtual Profile Profile { get; set; }
     }
 }
