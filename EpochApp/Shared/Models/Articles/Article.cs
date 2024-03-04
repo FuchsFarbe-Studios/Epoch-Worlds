@@ -5,6 +5,8 @@
 // Modified: 26-12-2023
 using EpochApp.Shared.Users;
 
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
+
 namespace EpochApp.Shared
 {
     /// <summary>
@@ -34,11 +36,30 @@ namespace EpochApp.Shared
         /// </summary>
         public Guid? WorldId { get; set; }
 
-        /// <summary> Article category. </summary>
+        /// <summary>
+        ///     The builder content associated with this article.
+        /// </summary>
+        public Guid? BuilderId { get; set; }
+
+        /// <summary>
+        ///    Parent article identifier.
+        /// </summary>
+        public Guid? ParentArticleId { get; set; }// Reference to parent Article
+
+        /// <summary>
+        /// Article's category identifier.
+        /// </summary>
         public int? CategoryId { get; set; }
 
-        /// <summary> Title of this article. </summary>
+        /// <summary>
+        /// Title of this article.
+        /// </summary>
         public string? Title { get; set; }
+
+        /// <summary>
+        /// Subtitle of this article.
+        /// </summary>
+        public string? SubTitle { get; set; }
 
         /// <summary>
         ///     Content of this article.
@@ -46,9 +67,14 @@ namespace EpochApp.Shared
         public string? Content { get; set; }
 
         /// <summary>
-        ///     The builder content associated with this article.
+        /// Short summary of the article.
         /// </summary>
-        public Guid? BuilderId { get; set; }
+        public string? Excerpt { get; set; }
+
+        /// <summary>
+        /// Snippet that displays when the mouse is hovered over and article link.
+        /// </summary>
+        public string MouseOverSnippet { get; set; }
 
         /// <summary>
         ///     Generated article content will go here.
@@ -61,9 +87,34 @@ namespace EpochApp.Shared
         public ContentType? ContentType { get; set; }
 
         /// <summary>
+        /// FontAwesome class for the article icon.
+        /// </summary>
+        public string Icon { get; set; }
+
+        /// <summary>
+        /// Cover image of the article.
+        /// </summary>
+        public string CoverImage { get; set; }
+
+        /// <summary>
+        /// Alt text for the cover image.
+        /// </summary>
+        public string CoverImageAlt { get; set; }
+
+        /// <summary>
         ///     Published articles are viewable by other users.
         /// </summary>
         public bool IsPublished { get; set; } = false;
+
+        /// <summary>
+        ///    Indicates if this article is public.
+        /// </summary>
+        public bool IsPublic { get; set; } = false;
+
+        /// <summary>
+        ///    Indicates if this article is a work in progress.
+        /// </summary>
+        public bool IsWorkInProgress { get; set; } = false;
 
         /// <summary>
         ///     Indicates if this article is not safe for work.
@@ -74,6 +125,16 @@ namespace EpochApp.Shared
         ///     Display the author of this article.
         /// </summary>
         public bool DisplayAuthor { get; set; } = false;
+
+        /// <summary>
+        ///    Allow comments on this article.
+        /// </summary>
+        public bool AllowComments { get; set; } = false;
+
+        /// <summary>
+        ///   Allow copy of this article.
+        /// </summary>
+        public bool AllowCopy { get; set; } = false;
 
         /// <summary>
         ///     Show this article in the table of contents.
@@ -121,14 +182,29 @@ namespace EpochApp.Shared
         public virtual ArticleCategory? Category { get; set; }
 
         /// <summary>
+        ///    Header navigation property.
+        /// </summary>
+        public virtual ArticleHeader Header { get; set; }
+
+        /// <summary>
+        ///   SideBar navigation property.
+        /// </summary>
+        public virtual ArticleSideBarContent SideBar { get; set; }
+
+        /// <summary>
+        ///   Footer navigation property.
+        /// </summary>
+        public virtual ArticleFooter Footer { get; set; }
+
+        /// <summary>
+        ///    Parent navigation property.
+        /// </summary>
+        public virtual Article ParentArticle { get; set; }// Navigation property for parent
+
+        /// <summary>
         ///     The builder content associated with this article.
         /// </summary>
         public virtual BuilderContent Builder { get; set; }
-
-        // /// <summary>
-        // ///   Template navigation property.
-        // /// </summary>
-        //public virtual ArticleTemplate Template { get; set; }
 
         /// <summary>
         ///     Sections navigation property.
@@ -147,6 +223,11 @@ namespace EpochApp.Shared
         ///     Meta navigation property.
         /// </summary>
         public virtual ICollection<ArticleMeta> Meta { get; set; }
+
+        /// <summary>
+        ///   SubArticles navigation property.
+        /// </summary>
+        public virtual ICollection<Article> SubArticles { get; set; }
     }
 
 }

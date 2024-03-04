@@ -39,7 +39,7 @@ namespace EpochApp.Shared.Utils
             public const string Blogs = "/Internal/Blogs";
             public const string Logs = "/Internal/Logs";
             public const string Contacts = "/Internal/Contacts";
-            public const string BlogPosts = "/Internal/Posts";
+            public const string Posts = "/Internal/Posts";
             public const string Users = "/Internal/Users";
             public const string Configuration = "/Internal/Configuration";
         }

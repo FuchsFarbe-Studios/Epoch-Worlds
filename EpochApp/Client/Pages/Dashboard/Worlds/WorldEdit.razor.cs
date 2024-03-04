@@ -1,7 +1,6 @@
 using EpochApp.Client.Services;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages.Dashboard.Worlds
 {
@@ -10,18 +9,15 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
     /// </summary>
     public partial class WorldEdit
     {
-        private WorldDTO _selectedWorld = null!;
+        private WorldDTO _selectedWorld;
         private List<WorldDTO> _userWorlds = new List<WorldDTO>();
-
         /// <summary>
         ///     The ID of the world to edit.
         /// </summary>
         [Parameter] public string WorldId { get; set; }
 
-        [Inject] private HttpClient Client { get; set; }
-
+        [Inject] private IWorldService WorldService { get; set; }
         [Inject] private EpochAuthProvider Auth { get; set; }
-
         [Inject] private NavigationManager Nav { get; set; }
 
         /// <inheritdoc />
@@ -31,13 +27,13 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
 
             if (string.IsNullOrWhiteSpace(WorldId))
             {
-                var worlds = await Client.GetFromJsonAsync<List<WorldDTO>>($"api/v1/Worlds/User?ownerId={Auth.CurrentUser.UserID}");
+                var worlds = await WorldService.GetUserWorldsAsync(Auth.CurrentUser.UserID);
                 if (worlds != null && worlds.Count != 0)
                     _userWorlds.AddRange(worlds);
             }
 
             if (Guid.TryParse(WorldId, out var worldId))
-                _selectedWorld = await Client.GetFromJsonAsync<WorldDTO>($"api/v1/Worlds/World/{Auth.CurrentUser.UserID}/{worldId}");
+                _selectedWorld = await WorldService.GetWorldAsync(worldId);
         }
 
         /// <inheritdoc />
@@ -46,7 +42,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
             await base.OnParametersSetAsync();
             if (!string.IsNullOrWhiteSpace(WorldId))
                 if (Guid.TryParse(WorldId, out var worldId))
-                    _selectedWorld = await Client.GetFromJsonAsync<WorldDTO>($"api/v1/Worlds/World/{Auth.CurrentUser.UserID}/{worldId}");
+                    _selectedWorld = await WorldService.GetWorldAsync(worldId);
         }
     }
 }

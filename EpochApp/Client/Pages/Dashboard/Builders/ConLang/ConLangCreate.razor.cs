@@ -11,6 +11,6 @@ namespace EpochApp.Client.Pages.Dashboard.Builders
         /// <summary>
         ///     The active world the user has selected.
         /// </summary>
-        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
     }
 }

@@ -88,5 +88,10 @@ namespace EpochApp.Shared.Users
         ///     The manuscripts this user has written.
         /// </summary>
         public virtual ICollection<Manuscript> Manuscripts { get; set; }
+
+        /// <summary>
+        ///    The subscriptions this user has.
+        /// </summary>
+        public virtual ICollection<Subscription> Subscriptions { get; set; }
     }
 }

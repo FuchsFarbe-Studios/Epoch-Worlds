@@ -14,7 +14,7 @@ namespace EpochApp.Client.Shared
         /// <summary>
         ///     The currently active world.
         /// </summary>
-        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
         [Inject] private EpochAuthProvider Auth { get; set; }
     }
 }

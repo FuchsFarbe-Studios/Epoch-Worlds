@@ -39,7 +39,7 @@ namespace EpochApp.Server.Controllers
         /// <summary>
         ///   Get all worlds.
         /// </summary>
-        /// <returns> A list of <see cref="UserWorldDTO"/>. </returns>
+        /// <returns> A list of <see cref="WorldDTO"/>. </returns>
         [HttpGet]
         public async Task<IActionResult> IndexWorldsAsync()
         {
@@ -51,7 +51,7 @@ namespace EpochApp.Server.Controllers
         ///  Get all worlds for a specific user.
         /// </summary>
         /// <param name="userId"> The user's unique identifier. </param>
-        /// <returns> A list of <see cref="UserWorldDTO"/>. </returns>
+        /// <returns> A list of <see cref="WorldDTO"/>. </returns>
         [HttpGet("UserWorlds")]
         public async Task<IActionResult> IndexUserWorldsAsync([FromQuery] Guid userId)
         {
@@ -63,7 +63,7 @@ namespace EpochApp.Server.Controllers
         ///    Get a specific world.
         /// </summary>
         /// <param name="worldId"> The unique identifier for the world. </param>
-        /// <returns> A <see cref="UserWorldDTO"/>. </returns>
+        /// <returns> A <see cref="WorldDTO"/>. </returns>
         [HttpGet("{worldId:guid}")]
         public async Task<IActionResult> GetWorldAsync(Guid worldId)
         {
@@ -87,7 +87,7 @@ namespace EpochApp.Server.Controllers
         ///  Get the active world for a user.
         /// </summary>
         /// <param name="ownerId"> The user's unique identifier. </param>
-        /// <returns> A <see cref="UserWorldDTO"/>. </returns>
+        /// <returns> A <see cref="WorldDTO"/>. </returns>
         [HttpGet("ActiveWorld")]
         public async Task<IActionResult> GetActiveUserWorld([FromQuery] Guid ownerId)
         {
@@ -99,9 +99,9 @@ namespace EpochApp.Server.Controllers
         ///  Create a new world.
         /// </summary>
         /// <param name="world"> The world to create. </param>
-        /// <returns> A <see cref="UserWorldDTO"/>. </returns>
+        /// <returns> A <see cref="WorldDTO"/>. </returns>
         [HttpPost]
-        public async Task<IActionResult> CreateWorldAsync([FromBody] UserWorldDTO world)
+        public async Task<IActionResult> CreateWorldAsync([FromBody] WorldDTO world)
         {
             var newWorld = await _worldService.CreateWorldAsync(world);
             return Ok(newWorld);
@@ -111,9 +111,9 @@ namespace EpochApp.Server.Controllers
         ///    Update the active world for a user.
         /// </summary>
         /// <param name="active"> The world to make active. </param>
-        /// <returns> A <see cref="UserWorldDTO"/>. </returns>
+        /// <returns> A <see cref="WorldDTO"/>. </returns>
         [HttpPut("ActiveWorld")]
-        public async Task<IActionResult> UpdateActiveUserWorlds([FromBody] UserWorldDTO active)
+        public async Task<IActionResult> UpdateActiveUserWorlds([FromBody] WorldDTO active)
         {
             var updatedWorld = await _worldService.UpdateActiveUserWorldsAsync(active);
             return Ok(updatedWorld);
@@ -124,9 +124,9 @@ namespace EpochApp.Server.Controllers
         /// </summary>
         /// <param name="worldId"> The unique identifier for the world. </param>
         /// <param name="world"> The world to update. </param>
-        /// <returns> A <see cref="UserWorldDTO"/>. </returns>
+        /// <returns> A <see cref="WorldDTO"/>. </returns>
         [HttpPut("{worldId:guid}")]
-        public async Task<IActionResult> UpdateWorldAsync(Guid worldId, [FromBody] UserWorldDTO world)
+        public async Task<IActionResult> UpdateWorldAsync(Guid worldId, [FromBody] WorldDTO world)
         {
             var updatedWorld = await _worldService.UpdateWorldAsync(world);
             return Ok(updatedWorld);
@@ -137,7 +137,7 @@ namespace EpochApp.Server.Controllers
         /// </summary>
         /// <param name="userId"> The user's unique identifier. </param>
         /// <param name="worldId"> The world's unique identifier. </param>
-        /// <returns> A <see cref="UserWorldDTO"/>. </returns>
+        /// <returns> A <see cref="WorldDTO"/>. </returns>
         [HttpDelete]
         public async Task<IActionResult> RemoveWorldAsync([FromQuery] Guid userId, [FromQuery] Guid worldId)
         {

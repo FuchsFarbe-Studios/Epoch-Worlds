@@ -22,7 +22,7 @@ namespace EpochApp.Client.Pages.Dashboard.User
         /// </summary>
         [Parameter] public bool IsWorldFile { get; set; }
 
-        [CascadingParameter] private UserWorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] private WorldDTO ActiveWorld { get; set; }
 
         [Inject] private EpochAuthProvider Auth { get; set; }
 

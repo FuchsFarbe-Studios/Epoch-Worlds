@@ -18,11 +18,6 @@ namespace EpochApp.Client.Pages.Dashboard.User
         [Parameter] public UserFileDTO UserFile { get; set; }
 
         /// <summary>
-        ///     The world this file belongs to.
-        /// </summary>
-        [Parameter] public WorldDTO ActiveWorld { get; set; } = null!;
-
-        /// <summary>
         ///     Event to call when the file is removed or modified.
         /// </summary>
         [Parameter] public EventCallback<UserFileDTO> OnFileChanged { get; set; }

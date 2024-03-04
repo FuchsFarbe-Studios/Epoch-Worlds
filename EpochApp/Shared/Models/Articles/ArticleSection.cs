@@ -23,7 +23,9 @@ namespace EpochApp.Shared
         /// </summary>
         public Guid ArticleId { get; set; }
 
-        /// <summary> Title of this section. </summary>
+        /// <summary>
+        /// Title of this section.
+        /// </summary>
         public string Title { get; set; }
 
         /// <summary>

@@ -9,13 +9,13 @@ namespace EpochApp.Client.Shared
     {
         private bool _condensed;
         private bool _isDirty = true;
-        private UserWorldDTO _selectedWorld;
-        private List<UserWorldDTO> _userWorlds = new List<UserWorldDTO>();
+        private WorldDTO _selectedWorld;
+        private List<WorldDTO> _userWorlds = new List<WorldDTO>();
 
         /// <summary>
         ///     The event that is called when the selected world is changed.
         /// </summary>
-        [Parameter] public EventCallback<UserWorldDTO> OnNewWorldChanged { get; set; }
+        [Parameter] public EventCallback<WorldDTO> OnNewWorldChanged { get; set; }
 
         /// <summary>
         ///     The event that is called when the selected world is changed.
@@ -51,7 +51,7 @@ namespace EpochApp.Client.Shared
             await base.OnInitializedAsync();
         }
 
-        private async Task WorldChanged(UserWorldDTO e)
+        private async Task WorldChanged(WorldDTO e)
         {
             var oldResponse = await Client.UpdateActiveUserWorldsAsync(e);
             _selectedWorld = _userWorlds.FirstOrDefault(x => x.WorldId == oldResponse.WorldId);

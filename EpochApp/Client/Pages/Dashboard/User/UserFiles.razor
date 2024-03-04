@@ -63,7 +63,7 @@
 	private bool _editMode { get; set; } = false;
 	private List<UserFileDTO> _files { get; set; } = new List<UserFileDTO>();
 
-	[CascadingParameter] private UserWorldDTO ActiveWorld { get; set; }
+	[CascadingParameter] private WorldDTO ActiveWorld { get; set; }
 	[Inject] private IWorldService WorldService { get; set; }
 	[Inject] private HttpClient Client { get; set; }
 	[Inject] private EpochAuthProvider Auth { get; set; }

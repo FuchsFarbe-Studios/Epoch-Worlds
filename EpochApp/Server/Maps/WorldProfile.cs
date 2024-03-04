@@ -16,11 +16,9 @@ namespace EpochApp.Server.Maps
         {
             CreateMap<WorldDate, WorldDateDTO>();
             CreateMap<WorldDateDTO, WorldDate>();
-            CreateMap<World, UserWorldDTO>().ForMember(dest => dest.WorldArticles, act => act.Ignore());
-            CreateMap<UserWorldDTO, World>()
+            CreateMap<World, WorldDTO>().ForMember(dest => dest.WorldArticles, act => act.Ignore());
+            CreateMap<WorldDTO, World>()
                 .ForMember(dest => dest.WorldArticles, act => act.Ignore());
-            CreateMap<World, WorldDTO>();
-            CreateMap<WorldDTO, World>();
             CreateMap<WorldMeta, WorldMetaDTO>()
                 .ForMember(x => x.TemplateId, opt => opt.MapFrom(x => x.MetaID))
                 .ForMember(x => x.CategoryId, opt => opt.MapFrom(x => x.Template.Category.CategoryId));

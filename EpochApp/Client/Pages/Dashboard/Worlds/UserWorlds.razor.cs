@@ -10,13 +10,13 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
     /// </summary>
     public partial class UserWorlds
     {
-        private List<UserWorldDTO> _newUserWorlds = new List<UserWorldDTO>();
+        private List<WorldDTO> _newUserWorlds = new List<WorldDTO>();
 
         /// <summary> The active world. </summary>
         [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
 
         /// <summary> The new active world. </summary>
-        [CascadingParameter] protected UserWorldDTO NewActiveWorld { get; set; }
+        [CascadingParameter] protected WorldDTO NewActiveWorld { get; set; }
 
         [Inject] private IWorldService Client { get; set; }
 
@@ -35,7 +35,7 @@ namespace EpochApp.Client.Pages.Dashboard.Worlds
             await base.OnInitializedAsync();
         }
 
-        private async Task HandleWorldDeletionAsync(UserWorldDTO world)
+        private async Task HandleWorldDeletionAsync(WorldDTO world)
         {
             if (_newUserWorlds.Count < 2)
             {

@@ -31,7 +31,7 @@ namespace EpochApp.Server.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<UserWorldDTO>> GetWorldsAsync()
+        public async Task<List<WorldDTO>> GetWorldsAsync()
         {
             _logger.LogInformation("Getting all worlds...");
             var worlds = await _context.Worlds
@@ -48,10 +48,10 @@ namespace EpochApp.Server.Services
                                        .ThenInclude(article => article.Sections)
                                        .AsSplitQuery()
                                        .ToListAsync();
-            var worldData = new List<UserWorldDTO>();
+            var worldData = new List<WorldDTO>();
             foreach (var world in worlds)
             {
-                var UserWorldDTO = _mapper.Map<World, UserWorldDTO>(world);
+                var UserWorldDTO = _mapper.Map<World, WorldDTO>(world);
                 worldData.Add(UserWorldDTO);
             }
             _logger.LogInformation("Returning all worlds...");
@@ -100,20 +100,20 @@ namespace EpochApp.Server.Services
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> CreateWorldAsync(UserWorldDTO world)
+        public async Task<WorldDTO> CreateWorldAsync(WorldDTO world)
         {
             _logger.LogInformation("Creating new world...");
-            var newWorld = _mapper.Map<UserWorldDTO, World>(world);
+            var newWorld = _mapper.Map<WorldDTO, World>(world);
             _logger.LogInformation("Saving new world...");
             await _context.Worlds.AddAsync(newWorld);
             await _context.SaveChangesAsync();
             _logger.LogInformation("Returning saved world...");
-            var w = _mapper.Map<World, UserWorldDTO>(newWorld);
+            var w = _mapper.Map<World, WorldDTO>(newWorld);
             return await Task.FromResult(w);
         }
 
         /// <inheritdoc />
-        public async Task<List<UserWorldDTO>> GetUserWorldsAsync(Guid userId)
+        public async Task<List<WorldDTO>> GetUserWorldsAsync(Guid userId)
         {
             var userWorlds = await _context.Worlds.Where(x => x.OwnerId == userId)
                                            .Include(x => x.CurrentWorldDate)
@@ -130,17 +130,17 @@ namespace EpochApp.Server.Services
                                            .Where(x => x.DateRemoved == null || x.DateRemoved > DateTime.UtcNow)
                                            .AsSplitQuery()
                                            .ToListAsync();
-            var worldData = new List<UserWorldDTO>();
+            var worldData = new List<WorldDTO>();
             foreach (var world in userWorlds)
             {
-                var userWorldDTO = _mapper.Map<World, UserWorldDTO>(world);
+                var userWorldDTO = _mapper.Map<World, WorldDTO>(world);
                 worldData.Add(userWorldDTO);
             }
             return await Task.FromResult(worldData);
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> GetWorldAsync(Guid worldId)
+        public async Task<WorldDTO> GetWorldAsync(Guid worldId)
         {
             var world = await _context.Worlds
                                       .Include(x => x.CurrentWorldDate)
@@ -156,7 +156,7 @@ namespace EpochApp.Server.Services
                                       .ThenInclude(article => article.Sections)
                                       .AsSplitQuery()
                                       .FirstOrDefaultAsync(x => x.WorldId == worldId);
-            var userWorldDTO = _mapper.Map<World, UserWorldDTO>(world);
+            var userWorldDTO = _mapper.Map<World, WorldDTO>(world);
             return await Task.FromResult(userWorldDTO);
         }
 
@@ -168,7 +168,7 @@ namespace EpochApp.Server.Services
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> UpdateWorldAsync(UserWorldDTO world)
+        public async Task<WorldDTO> UpdateWorldAsync(WorldDTO world)
         {
             var existingWorld = _context.Worlds
                                         .Include(w => w.CurrentWorldDate)
@@ -222,12 +222,12 @@ namespace EpochApp.Server.Services
 
                 _logger.LogError($"Error updating world: {ex.Message}");
             }
-            var updatedWorld = _mapper.Map<World, UserWorldDTO>(existingWorld);
+            var updatedWorld = _mapper.Map<World, WorldDTO>(existingWorld);
             return await Task.FromResult(updatedWorld);
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> UpdateActiveUserWorldsAsync(UserWorldDTO world)
+        public async Task<WorldDTO> UpdateActiveUserWorldsAsync(WorldDTO world)
         {
             var userWorlds = await _context.Worlds.Where(x => x.OwnerId == world.OwnerId).ToListAsync();
             var activeWorld = userWorlds.FirstOrDefault(x => x.WorldId == world.WorldId);
@@ -263,7 +263,7 @@ namespace EpochApp.Server.Services
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
+        public async Task<WorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
         {
             var worldToDelete = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldId == worldId && x.OwnerId == userId);
             if (worldToDelete == null)
@@ -287,15 +287,15 @@ namespace EpochApp.Server.Services
 
                 _logger.LogError("World does not exist!");
             }
-            var deletedWorld = _mapper.Map<World, UserWorldDTO>(worldToDelete);
+            var deletedWorld = _mapper.Map<World, WorldDTO>(worldToDelete);
             return await Task.FromResult(deletedWorld);
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> GetActiveWorldAsync(Guid userId)
+        public async Task<WorldDTO> GetActiveWorldAsync(Guid userId)
         {
             var activeWorld = await _context.Worlds.Where(x => x.OwnerId == userId && x.IsActiveWorld == true).FirstOrDefaultAsync();
-            var userWorldDTO = _mapper.Map<World, UserWorldDTO>(activeWorld);
+            var userWorldDTO = _mapper.Map<World, WorldDTO>(activeWorld);
             return await Task.FromResult(userWorldDTO);
         }
 

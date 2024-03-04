@@ -21,7 +21,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         [Inject] private IArticleService ArticleService { get; set; }
 
         /// <summary> The active world. </summary>
-        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()

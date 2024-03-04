@@ -1,7 +1,7 @@
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 
-namespace EpochApp.Client.Shared.Redirects
+namespace EpochApp.Client.Shared
 {
     /// <summary>
     /// Redirects to the dashboard page.

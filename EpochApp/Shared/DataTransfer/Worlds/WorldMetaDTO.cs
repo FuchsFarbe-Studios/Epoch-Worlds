@@ -3,6 +3,7 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 3-3-2024
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Shared
 {
     public class WorldMetaDTO

@@ -32,7 +32,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         [Parameter] public bool IsEditMode { get; set; }
 
         /// <summary> The active world. </summary>
-        [CascadingParameter] protected UserWorldDTO ActiveWorld { get; set; }
+        [CascadingParameter] protected WorldDTO ActiveWorld { get; set; }
 
         [Inject] private ILookupService LookupService { get; set; }
 
@@ -75,7 +75,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
 
             if (IsEditMode)
             {
-                var updatedArticle = await ArticleService.UpdateArticleAsync(article, Model.ArticleId ?? Guid.Empty, Auth?.CurrentUser?.UserID ?? Guid.Empty);
+                var updatedArticle = await ArticleService.UpdateArticleAsync(article, Model.ArticleId, Auth?.CurrentUser?.UserID ?? Guid.Empty);
                 if (updatedArticle == null)
                     Logger.LogError("Failed to update article!");
                 else

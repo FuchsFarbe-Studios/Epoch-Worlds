@@ -14,6 +14,12 @@ namespace EpochApp.Server.Maps
     {
         public ArticleProfile()
         {
+            CreateMap<ArticleHeader, ArticleHeaderDTO>();
+            CreateMap<ArticleHeaderDTO, ArticleHeader>();
+            CreateMap<ArticleFooter, ArticleFooterDTO>();
+            CreateMap<ArticleFooterDTO, ArticleFooter>();
+            CreateMap<ArticleSideBarContent, SideBarDTO>();
+            CreateMap<SideBarDTO, ArticleSideBarContent>();
             CreateMap<Article, ArticleDTO>();
             CreateMap<ArticleDTO, Article>();
             CreateMap<Article, ArticleEditDTO>();

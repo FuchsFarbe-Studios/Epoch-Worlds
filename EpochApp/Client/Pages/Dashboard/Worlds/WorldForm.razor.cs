@@ -1,4 +1,4 @@
-using EpochApp.Client.Services;
+using EpochApp.Client.Shared;
 using EpochApp.Shared;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components;
@@ -7,66 +7,126 @@ using Microsoft.AspNetCore.Components.Forms;
 namespace EpochApp.Client.Pages.Dashboard.Worlds
 {
     /// <summary>
-    ///     A form for creating or editing a world.
+    ///     World form component for creating and updated user worlds.
     /// </summary>
-    public partial class WorldForm
+    public partial class WorldForm : RequestComponent<WorldDTO>
     {
+        private List<MetaCategory> _categories = new List<MetaCategory>();
+        private string _error = string.Empty;
+        private Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
+        private List<ISOLanguage> _languages = new List<ISOLanguage>();
+        private bool _submitting = false;
+        private List<MetaTemplate> _templates = new List<MetaTemplate>();
+
+        [Inject] private ILookupService LookupService { get; set; }
+        [Inject] private IWorldService WorldService { get; set; }
+
         /// <summary>
-        ///     Whether the form is in edit mode or not.
+        ///     Determines if the form is in edit mode or create mode.
         /// </summary>
-        [Parameter] public bool IsEditMode { get; set; } = false;
+        [Parameter] public bool IsEditForm { get; set; } = false;
 
-        /// <summary> The world to edit. </summary>
-        [Parameter] public UserWorldDTO World { get; set; } = null!;
+        /// <summary> The world id to edit. </summary>
+        [Parameter] public Guid? WorldId { get; set; } = null!;
 
-        [Inject] private EpochAuthProvider Auth { get; set; }
-        [Inject] private ILogger<WorldForm> Logger { get; set; }
-        [Inject] private IWorldService Client { get; set; }
-        [Inject] private NavigationManager Nav { get; set; }
+        /// <summary>
+        ///     The world model to edit or create.
+        /// </summary>
+        [Parameter] public WorldDTO WorldModel { get; set; } = new WorldDTO
+                                                               {
+                                                                   CurrentWorldDate = new WorldDateDTO(),
+                                                                   MetaData = new List<WorldMetaDTO>(),
+                                                                   WorldArticles = new List<ArticleDTO>(),
+                                                                   WorldTags = new List<WorldTagDTO>(),
+                                                                   WorldFiles = new List<UserFileDTO>(),
+                                                                   WorldGenres = new List<WorldGenreDTO>()
+                                                               };
+
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            World ??= new UserWorldDTO
-                      {
-                          DateCreated = DateTime.Now,
-                          IsActiveWorld = true,
-                          CurrentWorldDate = new WorldDateDTO
-                                             {
-                                                 CurrentDay = 1,
-                                                 CurrentMonth = 1,
-                                                 CurrentYear = 1
-                                             }
-                      };
-            if (Auth?.CurrentUser?.UserID != Guid.Empty)
-                World.OwnerId = Auth.CurrentUser.UserID;
             await base.OnInitializedAsync();
+            _languages = await LookupService.GetLanguagesAsync();
+            _categories = await LookupService.GetMetaAsync();
+            _templates = await LookupService.GetMetaTemplatesAsync();
+            if (WorldModel.MetaData.Count < _templates.Count)
+                foreach (var template in _templates)
+                    WorldModel.MetaData.Add(new WorldMetaDTO
+                                            {
+                                                TemplateId = template.TemplateId,
+                                                CategoryId = template.CategoryId
+                                            });
+            if (WorldId != null)
+                await LoadWorldAsync();
         }
 
-        /// <summary>
-        ///     Handles the form submission of the world data.
-        /// </summary>
-        /// <param name="ctx"> The edit context. </param>
-        private async Task HandleWorldSubmit(EditContext ctx)
+        private void AddTemplates(MetaCategory cat)
         {
-            var world = ctx.Model as UserWorldDTO;
+            _templates.AddRange(cat.Templates);
+            Logger.LogInformation($"Added {cat.Templates.Count} templates to the list.");
+        }
+
+        private async Task LoadWorldAsync()
+        {
+            var world = await WorldService.GetWorldAsync(WorldId!.Value);
+            if (world.MetaData.Count < _templates.Count)
+                foreach (var template in _templates)
+                    world.MetaData.Add(new WorldMetaDTO
+                                       {
+                                           TemplateId = template.TemplateId,
+                                           CategoryId = template.CategoryId
+                                       });
+            WorldModel = world;
+        }
+
+        private async Task OnWorldSubmit(EditContext arg)
+        {
+            _submitting = true;
+            var world = arg.Model as WorldDTO;
             world.OwnerId = Auth.CurrentUser.UserID;
 
-            if (IsEditMode)
+            if (arg.Validate())
+                Logger.LogInformation("Form validation passed");
+            else
             {
-                // Update
-                var response = await Client.UpdateWorldAsync(world);
-                if (response != null)
-                    Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{response.WorldId}");
+                _submitting = false;
+                Logger.LogInformation("Form validation failed");
+                return;
+            }
+
+            await Task.Delay(500);
+            if (IsEditForm)
+            {
+                var updatedWorld = await WorldService.UpdateWorldAsync(world);
+                if (updatedWorld != null)
+                {
+                    Logger.LogInformation("World updated successfully");
+                    Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{WorldId}");
+                }
                 else
-                    Nav.NavigateTo(NavRef.WorldNav.Index);
+                {
+                    _error = "World update failed.";
+                    Logger.LogError("World update failed");
+                }
+                _submitting = false;
             }
             else
             {
-                // Create
-                var newWorld = await Client.CreateWorldAsync(world);
-                Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{newWorld.WorldId}");
+                var newWorld = await WorldService.CreateWorldAsync(world);
+                if (newWorld != null)
+                {
+                    Logger.LogInformation("World created successfully");
+                    Nav.NavigateTo($"{NavRef.WorldNav.Edit}/{newWorld.WorldId}");
+                }
+                else
+                {
+                    _error = "World creation failed.";
+                    Logger.LogError("World creation failed");
+                }
             }
+            _submitting = false;
+            await Task.CompletedTask;
         }
     }
 }

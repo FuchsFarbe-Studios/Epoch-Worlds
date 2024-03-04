@@ -41,6 +41,8 @@ namespace EpochApp.Server.Data
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<UserFile> UserFiles { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<SubscriptionTier> SubTiers { get; set; }
 
         // Lookups
         public DbSet<ISOLanguage> Languages { get; set; }
@@ -58,8 +60,12 @@ namespace EpochApp.Server.Data
         // Articles
         public DbSet<ArticleCategory> ArticleCategories { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<ArticleHeader> ArticleHeaders { get; set; }
+        public DbSet<ArticleFooter> ArticleFooters { get; set; }
+        public DbSet<ArticleSideBarContent> ArticleSideContents { get; set; }
         public DbSet<ArticleMeta> ArticleMetas { get; set; }
         public DbSet<ArticleSection> ArticleSections { get; set; }
+        public DbSet<UserCategory> UserCategories { get; set; }
         public DbSet<Manuscript> Manuscripts { get; set; }
         public DbSet<ManuscriptChapter> Chapters { get; set; }
         public DbSet<ArticleTemplate> ArticleTemplates { get; set; }
@@ -74,9 +80,6 @@ namespace EpochApp.Server.Data
         public DbSet<Genre> Genres { get; set; }
 
         // Blogs
-        public DbSet<Blog> Blogs { get; set; }
-        public DbSet<BlogPost> BlogPosts { get; set; }
-        public DbSet<Post> Posts { get; set; }
 
         // Content generation
 
@@ -185,6 +188,48 @@ namespace EpochApp.Server.Data
                       .OnDelete(DeleteBehavior.NoAction);
             });
 
+            modelBuilder.Entity<ArticleSideBarContent>(entity =>
+            {
+                entity.ToTable("ArticleSideBars", "Articles");
+                entity.HasKey(a => a.ArticleId);
+                entity.Property(x => x.ArticleId).HasColumnName("ArticleId");
+                entity.HasOne(a => a.Article)
+                      .WithOne()
+                      .HasForeignKey<ArticleSideBarContent>(a => a.ArticleId)
+                      .HasConstraintName("FK_ArticleSideBarContents_Articles")
+                      .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(x => x.SideBarBottom).HasMaxLength(1000);
+                entity.Property(x => x.SideBarTop).HasMaxLength(1000);
+                entity.Property(x => x.SideBarBottomContent).HasMaxLength(1000);
+                entity.Property(x => x.SideBarTopContent).HasMaxLength(1000);
+            });
+
+            modelBuilder.Entity<ArticleHeader>(entity =>
+            {
+                entity.ToTable("ArticleHeaders", "Articles");
+                entity.HasKey(a => a.ArticleId);// Assuming one-to-one relationship
+                entity.Property(x => x.ArticleId).HasColumnName("ArticleId");
+                entity.HasOne(a => a.Article)
+                      .WithOne()
+                      .HasForeignKey<ArticleHeader>(a => a.ArticleId)
+                      .HasConstraintName("FK_ArticleHeaders_Articles");
+                entity.Property(x => x.SubHeading).HasMaxLength(255);
+                entity.Property(x => x.Credits).HasMaxLength(2000);
+            });
+
+            modelBuilder.Entity<ArticleFooter>(entity =>
+            {
+                entity.ToTable("ArticleFooters", "Articles");
+                entity.HasKey(a => a.ArticleId);
+                entity.Property(x => x.ArticleId).HasColumnName("ArticleId");
+                entity.HasOne(a => a.Article)
+                      .WithOne()
+                      .HasForeignKey<ArticleFooter>(a => a.ArticleId)
+                      .HasConstraintName("FK_ArticleFooters_Articles");
+                entity.Property(x => x.Footnotes).HasMaxLength(1000);
+                entity.Property(x => x.FooterContent).HasMaxLength(2000);
+            });
+
             modelBuilder.Entity<Article>(entity =>
             {
                 entity.ToTable("Articles", "Articles");
@@ -192,6 +237,11 @@ namespace EpochApp.Server.Data
                 entity.Property(a => a.ArticleId)
                       .ValueGeneratedOnAdd();
                 entity.Property(a => a.Title).HasMaxLength(255);
+                entity.Property(a => a.Excerpt).HasMaxLength(500);
+                entity.Property(a => a.Icon).HasMaxLength(50);
+                entity.Property(a => a.CoverImage).HasMaxLength(255);
+                entity.Property(a => a.CoverImageAlt).HasMaxLength(500);
+                entity.Property(a => a.MouseOverSnippet).HasMaxLength(500);
                 entity.HasOne(a => a.Category)
                       .WithMany()
                       .HasForeignKey(a => a.CategoryId)
@@ -208,10 +258,16 @@ namespace EpochApp.Server.Data
                       .WithMany(w => w.WorldArticles)
                       .HasForeignKey(x => x.WorldId)
                       .HasConstraintName("FK_Articles_Worlds");
+                entity.HasMany(a => a.SubArticles)
+                      .WithOne(a => a.ParentArticle)
+                      .HasForeignKey(a => a.ParentArticleId)
+                      .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasQueryFilter(x => x.DeletedOn == null || x.DeletedOn > DateTime.UtcNow);
-                entity.Navigation(x => x.Sections)
-                      .AutoInclude();
+                entity.Navigation(x => x.Sections).AutoInclude();
+                entity.Navigation(x => x.Header).AutoInclude();
+                entity.Navigation(x => x.Footer).AutoInclude();
+                entity.Navigation(x => x.SideBar).AutoInclude();
             });
 
             modelBuilder.Entity<ArticleMeta>(entity =>
@@ -244,12 +300,59 @@ namespace EpochApp.Server.Data
                       .HasConstraintName("FK_ArticleSections_Articles");
             });
 
+            modelBuilder.Entity<Subscription>(entity =>
+            {
+                entity.HasKey(x => new { x.UserId, x.SubscriptionId });
+                entity.Property(x => x.SubscriptionId)
+                      .UseIdentityColumn(10000);
+                entity.HasOne(s => s.User)
+                      .WithMany(u => u.Subscriptions)
+                      .HasForeignKey(s => s.UserId)
+                      .HasForeignKey("FK_Subscriptions_Users")
+                      .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(s => s.Tier)
+                      .WithMany(t => t.Subscriptions)
+                      .HasForeignKey(s => s.TierId)
+                      .HasConstraintName("FK_Subscriptions_SubscriptionTiers");
+            });
+
+            modelBuilder.Entity<SubscriptionTier>(entity =>
+            {
+                entity.HasKey(x => x.TierId);
+                entity.Property(x => x.Description).HasMaxLength(500);
+                entity.Property(x => x.Icon).HasMaxLength(100);
+                entity.Property(x => x.IconAlt).HasMaxLength(500);
+                entity.Property(x => x.Image).HasMaxLength(255);
+                entity.Property(x => x.ImageAlt).HasMaxLength(500);
+                entity.Property(x => x.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<UserCategory>(entity =>
+            {
+                entity.ToTable("UserCategories", "Users");
+                entity.HasKey(x => x.CategoryId);
+                entity.Property(x => x.CategoryName).HasMaxLength(100);
+                entity.Property(x => x.Description).HasMaxLength(500);
+                entity.Property(x => x.Icon).HasMaxLength(100);
+                entity.Property(x => x.IconAlt).HasMaxLength(300);
+                entity.HasOne(x => x.ParentCategory)
+                      .WithMany(x => x.ChildCategories)
+                      .HasForeignKey(x => x.ParentId)
+                      .HasConstraintName("FK_UserCategories_Categories")
+                      .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne(x => x.User)
+                      .WithMany()
+                      .HasForeignKey(x => x.UserId)
+                      .HasConstraintName("FK_UserCategories_Users")
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<User>(user =>
             {
                 user.Property(p => p.UserName)
-                    .HasMaxLength(64);
-                user.Property(p => p.Email)
                     .HasMaxLength(128);
+                user.Property(p => p.Email)
+                    .HasMaxLength(255);
                 user.Ignore(x => x.NormalizedUserName);
                 user.Ignore(x => x.NormalizedEmail);
                 user.HasMany(u => u.OwnedWorlds)
@@ -257,7 +360,7 @@ namespace EpochApp.Server.Data
                     .HasForeignKey(w => w.OwnerId)
                     .HasConstraintName("FK_Worlds_Users")
                     .OnDelete(DeleteBehavior.Cascade);
-                // user.HasQueryFilter(x=>x.DateRemoved == null || x.DateRemoved > DateTime.Now);
+                user.HasQueryFilter(x => x.DateRemoved == null || x.DateRemoved > DateTime.Now);
             });
 
             modelBuilder.Entity<UserRole>(entity =>
@@ -286,7 +389,7 @@ namespace EpochApp.Server.Data
                     },
                     new Role
                     {
-                        RoleID = 2, Description = "ACTIVATED"
+                        RoleID = 2, Description = "VERIFIED"
                     },
                     new Role
                     {
@@ -323,6 +426,15 @@ namespace EpochApp.Server.Data
             modelBuilder.Entity<Profile>(entity =>
             {
                 entity.HasKey(p => p.UserID);
+                entity.Property(x => x.Signature).HasMaxLength(300);
+                entity.Property(x => x.CommunitySignature).HasMaxLength(300);
+                entity.Property(x => x.AvatarImg).HasMaxLength(255);
+                entity.Property(x => x.AvatarImgAlt).HasMaxLength(500);
+                entity.Property(x => x.CoverImg).HasMaxLength(255);
+                entity.Property(x => x.CoverImgAlt).HasMaxLength(500);
+                entity.Property(x => x.FirstName).HasMaxLength(255);
+                entity.Property(x => x.LastName).HasMaxLength(255);
+                entity.Property(x => x.WebAddress).HasMaxLength(255);
                 entity.HasOne(p => p.User)
                       .WithOne(u => u.Profile)
                       .HasForeignKey<Profile>(p => p.UserID)
@@ -331,42 +443,6 @@ namespace EpochApp.Server.Data
             });
 
             ConfigureLookups(modelBuilder);
-
-            // Blogging
-
-            modelBuilder.Entity<BlogPost>(entity =>
-            {
-                entity.ToTable("BlogPosts", "Blogs");
-                entity.HasKey(bp => new { bp.BlogID, bp.PostID });
-                entity.HasOne(bp => bp.Post)
-                      .WithMany(p => p.BlogPosts)
-                      .HasForeignKey(bp => bp.PostID)
-                      .HasConstraintName("FK_BlogPosts_Posts");
-                entity.HasOne(bp => bp.Blog)
-                      .WithMany(b => b.BlogPosts)
-                      .HasForeignKey(bp => bp.BlogID)
-                      .HasConstraintName("FK_BlogPosts_Blogs");
-            });
-
-            modelBuilder.Entity<Blog>(entity =>
-            {
-                entity.ToTable("Blogs", "Blogs");
-                entity.HasKey(x => x.BlogID);
-                entity.Property(x => x.BlogID)
-                      .ValueGeneratedOnAdd();
-                entity.Property(x => x.BlogType)
-                      .HasConversion<string>();
-            });
-
-            modelBuilder.Entity<Post>(entity =>
-            {
-                entity.ToTable("Posts", "Blogs");
-                entity.HasKey(x => x.PostID);
-                entity.Property(x => x.PostID)
-                      .ValueGeneratedOnAdd();
-                entity.Property(x => x.PostType)
-                      .HasConversion<string>();
-            });
 
             // Worlds
             modelBuilder.Entity<World>(entity =>

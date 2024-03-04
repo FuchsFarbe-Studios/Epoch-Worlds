@@ -31,17 +31,17 @@ namespace EpochApp.Client.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<UserWorldDTO>> GetWorldsAsync()
+        public async Task<List<WorldDTO>> GetWorldsAsync()
         {
-            var worlds = await _client.GetFromJsonAsync<List<UserWorldDTO>>("api/v2/Worlds");
+            var worlds = await _client.GetFromJsonAsync<List<WorldDTO>>("api/v2/Worlds");
             return await Task.FromResult(worlds);
         }
 
         /// <inheritdoc />
-        public async Task<List<UserWorldDTO>> GetUserWorldsAsync(Guid userId)
+        public async Task<List<WorldDTO>> GetUserWorldsAsync(Guid userId)
         {
-            var worlds = await _client.GetFromJsonAsync<List<UserWorldDTO>>($"api/v2/Worlds/UserWorlds?userId={userId}");
-            worlds ??= new List<UserWorldDTO>();
+            var worlds = await _client.GetFromJsonAsync<List<WorldDTO>>($"api/v2/Worlds/UserWorlds?userId={userId}");
+            worlds ??= new List<WorldDTO>();
             return await Task.FromResult(worlds);
         }
 
@@ -55,12 +55,12 @@ namespace EpochApp.Client.Services
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> CreateWorldAsync(UserWorldDTO world)
+        public async Task<WorldDTO> CreateWorldAsync(WorldDTO world)
         {
-            var response = await _client.PostAsJsonAsync<UserWorldDTO>("api/v2/Worlds", world);
+            var response = await _client.PostAsJsonAsync<WorldDTO>("api/v2/Worlds", world);
             if (response.IsSuccessStatusCode)
             {
-                var newWorld = await response.Content.ReadFromJsonAsync<UserWorldDTO>();
+                var newWorld = await response.Content.ReadFromJsonAsync<WorldDTO>();
                 _logger.LogInformation($"Created world {newWorld.WorldId} - {newWorld.WorldName}");
                 return await Task.FromResult(newWorld);
             }
@@ -69,9 +69,9 @@ namespace EpochApp.Client.Services
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> GetWorldAsync(Guid worldId)
+        public async Task<WorldDTO> GetWorldAsync(Guid worldId)
         {
-            var response = await _client.GetFromJsonAsync<UserWorldDTO>($"api/v2/Worlds/{worldId}");
+            var response = await _client.GetFromJsonAsync<WorldDTO>($"api/v2/Worlds/{worldId}");
             return await Task.FromResult(response);
         }
 
@@ -83,9 +83,9 @@ namespace EpochApp.Client.Services
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> UpdateWorldAsync(UserWorldDTO world)
+        public async Task<WorldDTO> UpdateWorldAsync(WorldDTO world)
         {
-            var response = await _client.PutAsJsonAsync<UserWorldDTO>($"api/v2/Worlds/{world.WorldId}", world);
+            var response = await _client.PutAsJsonAsync<WorldDTO>($"api/v2/Worlds/{world.WorldId}", world);
             if (response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("Updated world {WorldID}", world.WorldId);
@@ -95,23 +95,23 @@ namespace EpochApp.Client.Services
                 _logger.LogWarning("World failed to update!");
                 return null;
             }
-            var updateWorld = await response.Content.ReadFromJsonAsync<UserWorldDTO>();
+            var updateWorld = await response.Content.ReadFromJsonAsync<WorldDTO>();
             return await Task.FromResult(updateWorld);
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> UpdateActiveUserWorldsAsync(UserWorldDTO world)
+        public async Task<WorldDTO> UpdateActiveUserWorldsAsync(WorldDTO world)
         {
-            var response = await _client.PutAsJsonAsync<UserWorldDTO>("api/v2/Worlds/ActiveWorld", world);
+            var response = await _client.PutAsJsonAsync<WorldDTO>("api/v2/Worlds/ActiveWorld", world);
             response.EnsureSuccessStatusCode();
-            var update = await response.Content.ReadFromJsonAsync<UserWorldDTO>();
+            var update = await response.Content.ReadFromJsonAsync<WorldDTO>();
             return await Task.FromResult(update);
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
+        public async Task<WorldDTO> DeleteWorldAsync(Guid userId, Guid worldId)
         {
-            var response = await _client.DeleteFromJsonAsync<UserWorldDTO>($"api/v2/Worlds?userId={userId}&worldId={worldId}");
+            var response = await _client.DeleteFromJsonAsync<WorldDTO>($"api/v2/Worlds?userId={userId}&worldId={worldId}");
             if (response == null)
             {
                 _logger.LogWarning("World not found!");
@@ -121,9 +121,9 @@ namespace EpochApp.Client.Services
         }
 
         /// <inheritdoc />
-        public async Task<UserWorldDTO> GetActiveWorldAsync(Guid userId)
+        public async Task<WorldDTO> GetActiveWorldAsync(Guid userId)
         {
-            var activeWorld = await _client.GetFromJsonAsync<UserWorldDTO>($"api/v2/Worlds/ActiveWorld?ownerId={userId}");
+            var activeWorld = await _client.GetFromJsonAsync<WorldDTO>($"api/v2/Worlds/ActiveWorld?ownerId={userId}");
             return await Task.FromResult(activeWorld);
         }
     }

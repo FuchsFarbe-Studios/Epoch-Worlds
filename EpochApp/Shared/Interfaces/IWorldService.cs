@@ -15,15 +15,15 @@ namespace EpochApp.Shared
         /// <summary>
         ///    Get all worlds.
         /// </summary>
-        /// <returns> A list of <see cref="UserWorldDTO"/>. </returns>
-        Task<List<UserWorldDTO>> GetWorldsAsync();
+        /// <returns> A list of <see cref="WorldDTO"/>. </returns>
+        Task<List<WorldDTO>> GetWorldsAsync();
 
         /// <summary>
         ///    Get all worlds for a specific user.
         /// </summary>
         /// <param name="userId"> The user's unique identifier. </param>
-        /// <returns> A list of <see cref="UserWorldDTO"/>. </returns>
-        Task<List<UserWorldDTO>> GetUserWorldsAsync(Guid userId);
+        /// <returns> A list of <see cref="WorldDTO"/>. </returns>
+        Task<List<WorldDTO>> GetUserWorldsAsync(Guid userId);
 
         /// <summary> Create a new world. </summary>
         /// <param name="registration"> The registration data. </param>
@@ -36,18 +36,18 @@ namespace EpochApp.Shared
         /// <summary> Create a new world. </summary>
         /// <param name="world"> The world to create. </param>
         /// <returns>
-        ///     A <see cref="UserWorldDTO" />.
+        ///     A <see cref="WorldDTO" />.
         /// </returns>
-        Task<UserWorldDTO> CreateWorldAsync(UserWorldDTO world);
+        Task<WorldDTO> CreateWorldAsync(WorldDTO world);
 
         /// <summary> Get a specific world. </summary>
         /// <param name="worldId">
         ///     The unique identifier for the world.
         /// </param>
         /// <returns>
-        ///     A <see cref="UserWorldDTO" />.
+        ///     A <see cref="WorldDTO" />.
         /// </returns>
-        Task<UserWorldDTO> GetWorldAsync(Guid worldId);
+        Task<WorldDTO> GetWorldAsync(Guid worldId);
 
         /// <summary> Get a specific world. </summary>
         /// <param name="worldId">
@@ -59,9 +59,9 @@ namespace EpochApp.Shared
         /// <summary> Update a world. </summary>
         /// <param name="world"> The world to update. </param>
         /// <returns>
-        ///     A <see cref="UserWorldDTO" />.
+        ///     A <see cref="WorldDTO" />.
         /// </returns>
-        Task<UserWorldDTO> UpdateWorldAsync(UserWorldDTO world);
+        Task<WorldDTO> UpdateWorldAsync(WorldDTO world);
 
         /// <summary>
         ///     Update the active world for a user.
@@ -70,9 +70,9 @@ namespace EpochApp.Shared
         ///     The world to make active.
         /// </param>
         /// <returns>
-        ///     A <see cref="UserWorldDTO" />.
+        ///     A <see cref="WorldDTO" />.
         /// </returns>
-        Task<UserWorldDTO> UpdateActiveUserWorldsAsync(UserWorldDTO world);
+        Task<WorldDTO> UpdateActiveUserWorldsAsync(WorldDTO world);
 
         /// <summary>
         ///     Remove a world from a user's list of worlds.
@@ -84,9 +84,9 @@ namespace EpochApp.Shared
         ///     The world's unique identifier.
         /// </param>
         /// <returns>
-        ///     A <see cref="UserWorldDTO" />.
+        ///     A <see cref="WorldDTO" />.
         /// </returns>
-        Task<UserWorldDTO> DeleteWorldAsync(Guid userId, Guid worldId);
+        Task<WorldDTO> DeleteWorldAsync(Guid userId, Guid worldId);
 
         /// <summary>
         ///     Get the active world for a user.
@@ -95,8 +95,8 @@ namespace EpochApp.Shared
         ///     The user's unique identifier.
         /// </param>
         /// <returns>
-        ///     A <see cref="UserWorldDTO" />.
+        ///     A <see cref="WorldDTO" />.
         /// </returns>
-        Task<UserWorldDTO> GetActiveWorldAsync(Guid userId);
+        Task<WorldDTO> GetActiveWorldAsync(Guid userId);
     }
 }
