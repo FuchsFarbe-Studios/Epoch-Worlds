@@ -8,6 +8,7 @@ namespace EpochApp.Shared
     #pragma warning disable CS1591
     public class SideBarDTO
     {
+        public Guid ArticleId { get; set; }
         public string SideBarTop { get; set; }
         public string SideBarTopContent { get; set; }
         public string SideBarBottom { get; set; }

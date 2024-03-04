@@ -29,11 +29,6 @@ namespace EpochApp.Shared
         public Guid? BuilderId { get; set; }
 
         /// <summary>
-        ///     The name of the author of this article.
-        /// </summary>
-        public string Author { get; set; }
-
-        /// <summary>
         ///     The id of the article's category.
         /// </summary>
         public int? CategoryId { get; set; }

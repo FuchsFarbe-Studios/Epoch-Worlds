@@ -3,6 +3,9 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 22-2-2024
+using System.ComponentModel.DataAnnotations;
+
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Shared
 {
     /// <summary>
@@ -10,6 +13,10 @@ namespace EpochApp.Shared
     /// </summary>
     public class ArticleEditDTO
     {
+        public ArticleEditDTO()
+        {
+        }
+
         /// <summary>
         ///     The unique identifier for this article.
         /// </summary>
@@ -28,11 +35,6 @@ namespace EpochApp.Shared
         public Guid? BuilderId { get; set; }
 
         /// <summary>
-        ///     The name of the author of this article.
-        /// </summary>
-        public string Author { get; set; }
-
-        /// <summary>
         ///     The id of the article's category.
         /// </summary>
         public int CategoryId { get; set; }
@@ -40,11 +42,13 @@ namespace EpochApp.Shared
         /// <summary>
         ///     The title of this article.
         /// </summary>
+        [MaxLength(255)]
         public string? Title { get; set; }
 
         /// <summary>
         /// Subtitle of this article.
         /// </summary>
+        [MaxLength(255)]
         public string? SubTitle { get; set; }
 
         /// <summary>
@@ -55,11 +59,13 @@ namespace EpochApp.Shared
         /// <summary>
         /// Short summary of the article.
         /// </summary>
+        [MaxLength(500)]
         public string? Excerpt { get; set; }
 
         /// <summary>
         /// Snippet that displays when the mouse is hovered over and article link.
         /// </summary>
+        [MaxLength(500)]
         public string MouseOverSnippet { get; set; }
 
         /// <summary>
@@ -75,16 +81,19 @@ namespace EpochApp.Shared
         /// <summary>
         /// FontAwesome class for the article icon.
         /// </summary>
+        [MaxLength(50)]
         public string Icon { get; set; }
 
         /// <summary>
         /// Cover image of the article.
         /// </summary>
+        [MaxLength(255)]
         public string CoverImage { get; set; }
 
         /// <summary>
         /// Alt text for the cover image.
         /// </summary>
+        [MaxLength(500)]
         public string CoverImageAlt { get; set; }
 
         /// <summary>
@@ -140,17 +149,17 @@ namespace EpochApp.Shared
         /// <summary>
         ///    Header navigation property.
         /// </summary>
-        public virtual ArticleHeaderDTO Header { get; set; }
+        public virtual ArticleHeaderDTO Header { get; set; } = new ArticleHeaderDTO();
 
         /// <summary>
         ///   SideBar navigation property.
         /// </summary>
-        public virtual SideBarDTO SideBar { get; set; }
+        public virtual SideBarDTO SideBar { get; set; } = new SideBarDTO();
 
         /// <summary>
         ///   Footer navigation property.
         /// </summary>
-        public virtual ArticleFooterDTO Footer { get; set; }
+        public virtual ArticleFooterDTO Footer { get; set; } = new ArticleFooterDTO();
 
         public List<SectionEditDTO> Sections { get; set; } = new List<SectionEditDTO>();
         public DateTime? CreatedOn { get; set; }

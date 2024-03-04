@@ -1,4 +1,3 @@
-using EpochApp.Client.Shared;
 using EpochApp.Shared;
 using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components;
@@ -19,7 +18,6 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         private MudDynamicTabs _sectionTabs;
         private ArticleTemplateDTO _template = null!;
         private List<SectionTemplateDTO> _templateSections = new List<SectionTemplateDTO>();
-        private EpochValidator _validator;
 
         /// <summary>
         ///     Article edit information.
@@ -51,6 +49,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
             {
                 Model = new ArticleEditDTO
                         {
+
                             WorldId = ActiveWorld?.WorldId,
                             AuthorId = Auth?.CurrentUser?.UserID,
                             DisplayAuthor = true,
@@ -58,11 +57,29 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
                             ShowTableOfContents = true,
                             Sections = new List<SectionEditDTO>(),
                             CategoryId = _categories.FirstOrDefault().CategoryID,
+                            Header = new ArticleHeaderDTO(),
+                            SideBar = new SideBarDTO(),
+                            Footer = new ArticleFooterDTO(),
                         };
             }
             else
             {
                 Model = ArticleEdit;
+                if (Model.Header == null)
+                    Model.Header = new ArticleHeaderDTO()
+                                   {
+                                       ArticleId = Model.ArticleId
+                                   };
+                if (Model.SideBar == null)
+                    Model.SideBar = new SideBarDTO()
+                                    {
+                                        ArticleId = Model.ArticleId
+                                    };
+                if (Model.Footer == null)
+                    Model.Footer = new ArticleFooterDTO()
+                                   {
+                                       ArticleId = Model.ArticleId
+                                   };
             }
             await base.OnInitializedAsync();
         }
@@ -72,6 +89,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
             var article = ctx.Model as ArticleEditDTO;
             article.WorldId = ActiveWorld?.WorldId;
             article.AuthorId = Auth?.CurrentUser?.UserID;
+
 
             if (IsEditMode)
             {

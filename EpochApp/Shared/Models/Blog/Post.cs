@@ -1,65 +1,36 @@
 // EpochWorlds
 // Post.cs
-// FuchsFarbe Studios 2023
-// Oliver MacDougall
-// Modified: 29-11-2023
-
+// FuchsFarbe Studios 2024
+// matsu
+// Modified: 4-3-2024
+#pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Shared
 {
+
     public class Post
     {
-        public Post()
-        {
-            BlogPosts = new HashSet<BlogPost>();
-        }
-
-        /// <summary> Unique post id. </summary>
-        public Guid PostID { get; set; }
-
-        /// <summary> The type of post. </summary>
-        public PostType PostType { get; set; }
-
-        /// <summary>
-        ///     The author of the post.
-        /// </summary>
-        public string Author { get; set; }
-
-        /// <summary> The title of the post. </summary>
-        public string? Title { get; set; }
-
-        /// <summary>
-        ///     The content of the post.
-        /// </summary>
-        public string? Content { get; set; }
-
-        /// <summary>
-        ///     The outside link for this post.
-        /// </summary>
-        public string? OutsideLink { get; set; }
-
-        /// <summary>
-        ///     The date the post is scheduled to be posted.
-        /// </summary>
-        public DateTime? ScheduledTime { get; set; }
-
-        /// <summary>
-        ///     The date the post was posted.
-        /// </summary>
-        public DateTime? PostedOn { get; set; }
-
-        /// <summary>
-        ///     The date the post was last modified.
-        /// </summary>
+        public Guid PostId { get; set; }
+        public int BlogId { get; set; }
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string Image { get; set; }
+        public string ImageAlt { get; set; }
+        public string ExternalLink { get; set; }
+        public int Views { get; set; }
+        public bool IsPublished { get; set; }
+        public PostType Type { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? RemovedOn { get; set; }
+        public string RemovedBy { get; set; }
+        public string RemoveReason { get; set; }
 
-        /// <summary>
-        ///     The username of the last person to modify the post.
-        /// </summary>
-        public string? ModifiedBy { get; set; }
-
-        /// <summary>
-        ///     The blog posts that reference this post.
-        /// </summary>
-        public virtual ICollection<BlogPost> BlogPosts { get; set; }
+        public virtual Blog Blog { get; set; }
+        public virtual ICollection<PostTag> PostTags { get; set; }
+        // public virtual ICollection<PostLike> Likes { get; set; }
+        // public virtual ICollection<PostComment> Comments { get; set; }
     }
+
 }

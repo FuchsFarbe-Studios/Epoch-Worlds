@@ -8,6 +8,7 @@ namespace EpochApp.Shared
     #pragma warning disable CS1591
     public class ArticleFooterDTO
     {
+        public Guid ArticleId { get; set; }
         public string Footnotes { get; set; }
         public string FooterContent { get; set; }
     }

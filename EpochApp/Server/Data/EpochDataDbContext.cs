@@ -94,6 +94,7 @@ namespace EpochApp.Server.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ConfigureClient(modelBuilder);
+            ConfigureBlogs(modelBuilder);
 
             modelBuilder.HasDefaultSchema("Users");
 
@@ -194,7 +195,7 @@ namespace EpochApp.Server.Data
                 entity.HasKey(a => a.ArticleId);
                 entity.Property(x => x.ArticleId).HasColumnName("ArticleId");
                 entity.HasOne(a => a.Article)
-                      .WithOne()
+                      .WithOne(a => a.SideBar)
                       .HasForeignKey<ArticleSideBarContent>(a => a.ArticleId)
                       .HasConstraintName("FK_ArticleSideBarContents_Articles")
                       .OnDelete(DeleteBehavior.Cascade);
@@ -210,7 +211,7 @@ namespace EpochApp.Server.Data
                 entity.HasKey(a => a.ArticleId);// Assuming one-to-one relationship
                 entity.Property(x => x.ArticleId).HasColumnName("ArticleId");
                 entity.HasOne(a => a.Article)
-                      .WithOne()
+                      .WithOne(a => a.Header)
                       .HasForeignKey<ArticleHeader>(a => a.ArticleId)
                       .HasConstraintName("FK_ArticleHeaders_Articles");
                 entity.Property(x => x.SubHeading).HasMaxLength(255);
@@ -223,7 +224,7 @@ namespace EpochApp.Server.Data
                 entity.HasKey(a => a.ArticleId);
                 entity.Property(x => x.ArticleId).HasColumnName("ArticleId");
                 entity.HasOne(a => a.Article)
-                      .WithOne()
+                      .WithOne(a => a.Footer)
                       .HasForeignKey<ArticleFooter>(a => a.ArticleId)
                       .HasConstraintName("FK_ArticleFooters_Articles");
                 entity.Property(x => x.Footnotes).HasMaxLength(1000);
@@ -665,7 +666,56 @@ namespace EpochApp.Server.Data
             });
         }
 
-        private static void ConfigureClient(ModelBuilder modelBuilder)
+        private void ConfigureBlogs(ModelBuilder builder)
+        {
+            builder.Entity<PostTag>(entity =>
+            {
+                entity.ToTable("PostTags", "Blogs");
+                entity.HasKey(e => new { e.PostId, e.TagId });
+                entity.HasOne(pt => pt.Post)
+                      .WithMany(p => p.PostTags)
+                      .HasForeignKey(t => t.PostId)
+                      .HasConstraintName("FK_PostTags_Posts")
+                      .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(pt => pt.Tag)
+                      .WithMany(p => p.PostTags)
+                      .HasForeignKey(t => t.TagId)
+                      .HasConstraintName("FK_PostTags_Tags");
+            });
+
+            builder.Entity<Post>(entity =>
+            {
+                entity.ToTable("Posts", "Blogs");
+                entity.HasKey(x => x.PostId);
+                entity.Property(x => x.PostId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.Title).HasMaxLength(255);
+                entity.Property(x => x.Content).HasMaxLength(10000);
+                entity.Property(x => x.Image).HasMaxLength(255);
+                entity.Property(x => x.ImageAlt).HasMaxLength(500);
+                entity.Property(x => x.ExternalLink).HasMaxLength(255);
+                entity.Property(x => x.Views).HasDefaultValue(0);
+                entity.Property(x => x.IsPublished).HasDefaultValue(false);
+                entity.Property(x => x.Type).HasConversion<string>();
+                entity.HasOne(x => x.Blog)
+                      .WithMany(x => x.Posts)
+                      .HasForeignKey(x => x.BlogId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .HasConstraintName("FK_Posts_Blogs");
+            });
+
+            builder.Entity<Blog>(entity =>
+            {
+                entity.ToTable("Blogs", "Blogs");
+                entity.HasKey(x => x.BlogId);
+                entity.Property(x => x.BlogId)
+                      .ValueGeneratedOnAdd();
+                entity.Property(x => x.BlogName).HasMaxLength(50);
+                entity.Property(x => x.Description).HasMaxLength(500);
+            });
+        }
+
+        private void ConfigureClient(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EmailTemplate>(entity =>
             {

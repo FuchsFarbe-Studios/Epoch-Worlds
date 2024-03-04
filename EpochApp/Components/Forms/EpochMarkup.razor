@@ -1,19 +1,18 @@
 @using MudBlazor
 <MudPaper Width="100%" Class="pa-2" Outlined="true">
-	<MudStack>
-		<MudPaper Width="100%" Class="mud-border-primary pa-1" Outlined="true">
-			<MudToolBar Dense="true" DisableGutters="true">
-				<MudIconButton Size="Size.Small" Color="@(Color.Primary)" OnClick="@(async () => await AddHeadingMarkup())" Icon="@("fa-solid fa-heading")" Title="Heading" />
-				<MudIconButton Size="Size.Small" Color="@(Color.Primary)" OnClick="@(async () => await AddItalicMarkup())" Icon="@("fa-solid fa-italic")" Title="Italic" />
-				<MudIconButton Size="Size.Small" Color="@(Color.Primary)" OnClick="@(async () => await AddParagraphMarkup())" Icon="@("fa-solid fa-paragraph")" Title="Paragraph" />
-				<MudIconButton Size="Size.Small" Color="@(Color.Primary)" OnClick="@(async () => await AddStrikethroughMarkup())" Icon="@("fa-solid fa-strikethrough")" Title="Bold" />
-				<MudIconButton Size="Size.Small" Color="@(Color.Primary)" OnClick="@(async () => await AddUnderlineMarkup())" Icon="@("fa-solid fa-underline")" Title="Bold" />
-				<MudIconButton Size="Size.Small" Color="@(Color.Primary)" OnClick="@(async () => await AddBoldMarkup())" Icon="@("fa-solid fa-bold")" Title="Bold" />
+	<MudStack Spacing="1">
+		<MudPaper Width="100%" Class="mud-border-primary mb-1" Outlined="true">
+			<MudToolBar Dense="true" DisableGutters="false">
+				<MudIconButton Size="Size.Small" Color="@(Color.Default)" OnClick="@(async () => await AddHeadingMarkup())" Icon="@("fa-solid fa-heading")" Title="Heading" />
+				<MudIconButton Size="Size.Small" Color="@(Color.Default)" OnClick="@(async () => await AddItalicMarkup())" Icon="@("fa-solid fa-italic")" Title="Italic" />
+				<MudIconButton Size="Size.Small" Color="@(Color.Default)" OnClick="@(async () => await AddParagraphMarkup())" Icon="@("fa-solid fa-paragraph")" Title="Paragraph" />
+				<MudIconButton Size="Size.Small" Color="@(Color.Default)" OnClick="@(async () => await AddStrikethroughMarkup())" Icon="@("fa-solid fa-strikethrough")" Title="Bold" />
+				<MudIconButton Size="Size.Small" Color="@(Color.Default)" OnClick="@(async () => await AddUnderlineMarkup())" Icon="@("fa-solid fa-underline")" Title="Bold" />
+				<MudIconButton Size="Size.Small" Color="@(Color.Default)" OnClick="@(async () => await AddBoldMarkup())" Icon="@("fa-solid fa-bold")" Title="Bold" />
+				<MudSpacer />
 				<MudIconButton Size="Size.Small" Color="@(_previewMarkup ? Color.Primary : Color.Inherit)" OnClick="@(async () => await TogglePreviewAsync())" Icon="@(_previewMarkup ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)" Title="Preview" />
 			</MudToolBar>
 		</MudPaper>
-
-		<MudDivider DividerType="DividerType.Middle" Class="my-2" Light="false" />
 
 		@if (_previewMarkup)
 		{

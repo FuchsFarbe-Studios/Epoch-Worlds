@@ -93,15 +93,15 @@ namespace EpochApp.Server.Services
         /// <inheritdoc />
         public async Task<Article> CreateArticleAsync(ArticleEditDTO article)
         {
-            _logger.LogInformation("Creating new article...");
             var articleToAdd = _mapper.Map<ArticleEditDTO, Article>(article);
             articleToAdd.CreatedOn = DateTime.UtcNow;
+
             var sections = articleToAdd.Sections.ToList();
             sections.ForEach(x => x.CreatedOn = DateTime.UtcNow);
             articleToAdd.Sections = sections;
+
             _context.Articles.Add(articleToAdd);
             await _context.SaveChangesAsync();
-            _logger.LogInformation($"Article {articleToAdd.Title} created!");
             return await Task.FromResult(articleToAdd);
         }
 

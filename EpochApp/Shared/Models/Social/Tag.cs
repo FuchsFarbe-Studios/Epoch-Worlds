@@ -8,6 +8,7 @@ using EpochApp.Shared.Users;
 #pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 namespace EpochApp.Shared
 {
+
     public class Tag
     {
         public Tag()
@@ -15,6 +16,7 @@ namespace EpochApp.Shared
             ArticleTags = new HashSet<ArticleTag>();
             UserTags = new HashSet<UserTag>();
             WorldTags = new HashSet<WorldTag>();
+            PostTags = new HashSet<PostTag>();
         }
 
         public long TagId { get; set; }
@@ -23,6 +25,7 @@ namespace EpochApp.Shared
         public virtual ICollection<ArticleTag> ArticleTags { get; set; }
         public virtual ICollection<UserTag> UserTags { get; set; }
         public virtual ICollection<WorldTag> WorldTags { get; set; }
+        public virtual ICollection<PostTag> PostTags { get; set; }
     }
 
 }
