@@ -15,12 +15,13 @@
 			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Globe]" Href="@NavRef.WorldNav.Index">World</MudNavLink>
 			<!-- Articles -->
 			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]" Href="@NavRef.ArticleNav.Index">Articles</MudNavLink>
-			<!-- Files -->
-			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.File]" Href="@NavRef.WorldNav.Current.Files">Articles</MudNavLink>
+			<!-- Images -->
+			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Image]" Href="@NavRef.WorldNav.Current.Files">Images</MudNavLink>
 
 			<!-- Builders -->
-			<MudNavGroup Title="Builders" Expanded="false" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.SparkleWand]">
+			<MudNavGroup Title="Builders" Expanded="false" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.D20]">
 				<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand]">Builders</MudNavLink>
+
 				<MudNavGroup Title="Constructed Language" Expanded="false" Icon="@Icons.Material.Filled.Language">
 					<MudNavLink Href="@NavRef.BuilderNav.CongLang.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Language</MudNavLink>
 					<MudNavLink Href="@NavRef.BuilderNav.CongLang.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Language</MudNavLink>

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Services
 {
+
     /// <summary>
     ///     Service for managing articles, manuscripts, and their tags.
     /// </summary>
@@ -38,6 +39,7 @@ namespace EpochApp.Server.Services
                                          .Include(a => a.Category)
                                          .Include(a => a.World)
                                          .Include(a => a.Author)
+                                         .AsSplitQuery()
                                          .Select(x => _mapper.Map(x, new ArticleDTO()))
                                          .ToListAsync();
             return articles;
@@ -51,6 +53,7 @@ namespace EpochApp.Server.Services
                                              .Include(a => a.Category)
                                              .Include(a => a.World)
                                              .Include(a => a.Author)
+                                             .AsSplitQuery()
                                              .Select(x => _mapper.Map(x, new ArticleDTO()))
                                              .ToListAsync();
             return await Task.FromResult(userArticles);
@@ -63,6 +66,7 @@ namespace EpochApp.Server.Services
                                          .Include(a => a.Sections)
                                          .Include(a => a.Category)
                                          .Where(a => a.WorldId == worldId && a.ArticleId == articleId)
+                                         .AsSplitQuery()
                                          .Select(a => _mapper.Map(a, new ArticleDTO()))
                                          .FirstOrDefaultAsync();
             return articles;
@@ -75,6 +79,7 @@ namespace EpochApp.Server.Services
                                          .Include(a => a.Sections)
                                          .Include(a => a.Category)
                                          .Where(a => a.WorldId == worldId)
+                                         .AsSplitQuery()
                                          .Select(a => _mapper.Map(a, new ArticleDTO()))
                                          .ToListAsync();
             return articles;
@@ -88,6 +93,7 @@ namespace EpochApp.Server.Services
                                         .Include(a => a.Category)
                                         .Include(a => a.World)
                                         .Include(a => a.Author)
+                                        .AsSplitQuery()
                                         .FirstOrDefaultAsync(a => a.ArticleId == articleId);
             return _mapper.Map(article, new ArticleDTO());
         }
@@ -115,6 +121,7 @@ namespace EpochApp.Server.Services
                                         .Include(a => a.Category)
                                         .Include(a => a.World)
                                         .Include(a => a.Author)
+                                        .AsSplitQuery()
                                         .FirstOrDefaultAsync(a => a.ArticleId == articleId);
             if (article == null)
                 return null;
@@ -129,6 +136,7 @@ namespace EpochApp.Server.Services
             var templates = await _context.ArticleTemplates
                                           .Include(x => x.Meta)
                                           .Include(x => x.Sections)
+                                          .AsSplitQuery()
                                           .Select(x => _mapper.Map<ArticleTemplate, ArticleTemplateDTO>(x))
                                           .ToListAsync();
             return templates;
@@ -140,6 +148,7 @@ namespace EpochApp.Server.Services
             var articleTemplate = await _context.ArticleTemplates
                                                 .Include(x => x.Meta)
                                                 .Include(x => x.Sections)
+                                                .AsSplitQuery()
                                                 .FirstOrDefaultAsync(x => x.CategoryId == categoryId);
             return _mapper.Map<ArticleTemplate, ArticleTemplateDTO>(articleTemplate);
         }
@@ -160,6 +169,7 @@ namespace EpochApp.Server.Services
             var templateToUpdate = await _context.ArticleTemplates
                                                  .Include(x => x.Meta)
                                                  .Include(x => x.Sections)
+                                                 .AsSplitQuery()
                                                  .FirstOrDefaultAsync(x => x.TemplateId == template.TemplateId);
             _mapper.Map(template, templateToUpdate);
             _context.Entry(templateToUpdate).State = EntityState.Modified;
@@ -182,8 +192,10 @@ namespace EpochApp.Server.Services
         /// <inheritdoc />
         public async Task DeleteArticleAsync(Guid userId, Guid articleId)
         {
-            var articleToDelete = await _context.Articles.Include(x => x.Author)
+            var articleToDelete = await _context.Articles
+                                                .Include(x => x.Author)
                                                 .Where(x => x.ArticleId == articleId)
+                                                .AsSplitQuery()
                                                 .FirstOrDefaultAsync();
             if (articleToDelete == null)
                 return;
@@ -206,6 +218,7 @@ namespace EpochApp.Server.Services
                                                 .Include(x => x.Category)
                                                 .Include(x => x.Author)
                                                 .Include(x => x.Sections)
+                                                .AsSplitQuery()
                                                 .FirstOrDefaultAsync();
             var articleSections = articleToUpdate?.Sections.ToList() ?? new List<ArticleSection>();
             _logger.LogInformation($"Article sections: {articleSections.Count}");
@@ -229,9 +242,7 @@ namespace EpochApp.Server.Services
             catch (Exception e)
             {
                 _logger.LogError($"Error updating article: {e.Message}");
-                //return BadRequest(e.Message);
             }
-
             return await Task.FromResult(_mapper.Map<Article, ArticleEditDTO>(articleToUpdate));
         }
     }

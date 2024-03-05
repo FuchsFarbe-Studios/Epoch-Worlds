@@ -18,16 +18,19 @@ namespace EpochApp.Server.Controllers
     {
         private readonly IArticleService _articleService;
         private readonly ILookupService _lookupService;
+        private readonly IManuscriptService _manuscriptService;
 
         /// <summary>
         ///   Constructor for the <see cref="ArticlesController" />.
         /// </summary>
         /// <param name="articleService"> The <see cref="IArticleService" />. </param>
         /// <param name="lookupService"> The <see cref="ILookupService" />. </param>
-        public ArticlesController(IArticleService articleService, ILookupService lookupService)
+        /// <param name="manuscriptService"> The <see cref="IManuscriptService" />. </param>
+        public ArticlesController(IArticleService articleService, ILookupService lookupService, IManuscriptService manuscriptService)
         {
             _articleService = articleService;
             _lookupService = lookupService;
+            _manuscriptService = manuscriptService ?? throw new ArgumentNullException(nameof(manuscriptService));
         }
 
         /// <summary>
@@ -276,15 +279,16 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
-        ///// <summary> Deletes an article. </summary>
-        // [HttpDelete]
-        // public async Task<IActionResult> DeleteArticleAsync([FromQuery] Guid userId, [FromQuery] Guid articleId)
-        // {
-        //     var deleted = await _articleService.DeleteArticleAsync(articleId, userId);
-        //     if (!deleted)
-        //         return NotFound();
-        //
-        //     return Ok();
-        // }
+        /// <summary>
+        ///   Get all manuscripts for a user.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <returns> A <see cref="IEnumerable{T}" /> of <see cref="ManuscriptDTO"/>. </returns>
+        [HttpGet("Manuscripts")]
+        public async Task<IActionResult> GetUserManuscriptsAsync([FromQuery] Guid userId)
+        {
+            var manuscripts = await _manuscriptService.GetUserManuscripts(userId);
+            return Ok(manuscripts);
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace EpochApp.Shared
 {
     public class ManuscriptDTO
     {
+        public long ManuscriptId { get; set; }
         public Guid UserID { get; set; }
         [Required] [MaxLength(255)]
         public string Title { get; set; }

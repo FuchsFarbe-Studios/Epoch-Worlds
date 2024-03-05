@@ -4,14 +4,13 @@
 
 <AuthorizeView>
 	<Authorized>
-		<SubNav />
-		<MudContainer MaxWidth="MaxWidth.Large">
-			<MudPaper Outlined="true" Width="100%" MinHeight="300px" Class="mud-border-dark pa-4 mt-2">
-				@Body
-			</MudPaper>
-		</MudContainer>
+		<MudPaper Outlined="true" Width="100%" MinHeight="700px" Class="mud-border-default mud-theme-dark pa-2 border-2 rounded-xl">
+			@Body
+		</MudPaper>
 	</Authorized>
+
 	<NotAuthorized>
 		<RedirectToLogin />
 	</NotAuthorized>
+
 </AuthorizeView>

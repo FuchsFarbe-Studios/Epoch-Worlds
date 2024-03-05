@@ -32,6 +32,7 @@ namespace EpochApp.Shared.Utils
             public const string Profile = "/User/Profile";
             public const string Settings = "/User/Settings";
             public const string Dashboard = "/Dashboard";
+            public const string Manuscripts = "/Manuscripts";
         }
 
         public static class AdminNav
@@ -94,6 +95,7 @@ namespace EpochApp.Shared.Utils
             public const string Faq = "/FAQ";
             public const string Features = "/Features";
             public const string Dash = "/Dashboard";
+            public const string Discover = "/Discover";
         }
     }
 }

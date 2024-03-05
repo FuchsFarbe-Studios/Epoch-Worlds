@@ -1,7 +1,5 @@
-@using MudBlazor
 <AuthorizeView>
 	<Authorized>
-
 		<MudPaper Width="100%" Outlined="true" Square="true" Class="rounded-b-lg mud-theme-primary">
 			<MudToolBar Dense="true">
 				<MudIconButton Color="Color.Inherit" Href="@NavRef.UserNav.Dashboard" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Table]" Title="Dashboard" />
@@ -14,6 +12,5 @@
 				<MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Lightbulb" Href="@NavRef.ResourceNav.Tips" Title="Tips and Tricks" />
 			</MudToolBar>
 		</MudPaper>
-
 	</Authorized>
 </AuthorizeView>
