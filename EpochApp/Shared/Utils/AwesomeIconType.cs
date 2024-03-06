@@ -108,6 +108,11 @@ namespace EpochApp.Shared.Utils
         ExclamationCircle,
         Exclamation,
         Lock,
-        UnLock
+        UnLock,
+        Book,
+        BookmarkFilled,
+        BookEmpty,
+        BookOpen,
+        NewsPaper
     }
 }

@@ -1,15 +1,20 @@
 @page "/World/Files"
 
-<MudText>@(ActiveWorld?.WorldName)'s Images</MudText>
+<MudText></MudText>
 
-<MudGrid>
-	<MudItem xs="12" md="6" lg="4">
+<DashContent ContentTitle="@($"{ActiveWorld?.WorldName}'s Images")">
+	<AsideContent>
 		<FileUpload IsWorldFile="true" />
-	</MudItem>
-	<MudItem sm="12" md="6" lg="8">
-		@foreach (var file in _files)
-		{
-			<FileCard @key="@file.FileId" UserFile="@file" />
-		}
-	</MudItem>
-</MudGrid>
+	</AsideContent>
+	<ActionContent />
+	<MainContent>
+		<MudGrid>
+			@foreach (var file in _files)
+			{
+				<MudItem @key="@file.FileId" xs="12" md="6" lg="4" xl="3">
+					<FileCard @key="@file.FileId" UserFile="@file" />
+				</MudItem>
+			}
+		</MudGrid>
+	</MainContent>
+</DashContent>

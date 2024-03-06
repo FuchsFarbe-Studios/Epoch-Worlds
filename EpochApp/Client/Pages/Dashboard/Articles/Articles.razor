@@ -3,69 +3,60 @@
 
 <PageTitle>@StaticUtils.Constants.AppName - Articles</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large">
-	<MudText GutterBottom="true" Align="Align.Center" Typo="Typo.h3" Color="Color.Primary">@(ActiveWorld?.WorldName)'s Articles</MudText>
-	<MudDivider DividerType="DividerType.Middle" Light="false" Class="my-1" />
-	<MudGrid Spacing="2">
+<DashContent ContentTitle="@($"{ActiveWorld?.WorldName}'s Articles")">
+	<AsideContent>
+		@if (_filterCategory != null)
+		{
+			<MudButton Color="Color.Primary" DisableElevation="true" FullWidth="true" OnClick="@(async () => await FilterArticlesByCategory(null))">Reset Filter</MudButton>
+		}
+		@foreach (var cat in _categories)
+		{
+			@if (_worldArticles.Any(x => x.CategoryId == cat.CategoryID))
+			{
+				<MudButton DisableElevation="true" Color="Color.Primary" FullWidth="true" Variant="@(_filterCategory?.CategoryID == cat?.CategoryID ? Variant.Filled : Variant.Text)" OnClick="@(async () => await FilterArticlesByCategory(cat))">@cat.Description</MudButton>
+			}
+		}
+	</AsideContent>
+	<ActionContent>
+		<MudButton Color="Color.Primary" Variant="Variant.Filled" DisableElevation="true" FullWidth="true" Href="@($"{NavRef.ArticleNav.Create}")">Create New Article</MudButton>
+	</ActionContent>
+	<MainContent>
+		@if (_worldArticles.Any())
+		{
+			@foreach (var article in _filteredArticles.Any()
+				                         ? _filteredArticles
+				                         : _worldArticles)
+			{
+				var content = article.Content;
 
-		<MudItem xs="12" md="3">
-			<MudStack>
-				@if (_filterCategory != null)
-				{
-					<MudButton Color="Color.Primary" DisableElevation="true" FullWidth="true" OnClick="@(async () => await FilterArticlesByCategory(null))">Reset Filter</MudButton>
-				}
-				@foreach (var cat in _categories)
-				{
-					@if (_worldArticles.Any(x => x.CategoryId == cat.CategoryID))
-					{
-						<MudButton DisableElevation="true" Color="Color.Primary" FullWidth="true" Variant="@(_filterCategory?.CategoryID == cat?.CategoryID ? Variant.Filled : Variant.Text)" OnClick="@(async () => await FilterArticlesByCategory(cat))">@cat.Description</MudButton>
-					}
-				}
-			</MudStack>
-		</MudItem>
-
-		<MudItem xs="12" md="9">
-			<MudStack>
-				<MudButton Color="Color.Primary" Variant="Variant.Filled" DisableElevation="true" FullWidth="true" Href="@($"{NavRef.ArticleNav.Create}")">Create New Article</MudButton>
-
-				@if (_worldArticles.Any())
-				{
-					@foreach (var article in _filteredArticles.Any()
-						                         ? _filteredArticles
-						                         : _worldArticles)
-					{
-						var content = article.Content;
-
-						<MudCard @key=@article Class="pa-1 my-1" Outlined="true">
-							<MudCardHeader>
-								<CardHeaderContent>
-									<MudText Typo="Typo.h6">@article.Title</MudText>
-								</CardHeaderContent>
-								<CardHeaderActions>
-									<MudIconButton Size="Size.Small" Href="@($"{NavRef.ArticleNav.Edit}/{article.ArticleId}")" Icon="@Icons.Material.Filled.Edit" Title="Edit article." />
-									<MudIconButton Size="Size.Small" Href="@($"/W/{article.WorldId}/A/{article.ArticleId}")" Icon="@Icons.Material.Filled.Visibility" Title="View article." />
-									<MudIconButton Size="Size.Small" Color="Color.Error" OnClick="@(async () => await AttemptArticleDeleteAsync(article))" Icon="@Icons.Material.Filled.Delete" Title="Delete article." />
-								</CardHeaderActions>
-							</MudCardHeader>
-							<MudCardContent>
-								<MudStack Row="true" AlignItems="AlignItems.Baseline" Justify="Justify.FlexStart">
-									<MudText Typo="Typo.caption">in @(_categories.FirstOrDefault(x => x.CategoryID == article.CategoryId)?.Description)</MudText>
-									<MudText Typo="Typo.caption">Word Count: @(content?.Split(" ")?.Length)</MudText>
-									<MudText Typo="Typo.body1">
-										<MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Title="Created on" /> @(article?.CreatedOn?.ToString("MM-dd-yyyy"))
-									</MudText>
-									<MudText Typo="Typo.body1">
-										<MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Title="Last modified on" /> @(article?.ModifiedOn?.ToString("MM-dd-yyyy"))
-									</MudText>
-								</MudStack>
-							</MudCardContent>
-							<MudCardActions>
-								<MudIconButton OnClick="@(async () => await ToggleArticlePublishAsync(article))" Color="@(article.IsPublished ? Color.Warning : Color.Default)" Icon="@(article.IsPublished ? Icons.Material.Filled.Star : Icons.Material.Outlined.Star)" />
-							</MudCardActions>
-						</MudCard>
-					}
-				}
-			</MudStack>
-		</MudItem>
-	</MudGrid>
-</MudContainer>
+				<MudCard @key=@article Class="pa-1 my-1" Outlined="true">
+					<MudCardHeader>
+						<CardHeaderContent>
+							<MudText Typo="Typo.h6">@article.Title</MudText>
+						</CardHeaderContent>
+						<CardHeaderActions>
+							<MudIconButton Size="Size.Small" Href="@($"{NavRef.ArticleNav.Edit}/{article.ArticleId}")" Icon="@Icons.Material.Filled.Edit" Title="Edit article." />
+							<MudIconButton Size="Size.Small" Href="@($"/W/{article.WorldId}/A/{article.ArticleId}")" Icon="@Icons.Material.Filled.Visibility" Title="View article." />
+							<MudIconButton Size="Size.Small" Color="Color.Error" OnClick="@(async () => await AttemptArticleDeleteAsync(article))" Icon="@Icons.Material.Filled.Delete" Title="Delete article." />
+						</CardHeaderActions>
+					</MudCardHeader>
+					<MudCardContent>
+						<MudStack Row="true" AlignItems="AlignItems.Baseline" Justify="Justify.FlexStart">
+							<MudText Typo="Typo.caption">in @(_categories.FirstOrDefault(x => x.CategoryID == article.CategoryId)?.Description)</MudText>
+							<MudText Typo="Typo.caption">Word Count: @(content?.Split(" ")?.Length)</MudText>
+							<MudText Typo="Typo.body1">
+								<MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Title="Created on" /> @(article?.CreatedOn?.ToString("MM-dd-yyyy"))
+							</MudText>
+							<MudText Typo="Typo.body1">
+								<MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Title="Last modified on" /> @(article?.ModifiedOn?.ToString("MM-dd-yyyy"))
+							</MudText>
+						</MudStack>
+					</MudCardContent>
+					<MudCardActions>
+						<MudIconButton OnClick="@(async () => await ToggleArticlePublishAsync(article))" Color="@(article.IsPublished ? Color.Warning : Color.Default)" Icon="@(article.IsPublished ? Icons.Material.Filled.Star : Icons.Material.Outlined.Star)" />
+					</MudCardActions>
+				</MudCard>
+			}
+		}
+	</MainContent>
+</DashContent>

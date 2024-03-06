@@ -1,6 +1,6 @@
+using EpochApp.Client.Services;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Shared
 {
@@ -16,18 +16,20 @@ namespace EpochApp.Client.Shared
         /// </summary>
         [Parameter] public EventCallback<UserFileDTO> OnFileSelectionChanged { get; set; }
 
+        [Inject] private EpochAuthProvider Auth { get; set; }
+        [Inject] private IFileService Client { get; set; }
+
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             if (Auth?.CurrentUser?.UserID != Guid.Empty)
             {
-                var contents = await Client.GetFromJsonAsync<List<UserFileDTO>>($"api/v1/UserFiles/UserFiles/{Auth.CurrentUser.UserID}");
+                var contents = await Client.GetUserFilesAsync(Auth.CurrentUser.UserID);
                 if (contents.Any())
-                    contents.ForEach(x => _userFiles.Add(x));
+                    _userFiles = contents?.ToList();
             }
-            // _selectedFile = _userFiles.FirstOrDefault();
-            // await ContentChanged(_selectedFile);
+            _selectedFile = _userFiles.FirstOrDefault();
+            await base.OnInitializedAsync();
         }
 
         private async Task ContentChanged(UserFileDTO e)

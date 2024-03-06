@@ -5,24 +5,25 @@
 // Modified: 29-11-2023
 
 using EpochApp.Shared;
+using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http.Json;
 
 namespace EpochApp.Client.Pages
 {
     /// <summary> About page. </summary>
     public partial class About
     {
-        [Inject] private HttpClient Http { get; set; }
+        private List<ClientSetting> _aboutContents = new List<ClientSetting>();
 
-        private List<ClientSettingDTO> AboutContents { get; set; } = new List<ClientSettingDTO>();
+        /// <summary>
+        /// Site settings.
+        /// </summary>
+        [CascadingParameter(Name = "Settings")] protected SiteSettings SiteSettings { get; set; }
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            var aboutContents = await Http.GetFromJsonAsync<List<ClientSettingDTO>>("api/v1/Settings/About");
-            if (aboutContents != null)
-                AboutContents = aboutContents;
+            var abouts = SiteSettings?.AboutSettings;
         }
     }
 }

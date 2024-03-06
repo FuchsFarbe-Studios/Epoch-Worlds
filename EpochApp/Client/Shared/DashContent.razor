@@ -1,0 +1,27 @@
+
+<MudContainer MaxWidth="MaxWidth.Large">
+	<MudText GutterBottom="true" Align="Align.Center" Typo="Typo.h3">@ContentTitle</MudText>
+	<MudDivider DividerType="DividerType.Middle" Light="false" Class="my-1" />
+
+	<MudGrid Spacing="2">
+		<MudItem xs="12" md="3">
+			<MudStack>
+				@AsideContent
+			</MudStack>
+		</MudItem>
+
+		<MudItem xs="12" md="9">
+			<MudStack>
+				@ActionContent
+				@MainContent
+			</MudStack>
+		</MudItem>
+	</MudGrid>
+</MudContainer>
+
+@code{
+	[Parameter] public string ContentTitle { get; set; }
+	[Parameter] public RenderFragment AsideContent { get; set; }
+	[Parameter] public RenderFragment ActionContent { get; set; }
+	[Parameter] public RenderFragment MainContent { get; set; }
+}

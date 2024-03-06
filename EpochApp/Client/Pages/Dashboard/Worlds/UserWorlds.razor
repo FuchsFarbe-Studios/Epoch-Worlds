@@ -3,47 +3,50 @@
 
 <PageTitle>@StaticUtils.Constants.AppName - @(Auth.CurrentUser.UserName)'s Worlds</PageTitle>
 
-<MudText Align="Align.Center" GutterBottom="true" Typo="Typo.h3">@($"{Auth.CurrentUser.UserName}'s Worlds")</MudText>
-<MudDivider Class="my-1" Light="false" DividerType="DividerType.Middle" />
-<MudGrid>
-	@foreach (var world in _newUserWorlds)
-	{
-		<MudItem @key=@world.WorldId xs="12" sm="6" md="4">
-			<MudCard Outlined="true" Class="pa-2 mud-border-primary" Style="min-height: 200px; max-height: 320px;">
-				@if (!string.IsNullOrEmpty(world.Image))
-				{
-					<MudCardMedia Height="128" Image="@($"/{world.Image}")" Title="World header image." Style="max-height: 128px;" />
-				}
-				<MudCardHeader>
-					<CardHeaderActions>
-						@if (world.WorldId == NewActiveWorld?.WorldId)
+<DashContent ContentTitle="@($"{Auth.CurrentUser.UserName}'s Worlds")">
+	<AsideContent>
+		<MudButton DisableElevation="true" FullWidth="true" Color="Color.Primary" Variant="Variant.Filled" OnClick="@(() => Nav.NavigateTo(NavRef.WorldNav.Create))">Create World</MudButton>
+	</AsideContent>
+	<ActionContent>
+	</ActionContent>
+	<MainContent>
+		<MudGrid>
+			@foreach (var world in _newUserWorlds)
+			{
+				<MudItem @key=@world.WorldId xs="12" sm="6" md="4" xl="3">
+					<MudCard Outlined="true" Class="pa-1 mud-border-primary" Style="height: 320px;">
+						@if (!string.IsNullOrEmpty(world.Image))
 						{
-							<MudIconButton Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]" Href="@($"{NavRef.ArticleNav.Index}")" Title="World world articles." />
+							<MudCardMedia Height="128" Image="@($"/{world.Image}")" Title="World header image." Style="max-height: 64px; background-repeat: no-repeat; background-attachment: fixed; background-position: center;" />
 						}
-						<MudIconButton Icon="@Icons.Material.Filled.Visibility" Href="@($"/W/{world.WorldId}")" Title="View world." />
-						<MudIconButton Icon="@Icons.Material.Filled.Edit" Href="@($"{NavRef.WorldNav.Edit}/{world.WorldId}")" Title="Edit this world." />
-						<MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await HandleWorldDeletionAsync(world))" Title="Delete world." />
-					</CardHeaderActions>
-					<CardHeaderContent>
-						<MudText Typo="Typo.h5" Color="@(world.WorldId == NewActiveWorld?.WorldId ? Color.Success : Color.Default)" GutterBottom="true">@world.WorldName @($"{(world.WorldId == NewActiveWorld?.WorldId ? "(Active)" : "")}")</MudText>
-						<MudDivider DividerType="DividerType.Middle" />
-						<MudText Typo="Typo.subtitle1" GutterBottom="true">@world.Header</MudText>
-					</CardHeaderContent>
-				</MudCardHeader>
-				<MudCardContent>
-					<MudStack>
-						<AuthorizeView Roles="ADMIN,INTERNAL">
-							<MudText Typo="Typo.caption">@world.WorldId</MudText>
-						</AuthorizeView>
-						<MudText Typo="Typo.caption">@world.Excerpt</MudText>
-					</MudStack>
-				</MudCardContent>
-			</MudCard>
-		</MudItem>
-	}
-	<MudItem xs="12" sm="6" md="4" lg="3">
-		<MudPaper Outlined="true" MinHeight="200px" Width="100%" Class="p-1">
-			<MudButton Class="m-auto" Style="height: 320px;" FullWidth="true" Color="Color.Primary" OnClick="@(() => Nav.NavigateTo(NavRef.WorldNav.Create))">Create World</MudButton>
-		</MudPaper>
-	</MudItem>
-</MudGrid>
+						<MudCardHeader>
+							<CardHeaderActions>
+								<MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Visibility" Href="@($"/W/{world.WorldId}")" Title="View world." />
+								<MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Edit" Href="@($"{NavRef.WorldNav.Edit}/{world.WorldId}")" Title="Edit this world." />
+								<MudIconButton Size="Size.Small" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await HandleWorldDeletionAsync(world))" Title="Delete world." />
+							</CardHeaderActions>
+							<CardHeaderContent>
+								<MudText Typo="Typo.h5" Color="@(world.WorldId == NewActiveWorld?.WorldId ? Color.Success : Color.Default)" GutterBottom="true">@world.WorldName @($"{(world.WorldId == NewActiveWorld?.WorldId ? "(Active)" : "")}")</MudText>
+							</CardHeaderContent>
+						</MudCardHeader>
+						<MudCardContent>
+							<MudStack>
+								<MudText Typo="Typo.subtitle1" GutterBottom="true">@world.Header</MudText>
+								<AuthorizeView Roles="ADMIN,INTERNAL">
+									<MudText Typo="Typo.caption">@world.WorldId</MudText>
+								</AuthorizeView>
+								<MudText Typo="Typo.caption">@world.Excerpt</MudText>
+							</MudStack>
+						</MudCardContent>
+						<MudCardActions>
+							@if (world.WorldId == NewActiveWorld?.WorldId)
+							{
+								<MudIconButton Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]" Href="@($"{NavRef.ArticleNav.Index}")" Title="Go to world articles." />
+							}
+						</MudCardActions>
+					</MudCard>
+				</MudItem>
+			}
+		</MudGrid>
+	</MainContent>
+</DashContent>

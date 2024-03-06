@@ -14,7 +14,7 @@ namespace EpochApp.Client.Shared.Forms
     public partial class FileUpload
     {
         private const string FileContent = "this is content";
-        private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
+        private const string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mb-2 mud-width-full mud-height-full z-10";
         private string _dragClass = DefaultDragClass;
         private FileModel _fileModel = new FileModel();
         private bool _isTouched;

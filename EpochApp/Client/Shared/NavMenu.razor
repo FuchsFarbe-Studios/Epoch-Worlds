@@ -1,36 +1,37 @@
 ﻿<MudNavMenu Color="Color.Primary" Rounded="false" Bordered="true" Dense="true">
 	@if (IsMenuOpened)
 	{
-		<MudText Typo="Typo.h6" Class="px-4">The Epoch Exchange</MudText>
+		<MudLink Href="/" Underline="Underline.None">
+			<MudImage Src="images/logos/SVG/world-svg.svg" Height="40" Alt="The logo for the website's application bar." Elevation="0" Class="" />
+			<MudText Typo="Typo.button" Class="px-2">The Epoch Exchange</MudText>
+		</MudLink>
+		<MudDivider Class="my-2" />
+	}
+	else
+	{
+		<MudLink Href="/">
+			<MudImage Src="images/logos/SVG/world-svg.svg" Height="40" Alt="The logo for the website's application bar." Elevation="0" Class="m-1" />
+		</MudLink>
 		<MudDivider Class="my-2" />
 	}
 
 	<!-- User -->
 	<AuthorizeView>
 		<Authorized>
-			<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-			<MudNavLink Href="@NavRef.Site.Dash" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+			<MudNavLink Href="@NavRef.Site.Dash" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.TwoTone.SpaceDashboard">Dashboard</MudNavLink>
 
 			<!-- Worlds -->
-			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Globe]" Href="@NavRef.WorldNav.Index">World</MudNavLink>
+			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[StaticUtils.AwesomeIcons.GetRandomWorldIcon()]" Href="@NavRef.WorldNav.Index">@(ActiveWorld?.WorldName)</MudNavLink>
 			<!-- Articles -->
 			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]" Href="@NavRef.ArticleNav.Index">Articles</MudNavLink>
 			<!-- Images -->
 			<MudNavLink Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Image]" Href="@NavRef.WorldNav.Current.Files">Images</MudNavLink>
-
 			<!-- Builders -->
-			<MudNavGroup Title="Builders" Expanded="false" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.D20]">
-				<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.MagicWand]">Builders</MudNavLink>
-
-				<MudNavGroup Title="Constructed Language" Expanded="false" Icon="@Icons.Material.Filled.Language">
-					<MudNavLink Href="@NavRef.BuilderNav.CongLang.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Language</MudNavLink>
-					<MudNavLink Href="@NavRef.BuilderNav.CongLang.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Language</MudNavLink>
-				</MudNavGroup>
-				<MudNavGroup Title="Character" Expanded="false" Icon="@Icons.Material.Filled.Person">
-					<MudNavLink Href="@NavRef.BuilderNav.Character.Create" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AddCircle">Create Character</MudNavLink>
-					<MudNavLink Href="@NavRef.BuilderNav.Character.Edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Edit">Edit Character</MudNavLink>
-				</MudNavGroup>
-			</MudNavGroup>
+			<MudNavLink Href="@NavRef.BuilderNav.Index" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.D20]">Builders</MudNavLink>
+			<!-- Manuscripts -->
+			<MudNavLink Href="@NavRef.UserNav.Manuscripts" Match="NavLinkMatch.Prefix" Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Book]">Manuscripts</MudNavLink>
+			<!-- View World -->
+			<MudNavLink Icon="@Icons.Material.Outlined.Visibility" Href="@($"/W/{ActiveWorld?.WorldId}")">View @(ActiveWorld?.WorldName)</MudNavLink>
 
 			<!-- Auth -->
 			<MudNavGroup Title="User" Expanded="false" Icon="@Icons.Material.Filled.PermIdentity">
@@ -41,29 +42,28 @@
 			</MudNavGroup>
 		</Authorized>
 		<NotAuthorized>
+			<MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
 			<!-- Auth -->
 			<MudNavLink Href="@NavRef.Auth.Registration" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AppRegistration">Register</MudNavLink>
 			<MudNavLink Href="@NavRef.Auth.Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Login">Log-In</MudNavLink>
+
+			<!-- Site -->
+			<MudNavLink Href="@NavRef.Site.Features" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Map">Features</MudNavLink>
+			<MudNavLink Href="@NavRef.Site.Faq" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.QuestionAnswer">FAQ</MudNavLink>
+			<MudNavLink Href="@NavRef.Site.About" Icon="@Icons.Material.Filled.QuestionMark" Match="NavLinkMatch.Prefix">About</MudNavLink>
+			<MudNavLink Href="@NavRef.Site.Contact" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ContactPage">Contact Us!</MudNavLink>
 		</NotAuthorized>
 
 	</AuthorizeView>
 
 	<!-- Internal -->
 	<AuthorizeView Roles="ADMIN,INTERNAL">
-		<MudNavGroup Title="Internal" Expanded="false" Icon="@Icons.Material.Filled.Warning" IconColor="Color.Warning">
-			<MudNavLink Href="@NavRef.AdminNav.Index" Match="NavLinkMatch.Prefix">Internal</MudNavLink>
-			<MudNavLink Href="@NavRef.AdminNav.Blogs" Match="NavLinkMatch.Prefix">Manage Blogs</MudNavLink>
-			<MudNavLink Href="@NavRef.AdminNav.Posts" Match="NavLinkMatch.Prefix">Blog Posts</MudNavLink>
-			<MudNavLink Href="@NavRef.AdminNav.Contacts" Match="NavLinkMatch.Prefix">Contacts</MudNavLink>
-			<MudNavLink Href="@NavRef.AdminNav.Logs" Match="NavLinkMatch.Prefix">Site Logs</MudNavLink>
+		<MudNavGroup Title="Internal" Expanded="false" Icon="@Icons.Material.Rounded.Warning" IconColor="Color.Warning">
+			<MudNavLink Icon="@Icons.Material.Filled.AdminPanelSettings" Href="@NavRef.AdminNav.Index" Match="NavLinkMatch.Prefix">Internal</MudNavLink>
+			<MudNavLink Icon="@Icons.Material.Filled.AdminPanelSettings" Href="@NavRef.AdminNav.Blogs" Match="NavLinkMatch.Prefix">Manage Blogs</MudNavLink>
+			<MudNavLink Icon="@Icons.Material.Filled.AdminPanelSettings" Href="@NavRef.AdminNav.Posts" Match="NavLinkMatch.Prefix">Blog Posts</MudNavLink>
+			<MudNavLink Icon="@Icons.Material.Filled.AdminPanelSettings" Href="@NavRef.AdminNav.Contacts" Match="NavLinkMatch.Prefix">Contacts</MudNavLink>
+			<MudNavLink Icon="@Icons.Material.Filled.AdminPanelSettings" Href="@NavRef.AdminNav.Logs" Match="NavLinkMatch.Prefix">Site Logs</MudNavLink>
 		</MudNavGroup>
 	</AuthorizeView>
-
-	<!-- Site -->
-	<MudNavGroup Title="Site" Expanded="false" Icon="@Icons.Material.Filled.Map">
-		<MudNavLink Href="@NavRef.Site.Features" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ViewList">Features</MudNavLink>
-		<MudNavLink Href="@NavRef.Site.About" Icon="@Icons.Material.Filled.QuestionMark" Match="NavLinkMatch.Prefix">About</MudNavLink>
-		<MudNavLink Href="@NavRef.Site.Faq" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.QuestionAnswer">FAQ</MudNavLink>
-		<MudNavLink Href="@NavRef.Site.Contact" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ContactPage">Contact Us!</MudNavLink>
-	</MudNavGroup>
 </MudNavMenu>

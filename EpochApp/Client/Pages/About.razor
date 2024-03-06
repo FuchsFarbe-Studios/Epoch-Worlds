@@ -3,7 +3,11 @@
 
 <PageTitle>@StaticUtils.Constants.AppName - About</PageTitle>
 
-@foreach (var item in AboutContents)
-{
-	@((MarkupString)item.SettingVal)
-}
+<MudContainer>
+	<MudPaper Outlined="true" Width="100%">
+		@foreach (var item in _aboutContents)
+		{
+			@((MarkupString)item.SettingValue)
+		}
+	</MudPaper>
+</MudContainer>

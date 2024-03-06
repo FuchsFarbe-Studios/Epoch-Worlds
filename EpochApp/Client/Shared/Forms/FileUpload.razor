@@ -7,23 +7,17 @@
 				<ButtonTemplate>
 					<MudPaper Height="300px" Outlined="true" Class="@_dragClass">
 						<MudText Typo="Typo.h6">
-							Drag and drop files here or click
+							Drag or click here to upload an image file
 						</MudText>
 						@foreach (var file in _fileModel.Files?.Select(file => file.Name) ?? Enumerable.Empty<string>())
 						{
 							<MudChip Color="Color.Dark" Text="@file" />
 						}
 					</MudPaper>
-					<MudToolBar DisableGutters="true" Class="relative d-flex justify-end gap-4 z-30">
-						<MudButton HtmlTag="label" Color="Color.Primary" for="@context.Id" Variant="Variant.Filled">
-							Open file picker
-						</MudButton>
-						<MudButton OnClick="@Upload" Color="Color.Primary" Disabled="@(!_isValid || !_isTouched || _fileModel.Files is null || !_fileModel.Files.Any())" Variant="Variant.Filled">
-							Upload
-						</MudButton>
-						<MudButton OnClick="@context.Actions.ClearAsync" Color="Color.Error" Disabled="@(_fileModel.Files is null || !_fileModel.Files.Any())" Variant="Variant.Filled">
-							Clear
-						</MudButton>
+					<MudToolBar DisableGutters="true" Class="relative d-flex justify-end gap-2 z-30">
+						<MudButton DisableElevation="true" HtmlTag="label" Color="Color.Primary" for="@context.Id" Variant="Variant.Filled">Open</MudButton>
+						<MudButton DisableElevation="true" OnClick="@Upload" Color="Color.Primary" Disabled="@(!_isValid || !_isTouched || _fileModel.Files is null || !_fileModel.Files.Any())" Variant="Variant.Filled">Upload</MudButton>
+						<MudIconButton DisableElevation="true" Icon="@Icons.Material.Filled.ClearAll" OnClick="@context.Actions.ClearAsync" Color="Color.Error" Disabled="@(_fileModel.Files is null || !_fileModel.Files.Any())" Variant="Variant.Filled" Title="Clear files." />
 					</MudToolBar>
 				</ButtonTemplate>
 			</MudFileUpload>

@@ -114,8 +114,27 @@ namespace EpochApp.Shared.Utils
                                                                                       { AwesomeIconType.Exclamation, "fas fa-exclamation" },
                                                                                       { AwesomeIconType.Lock, "fas fa-lock" },
                                                                                       { AwesomeIconType.UnLock, "fas fa-unlock" },
+                                                                                      { AwesomeIconType.Book, "fa-solid fa-book" },
+                                                                                      { AwesomeIconType.BookmarkFilled, "fa-solid fa-bookmark" },
+                                                                                      { AwesomeIconType.BookEmpty, "fa-regular fa-book" },
+                                                                                      { AwesomeIconType.BookOpen, "fa-solid fa-book-open" },
+                                                                                      { AwesomeIconType.NewsPaper, "fa-solid fa-newspaper" },
 
                                                                                   };
+
+            public static AwesomeIconType GetRandomWorldIcon()
+            {
+                var rand = new Random();
+                AwesomeIconType[] values = new AwesomeIconType[]
+                                           {
+                                               AwesomeIconType.EarthAfrica,
+                                               AwesomeIconType.EarthAmericas,
+                                               AwesomeIconType.EarthAsia,
+                                               AwesomeIconType.EarthOceania
+                                           };
+                var randomType = values[rand.Next(values.Length)];
+                return randomType;
+            }
         }
 
         public static class Auth

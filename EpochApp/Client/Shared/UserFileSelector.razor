@@ -1,5 +1,3 @@
-@inherits RequestComponent<UserFileDTO>
-
 @if (_userFiles.Any())
 {
 	<MudSelect Variant="Variant.Filled" T="UserFileDTO" Value="@_selectedFile" ValueChanged="@(async c => await ContentChanged(c))" Label="File Selection" FullWidth="true">
