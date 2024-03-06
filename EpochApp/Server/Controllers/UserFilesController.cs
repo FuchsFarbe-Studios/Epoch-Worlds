@@ -5,7 +5,6 @@
 // Modified: 26-2-2024
 using EpochApp.Server.Data;
 using EpochApp.Shared;
-using EpochApp.Shared.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,51 +19,38 @@ namespace EpochApp.Server.Controllers
     public class UserFilesController : ControllerBase
     {
         private readonly EpochDataDbContext _context;
-        private readonly IWebHostEnvironment _environment;
+        private readonly IFileService _fileService;
         private readonly ILogger<UserFilesController> _logger;
-        public UserFilesController(EpochDataDbContext context, ILogger<UserFilesController> logger, IWebHostEnvironment environment)
+
+        public UserFilesController(EpochDataDbContext context, ILogger<UserFilesController> logger, IFileService fileService)
         {
             _context = context;
             _logger = logger;
-            _environment = environment;
+            _fileService = fileService;
         }
 
+        /// <summary>
+        /// Get all files for a user.
+        /// </summary>
+        /// <param name="userId"> The user's ID. </param>
+        /// <returns> <see cref="Task{TResult}"/> of <see cref="ActionResult{T}"/> of <see cref="IEnumerable{T}"/> of <see cref="UserFileDTO"/>. </returns>
         [HttpGet("UserFiles/{userId}")]
         public async Task<ActionResult<IEnumerable<UserFileDTO>>> GetUserFilesAsync(Guid userId)
         {
-            var files = await _context.UserFiles.Where(x => x.UserId == userId && (x.RemovedOn == null || x.RemovedOn > DateTime.UtcNow))
-                                      .Select(x => new UserFileDTO
-                                                   {
-                                                       FileId = x.FileId,
-                                                       FilePath = x.FilePath,
-                                                       AltText = x.ImageAlt,
-                                                       // FileData = Convert.ToBase64String(x.)
-                                                       SafeName = x.SafeName,
-                                                       Alias = x.Alias,
-                                                       UploadedOn = x.UploadedOn
-                                                   })
-                                      .ToListAsync();
-            // foreach (var file in files)
-            // {
-            //     var path = Path.Combine(_environment.ContentRootPath, file.FilePath);
-            //     var data = await System.IO.File.ReadAllBytesAsync(path);
-            //     file.FileData = Convert.ToBase64String(data);
-            // }
+            var files = await _fileService.GetUserFilesAsync(userId);
             return Ok(files);
         }
 
-        [HttpGet("WorldFiles/{userId}/{worldId:guid}")]
+        /// <summary>
+        ///  Get all files for a world.
+        /// </summary>
+        /// <param name="userId"> The user's ID. </param>
+        /// <param name="worldId"> The world's ID. </param>
+        /// <returns>   <see cref="Task{TResult}"/> of <see cref="ActionResult{T}"/> of <see cref="IEnumerable{T}"/> of <see cref="UserFileDTO"/>. </returns>
+        [HttpGet("WorldFiles/{userId:guid}/{worldId:guid}")]
         public async Task<ActionResult<IEnumerable<UserFileDTO>>> GetWorldFilesAsync(Guid userId, Guid worldId)
         {
-            var files = await _context.UserFiles.Where(x => x.UserId == userId && x.WorldId == worldId)
-                                      .Select(x => new UserFileDTO
-                                                   {
-                                                       FilePath = x.FilePath,
-                                                       SafeName = x.SafeName,
-                                                       Alias = x.Alias,
-                                                       UploadedOn = x.UploadedOn
-                                                   })
-                                      .ToListAsync();
+            var files = await _fileService.GetUserFilesAsync(userId, worldId);
             return Ok(files);
         }
 
@@ -72,16 +58,19 @@ namespace EpochApp.Server.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateFileInformationAsync([FromQuery] Guid userId, [FromBody] UpdateFileDTO updateFile)
         {
-            var file = await _context.UserFiles.FirstOrDefaultAsync(x => x.FileId == updateFile.FileId);
-            if (file == null)
+            if (updateFile == null)
                 return BadRequest("File not found.");
-            if (file.UserId != userId)
+            if (updateFile.UserId != userId)
                 return BadRequest("You are not authorized to update this file.");
 
-            file.Alias = updateFile.Alias;
-            file.ImageAlt = updateFile.Alt;
-            _context.UserFiles.Update(file);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _fileService.UpdateFileInformationAsync(userId, updateFile);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok();
         }
 
@@ -89,60 +78,30 @@ namespace EpochApp.Server.Controllers
         [HttpDelete]
         public async Task<IActionResult> RemoveFileAsync([FromQuery] Guid userId, [FromQuery] int fileId)
         {
-            var file = await _context.UserFiles.FirstOrDefaultAsync(x => x.FileId == fileId);
-            if (file == null)
-                return BadRequest("File not found.");
-            if (file.UserId != userId)
-                return BadRequest("You are not authorized to remove this file.");
-
-            file.RemovedOn = DateTime.UtcNow;
-            _context.UserFiles.Update(file);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _fileService.RemoveFileAsync(userId, fileId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok();
         }
 
         [HttpPost("UserFile")]
-        public async Task<IActionResult> UploadUserFileAsync([FromQuery] Guid userId, [FromBody] FileUploadDto fileUploadDto)
+        public async Task<IActionResult> UploadUserFileAsync([FromQuery] Guid userId, [FromBody] FileUploadDTO fileUploadDto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserID == userId);
             if (user == null)
                 return BadRequest("Not a valid user.");
             if (userId != user.UserID)
                 return BadRequest("You are not authorized to upload files for this user.");
-            // if (fileUploadDto.File.Size == 0)
-            //     return BadRequest("No file uploaded.");
-
-            var worldDirPath = Path.Combine(StaticUtils.Constants.UserFilesDirectory, user.UserName);// Adjust this path accordingly
-            if (!Directory.Exists(worldDirPath))
-                Directory.CreateDirectory(worldDirPath);
-
-            var extension = Path.GetExtension(fileUploadDto?.FileName);
-            var uniqueFileName = Path.GetRandomFileName();
-            uniqueFileName = uniqueFileName.Split(".").FirstOrDefault();
-            uniqueFileName += extension;
-            var filePath = Path.Combine(worldDirPath, uniqueFileName);
 
             try
             {
-                _logger.LogWarning($"Uploading file: {fileUploadDto?.FileName} to {worldDirPath} as {uniqueFileName}");
-                // Write file data to the disk
-                var data = Convert.FromBase64String(fileUploadDto.FileData);
-                await System.IO.File.WriteAllBytesAsync(filePath, data);
-                var fileData = new UserFile
-                               {
-                                   UserId = user.UserID,
-                                   WorldId = fileUploadDto.WorldId,
-                                   FileName = fileUploadDto.FileName,
-                                   SafeName = uniqueFileName,
-                                   ImageAlt = fileUploadDto?.Alt ?? null,
-                                   Alias = fileUploadDto.Alias ?? null,
-                                   FilePath = filePath.Replace("\\", "/"),
-                                   FileSize = fileUploadDto.FileSize,
-                                   ContentType = extension,
-                                   UploadedOn = DateTime.UtcNow
-                               };
-                _context.UserFiles.Add(fileData);
-                await _context.SaveChangesAsync();
+                await _fileService.UploadFileAsync(userId, fileUploadDto);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -153,12 +112,10 @@ namespace EpochApp.Server.Controllers
                                  + $"\n\tStackTrace: {ex.StackTrace}");
                 return BadRequest("Something went wrong!");
             }
-
-            return Ok(new { FilePath = filePath });
         }
 
         [HttpPost("WorldFile")]
-        public async Task<IActionResult> UploadWorldFileAsync([FromQuery] Guid userId, [FromQuery] Guid worldId, [FromBody] FileUploadDto fileUploadDto)
+        public async Task<IActionResult> UploadWorldFileAsync([FromQuery] Guid userId, [FromQuery] Guid worldId, [FromBody] FileUploadDTO fileUploadDto)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserID == userId);
             var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldId == worldId);
@@ -168,40 +125,11 @@ namespace EpochApp.Server.Controllers
                 return BadRequest("You are not authorized to upload files for this user.");
             if (userId != world.OwnerId)
                 return BadRequest("You are not authorized to upload files for this world.");
-            // if (fileUploadDto.File.Size == 0)
-            //     return BadRequest("No file uploaded.");
-
-            var userDirPath = Path.Combine(StaticUtils.Constants.WorldFilesDirectory, world.WorldName);// Adjust this path accordingly
-            if (!Directory.Exists(userDirPath))
-                Directory.CreateDirectory(userDirPath);
-
-            var extension = Path.GetExtension(fileUploadDto.FileName);
-            var uniqueFileName = Path.GetRandomFileName();
-            uniqueFileName = uniqueFileName.Split(".").FirstOrDefault();
-            uniqueFileName += extension;
-            var filePath = Path.Combine(userDirPath, uniqueFileName);
 
             try
             {
-                _logger.LogWarning($"Uploading file: {fileUploadDto.FileName} to {userDirPath} as {uniqueFileName}");
-                // Write file data to the disk
-                var data = Convert.FromBase64String(fileUploadDto.FileData);
-                await System.IO.File.WriteAllBytesAsync(filePath, data);
-                var fileData = new UserFile
-                               {
-                                   UserId = user.UserID,
-                                   WorldId = fileUploadDto.WorldId,
-                                   FileName = fileUploadDto.FileName,
-                                   SafeName = uniqueFileName,
-                                   Alias = fileUploadDto.Alias ?? null,
-                                   ImageAlt = fileUploadDto?.Alt ?? null,
-                                   FilePath = filePath.Replace("\\", "/"),
-                                   FileSize = fileUploadDto.FileSize,
-                                   ContentType = extension,
-                                   UploadedOn = DateTime.UtcNow
-                               };
-                _context.UserFiles.Add(fileData);
-                await _context.SaveChangesAsync();
+                await _fileService.UploadFileAsync(userId, worldId, fileUploadDto);
+                return Ok();
             }
             catch
             {
@@ -210,8 +138,6 @@ namespace EpochApp.Server.Controllers
                                  + fileUploadDto?.FileName);
                 return BadRequest("Something went wrong!");
             }
-
-            return Ok(new { FilePath = filePath });
         }
     }
 }

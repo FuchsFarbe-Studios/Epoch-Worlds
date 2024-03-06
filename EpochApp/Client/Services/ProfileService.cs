@@ -10,6 +10,7 @@ using System.Net.Http.Json;
 namespace EpochApp.Client.Services
 {
     #pragma warning disable CS1591
+
     /// <inheritdoc />
     public class ProfileService : IProfileSerivce
     {

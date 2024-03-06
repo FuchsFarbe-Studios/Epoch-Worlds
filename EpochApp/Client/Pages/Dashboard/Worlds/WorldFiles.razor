@@ -1,5 +1,15 @@
 @page "/World/Files"
-<h3>World Files</h3>
 
-@code {
-}
+<MudText>@(ActiveWorld?.WorldName)'s Images</MudText>
+
+<MudGrid>
+	<MudItem xs="12" md="6" lg="4">
+		<FileUpload IsWorldFile="true" />
+	</MudItem>
+	<MudItem sm="12" md="6" lg="8">
+		@foreach (var file in _files)
+		{
+			<FileCard @key="@file.FileId" UserFile="@file" />
+		}
+	</MudItem>
+</MudGrid>

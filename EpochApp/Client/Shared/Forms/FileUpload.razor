@@ -1,0 +1,32 @@
+@inject ISnackbar Snackbar
+
+<MudStack Style="width: 100%">
+	<MudForm Model="@_fileModel" @bind-IsValid="_isValid" @bind-IsTouched="_isTouched" Validation="@_validationRules.ValidateValue">
+		<MudItem xs="12">
+			<MudFileUpload T="IReadOnlyList<IBrowserFile>" AppendMultipleFiles @bind-Files="_fileModel.Files" @bind-Files:after="@ClearDragClass" For="@(() => _fileModel.Files)" Hidden="@false" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20" InputStyle="opacity:0" Accept=".gif,.jpg,.jpeg,.png" @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass">
+				<ButtonTemplate>
+					<MudPaper Height="300px" Outlined="true" Class="@_dragClass">
+						<MudText Typo="Typo.h6">
+							Drag and drop files here or click
+						</MudText>
+						@foreach (var file in _fileModel.Files?.Select(file => file.Name) ?? Enumerable.Empty<string>())
+						{
+							<MudChip Color="Color.Dark" Text="@file" />
+						}
+					</MudPaper>
+					<MudToolBar DisableGutters="true" Class="relative d-flex justify-end gap-4 z-30">
+						<MudButton HtmlTag="label" Color="Color.Primary" for="@context.Id" Variant="Variant.Filled">
+							Open file picker
+						</MudButton>
+						<MudButton OnClick="@Upload" Color="Color.Primary" Disabled="@(!_isValid || !_isTouched || _fileModel.Files is null || !_fileModel.Files.Any())" Variant="Variant.Filled">
+							Upload
+						</MudButton>
+						<MudButton OnClick="@context.Actions.ClearAsync" Color="Color.Error" Disabled="@(_fileModel.Files is null || !_fileModel.Files.Any())" Variant="Variant.Filled">
+							Clear
+						</MudButton>
+					</MudToolBar>
+				</ButtonTemplate>
+			</MudFileUpload>
+		</MudItem>
+	</MudForm>
+</MudStack>

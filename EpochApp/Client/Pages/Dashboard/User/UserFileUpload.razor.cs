@@ -14,7 +14,7 @@ namespace EpochApp.Client.Pages.Dashboard.User
         private IList<IBrowserFile> _files = new List<IBrowserFile>();
         private List<string> _messages = new List<string>();
         private int _percentDone = 0;
-        private List<FileUploadDto> _uploadedFiles = new List<FileUploadDto>();
+        private List<FileUploadDTO> _uploadedFiles = new List<FileUploadDTO>();
         private bool _uploading = false;
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace EpochApp.Client.Pages.Dashboard.User
             var buffer = new byte[file.Size];
             _ = await file.OpenReadStream().ReadAsync(buffer);
             var data = Convert.ToBase64String(buffer);
-            var newFile = new FileUploadDto
+            var newFile = new FileUploadDTO
                           {
                               FileName = file.Name,
                               FileSize = file.Size,
@@ -52,7 +52,7 @@ namespace EpochApp.Client.Pages.Dashboard.User
             StateHasChanged();
         }
 
-        private async Task OnFileRemovedAsync(FileUploadDto file)
+        private async Task OnFileRemovedAsync(FileUploadDTO file)
         {
             Logger.LogInformation($"Removing file {file.FileName}");
             if (_uploadedFiles.Contains(file))

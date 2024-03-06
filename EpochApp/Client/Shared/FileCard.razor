@@ -1,0 +1,41 @@
+<MudCard Outlined="true" Class="ma-2 pa-2">
+	<MudCardMedia Image="@($"/{UserFile?.FilePath}")" Title="@UserFile?.AltText" Height="200" />
+	<MudCardContent>
+		@if (_isEditMode)
+		{
+			<EditForm Model="@_updateFile" OnValidSubmit="@(async () => await UpdateFileAsync())">
+				<MudStack>
+					<AuthorizeView Roles="ADMIN,INTERNAL">
+						<Authorized Context="AuthCtx">
+							<MudStack Row="true">
+								<MudTextField @bind-Value="@_updateFile.UserId" For="@(() => _updateFile.UserId)" Label="User Id" Variant="Variant.Text" Margin="Margin.Dense" ReadOnly="true" />
+								<MudTextField @bind-Value="@_updateFile.WorldId" For="@(() => _updateFile.WorldId)" Label="World Id" Variant="Variant.Text" Margin="Margin.Dense" ReadOnly="true" />
+								<MudTextField @bind-Value="@_updateFile.FileId" For="@(() => _updateFile.FileId)" Label="File Id" Variant="Variant.Text" Margin="Margin.Dense" ReadOnly="true" />
+							</MudStack>
+						</Authorized>
+					</AuthorizeView>
+					<MudTextField @bind-Value="@_updateFile.Alias" For="@(() => _updateFile.Alias)" Label="Alias" Variant="Variant.Filled" Margin="Margin.Dense" MaxLength="255" FullWidth="true" />
+					<MudTextField @bind-Value="@_updateFile.Alt" For="@(() => _updateFile.Alt)" Label="Alias" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="1000" FullWidth="true" Lines="5" />
+					<MudButton FullWidth="true" ButtonType="ButtonType.Submit" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">Submit</MudButton>
+					<MudButton FullWidth="true" StartIcon="@Icons.Material.Filled.Cancel" OnClick="@(() => _isEditMode = !_isEditMode)">Cancel</MudButton>
+				</MudStack>
+			</EditForm>
+		}
+		else
+		{
+			@if (string.IsNullOrEmpty(UserFile?.Alias))
+			{
+				<MudText Typo="Typo.h5">@UserFile?.SafeName</MudText>
+			}
+			else
+			{
+				<MudText Typo="Typo.h5">@UserFile?.Alias</MudText>
+			}
+			<MudText Typo="Typo.body2">@UserFile?.AltText</MudText>
+		}
+	</MudCardContent>
+	<MudCardActions>
+		<MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => _isEditMode = !_isEditMode)" Title="Edit this items alias and alternate text. " />
+		<MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Text" Color="Color.Error" OnClick="@(async () => await OnRemoveFileAsync())" Title="Delete this file." Disabled="@(_isEditMode)" />
+	</MudCardActions>
+</MudCard>
