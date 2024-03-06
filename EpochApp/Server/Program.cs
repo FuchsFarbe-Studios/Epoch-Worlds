@@ -77,6 +77,7 @@ namespace EpochApp.Server
             services.AddScoped<IProfileSerivce, ProfileService>();
             services.AddScoped<IUserModeration, ModerationService>();
             services.AddScoped<ILookupService, LookupService>();
+            services.AddScoped<IManuscriptService, ManuscriptService>();
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<IWorldService, WorldService>();

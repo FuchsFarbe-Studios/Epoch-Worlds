@@ -22,8 +22,8 @@ namespace EpochApp.Client
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddTransient<MarkupService>();
             builder.Services.AddScoped<ILocalStorage, LocalStorageAccessor>();
+            builder.Services.AddScoped<IManuscriptService, ManuscriptService>();
             builder.Services.AddScoped<IProfileSerivce, ProfileService>();
-            builder.Services.AddScoped<MarkupService>();
             builder.Services.AddScoped<ILookupService, LookupService>();
             builder.Services.AddScoped<IArticleService, ArticleService>();
             builder.Services.AddScoped<IWorldService, WorldService>();

@@ -17,7 +17,8 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
-            _manuscripts = await ManuscriptService.GetUserManuscripts(Auth.CurrentUser.UserID);
+            var manuscripts = await ManuscriptService.GetUserManuscripts(Auth.CurrentUser.UserID);
+            _manuscripts = manuscripts ?? new List<ManuscriptDTO>();
             await base.OnInitializedAsync();
         }
     }

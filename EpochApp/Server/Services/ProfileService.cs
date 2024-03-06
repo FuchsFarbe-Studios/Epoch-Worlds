@@ -38,13 +38,17 @@ namespace EpochApp.Server.Services
 
         public async Task<ProfileDTO> GetProfileByUserIdAsync(Guid userId)
         {
-            var user = await _context.Users.Include(x => x.UserRoles).ThenInclude(r => r.Role).FirstOrDefaultAsync(x => x.UserID == userId);
+            var user = await _context.Users
+                                     .Include(x => x.UserRoles)
+                                     .ThenInclude(r => r.Role)
+                                     .Include(user => user.Profile)
+                                     .FirstOrDefaultAsync(x => x.UserID == userId);
             if (user == null)
             {
                 _logger.LogWarning("User not found!");
                 return null;
             }
-            var profile = _mapper.Map(user, new ProfileDTO());
+            var profile = _mapper.Map(user.Profile, new ProfileDTO());
             return await Task.FromResult(profile);
         }
 
