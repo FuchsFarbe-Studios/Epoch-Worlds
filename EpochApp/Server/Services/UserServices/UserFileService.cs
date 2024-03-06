@@ -32,7 +32,7 @@ namespace EpochApp.Server.Services
                                           .Select(x => x.UserFiles)
                                           .AsSplitQuery()
                                           .FirstOrDefaultAsync();
-            var files = userFiles.Select(x => _mapper.Map<UserFileDTO>(x));
+            var files = userFiles.Where(x => (x.RemovedOn == null || x.RemovedOn > DateTime.UtcNow)).Select(x => _mapper.Map<UserFileDTO>(x));
             return files;
         }
 
@@ -44,7 +44,7 @@ namespace EpochApp.Server.Services
                                           .Select(x => x.WorldFiles)
                                           .AsSplitQuery()
                                           .FirstOrDefaultAsync();
-            var files = userFiles.Select(x => _mapper.Map<UserFileDTO>(x));
+            var files = userFiles.Where(x => (x.RemovedOn == null || x.RemovedOn > DateTime.UtcNow)).Select(x => _mapper.Map<UserFileDTO>(x));
             return files;
         }
 

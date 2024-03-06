@@ -62,7 +62,6 @@ namespace EpochApp.Client.Shared
 
             await FileService.RemoveFileAsync(Auth.CurrentUser.UserID, (int)UserFile.FileId);
             await OnFileChanged.InvokeAsync(UserFile);
-            StateHasChanged();
         }
     }
 }

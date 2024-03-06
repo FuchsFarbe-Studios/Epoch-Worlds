@@ -5,16 +5,23 @@
 		<Found Context="routeData">
 			<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
 				<NotAuthorized>
-					<div class="alert style-warning-light" role="alert">
-						<p>Not authorized to view this content!</p>
-					</div>
+					<MudContainer>
+						<MudPaper Outlined="true" Class="mud-theme-dark mud-border-error" Width="100%">
+							<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
+								<MudText Typo="Typo.h4" Color="Color.Error" Align="Align.Center">Authorization failed!</MudText>
+								<MudText Typo="Typo.h6" Color="Color.Error" Align="Align.Center">Please sign in with valid credentials to view this content.</MudText>
+							</MudStack>
+						</MudPaper>
+					</MudContainer>
 				</NotAuthorized>
 				<Authorizing>
 					<MudContainer>
-						<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
-							<MudText Typo="Typo.h4" Color="Color.Warning" Align="Align.Center">Authentication in progress...</MudText>
-							<MudProgressCircular Indeterminate="true" Color="Color.Warning" Size="Size.Large" />
-						</MudStack>
+						<MudPaper Outlined="true" Class="mud-theme-dark mud-border-warning" Width="100%">
+							<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
+								<MudText Typo="Typo.h4" Color="Color.Warning" Align="Align.Center">Authentication in progress...</MudText>
+								<MudProgressCircular Indeterminate="true" Color="Color.Warning" Size="Size.Large" />
+							</MudStack>
+						</MudPaper>
 					</MudContainer>
 				</Authorizing>
 			</AuthorizeRouteView>
