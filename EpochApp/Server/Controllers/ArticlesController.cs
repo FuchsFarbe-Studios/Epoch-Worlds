@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EpochApp.Server.Controllers
 {
+
     /// <summary>
     ///     Controller for managing articles and manuscripts.
     /// </summary>

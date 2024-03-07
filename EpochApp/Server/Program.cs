@@ -13,9 +13,6 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
-using ArticleService=EpochApp.Server.Services.ArticleService;
-using LookupService=EpochApp.Server.Services.LookupService;
-using WorldService=EpochApp.Server.Services.WorldService;
 
 #pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 
@@ -71,6 +68,7 @@ namespace EpochApp.Server
             services.AddAutoMapper(typeof(FileProfile));
             services.AddAutoMapper(typeof(WorldProfile));
             services.AddAutoMapper(typeof(UserMapProfile));
+            services.AddAutoMapper(typeof(BuilderProfile));
 
             // Custom services
             services.AddScoped<ITagService, TagService>();
@@ -82,6 +80,7 @@ namespace EpochApp.Server
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<IWorldService, WorldService>();
             services.AddScoped<IFileService, UserFileService>();
+            services.AddScoped<IBuilderService, BuilderService>();
             services.AddRazorPages();
             services.AddSwaggerGen(c =>
             {
