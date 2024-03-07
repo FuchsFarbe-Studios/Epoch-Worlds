@@ -76,9 +76,9 @@ namespace EpochApp.Client.Services
         }
 
         /// <inheritdoc />
-        public async Task<World> GetWorldViewAsync(Guid worldId)
+        public async Task<WorldDTO> GetWorldViewAsync(Guid worldId)
         {
-            var response = await _client.GetFromJsonAsync<World>($"api/v2/Worlds/View/{worldId}");
+            var response = await _client.GetFromJsonAsync<WorldDTO>($"api/v2/Worlds/View/{worldId}");
             return await Task.FromResult(response);
         }
 

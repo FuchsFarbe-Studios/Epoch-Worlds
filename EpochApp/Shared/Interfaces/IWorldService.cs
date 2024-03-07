@@ -54,7 +54,7 @@ namespace EpochApp.Shared
         ///     The unique identifier for the world.
         /// </param>
         /// <returns> A <see cref="World" />. </returns>
-        Task<World> GetWorldViewAsync(Guid worldId);
+        Task<WorldDTO> GetWorldViewAsync(Guid worldId);
 
         /// <summary> Update a world. </summary>
         /// <param name="world"> The world to update. </param>

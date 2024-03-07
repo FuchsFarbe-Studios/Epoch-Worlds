@@ -10,39 +10,30 @@
 	<ActionContent>
 	</ActionContent>
 	<MainContent>
-		<MudGrid>
+		<MudGrid Justify="Justify.FlexStart" Spacing="1">
 			@foreach (var world in _newUserWorlds)
 			{
 				<MudItem @key=@world.WorldId xs="12" sm="6" md="4" xl="3">
-					<MudCard Outlined="true" Class="pa-1 mud-border-primary" Style="height: 320px;">
-						@if (!string.IsNullOrEmpty(world.Image))
-						{
-							<MudCardMedia Height="128" Image="@($"/{world.Image}")" Title="World header image." Style="max-height: 64px; background-repeat: no-repeat; background-attachment: fixed; background-position: center;" />
-						}
-						<MudCardHeader>
-							<CardHeaderActions>
-								<MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Visibility" Href="@($"/W/{world.WorldId}")" Title="View world." />
-								<MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Edit" Href="@($"{NavRef.WorldNav.Edit}/{world.WorldId}")" Title="Edit this world." />
-								<MudIconButton Size="Size.Small" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await HandleWorldDeletionAsync(world))" Title="Delete world." />
-							</CardHeaderActions>
-							<CardHeaderContent>
-								<MudText Typo="Typo.h5" Color="@(world.WorldId == NewActiveWorld?.WorldId ? Color.Success : Color.Default)" GutterBottom="true">@world.WorldName @($"{(world.WorldId == NewActiveWorld?.WorldId ? "(Active)" : "")}")</MudText>
-							</CardHeaderContent>
-						</MudCardHeader>
-						<MudCardContent>
-							<MudStack>
-								<MudText Typo="Typo.subtitle1" GutterBottom="true">@world.Header</MudText>
-								<AuthorizeView Roles="ADMIN,INTERNAL">
-									<MudText Typo="Typo.caption">@world.WorldId</MudText>
-								</AuthorizeView>
+					<MudCard Outlined="true" Class="pa-1 mud-border-primary">
+						<MudCardMedia Height="200" Image="@($"/{world?.Image}")" Title="World header image." />
+						<MudCardContent Class="pa-1 overflow-hidden">
+							<MudText Typo="Typo.h5" Color="@(world.WorldId == NewActiveWorld?.WorldId ? Color.Success : Color.Default)" GutterBottom="true">@world.WorldName @($"{(world.WorldId == NewActiveWorld?.WorldId ? "(Active)" : "")}")</MudText>
+							<AuthorizeView Roles="ADMIN,INTERNAL">
+								<MudText Typo="Typo.caption">@world.WorldId</MudText>
+							</AuthorizeView>
+							<MudElement HtmlTag="div" Class="overflow-hidden" Style="max-height: 40px;">
 								<MudText Typo="Typo.caption">@world.Excerpt</MudText>
-							</MudStack>
+							</MudElement>
 						</MudCardContent>
-						<MudCardActions>
+						<MudCardActions Class="pa-1">
 							@if (world.WorldId == NewActiveWorld?.WorldId)
 							{
 								<MudIconButton Icon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Scroll]" Href="@($"{NavRef.ArticleNav.Index}")" Title="Go to world articles." />
 							}
+							<MudSpacer />
+							<MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Visibility" Href="@($"/W/{world.WorldId}")" Title="View world." />
+							<MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Edit" Href="@($"{NavRef.WorldNav.Edit}/{world.WorldId}")" Title="Edit this world." />
+							<MudIconButton Size="Size.Small" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="@(async () => await HandleWorldDeletionAsync(world))" Title="Delete world." />
 						</MudCardActions>
 					</MudCard>
 				</MudItem>

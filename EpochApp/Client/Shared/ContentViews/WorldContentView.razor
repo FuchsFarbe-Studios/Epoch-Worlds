@@ -1,0 +1,40 @@
+@namespace EpochApp.Client.Shared
+
+<MudImage Src="@World.Image" Fluid="true" ObjectFit="ObjectFit.Cover" Elevation="0" />
+<MudStack Spacing="1" Class="pa-1">
+	<MudText Align="Align.Center" Typo="Typo.h1" Color="Color.Primary" GutterBottom="true">@World?.WorldName</MudText>
+	@if (!string.IsNullOrWhiteSpace(World?.Pronunciation))
+	{
+		<MudText Class="mt-1" Align="Align.Center" Typo="Typo.subtitle1" Color="Color.Primary" GutterBottom="true">/@(World?.Pronunciation)/</MudText>
+	}
+	@if (!string.IsNullOrWhiteSpace(World?.Excerpt))
+	{
+		<MudText Align="Align.Center" Typo="Typo.caption">@((MarkupString)World?.Excerpt)</MudText>
+	}
+	<MudText Align="Align.Center" Typo="Typo.caption" Color="Color.Tertiary">Created On: @(World.DateCreated.ToString("d"))</MudText>
+	<MudDivider Light="false" Class="my-1" DividerType="DividerType.Middle" />
+	@if (!string.IsNullOrWhiteSpace(World?.Header))
+	{
+		<MudText Align="Align.Center" Typo="Typo.h3" GutterBottom="true">@World?.Header</MudText>
+	}
+	@if (!string.IsNullOrWhiteSpace(World?.SubHeader))
+	{
+		<MudText Align="Align.Center" Typo="Typo.h4">@World?.SubHeader</MudText>
+	}
+	<MudDivider Light="false" Class="my-1" DividerType="DividerType.Middle" />
+	@if (!string.IsNullOrWhiteSpace(World?.CurrentWorldDate?.CurrentAge))
+	{
+		<MudText Align="Align.Center" Typo="Typo.h4">@World?.CurrentWorldDate?.CurrentAge</MudText>
+	}
+	@if (!string.IsNullOrWhiteSpace(World?.Description))
+	{
+		<MudText Align="Align.Center" Typo="Typo.body1">@((MarkupString)World?.Description)</MudText>
+	}
+</MudStack>
+
+@code {
+	/// <summary>
+	/// The world to display.
+	/// </summary>
+	[Parameter] public WorldDTO World { get; set; }
+}

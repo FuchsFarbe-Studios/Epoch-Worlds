@@ -162,10 +162,10 @@ namespace EpochApp.Server.Services
         }
 
         /// <inheritdoc />
-        public async Task<World> GetWorldViewAsync(Guid worldId)
+        public async Task<WorldDTO> GetWorldViewAsync(Guid worldId)
         {
             var world = await _context.Worlds.FirstOrDefaultAsync(x => x.WorldId == worldId);
-            return await Task.FromResult(world);
+            return await Task.FromResult(_mapper.Map(world, new WorldDTO()));
         }
 
         /// <inheritdoc />
@@ -175,7 +175,7 @@ namespace EpochApp.Server.Services
                                         .Include(w => w.CurrentWorldDate)
                                         .Include(w => w.WorldTags)
                                         .ThenInclude(w => w.Tag)
-                                        .Include(w => w.WorldFiles)
+                                        //.Include(w => w.WorldFiles)
                                         .Include(w => w.MetaData)
                                         .ThenInclude(worldMeta => worldMeta.Template)
                                         .FirstOrDefault(x => x.WorldId == world.WorldId && x.OwnerId == world.OwnerId);
@@ -188,25 +188,19 @@ namespace EpochApp.Server.Services
             // Handling WorldMetas entities
             // Remove the WorldMetas that are not in the incoming DTO world
             var worldMetasToRemove = existingWorld.MetaData
-                                                  .Where(meta => !world.MetaData.Any(m => m.TemplateId == meta.Template.TemplateId));
+                                                  .Where(meta => world.MetaData.All(m => m.TemplateId != meta.Template.TemplateId));
             foreach (var wm in worldMetasToRemove)
-            {
                 existingWorld.MetaData.Remove(wm);
-            }
 
             foreach (var wm in world.MetaData)
             {
                 var existingMeta = existingWorld.MetaData.FirstOrDefault(m => m.Template.TemplateId == wm.TemplateId);
                 if (existingMeta == null)
-                {
                     // Add new WorldMeta
                     existingWorld.MetaData.Add(_mapper.Map(wm, new WorldMeta()));
-                }
                 else
-                {
                     // Update existing WorldMeta
                     _mapper.Map(wm, existingMeta);
-                }
             }
             _mapper.Map(world, existingWorld);
             try

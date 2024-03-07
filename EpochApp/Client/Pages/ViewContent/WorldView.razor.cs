@@ -8,7 +8,7 @@ namespace EpochApp.Client.Pages.ViewContent
     /// </summary>
     public partial class WorldView
     {
-        private World _world = null!;
+        private WorldDTO _world = null!;
 
         /// <summary>
         ///     The world id to display.
