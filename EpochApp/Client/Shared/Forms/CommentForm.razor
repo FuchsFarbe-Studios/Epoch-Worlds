@@ -1,0 +1,12 @@
+<MudCard Elevation="0" Class="pa-4">
+	<MudCardContent>
+		<MudTextField @bind-Value="@CommentContent" Label="Comment" Lines="5" AutoFocus="true" FullWidth="true" Variant="Variant.Outlined" />
+	</MudCardContent>
+	<MudCardActions>
+		<MudButton Disabled="@(string.IsNullOrEmpty(CommentContent))" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">Post</MudButton>
+	</MudCardActions>
+</MudCard>
+
+@code {
+	private string CommentContent { get; set; }
+}
