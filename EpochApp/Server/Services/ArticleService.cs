@@ -12,22 +12,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Services
 {
-
     /// <summary>
-    ///     Service for managing articles, manuscripts, and their tags.
+    ///     Service for managing articles.
     /// </summary>
     public class ArticleService : IArticleService
     {
         private readonly EpochDataDbContext _context;
         private readonly ILogger<ArticleService> _logger;
         private readonly IMapper _mapper;
-        private readonly ITagService _tagService;
 
-        public ArticleService(EpochDataDbContext context, ILogger<ArticleService> logger, ITagService tagService, IMapper mapper)
+        public ArticleService(EpochDataDbContext context, ILogger<ArticleService> logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
-            _tagService = tagService;
             _mapper = mapper;
         }
 

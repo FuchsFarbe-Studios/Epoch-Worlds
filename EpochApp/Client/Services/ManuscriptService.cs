@@ -1,7 +1,6 @@
 // EpochWorlds
 // ManuscriptService.cs
 // FuchsFarbe Studios 2024
-// matsu
 // Modified: 4-3-2024
 using EpochApp.Shared;
 using MudBlazor;
@@ -32,8 +31,31 @@ namespace EpochApp.Client.Services
         /// <inheritdoc />
         public async Task<List<ManuscriptDTO>> GetUserManuscripts(Guid userId)
         {
-            var userManuscripts = await _client.GetFromJsonAsync<List<ManuscriptDTO>>($"api/v1/Articles/Manuscripts?userId={userId}");
+            var userManuscripts = await _client.GetFromJsonAsync<List<ManuscriptDTO>>($"api/v1/Manuscripts/{userId}");
             return await Task.FromResult(userManuscripts);
+        }
+
+        /// <inheritdoc />
+        public async Task<ManuscriptDTO> GetManuscriptAsync(long manuscriptId)
+        {
+            var manuscript = await _client.GetFromJsonAsync<ManuscriptDTO>($"api/v1/Manuscripts/Manuscript/{manuscriptId}");
+            return manuscript;
+        }
+
+        /// <inheritdoc />
+        public async Task<ManuscriptDTO> CreateManuscriptAsync(ManuscriptDTO manuscript)
+        {
+            var response = await _client.PostAsJsonAsync("api/v1/Manuscripts", manuscript);
+            if (response.IsSuccessStatusCode)
+            {
+                var newManuscript = await response.Content.ReadFromJsonAsync<ManuscriptDTO>();
+                return newManuscript;
+            }
+            else
+            {
+                _snackbar.Add("Failed to create manuscript.", Severity.Error);
+                return null;
+            }
         }
     }
 }

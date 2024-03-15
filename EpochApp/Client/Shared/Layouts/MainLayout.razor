@@ -1,7 +1,7 @@
 ﻿@namespace EpochApp.Client.Shared
 @inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@_theme" @bind-IsDarkMode="@_isDarkMode" />
+<MudThemeProvider @ref="@_mudThemeProvider" Theme="@_theme" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 

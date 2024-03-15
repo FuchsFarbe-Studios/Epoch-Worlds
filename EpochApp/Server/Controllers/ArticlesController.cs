@@ -279,17 +279,5 @@ namespace EpochApp.Server.Controllers
 
             return Ok();
         }
-
-        /// <summary>
-        ///   Get all manuscripts for a user.
-        /// </summary>
-        /// <param name="userId"> The user's unique identifier. </param>
-        /// <returns> A <see cref="IEnumerable{T}" /> of <see cref="ManuscriptDTO"/>. </returns>
-        [HttpGet("Manuscripts")]
-        public async Task<IActionResult> GetUserManuscriptsAsync([FromQuery] Guid userId)
-        {
-            var manuscripts = await _manuscriptService.GetUserManuscripts(userId);
-            return Ok(manuscripts);
-        }
     }
 }

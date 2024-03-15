@@ -24,6 +24,7 @@ namespace EpochApp.Server.Services
             _mapper = mapper;
         }
 
+        /// <inheritdoc />
         public async Task<List<ManuscriptDTO>> GetUserManuscripts(Guid userId)
         {
             var userManuscripts = await _context.Manuscripts
@@ -34,7 +35,8 @@ namespace EpochApp.Server.Services
             return userManuscripts;
         }
 
-        public async Task<ManuscriptDTO> GetManuscript(long manuscriptId)
+        /// <inheritdoc />
+        public async Task<ManuscriptDTO> GetManuscriptAsync(long manuscriptId)
         {
             var manuscript = await _context.Manuscripts
                                            .Where(m => m.ManuscriptId == manuscriptId)
@@ -44,7 +46,8 @@ namespace EpochApp.Server.Services
             return manuscript;
         }
 
-        public async Task<ManuscriptDTO> CreateManuscript(ManuscriptDTO manuscript)
+        /// <inheritdoc />
+        public async Task<ManuscriptDTO> CreateManuscriptAsync(ManuscriptDTO manuscript)
         {
             var newManuscript = _mapper.Map<Manuscript>(manuscript);
             _context.Manuscripts.Add(newManuscript);

@@ -14,6 +14,7 @@ namespace EpochApp.Client.Shared
         private List<ClientSetting> _clientSettings = new List<ClientSetting>();
         private bool _drawerOpen;
         private bool _isDarkMode;
+        private MudThemeProvider _mudThemeProvider;
         private WorldDTO _newWorld;
         private SiteSettings _settings = new SiteSettings();
 
@@ -200,6 +201,24 @@ namespace EpochApp.Client.Shared
         [Inject] private ILogger<MainLayout> Logger { get; set; }
 
         /// <inheritdoc />
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+                await _mudThemeProvider.WatchSystemPreference(OnSystemPrefChanged);
+                StateHasChanged();
+            }
+        }
+
+        private Task OnSystemPrefChanged(bool arg)
+        {
+            _isDarkMode = arg;
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
         protected override async Task OnInitializedAsync()
         {
             var clientSettings = await Client.GetFromJsonAsync<List<ClientSetting>>("api/v1/Settings/ClientSettings");
@@ -215,10 +234,7 @@ namespace EpochApp.Client.Shared
             await base.OnInitializedAsync();
         }
 
-        private void DrawerToggle()
-        {
-            _drawerOpen = !_drawerOpen;
-        }
+        private void DrawerToggle() => _drawerOpen = !_drawerOpen;
 
         private async Task HandleNewWorldChanged(WorldDTO arg)
         {
