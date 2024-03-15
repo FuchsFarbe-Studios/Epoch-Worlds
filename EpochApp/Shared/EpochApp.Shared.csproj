@@ -13,6 +13,7 @@
         <Copyright>FuchsFarbe Studios 2023</Copyright>
         <Company>FuchsFarbe Studios</Company>
         <Product>Epoch World Data Access</Product>
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     </PropertyGroup>
 
     <ItemGroup>

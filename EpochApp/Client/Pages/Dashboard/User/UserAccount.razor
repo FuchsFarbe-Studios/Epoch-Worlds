@@ -1,7 +1,17 @@
 @page "/User/Account"
 @namespace EpochApp.Client.Pages.User
 
-<PageTitle>@StaticUtils.Constants.AppName - @Auth.CurrentUser.UserName - Account</PageTitle>
+<PageTitle>@StaticUtils.Constants.AppName - @($"{Auth.CurrentUser.UserName}s' Account")</PageTitle>
 
-<MudText Typo="Typo.h3">Account</MudText>
-<MudText>@Auth.CurrentUser.UserID</MudText>
+<MudText Typo="Typo.h3" Align="Align.Center">Account</MudText>
+<MudDivider Light="false" DividerType="DividerType.Middle" />
+<MudContainer>
+	<MudGrid>
+		<MudItem xs="12" sm="12" md="6" lg="6" xl="6">
+			<MudPaper Elevation="0">
+				<MudText Typo="Typo.h6" Align="Align.Center">User Information</MudText>
+				<MudDivider Light="false" DividerType="DividerType.Middle" />
+			</MudPaper>
+		</MudItem>
+	</MudGrid>
+</MudContainer>

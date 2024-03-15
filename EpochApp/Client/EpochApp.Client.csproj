@@ -14,6 +14,7 @@
         <Copyright>FuchsFarbe Studios 2023</Copyright>
         <Company>FuchsFarbe Studios</Company>
         <Product>Epoch World Exchange</Product>
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

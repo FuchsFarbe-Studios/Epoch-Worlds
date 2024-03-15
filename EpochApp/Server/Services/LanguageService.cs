@@ -49,7 +49,7 @@ namespace EpochApp.Server.Services
             var langResult = new ConstructedLanguageResult
                              {
                                  Author = content.AuthorID,
-                                 Words = new List<GeneratedWord>()
+                                 Words = new List<GeneratedWord>(),
                              };
             ConstructedLanguage language = null!;
             try
@@ -346,16 +346,20 @@ namespace EpochApp.Server.Services
             var sb = new StringBuilder();
             var startWithVowel = await ShouldStartWithVowelAsync(phonology);
             var endWithVowel = await ShouldEndWithVowelAsync(phonology);
-            var wordSyllables = random.Next(1, 3);
+            var wordSyllables = random.Next(1, 4);
+
             // Generate syllable
             if (startWithVowel)
             {
                 var vowel = vowels[random.Next(0, vowels.Count - 1)];
                 sb.Append(vowel);
+                if (wordSyllables == 1)
+                    return await Task.FromResult(sb.ToString());
+
                 for (var i = 0; i < wordSyllables; i++)
                 {
-                    sb.Append(consonants[random.Next(0, consonants.Count - 1)]);
-                    sb.Append(vowels[random.Next(0, vowels.Count - 1)]);
+                    sb.Append(await GetRandomItem(consonants));
+                    sb.Append(await GetRandomItem(vowels));
                 }
                 if (!endWithVowel)
                     sb.Append(consonants[random.Next(0, consonants.Count - 1)]);
@@ -370,8 +374,9 @@ namespace EpochApp.Server.Services
                 if (!endWithVowel)
                     sb.Append(consonants[random.Next(0, consonants.Count - 1)]);
             }
-            _logger.LogInformation("Word generated!");
-            return await Task.FromResult(sb.ToString());
+            var result = sb.ToString();
+            _logger.LogInformation($"Word generated: {result}");
+            return await Task.FromResult(result);
         }
 
         private async Task<bool> ShouldEndWithVowelAsync(Phonology phonology)
