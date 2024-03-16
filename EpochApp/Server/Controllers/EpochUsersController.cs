@@ -122,12 +122,11 @@ namespace EpochApp.Server.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!UserExists(id))
-                {
                     return NotFound();
-                }
+
                 throw;
             }
 
