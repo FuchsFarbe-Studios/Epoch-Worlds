@@ -38,7 +38,7 @@ namespace EpochApp.Server
             services.AddDbContext<EpochDataDbContext>(
             options =>
             {
-                options.UseSqlServer(config.GetConnectionString("LocalUserConnection"));
+                options.UseSqlServer(config.GetConnectionString("RemoteUserConnection"));
             });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>

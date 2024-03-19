@@ -49,7 +49,6 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
             {
                 Model = new ArticleEditDTO
                         {
-
                             WorldId = ActiveWorld?.WorldId,
                             AuthorId = Auth?.CurrentUser?.UserID,
                             DisplayAuthor = true,

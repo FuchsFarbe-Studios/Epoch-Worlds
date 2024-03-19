@@ -16,6 +16,7 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         [Parameter] public string ArticleId { get; set; }
 
         [Inject] private HttpClient Client { get; set; }
+        public int suckmycock = 1587;
 
         /// <inheritdoc />
         protected override async Task OnInitializedAsync()

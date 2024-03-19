@@ -13,7 +13,9 @@ namespace EpochApp.Client.Pages.Dashboard.Articles
         ///     If there is a manuscript to edit, it will be passed in here.
         /// </summary>
         [Parameter] public ManuscriptDTO Manuscript { get; set; } = null!;
-
+        
+        
+        
         /// <summary>
         ///     Determines if this form is in edit mode.
         /// </summary>

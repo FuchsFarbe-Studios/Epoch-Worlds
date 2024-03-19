@@ -10,6 +10,9 @@ using MudBlazor.Services;
 
 namespace EpochApp.Client
 {
+    /// <summary>
+    /// Le Program 😍😍😍
+    /// </summary>
     public class Program
     {
         public static async Task Main(string[] args)

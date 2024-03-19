@@ -1,0 +1,38 @@
+@using MudBlazor
+@inject HttpClient Client
+@page "/Stuff"
+
+<h3>Stuff</h3>
+
+@if (_articles.Any())
+{
+   @foreach (var article in _articles)
+   {
+       <MudText />
+   } 
+}
+else
+{
+    <MudProgressLinear Indeterminate="true"/>
+}
+
+@code {
+    [CascadingParameter]
+    protected WorldDTO ActiveWorldDTO { get; set; }
+
+    private List<ArticleDTO> _articles = new List<ArticleDTO>();
+    
+    /// <inheritdoc />
+    protected override async Task OnInitializedAsync()
+    {
+        _articles = await GetArticlesAsync();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task<List<ArticleDTO>> GetArticlesAsync()
+    {
+        var Articles = await Client.GetFromJsonAsync<List<ArticleDTO>>($"api/v1/Articles/WorldArticles?worldId={ActiveWorldDTO.WorldId}");
+        return Articles;
+    }
+
+}
