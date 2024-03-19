@@ -3,9 +3,11 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 22-2-2024
+using EpochApp.Server.Data;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Controllers
 {
@@ -18,6 +20,7 @@ namespace EpochApp.Server.Controllers
     public class ArticlesController : ControllerBase
     {
         private readonly IArticleService _articleService;
+        private readonly EpochDataDbContext _context;
         private readonly ILookupService _lookupService;
         private readonly IManuscriptService _manuscriptService;
 
@@ -27,11 +30,12 @@ namespace EpochApp.Server.Controllers
         /// <param name="articleService"> The <see cref="IArticleService" />. </param>
         /// <param name="lookupService"> The <see cref="ILookupService" />. </param>
         /// <param name="manuscriptService"> The <see cref="IManuscriptService" />. </param>
-        public ArticlesController(IArticleService articleService, ILookupService lookupService, IManuscriptService manuscriptService)
+        public ArticlesController(IArticleService articleService, ILookupService lookupService, IManuscriptService manuscriptService, EpochDataDbContext context)
         {
             _articleService = articleService;
             _lookupService = lookupService;
             _manuscriptService = manuscriptService ?? throw new ArgumentNullException(nameof(manuscriptService));
+            _context = context;
         }
 
         /// <summary>
@@ -278,6 +282,33 @@ namespace EpochApp.Server.Controllers
                 return NotFound();
 
             return Ok();
+        }
+
+        [HttpGet("ToC/{worldId:guid}")]
+        public async Task<ActionResult<TableOfContentsDTO>> GetTableOfContentsAsync(Guid worldId)
+        {
+            var world = await _context.Worlds
+                                      .Include(a => a.WorldArticles)
+                                      .ThenInclude(c => c.Category)
+                                      .FirstOrDefaultAsync(w => w.WorldId == worldId);
+            if (world == null)
+                return BadRequest();
+
+            List<ArticleTocDTO> articleTocs = world.WorldArticles.Select(a => new ArticleTocDTO
+                                                                              {
+                                                                                  ArticleId = a.ArticleId,
+                                                                                  ArticleTitle = a.Title,
+                                                                                  CategoryName = a.Category.Description
+                                                                                  // TODO: Add parent category and parent article id
+                                                                              })
+                                                   .ToList();
+            var toc = new TableOfContentsDTO()
+                      {
+                          ArticleTocs = articleTocs
+                      };
+            var topLevelCategories = toc.ArticleTocs.Where(x => x.ParentCategoryName == null);
+
+            return Ok(toc);
         }
     }
 }

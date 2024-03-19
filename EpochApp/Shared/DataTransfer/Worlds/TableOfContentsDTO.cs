@@ -5,31 +5,32 @@ namespace EpochApp.Shared
     {
         // list of ArticleTocDTOs
         // 
+        public List<ArticleTocDTO> ArticleTocs { get; set; } = new List<ArticleTocDTO>();
     }
 
     public class ArticleTocDTO
     {
         public Guid ArticleId { get; set; }
         public string ArticleTitle { get; set; }
-        public string CategoryName  { get; set; }
-        public string ParentCategoryName  { get; set; }
-        public string IconPath  { get; set; }
+        public string CategoryName { get; set; }
+        public string ParentCategoryName { get; set; }
+        public string IconPath { get; set; }
     }
 }
 
 /* ~/areas
  * ~/areas/cities
- * 
+ *
  * ~/characters
  * ~/characters/char1.char
  * ~/characters/char1/description.art/summary.art
- * 
+ *
  * ~/cultures
  * ~/cultures/green people
  * ~/cultures/green people/summary.art
  * ~/cultures/green people/traditions.art
  * ~/cultures/green people/religion.art
- * 
+ *
  * ~/languages
  * ~/languages/green tongue.lang
  */
