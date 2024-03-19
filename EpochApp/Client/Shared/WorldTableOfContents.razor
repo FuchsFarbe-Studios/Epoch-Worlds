@@ -1,0 +1,24 @@
+@if (topLevels.Any())
+{
+    @foreach (var articleToc in topLevels)
+    {
+        <p>@articleToc.CategoryName</p>
+    }
+}
+
+@code {
+    [Parameter] public WorldDTO SelectedWorld { get; set; }
+    
+    private TableOfContentsDTO _tocData;
+    private IEnumerable<ArticleTocDTO> topLevels = new List<ArticleTocDTO>();
+    [Inject] private HttpClient Client { get; set; }
+        
+    protected override async Task OnInitializedAsync()
+    {
+        var toc = await Client.GetFromJsonAsync<TableOfContentsDTO>($"api/v1/Articles/ToC/{SelectedWorld.WorldId}");
+        if (toc != null)
+            _tocData = toc;
+        topLevels = _tocData?.ArticleTocs.Where(x => x.ParentCategoryName == null);
+        await base.OnInitializedAsync();
+    }
+}
