@@ -27,6 +27,7 @@ namespace EpochApp.Client
             builder.Services.AddScoped<ILocalStorage, LocalStorageAccessor>();
             builder.Services.AddScoped<IManuscriptService, ManuscriptService>();
             builder.Services.AddScoped<IProfileSerivce, ProfileService>();
+            builder.Services.AddScoped<IUserCategoryService, UserCategoryService>();
             builder.Services.AddScoped<ILookupService, LookupService>();
             builder.Services.AddScoped<IArticleService, ArticleService>();
             builder.Services.AddScoped<IWorldService, WorldService>();

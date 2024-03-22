@@ -38,6 +38,8 @@ namespace EpochApp.Shared
         /// <summary> The name of the world. </summary>
         public string WorldName { get; set; }
 
+        public string Slug { get; set; }
+
         /// <summary>
         ///     The pronunciation of the <see cref="WorldName" />.
         /// </summary>

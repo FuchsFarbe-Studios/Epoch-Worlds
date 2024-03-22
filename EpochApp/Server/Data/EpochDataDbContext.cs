@@ -307,6 +307,8 @@ namespace EpochApp.Server.Data
                       .WithOne(a => a.ParentArticle)
                       .HasForeignKey(a => a.ParentArticleId)
                       .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(x => x.Slug)
+                      .HasMaxLength(255);
 
                 entity.HasQueryFilter(x => x.DeletedOn == null || x.DeletedOn > DateTime.UtcNow);
                 entity.Navigation(x => x.Sections).AutoInclude();
@@ -508,6 +510,8 @@ namespace EpochApp.Server.Data
                       .AutoInclude();
                 entity.Navigation(x => x.WorldTags)
                       .AutoInclude();
+                entity.Property(x => x.Slug)
+                      .HasMaxLength(255);
                 entity.HasQueryFilter(x => x.RemovedOn == null || x.RemovedOn > DateTime.UtcNow);
             });
 

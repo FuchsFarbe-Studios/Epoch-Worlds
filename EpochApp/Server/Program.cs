@@ -72,6 +72,7 @@ namespace EpochApp.Server
 
             // Custom services
             services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IUserCategoryService, UserCategoryService>();
             services.AddScoped<IProfileSerivce, ProfileService>();
             services.AddScoped<IUserModeration, ModerationService>();
             services.AddScoped<ILookupService, LookupService>();

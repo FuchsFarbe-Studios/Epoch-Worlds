@@ -82,6 +82,11 @@ namespace EpochApp.Shared
         public string MouseOverSnippet { get; set; }
 
         /// <summary>
+        /// Article slug for the URL.
+        /// </summary>
+        public string Slug { get; set; }
+
+        /// <summary>
         ///     Generated article content will go here.
         /// </summary>
         public string GeneratedContentXml { get; set; }

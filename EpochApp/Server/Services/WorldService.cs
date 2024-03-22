@@ -97,6 +97,7 @@ namespace EpochApp.Server.Services
             world.WorldTags = tags;
             world.WorldGenres = genres;
             world.CurrentWorldDate = date;
+            world.Slug = await GenerateWorldSlugAsync(world);
             return await Task.FromResult(world);
         }
 
@@ -105,11 +106,13 @@ namespace EpochApp.Server.Services
         {
             _logger.LogInformation("Creating new world...");
             var newWorld = _mapper.Map<WorldDTO, World>(world);
-            _logger.LogInformation("Saving new world...");
+            string worldSlug = await GenerateWorldSlugAsync(newWorld);
+            _logger.LogInformation($"World slug: {worldSlug}");
+            newWorld.Slug = worldSlug;
             await _context.Worlds.AddAsync(newWorld);
             await _context.SaveChangesAsync();
-            _logger.LogInformation("Returning saved world...");
             var w = _mapper.Map<World, WorldDTO>(newWorld);
+            _logger.LogInformation("World creation successful");
             return await Task.FromResult(w);
         }
 
@@ -178,6 +181,7 @@ namespace EpochApp.Server.Services
                                         //.Include(w => w.WorldFiles)
                                         .Include(w => w.MetaData)
                                         .ThenInclude(worldMeta => worldMeta.Template)
+                                        .Include(world => world.WorldArticles)
                                         .FirstOrDefault(x => x.WorldId == world.WorldId && x.OwnerId == world.OwnerId);
             if (existingWorld == null)
             {
@@ -201,6 +205,17 @@ namespace EpochApp.Server.Services
                 else
                     // Update existing WorldMeta
                     _mapper.Map(wm, existingMeta);
+            }
+            if (world.WorldName != existingWorld.WorldName || existingWorld.Slug is null)
+            {
+                // Update the slug (world name has changed)
+                string worldSlug = await GenerateWorldSlugAsync(existingWorld);
+                _logger.LogInformation($"World slug: {worldSlug}");
+                existingWorld.Slug = worldSlug;
+                // Then update all the world article slugs
+                var articlesToUpdate = existingWorld.WorldArticles;
+                foreach (var article in articlesToUpdate)
+                    article.Slug = await GenerateArticleSlugAsync(article, worldSlug);
             }
             _mapper.Map(world, existingWorld);
             try
@@ -294,9 +309,36 @@ namespace EpochApp.Server.Services
             return await Task.FromResult(userWorldDTO);
         }
 
+        private async Task<string> GenerateWorldSlugAsync(World world)
+        {
+            var slug = world.WorldName
+                            .ToLower()
+                            .Replace(" ", "-");
+            var owner = await _context.Users
+                                      .Where(x => x.UserID == world.OwnerId)
+                                      .Select(x => x.UserName.ToLowerInvariant())
+                                      .FirstOrDefaultAsync();
+            var userSlug = owner.Replace(" ", "-");
+            slug = $"{userSlug}-{slug}";
+            return slug;
+        }
+
         private async Task<bool> WorldExists(Guid existingWorldWorldId)
         {
             return await _context.Worlds.AnyAsync(x => x.WorldId == existingWorldWorldId);
+        }
+
+        private async Task<string> GenerateArticleSlugAsync(Article article, string worldSlug)
+        {
+            var slug = article.Title.ToLower().Replace(" ", "-");
+            slug = $"{worldSlug?.ToLower().Replace(" ", "-")}/{slug}";
+            var exists = await _context.Articles.AnyAsync(x => x.Slug == slug);
+            if (exists)
+            {
+                var count = await _context.Articles.CountAsync(x => x.Slug.StartsWith(slug));
+                slug += $"-{count}";
+            }
+            return slug;
         }
     }
 }

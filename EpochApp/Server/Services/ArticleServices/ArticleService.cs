@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EpochApp.Server.Services
 {
+
     /// <summary>
     ///     Service for managing articles.
     /// </summary>
@@ -100,7 +101,9 @@ namespace EpochApp.Server.Services
         {
             var articleToAdd = _mapper.Map<ArticleEditDTO, Article>(article);
             articleToAdd.CreatedOn = DateTime.UtcNow;
-
+            var slug = await GenerateArticleSlugAsync(articleToAdd);
+            articleToAdd.Slug = slug;
+            _logger.LogInformation($"Article slug: {slug}");
             var sections = articleToAdd.Sections.ToList();
             sections.ForEach(x => x.CreatedOn = DateTime.UtcNow);
             articleToAdd.Sections = sections;
@@ -228,7 +231,9 @@ namespace EpochApp.Server.Services
             _mapper.Map(article, articleToUpdate);
             articleToUpdate.Sections = sections;
             articleToUpdate.ModifiedOn = DateTime.UtcNow;
-
+            var slug = await GenerateArticleSlugAsync(articleToUpdate);
+            articleToUpdate.Slug = slug;
+            _logger.LogInformation($"Article slug: {slug}");
             _context.Entry(articleToUpdate).State = EntityState.Modified;
 
             try
@@ -241,6 +246,20 @@ namespace EpochApp.Server.Services
                 _logger.LogError($"Error updating article: {e.Message}");
             }
             return await Task.FromResult(_mapper.Map<Article, ArticleEditDTO>(articleToUpdate));
+        }
+
+        private async Task<string> GenerateArticleSlugAsync(Article articleToAdd)
+        {
+            var slug = articleToAdd.Title.ToLower().Replace(" ", "-");
+            var worldSlug = await _context.Worlds.Where(x => x.WorldId == articleToAdd.WorldId).Select(x => x.Slug).FirstOrDefaultAsync();
+            slug = $"{worldSlug?.ToLower().Replace(" ", "-")}/{slug}";
+            var exists = await _context.Articles.AnyAsync(x => x.Slug == slug);
+            if (exists)
+            {
+                var count = await _context.Articles.CountAsync(x => x.Slug.StartsWith(slug));
+                slug += $"-{count}";
+            }
+            return slug;
         }
     }
 }

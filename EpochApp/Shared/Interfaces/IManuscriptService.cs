@@ -5,6 +5,7 @@
 // Modified: 4-3-2024
 namespace EpochApp.Shared
 {
+
     /// <summary>
     ///    Service for managing manuscripts.
     /// </summary>

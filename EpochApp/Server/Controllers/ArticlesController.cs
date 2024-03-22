@@ -20,22 +20,23 @@ namespace EpochApp.Server.Controllers
     public class ArticlesController : ControllerBase
     {
         private readonly IArticleService _articleService;
+        private readonly IUserCategoryService _categoryService;
         private readonly EpochDataDbContext _context;
         private readonly ILookupService _lookupService;
-        private readonly IManuscriptService _manuscriptService;
 
         /// <summary>
-        ///   Constructor for the <see cref="ArticlesController" />.
+        ///    Constructor for the <see cref="ArticlesController"/>.
         /// </summary>
-        /// <param name="articleService"> The <see cref="IArticleService" />. </param>
-        /// <param name="lookupService"> The <see cref="ILookupService" />. </param>
-        /// <param name="manuscriptService"> The <see cref="IManuscriptService" />. </param>
-        public ArticlesController(IArticleService articleService, ILookupService lookupService, IManuscriptService manuscriptService, EpochDataDbContext context)
+        /// <param name="context"> The <see cref="EpochDataDbContext"/>. </param>
+        /// <param name="articleService"> The <see cref="IArticleService"/>. </param>
+        /// <param name="lookupService"> The <see cref="ILookupService"/>. </param>
+        /// <param name="categoryService"> The <see cref="IUserCategoryService"/>. </param>
+        public ArticlesController(EpochDataDbContext context, IArticleService articleService, ILookupService lookupService, IUserCategoryService categoryService)
         {
+            _context = context;
             _articleService = articleService;
             _lookupService = lookupService;
-            _manuscriptService = manuscriptService ?? throw new ArgumentNullException(nameof(manuscriptService));
-            _context = context;
+            _categoryService = categoryService;
         }
 
         /// <summary>
@@ -284,6 +285,90 @@ namespace EpochApp.Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        ///   Get all user categories.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <returns> A <see cref="IEnumerable{T}" /> of <see cref="UserCategoryDTO"/>. </returns>
+        [HttpGet("UserCategories/{userId:guid}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<UserCategoryDTO>>> GetUserCategoriesAsync(Guid userId)
+        {
+            var categories = await _categoryService.GetUserCategoriesAsync(userId);
+            return Ok(categories);
+        }
+
+        /// <summary>
+        /// Create a new user category.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <param name="category"> The <see cref="UserCategoryDTO"/>. </param>
+        /// <returns> <see cref="IActionResult"/> </returns>
+        [HttpPost("UserCategories/{userId:guid}")]
+        [Authorize]
+        public async Task<IActionResult> CreateUserCategoryAsync(Guid userId, UserCategoryDTO category)
+        {
+            var newCategory = await _categoryService.CreateUserCategoryAsync(userId, category);
+            return CreatedAtAction("GetUserCategory", new { userId = userId, category = newCategory.CategoryId }, newCategory);
+        }
+
+        /// <summary>
+        ///  Create a new user category.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <param name="categoryId"> The category's unique identifier. </param>
+        /// <param name="category"> The <see cref="UserCategoryDTO"/>. </param>
+        /// <returns> <see cref="IActionResult"/> </returns>
+        [HttpPut("UserCategories/{userId:guid}/{categoryId:int}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateUserCategoryAsync(Guid userId, int categoryId, UserCategoryDTO category)
+        {
+            var updatedCategory = await _categoryService.UpdateUserCategoryAsync(userId, categoryId, category);
+            if (updatedCategory == null)
+                return NotFound();
+
+            return Ok(updatedCategory);
+        }
+
+        /// <summary>
+        /// Delete a user category.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <param name="categoryId"> The category's unique identifier. </param>
+        /// <returns> <see cref="IActionResult"/> </returns>
+        [HttpDelete("UserCategories/{userId:guid}/{categoryId:int}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteUserCategoryAsync(Guid userId, int categoryId)
+        {
+            var deleted = await _categoryService.DeleteUserCategoryAsync(userId, categoryId);
+            if (!deleted)
+                return NotFound();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Get a user category.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <param name="categoryId"> The category's unique identifier. </param>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="UserCategoryDTO" />. </returns>
+        [HttpGet("UserCategories/Category/{userId:guid}/{categoryId:int}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserCategory(Guid userId, int categoryId)
+        {
+            var category = await _categoryService.GetUserCategoryAsync(userId, categoryId);
+            if (category == null)
+                return NotFound();
+
+            return Ok(category);
+        }
+
+        /// <summary>
+        ///    Get the table of contents for a world.
+        /// </summary>
+        /// <param name="worldId"></param>
+        /// <returns></returns>
         [HttpGet("ToC/{worldId:guid}")]
         public async Task<ActionResult<TableOfContentsDTO>> GetTableOfContentsAsync(Guid worldId)
         {
