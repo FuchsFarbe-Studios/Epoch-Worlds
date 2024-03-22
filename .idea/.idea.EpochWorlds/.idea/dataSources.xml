@@ -27,7 +27,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="@174.60.51.9" uuid="162c6d5f-ec10-4c24-a65f-2af5e22db8fd">
+    <data-source source="LOCAL" name="@73.230.171.130" uuid="162c6d5f-ec10-4c24-a65f-2af5e22db8fd">
       <driver-ref>sqlserver.jb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>

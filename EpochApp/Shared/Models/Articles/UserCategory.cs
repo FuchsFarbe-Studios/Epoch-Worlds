@@ -21,9 +21,7 @@ namespace EpochApp.Shared
         public DateTime? ModifiedOn { get; set; }
         public DateTime? DeletedOn { get; set; }
         public virtual User User { get; set; }
-
         public virtual UserCategory ParentCategory { get; set; }
-
         public virtual ICollection<UserCategory> ChildCategories { get; set; }
     }
 }

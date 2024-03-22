@@ -36,6 +36,8 @@ namespace EpochApp.Server.Maps
             CreateMap<SectionTemplateDTO, ArticleTemplateSection>();
             CreateMap<ArticleTemplate, ArticleTemplateDTO>();
             CreateMap<ArticleTemplateDTO, ArticleTemplate>();
+            CreateMap<UserCategory, UserCategoryDTO>();
+            CreateMap<UserCategoryDTO, UserCategory>();
         }
     }
 

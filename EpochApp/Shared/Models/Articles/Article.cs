@@ -52,6 +52,11 @@ namespace EpochApp.Shared
         public int? CategoryId { get; set; }
 
         /// <summary>
+        /// User's category.
+        /// </summary>
+        public string UserCategory { get; set; }
+
+        /// <summary>
         /// Title of this article.
         /// </summary>
         public string Title { get; set; }
