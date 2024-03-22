@@ -82,6 +82,7 @@ namespace EpochApp.Server
             services.AddScoped<IWorldService, WorldService>();
             services.AddScoped<IFileService, UserFileService>();
             services.AddScoped<IBuilderService, BuilderService>();
+            services.AddScoped<ISlugService, SlugService>();
             services.AddRazorPages();
             services.AddSwaggerGen(c =>
             {

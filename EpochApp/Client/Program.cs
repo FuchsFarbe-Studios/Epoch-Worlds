@@ -33,6 +33,7 @@ namespace EpochApp.Client
             builder.Services.AddScoped<IWorldService, WorldService>();
             builder.Services.AddScoped<IFileService, UserFileService>();
             builder.Services.AddScoped<IBuilderService, BuilderService>();
+            builder.Services.AddScoped<ISlugService, SlugService>();
             builder.Services.AddScoped<ClientAuthData>();// Storage
             builder.Services.AddScoped<EpochUserService>();// Service
             builder.Services.AddScoped<EpochAuthProvider>();// Auth provider

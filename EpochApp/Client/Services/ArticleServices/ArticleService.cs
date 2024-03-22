@@ -10,11 +10,8 @@ using System.Net.Http.Json;
 
 #pragma warning disable CS1591// Missing XML comment for publicly visible type or member
 
-// ReSharper disable All
-
 namespace EpochApp.Client.Services
 {
-
     /// <summary>
     ///    Service for handling and modifying Article Data.
     /// </summary>

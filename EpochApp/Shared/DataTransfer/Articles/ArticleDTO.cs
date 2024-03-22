@@ -39,6 +39,11 @@ namespace EpochApp.Shared
         public string UserCategory { get; set; }
 
         /// <summary>
+        ///    The slug of this article.
+        /// </summary>
+        public string Slug { get; set; }
+
+        /// <summary>
         ///     The title of this article.
         /// </summary>
         public string Title { get; set; }
