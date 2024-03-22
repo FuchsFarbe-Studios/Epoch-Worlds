@@ -64,6 +64,8 @@ namespace EpochApp.Server.Services
                 return;
             }
 
+            if (language == null)
+                return;
 
             var phonology = language.Phonology;
             var spelling = language.Spelling;
