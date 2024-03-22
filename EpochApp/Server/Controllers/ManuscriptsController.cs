@@ -3,7 +3,6 @@
 // FuchsFarbe Studios 2024
 // matsu
 // Modified: 15-3-2024
-using EpochApp.Server.Data;
 using EpochApp.Shared;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,18 +15,15 @@ namespace EpochApp.Server.Controllers
     [Route("api/v1/[controller]")]
     public class ManuscriptsController : ControllerBase
     {
-        private readonly EpochDataDbContext _context;
         private readonly IManuscriptService _manuscriptService;
 
         /// <summary>
         ///  Constructor
         /// </summary>
         /// <param name="manuscriptService"> The manuscript service. </param>
-        /// <param name="context"> The database context. </param>
-        public ManuscriptsController(IManuscriptService manuscriptService, EpochDataDbContext context)
+        public ManuscriptsController(IManuscriptService manuscriptService)
         {
             _manuscriptService = manuscriptService;
-            _context = context;
         }
 
         /// <summary>
@@ -65,6 +61,20 @@ namespace EpochApp.Server.Controllers
         {
             var newManuscript = await _manuscriptService.CreateManuscriptAsync(manuscript);
             return CreatedAtAction("GetManuscript", new { manuscriptId = newManuscript.ManuscriptId }, newManuscript);
+        }
+
+        /// <summary>
+        /// Update a manuscript.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <param name="manuscriptId"> The manuscript's unique identifier. </param>
+        /// <param name="manuscript"> The manuscript to update. </param>
+        /// <returns> <see cref="ActionResult" /> of <see cref="ManuscriptDTO" />. </returns>
+        [HttpPut("{userId:guid}/{manuscriptId:long}")]
+        public async Task<IActionResult> UpdateManuscriptAsync(Guid userId, long manuscriptId, ManuscriptDTO manuscript)
+        {
+            var updatedManuscript = await _manuscriptService.UpdateManuscript(userId, manuscriptId, manuscript);
+            return Ok(updatedManuscript);
         }
     }
 }

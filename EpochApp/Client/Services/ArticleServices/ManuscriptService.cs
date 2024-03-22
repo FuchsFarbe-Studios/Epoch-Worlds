@@ -57,5 +57,21 @@ namespace EpochApp.Client.Services
                 return null;
             }
         }
+
+        /// <inheritdoc />
+        public async Task<ManuscriptDTO> UpdateManuscript(Guid userId, long manuscriptId, ManuscriptDTO manuscript)
+        {
+            var response = await _client.PutAsJsonAsync($"api/v1/Manuscripts/{userId}/{manuscriptId}", manuscript);
+            if (response.IsSuccessStatusCode)
+            {
+                var updatedManuscript = await response.Content.ReadFromJsonAsync<ManuscriptDTO>();
+                return updatedManuscript;
+            }
+            else
+            {
+                _snackbar.Add("Failed to update manuscript.", Severity.Error);
+                return null;
+            }
+        }
     }
 }

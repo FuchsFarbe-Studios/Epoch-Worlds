@@ -55,11 +55,12 @@ namespace EpochApp.Server.Services
             return _mapper.Map<ManuscriptDTO>(newManuscript);
         }
 
-        public async Task<ManuscriptDTO> UpdateManuscript(ManuscriptDTO manuscript)
+        /// <inheritdoc />
+        public async Task<ManuscriptDTO> UpdateManuscript(Guid userId, long manuscriptId, ManuscriptDTO manuscript)
         {
             var manuscriptToUpdate = await _context.Manuscripts
                                                    .AsSplitQuery()
-                                                   .FirstOrDefaultAsync(x => x.UserId == manuscript.UserID && x.ManuscriptId == manuscript.ManuscriptId);
+                                                   .FirstOrDefaultAsync(x => x.UserId == manuscript.UserID && x.ManuscriptId == manuscriptId);
             _mapper.Map(manuscript, manuscriptToUpdate);
             _context.Manuscripts.Update(manuscriptToUpdate);
             await _context.SaveChangesAsync();

@@ -31,5 +31,14 @@ namespace EpochApp.Shared
         /// <param name="manuscript"> The manuscript to create. </param>
         /// <returns> <see cref="Task{TResult}" /> of <see cref="ManuscriptDTO" />. </returns>
         Task<ManuscriptDTO> CreateManuscriptAsync(ManuscriptDTO manuscript);
+
+        /// <summary>
+        ///   Update a manuscript.
+        /// </summary>
+        /// <param name="userId"> The user's unique identifier. </param>
+        /// <param name="manuscriptId"> The manuscript's unique identifier. </param>
+        /// <param name="manuscript"> The manuscript data. </param>
+        /// <returns> <see cref="Task{TResult}" /> of <see cref="ManuscriptDTO" />. </returns>
+        Task<ManuscriptDTO> UpdateManuscript(Guid userId, long manuscriptId, ManuscriptDTO manuscript);
     }
 }
