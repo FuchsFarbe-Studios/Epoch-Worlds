@@ -11,14 +11,6 @@
 			<!-- Article Content -->
 			<MudTabPanel ID="@("ArticleContent")" Icon="@Icons.Material.Filled.Article" Text="Article">
 				<MudText Align="Align.Center" Typo="Typo.h3">Article Information</MudText>
-				<AuthorizeView Roles="ADMIN,INTERNAL" Context="AuthCtx">
-					<Authorized>
-						<MudStack Row="true">
-							<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="WorldId" @bind-Value="@Model.WorldId" For="@(() => Model.WorldId)" ReadOnly="true" />
-							<MudTextField Adornment="@Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Warning" AdornmentColor="Color.Warning" Label="AuthorId" @bind-Value="@Model.AuthorId" For="@(() => Model.AuthorId)" ReadOnly="true" />
-						</MudStack>
-					</Authorized>
-				</AuthorizeView>
 				<MudStack Row="true">
 					<MudTextField Variant="Variant.Outlined" Label="Title" @bind-Value="@Model.Title" For="@(() => Model.Title)" MaxLength="255" Required="true" AutoFocus="true" />
 					<MudSelect Variant="Variant.Outlined" T="int" Label="Category" @bind-Value="@Model.CategoryId" For="@(() => Model.CategoryId)" Required="true" Placeholder="Please choose a category for this article..." Adornment="Adornment.End" AdornmentColor="Color.Primary" AdornmentIcon="@StaticUtils.AwesomeIcons.FontDict[AwesomeIconType.Bolt]" OnAdornmentClick="@(async () => await GenerateArticleTemplateAsync())" AdornmentAriaLabel="Generate article templated sections.">

@@ -1,0 +1,9 @@
+<MudContainer Style="@(Color == Color.Default ? "" : Style)">
+	@ChildContent
+</MudContainer>
+
+@code {
+	protected string Style => $"background-color: var(mud-theme-{Color.ToDescriptionString()})";
+	[Parameter] public Color Color { get; set; } = Color.Default;
+	[Parameter] public RenderFragment ChildContent { get; set; }
+}
